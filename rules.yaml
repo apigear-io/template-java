@@ -1,0 +1,9 @@
+languages: ["java"]
+features:
+  - name: api
+    scopes:
+      - match: module
+        prefix: "{{snake .Module.Name}}/"
+        documents:
+          - source: "api/api.java.tpl"
+            target: "api/api.go"

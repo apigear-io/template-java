@@ -1,0 +1,20 @@
+schema: "apigear.solution/1.0"
+name: demo
+version: "0.1"
+
+targets:
+  - name: goldenmaster
+    meta:
+      go.module: goldenmaster
+    inputs:
+      - ../test-apis/testbed.advanced.module.yaml
+      - ../test-apis/testbed.enum.module.yaml
+      - ../test-apis/testbed.names.module.yaml
+      - ../test-apis/testbed.same1.module.yaml
+      - ../test-apis/testbed.same2.module.yaml
+      - ../test-apis/testbed.simple.module.yaml
+      - ../test-apis/testbed.struct.module.yaml
+    output: ../test
+    template: ..
+    force: true
+    features: ["all"]

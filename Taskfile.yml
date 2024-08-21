@@ -1,0 +1,32 @@
+version: 3
+
+tasks:
+  install:
+    desc: Install dependencies
+    cmds:
+      - go install github.com/apigear-io/cli/cmd/apigear@latest
+  gm_clean:
+    desc: Clean up goldenmaster
+    dir: goldenmaster
+    cmds:
+      - rm -rf goldenmaster
+  clean:
+    desc: Clean up
+    cmds:
+      - rm -rf test
+  run:
+    desc: Run code generation
+    deps:
+      - clean
+    cmds:
+      - apigear g s ./apigear/goldenmaster.solution.yaml --force
+      - task: test_validate
+  test:
+    desc: Run tests
+    cmds:
+      - apigear g s ./apigear/goldenmaster.solution.yaml
+      - git --no-pager diff --no-index --exit-code goldenmaster test
+  update:
+    desc: Update dependencies
+    cmds:
+      - git submodule update --remote test-apis
