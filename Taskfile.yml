@@ -20,7 +20,12 @@ tasks:
       - clean
     cmds:
       - apigear g s ./apigear/goldenmaster.solution.yaml --force
-      - task: test_validate
+  watch:
+    desc: Run code generation on file changes
+    deps:
+      - clean
+    cmds:
+      - apigear g s ./apigear/goldenmaster.solution.yaml --force --watch
   test:
     desc: Run tests
     cmds:

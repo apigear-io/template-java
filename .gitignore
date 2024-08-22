@@ -3,3 +3,5 @@
 .vscode/
 .idea/
 test/
+/demo/app/bin
+/demo/gradle

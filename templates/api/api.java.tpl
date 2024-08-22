@@ -2,6 +2,7 @@ package {{dot .Module.Name}}.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
 public class {{Camel .Module.Name}} {
 
   // enumerations
@@ -31,7 +32,10 @@ public class {{Camel .Module.Name}} {
 
   // interfaces
   {{- range .Module.Interfaces }}
-  public static interface I{{Camel .Name }}EventListener extends EventListener {
+  public static interface I{{Camel .Name }}EventListener {
+  {{- range .Properties }}
+    void on{{Camel .Name}}Changed({{javaType "" .}} oldValue, {{javaType "" .}} newValue);
+  {{- end }}
   {{- range .Signals }}
     void on{{Camel .Name}}({{javaParams "" .Params}});
   {{- end }}
@@ -49,14 +53,37 @@ public class {{Camel .Module.Name}} {
     {{javaReturn "" .Return}} {{camel .Name}}({{javaParams "" .Params}});
   {{- end }}
 
-    // property listeners
-    void addPropertyChangeListener(PropertyChangeListener listener);
-    void removePropertyChangeListener(PropertyChangeListener listener);
-
     // signal listeners
-    void add{{Camel .Name}}EventListener(I{{Camel .Name }}EventListener listener);
-    void remove{{Camel .Name}}EventListener(I{{Camel .Name }}EventListener listener);
+    void addEventListener(I{{Camel .Name }}EventListener listener);
+    void removeEventListener(I{{Camel .Name }}EventListener listener);
+  }
+
+  public static class Abstract{{Camel .Name}} implements I{{Camel .Name }} {
+    public Collection<IVoidInterfaceEventListener> events = new HashSet<>();
+
+    public void addEventListener(IVoidInterfaceEventListener listener) {
+      listeners.add(listener); 
+    }
+    public void removeEventListener(IVoidInterfaceEventListener listener) {
+      listeners.remove(listener);
+    }
+  {{- range .Properties }}
+    @Override
+    public void fire{{Camel .Name}}Changed({{javaType "" .}} oldValue, {{javaType "" .}} newValue) {
+      for (IVoidInterfaceEventListener listener : events) {
+        listener.on{{Camel .Name}}Changed(oldValue, newValue);
+      }
+    }
+  {{ end }}
+  {{- range .Signals }}
+    @Override
+    public void fire{{Camel .Name}}({{javaParams "" .Params}}) {
+      for (I{{Camel .Name }}EventListener listener : events) {
+        listener.on{{Camel .Name}}({{ javaVars .Params}});
+      }
+    }
+  {{ end }}
+    
   }
   {{- end }}
-
 }
