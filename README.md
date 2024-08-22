@@ -37,7 +37,9 @@ This is a very basic template. It supports only the core features of ApiGear.
 
 ## Planned Features
 
-- scaffold: maven support
+- github workflow
+- scaffold: maven/gradle support
+- demo app
 - imports: support for importing other APIs 
 - extends: support for extending other APIs
 - external: support for external APIs
