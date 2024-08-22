@@ -28,9 +28,19 @@ tasks:
       - apigear g s ./apigear/goldenmaster.solution.yaml --force --watch
   test:
     desc: Run tests
+    deps:
+      - clean
     cmds:
       - apigear g s ./apigear/goldenmaster.solution.yaml
       - git --no-pager diff --no-index --exit-code goldenmaster test
+  goldenmaster:
+    desc: Update goldenmaster
+    cmds:
+      - rm -rf goldenmaster
+      - apigear g s ./apigear/goldenmaster.solution.yaml
+      - mv test goldenmaster
+      - apigear g s ./apigear/goldenmaster.solution.yaml
+      - git diff --no-index --exit-code goldenmaster test
   update:
     desc: Update dependencies
     cmds:
