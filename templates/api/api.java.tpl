@@ -8,10 +8,27 @@ public class {{Camel .Module.Name}} {
   // enumerations
   {{- range .Module.Enums }}
   public enum {{Camel .Name}} {
-  {{- range .Members }}
-      @JsonProperty("{{.Value}}")
-      {{Camel .Name}},
-  {{- end }}
+  {{- range  $idx, $m :=.Members }}
+    {{- if $idx}}, {{ end -}}
+      {{Camel .Name}}({{.Value}})
+  {{- end }};
+
+  private final int value;
+
+  {{Camel .Name}}(int value) {
+      this.value = value;
+  }
+
+  public int getValue() {
+      return value;
+  }
+
+  public static {{Camel .Name}} fromValue(int value) {
+      for ({{Camel .Name}} e : values()) {
+          if (e.value == value) return e;
+      }
+      throw new IllegalArgumentException("Unknown code: " + code);
+    }
   }
   {{- end }}
 
