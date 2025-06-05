@@ -3,7 +3,8 @@ features:
   - name: api
     scopes:
       - match: module
-        prefix: "{{dot .Module.Name}}.api/"
+        prefix: "{{dot .Module.Name}}/api/"
         documents:
           - source: "api/api.java.tpl"
             target: "{{Camel .Module.Name}}.java"
+
