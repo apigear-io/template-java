@@ -68,8 +68,10 @@ public class {{Camel .Module.Name}} {
     // methods
   {{- range .Operations }}
     {{javaReturn "" .Return}} {{camel .Name}}({{javaParams "" .Params}});
+    {{javaAsyncReturn "" .Return}} {{camel .Name}}Async({{javaParams "" .Params}});
   {{- end }}
 
+    bool _isReady();
     // signal listeners
     void addEventListener(I{{Camel .Name }}EventListener listener);
     void removeEventListener(I{{Camel .Name }}EventListener listener);
