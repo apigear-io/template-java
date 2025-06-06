@@ -7,4 +7,23 @@ features:
         documents:
           - source: "api/api.java.tpl"
             target: "{{Camel .Module.Name}}.java"
-
+  - name: android
+    scopes:
+      - match: interface
+        prefix: "{{dot .Module.Name}}/android/service/"
+        documents:
+          - source: "android/service/iservicefactory.java.tpl"
+            target: "{{Camel .Module.Name}}ServiceFactory.java"
+          - source: "android/service/serviceadapter.java.tpl"
+            target: "{{Camel .Module.Name}}ServiceAdapter.java"
+  - name: unreal
+    scopes:
+      - match: interface
+        prefix: "{{dot .Module.Name}}/unreal/service/"
+        documents:
+          - source: "unreal/service/unrealservicefactory.java.tpl"
+            target: "{{Camel .Module.Name}}ServiceFactory.java"
+          - source: "unreal/service/unrealservice.java.tpl"
+            target: "{{Camel .Module.Name}}Service.java"
+          - source: "unreal/service/unrealservicestarter.java.tpl"
+            target: "{{Camel .Module.Name}}Starter.java"
