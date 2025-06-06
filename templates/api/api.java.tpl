@@ -73,23 +73,23 @@ public class {{Camel .Module.Name}} {
 
     bool _isReady();
     // signal listeners
-    void addEventListener(I{{Camel .Name }}EventListener listener);
+    int addEventListener(I{{Camel .Name }}EventListener listener);
     void removeEventListener(I{{Camel .Name }}EventListener listener);
   }
 
   public static class Abstract{{Camel .Name}} implements I{{Camel .Name }} {
-    public Collection<IVoidInterfaceEventListener> events = new HashSet<>();
+    public Collection<I{{Camel .Name }}EventListener> events = new HashSet<>();
 
-    public void addEventListener(IVoidInterfaceEventListener listener) {
+    public void addEventListener(I{{Camel .Name }}EventListener listener) {
       listeners.add(listener); 
     }
-    public void removeEventListener(IVoidInterfaceEventListener listener) {
+    public void removeEventListener(I{{Camel .Name }}EventListener listener) {
       listeners.remove(listener);
     }
   {{- range .Properties }}
     @Override
     public void fire{{Camel .Name}}Changed({{javaType "" .}} oldValue, {{javaType "" .}} newValue) {
-      for (IVoidInterfaceEventListener listener : events) {
+      for (I{{Camel .Name }}EventListener listener : events) {
         listener.on{{Camel .Name}}Changed(oldValue, newValue);
       }
     }
