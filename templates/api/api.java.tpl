@@ -51,7 +51,7 @@ public class {{Camel .Module.Name}} {
   {{- range .Module.Interfaces }}
   public static interface I{{Camel .Name }}EventListener {
   {{- range .Properties }}
-    void on{{Camel .Name}}Changed({{javaType "" .}} oldValue, {{javaType "" .}} newValue);
+    void on{{Camel .Name}}Changed({{javaType "" .}} newValue);
   {{- end }}
   {{- range .Signals }}
     void on{{Camel .Name}}({{javaParams "" .Params}});
@@ -63,14 +63,16 @@ public class {{Camel .Module.Name}} {
   {{- range .Properties }}
     void set{{Camel .Name}}({{javaParam "" .}});
     {{javaReturn "" . }} get{{Camel .Name}}();
-    void fire{{Camel .Name}}Changed({{javaType "" .}} oldValue, {{javaType "" .}} newValue);
+    void fire{{Camel .Name}}Changed({{javaType "" .}} newValue);
   {{ end }}
     // methods
   {{- range .Operations }}
     {{javaReturn "" .Return}} {{camel .Name}}({{javaParams "" .Params}});
     {{javaAsyncReturn "" .Return}} {{camel .Name}}Async({{javaParams "" .Params}});
   {{- end }}
-
+   {{- range .Signals }}
+   public void fire{{Camel .Name}}({{javaParams "" .Params}});
+   {{- end }}
     bool _isReady();
     // signal listeners
     int addEventListener(I{{Camel .Name }}EventListener listener);
@@ -88,9 +90,9 @@ public class {{Camel .Module.Name}} {
     }
   {{- range .Properties }}
     @Override
-    public void fire{{Camel .Name}}Changed({{javaType "" .}} oldValue, {{javaType "" .}} newValue) {
+    public void fire{{Camel .Name}}Changed({{javaType "" .}} newValue) {
       for (I{{Camel .Name }}EventListener listener : events) {
-        listener.on{{Camel .Name}}Changed(oldValue, newValue);
+        listener.on{{Camel .Name}}Changed(newValue);
       }
     }
   {{ end }}
