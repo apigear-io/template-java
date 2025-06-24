@@ -1,0 +1,18 @@
+package {{dot .Module.Name}}.{{dot .Module.Name}}_api;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+//TODO imports - may need some struct from this or imported module
+
+  public  class {{Camel .Struct.Name}} {
+
+    public {{Camel .Struct.Name}}({{javaParams "" .Struct.Fields}}) {
+      {{- range .Struct.Fields }}
+      this.{{camel .Name}} = {{camel .Name}};
+      {{- end }}
+    }  
+  {{- range .Struct.Fields }}
+    @JsonProperty("{{snake .Name}}")
+    public {{javaType "" .}} {{camel .Name}};
+  {{- end }}
+  }

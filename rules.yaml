@@ -2,9 +2,22 @@ languages: ["java"]
 features:
   - name: api
     scopes:
-      - match: module
-        prefix: "{{dot .Module.Name}}/api/"
+      - match: interface
+        prefix: "{{dot .Module.Name}}/{{dot .Module.Name}}_api/src/main/java/{{dot .Module.Name}}/{{dot .Module.Name}}_api/"
         documents:
-          - source: "api/api.java.tpl"
-            target: "{{Camel .Module.Name}}.java"
-
+          - source: "api/eventlistener.java.tpl"
+            target: "I{{Camel .Interface.Name }}EventListener.java"
+          - source: "api/abstract.java.tpl"
+            target: "Abstract{{Camel .Interface.Name}}.java"
+          - source: "api/interface.java.tpl"
+            target: "I{{Camel .Interface.Name}}.java"
+      - match: struct
+        prefix: "{{dot .Module.Name}}/{{dot .Module.Name}}_api/src/main/java/{{dot .Module.Name}}/{{dot .Module.Name}}_api/"
+        documents:
+          - source: "api/struct.java.tpl"
+            target: "{{Camel .Struct.Name }}.java"
+      - match: enum
+        prefix: "{{dot .Module.Name}}/{{dot .Module.Name}}_api/src/main/java/{{dot .Module.Name}}/{{dot .Module.Name}}_api/"
+        documents:
+          - source: "api/enum.java.tpl"
+            target: "{{Camel .Enum.Name }}.java"
