@@ -16,6 +16,14 @@ import android.os.RemoteException;
 import android.util.Log;
 
 //import message type and parcelabe types
+
+{{- range .Module.Structs }}
+import {{dot .Module.Name}}.api.types.{{Camel .Name}}
+{{- end }}
+{{- range .Module.Enums }}
+import {{dot .Module.Name}}.api.types.{{Camel .Name}}
+{{- end }}
+
 import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }}EventListener;
 import {{camel .Module.Name}}.android.service.I{{Camel .Interface.Name}}ServiceFactory;
 import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }};
