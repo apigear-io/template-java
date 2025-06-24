@@ -6,7 +6,12 @@ import android.util.Log;
 import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }};
 import {{dot .Module.Name}}.api.Abstract{{Camel .Interface.Name}};
 import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }}EventListener;
-// TODO import all the structs and enums
+{{- range .Module.Structs }}
+import {{dot .Module.Name}}.api.types.{{Camel .Name}}
+{{- end }}
+{{- range .Module.Enums }}
+import {{dot .Module.Name}}.api.types.{{Camel .Name}}
+{{- end }}
 
 
 import java.util.Map;
@@ -81,20 +86,20 @@ public class Unreal{{Camel .Interface.Name}}Service extends Abstract{{Camel .Int
         isUnrealServiceReady = value;
     }
 
-    //In theory event listner interface
+    //In theory event listener interface
 
     // TODO should those be static funcs? I don't think there is sense in having more than one those objects. 
     {{- range .Interface.Properties }}
     public static void on{{Camel .Name}}Changed({{javaType "" .}} newValue)
     {
-         Log.i(TAG, "on{{Camel .Name}}Changed, will pass notification to all listners");
+         Log.i(TAG, "on{{Camel .Name}}Changed, will pass notification to all listeners");
          fire{{Camel .Name}}Changed(newValue);
     }
     {{- end}}
     {{- range .Interface.Signals }}
     public static void on{{Camel .Name}}({{javaParams "" .Params}})
     {
-        Log.i(TAG, "on{{Camel .Name}}, will pass notification to all listners");
+        Log.i(TAG, "on{{Camel .Name}}, will pass notification to all listeners");
         fire{{Camel .Name}}({{javaVars .Params}});
     }
     {{- end }}
