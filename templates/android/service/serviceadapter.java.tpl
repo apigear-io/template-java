@@ -18,10 +18,10 @@ import android.util.Log;
 //import message type and parcelabe types
 
 {{- range .Module.Structs }}
-import {{dot .Module.Name}}.api.types.{{Camel .Name}}
+import {{dot .Module.Name}}.api.{{Camel .Name}}
 {{- end }}
 {{- range .Module.Enums }}
-import {{dot .Module.Name}}.api.types.{{Camel .Name}}
+import {{dot .Module.Name}}.api.{{Camel .Name}}
 {{- end }}
 
 import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }}EventListener;

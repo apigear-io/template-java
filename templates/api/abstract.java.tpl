@@ -4,10 +4,10 @@ import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }}EventListener;
 import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }};
 //TODO imported/extern modules
 {{- range .Module.Structs }}
-import {{dot .Module.Name}}.api.types.{{Camel .Name}}
+import {{dot .Module.Name}}.api.{{Camel .Name}}
 {{- end }}
 {{- range .Module.Enums }}
-import {{dot .Module.Name}}.api.types.{{Camel .Name}}
+import {{dot .Module.Name}}.api.{{Camel .Name}}
 {{- end }}
 
 

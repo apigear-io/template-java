@@ -12,12 +12,12 @@ features:
           - source: "api/interface.java.tpl"
             target: "I{{Camel .Interface.Name}}.java"
       - match: struct
-        prefix: "{{dot .Module.Name}}/api/types/"
+        prefix: "{{dot .Module.Name}}/api/"
         documents:
           - source: "api/struct.java.tpl"
             target: "{{Camel .Struct.Name }}.java"
       - match: enum
-        prefix: "{{dot .Module.Name}}/api/types/"
+        prefix: "{{dot .Module.Name}}/api/"
         documents:
           - source: "api/enum.java.tpl"
             target: "{{Camel .Enum.Name }}.java"
@@ -33,7 +33,7 @@ features:
   - name: unreal
     scopes:
       - match: interface
-        prefix: "{{dot .Module.Name}}/unreal/service/"
+        prefix: "{{dot .Module.Name}}/unreal/{{dot .Module.Name}}service/"
         documents:
           - source: "unreal/service/unrealservicefactory.java.tpl"
             target: "{{Camel .Interface.Name}}ServiceFactory.java"
