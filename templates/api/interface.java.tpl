@@ -2,10 +2,10 @@ package {{dot .Module.Name}}.api;
 
 import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }}EventListener;
 {{- range .Module.Structs }}
-import {{dot .Module.Name}}.api.{{Camel .Name}}
+import {{dot .Module.Name}}.api.{{Camel .Name}};
 {{- end }}
 {{- range .Module.Enums }}
-import {{dot .Module.Name}}.api.{{Camel .Name}}
+import {{dot .Module.Name}}.api.{{Camel .Name}};
 {{- end }}
 
 
@@ -24,8 +24,8 @@ import {{dot .Module.Name}}.api.{{Camel .Name}}
    {{- range .Interface.Signals }}
    public void fire{{Camel .Name}}({{javaParams "" .Params}});
    {{- end }}
-    bool _isReady();
+    boolean _isReady();
     // signal listeners
-    int addEventListener(I{{Camel .Interface.Name }}EventListener listener);
+    void addEventListener(I{{Camel .Interface.Name }}EventListener listener);
     void removeEventListener(I{{Camel .Interface.Name }}EventListener listener);
   }

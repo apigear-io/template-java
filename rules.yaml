@@ -2,32 +2,56 @@ languages: ["java"]
 features:
   - name: api
     scopes:
-      - match: interface
-        prefix: "{{dot .Module.Name}}/api/"
+      - match: system
         documents:
-          - source: "api/interface.java.tpl"
+          - source: "libs.versions.toml"
+            target: "gradle/libs.versions.toml"
+            raw: true
+      - match: module
+        prefix: "{{dot .Module.Name}}/"
+        documents:
+          - source: "settings.gradle.tpl"
+            target: "settings.gradle"
+          - source: "gradle.properties"
+            target: "gradle.properties"
+            raw: true
+          - source: "api/build.gradle.tpl"
+            target: "api/build.gradle"
+      - match: interface
+        prefix: "{{dot .Module.Name}}/api/src/main/java/{{dot .Module.Name}}/api/"
+        documents:
+          - source: "api/eventlistener.java.tpl"
             target: "I{{Camel .Interface.Name }}EventListener.java"
           - source: "api/abstract.java.tpl"
             target: "Abstract{{Camel .Interface.Name}}.java"
           - source: "api/interface.java.tpl"
             target: "I{{Camel .Interface.Name}}.java"
       - match: struct
-        prefix: "{{dot .Module.Name}}/api/"
+        prefix: "{{dot .Module.Name}}/api/src/main/java/{{dot .Module.Name}}/api/"
         documents:
           - source: "api/struct.java.tpl"
             target: "{{Camel .Struct.Name }}.java"
       - match: enum
-        prefix: "{{dot .Module.Name}}/api/"
+        prefix: "{{dot .Module.Name}}/api/src/main/java/{{dot .Module.Name}}/api/"
         documents:
           - source: "api/enum.java.tpl"
             target: "{{Camel .Enum.Name }}.java"
   - name: android
     scopes:
+      - match: module
+        prefix: "{{dot .Module.Name}}/android/"
+        documents:
+          - source: "android/service/build.gradle.tpl"
+            target: "build.gradle"
+          - source: "android/service/additions.gradle.tpl"
+            target: "additions.gradle"
+          - source: "android/service/AndroidManifest.xml.tpl"
+            target: "service/src/main/AndroidManifest.xml"
       - match: interface
-        prefix: "{{dot .Module.Name}}/android/service/"
+        prefix: "{{dot .Module.Name}}/android/service/src/main/java/{{dot .Module.Name}}/android/service/"
         documents:
           - source: "android/service/iservicefactory.java.tpl"
-            target: "{{Camel .Interface.Name}}ServiceFactory.java"
+            target: "I{{Camel .Interface.Name}}ServiceFactory.java"
           - source: "android/service/serviceadapter.java.tpl"
             target: "{{Camel .Interface.Name}}ServiceAdapter.java"
   - name: unreal

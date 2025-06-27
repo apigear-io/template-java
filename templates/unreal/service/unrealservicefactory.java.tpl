@@ -1,9 +1,10 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-package {{camel .Module.Name}}.unreal.{{camel .Module.Name}}service
+package {{camel .Module.Name}}.unreal.{{camel .Module.Name}}service;
 
 import {{camel .Module.Name}}.android.service.I{{Camel .Interface.Name }}ServiceFactory;
 import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }};
+import {{dot .Module.Name}}.api.Abstract{{Camel .Interface.Name }};
 import {{camel .Module.Name}}.unreal.{{camel .Module.Name}}service.Unreal{{Camel .Interface.Name}}Service
 import android.util.Log;
 import android.os.HandlerThread;
@@ -47,7 +48,7 @@ public class Unreal{{Camel .Interface.Name}}ServiceFactory extends HandlerThread
 		}
 	}
 
-	public synchronized  I{{Camel .Interface.Name }} getServiceInstance()
+	public synchronized  Abstract{{Camel .Interface.Name }} getServiceInstance()
 	{
 		if (unrealService == null)
 		{

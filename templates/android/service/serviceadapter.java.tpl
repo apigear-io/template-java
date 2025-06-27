@@ -1,6 +1,6 @@
 //TODO later// Copyright Epic Games, Inc. All Rights Reserved.
 
-package {{camel .Module.Name}}.android.service
+package {{camel .Module.Name}}.android.service;
 
 import android.app.Service;
 import android.content.Context;
@@ -18,15 +18,16 @@ import android.util.Log;
 //import message type and parcelabe types
 
 {{- range .Module.Structs }}
-import {{dot .Module.Name}}.api.{{Camel .Name}}
+import {{dot .Module.Name}}.api.{{Camel .Name}};
 {{- end }}
 {{- range .Module.Enums }}
-import {{dot .Module.Name}}.api.{{Camel .Name}}
+import {{dot .Module.Name}}.api.{{Camel .Name}};
 {{- end }}
 
 import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }}EventListener;
 import {{camel .Module.Name}}.android.service.I{{Camel .Interface.Name}}ServiceFactory;
 import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }};
+import {{dot .Module.Name}}.api.Abstract{{Camel .Interface.Name}};
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,8 +38,8 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
 	private Messenger mMessenger;
-	private IncomingHandler mHandler;
-	private static I{{Camel .Interface.Name }} mBackendService;
+	private static IncomingHandler mHandler;
+	private static I{{Camel .Interface.Name}} mBackendService;
 	private static I{{Camel .Interface.Name}}ServiceFactory mServiceFactory;
 
 	//private final List<Message> mMessagesQueue = new ArrayList<>();
@@ -55,6 +56,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 			mServiceFactory = factory;
 		}
 		mBackendService = mServiceFactory.getServiceInstance();
+		mBackendService.addEventListener(mHandler);
 	}
 
 
@@ -84,16 +86,14 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 	{
 		super.onDestroy();
 		
-		Log.i(TAG, "LIFECYCLE: onDestroy({{Camel .Interface.Name }}Service) - proc = " + .Interface.Name(this)
-				+ ", mMessenger = " + mMessenger
+		Log.i(TAG, "LIFECYCLE: onDestroy({{Camel .Interface.Name }}Service) - proc = " + ", mMessenger = " + mMessenger
 		);
 
 		if (mBackendService != null)
 		{
-			Log.i(TAG, "LIFECYCLE: onDestroy({{Camel .Interface.Name }}Service) - proc = " + .Interface.Name(this) +
-					", remove engine event callback!");
+			Log.i(TAG, "LIFECYCLE: onDestroy({{Camel .Interface.Name }}Service) - proc = " + ", remove engine event callback!");
 
-			mBackendService.removeEventListener(this);
+			mBackendService.removeEventListener(mHandler);
 			mBackendService = null;
 		}
 	}
@@ -101,10 +101,9 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 	@Override
 	public IBinder onBind(Intent intent)
 	{
-		Log.i(TAG, "LIFECYCLE: onBind(intent) - proc=" + .Interface.Name(this)
-				+ ", intent=" + intent);
+		Log.i(TAG, "LIFECYCLE: onBind(intent) - proc=" +  ", intent=" + intent);
 
-		Log.i(TAG, "binding attachId=" + attachId);
+		//Log.i(TAG, "binding attachId=" + attachId);
 		return mMessenger.getBinder();
 	}
 
@@ -112,8 +111,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 	@Override
 	public boolean onUnbind(Intent intent)
 	{
-		Log.i(TAG, "LIFECYCLE: onUnbind(intent) - proc=" + .Interface.Name(this)
-				+ ", mMessenger=" + mMessenger
+		Log.i(TAG, "LIFECYCLE: onUnbind(intent) - proc=" + ", mMessenger=" + mMessenger
 				+ ", intent=" + intent);
 
 		return super.onUnbind(intent);
@@ -128,7 +126,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 	/**
 	 * Handler of incoming messages from clients.
 	 */
-	class IncomingHandler extends Handler  //TODO   implements Listener
+	class IncomingHandler extends Handler implements I{{Camel .Interface.Name }}EventListener
 	{
 		private final Service mApplicationContext;
 		private final ConcurrentHashMap<String, Messenger> mActivityClients = new ConcurrentHashMap<>();
@@ -143,13 +141,13 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 		{
 			if (mBackendService == null)
 			{
-				if (!mServiceFactory)
+				if (mServiceFactory != null)
 				{
 					Log.e(TAG, "setUpService: no service factory set, cannot create service backend");
 				}
 				mBackendService = mServiceFactory.getServiceInstance();
+				mBackendService.addEventListener(this);
 			}
-			mBackendService.addEventListener(this);
 		};
 
 		private void sendMessageToActivityClients(Message msg)
@@ -198,5 +196,18 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 			mActivityClients.remove(connectionID);
 			Log.i(TAG, "UnRegister event listener with connectionID = " + connectionID);
 		}
+
+		{{- range .Interface.Properties }}
+		@Override
+		public void on{{Camel .Name}}Changed({{javaType "" .}} newValue){
+			Log.i(TAG, "New value for {{Camel .Name}} from backend" + newValue);
+		}
+		{{- end }}
+		{{- range .Interface.Signals }}
+		@Override
+		public void on{{Camel .Name}}({{javaParams "" .Params}}){
+			Log.i(TAG, "New singal for {{Camel .Name}} = " + {{javaVars .Params}});
+		}
+		{{- end }}
 	}
 }

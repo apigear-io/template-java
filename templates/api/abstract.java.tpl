@@ -4,26 +4,29 @@ import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }}EventListener;
 import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }};
 //TODO imported/extern modules
 {{- range .Module.Structs }}
-import {{dot .Module.Name}}.api.{{Camel .Name}}
+import {{dot .Module.Name}}.api.{{Camel .Name}};
 {{- end }}
 {{- range .Module.Enums }}
-import {{dot .Module.Name}}.api.{{Camel .Name}}
+import {{dot .Module.Name}}.api.{{Camel .Name}};
 {{- end }}
 
+import java.util.Collection;
+import java.util.HashSet;
 
-  public static class Abstract{{Camel .Interface.Name}} implements I{{Camel .Interface.Name }} {
-    public Collection<I{{Camel .Interface.Name }}EventListener> events = new HashSet<>();
+{{- $interfaceName := printf "I%s" (Camel .Interface.Name) }}
+  public abstract class Abstract{{Camel .Interface.Name}} implements {{$interfaceName}} {
+    public Collection<{{$interfaceName}}EventListener> listeners = new HashSet<>();
 
-    public void addEventListener(I{{Camel .Interface.Name }}EventListener listener) {
+    public void addEventListener({{$interfaceName}}EventListener listener) {
       listeners.add(listener); 
     }
-    public void removeEventListener(I{{Camel .Interface.Name }}EventListener listener) {
+    public void removeEventListener({{$interfaceName}}EventListener listener) {
       listeners.remove(listener);
     }
   {{- range .Interface.Properties }}
     @Override
     public void fire{{Camel .Name}}Changed({{javaType "" .}} newValue) {
-      for (I{{Camel .Name }}EventListener listener : events) {
+      for ({{$interfaceName}}EventListener listener : listeners) {
         listener.on{{Camel .Name}}Changed(newValue);
       }
     }
@@ -31,7 +34,7 @@ import {{dot .Module.Name}}.api.{{Camel .Name}}
   {{- range .Interface.Signals }}
     @Override
     public void fire{{Camel .Name}}({{javaParams "" .Params}}) {
-      for (I{{Camel .Name }}EventListener listener : events) {
+      for ({{$interfaceName}}EventListener listener : listeners) {
         listener.on{{Camel .Name}}({{ javaVars .Params}});
       }
     }
