@@ -208,7 +208,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 		@Override
 		public void on{{Camel .Name}}({{javaParams "" .Params}}){
 			Log.i(TAG, "New singal for {{Camel .Name}} = "
-			{{- range .Params -}} + " " + {{javaVar .}}{{ end}};
+			{{- range .Params -}} + " " + {{javaVar .}}{{ end}});
 		}
 		{{- end }}
 	}

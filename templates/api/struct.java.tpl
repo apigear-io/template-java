@@ -10,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
       this.{{camel .Name}} = {{camel .Name}};
       {{- end }}
     }  
+
+     public {{Camel .Struct.Name}}() {}
   {{- range .Struct.Fields }}
     @JsonProperty("{{snake .Name}}")
     public {{javaType "" .}} {{camel .Name}};
