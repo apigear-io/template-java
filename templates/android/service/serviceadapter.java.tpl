@@ -38,7 +38,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
 	private Messenger mMessenger;
-	private static IncomingHandler mHandler;
+	private static IncomingHandler mHandler = null;
 	private static I{{Camel .Interface.Name}} mBackendService;
 	private static I{{Camel .Interface.Name}}ServiceFactory mServiceFactory;
 
@@ -56,7 +56,10 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 			mServiceFactory = factory;
 		}
 		mBackendService = mServiceFactory.getServiceInstance();
-		mBackendService.addEventListener(mHandler);
+		if (mHandler != null)
+		{
+			mBackendService.addEventListener(mHandler);
+		}
 		return mBackendService;
 	}
 
@@ -69,6 +72,10 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 
 		mHandler = new IncomingHandler(this);
 		mMessenger = new Messenger(mHandler);
+		if (mBackendService != null)
+		{
+			mBackendService.addEventListener(mHandler);
+		}
 	}
 
 	// execution of service will start on calling this method
@@ -137,19 +144,6 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 			super(Looper.getMainLooper());
 			mApplicationContext = context;
 		}
-
-		public void setUpService()
-		{
-			if (mBackendService == null)
-			{
-				if (mServiceFactory != null)
-				{
-					Log.e(TAG, "setUpService: no service factory set, cannot create service backend");
-				}
-				mBackendService = mServiceFactory.getServiceInstance();
-				mBackendService.addEventListener(this);
-			}
-		};
 
 		private void sendMessageToActivityClients(Message msg)
 		{
