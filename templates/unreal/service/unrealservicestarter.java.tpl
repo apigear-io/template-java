@@ -1,37 +1,42 @@
-package {{camel .Module.Name}}.unreal.{{camel .Module.Name}}service
+package {{camel .Module.Name}}.unreal_{{camel .Module.Name}}service;
 
 import android.util.Log;
 import android.content.Context;
 import android.content.Intent;
 
-import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }}EventListener;
-import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }};
-import {{camel .Module.Name}}.android.service.{{Camel .Interface.Name }}ServiceAdapter;
-import {{camel .Module.Name}}.unreal.{{camel .Module.Name}}service.Unreal{{Camel .Interface.Name}}ServiceFactory;
+import {{dot .Module.Name}}.{{dot .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
+import {{dot .Module.Name}}.{{dot .Module.Name}}_api.I{{Camel .Interface.Name }};
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel .Interface.Name }}ServiceAdapter;
+import {{camel .Module.Name}}.unreal_{{camel .Module.Name}}service.Unreal{{Camel .Interface.Name}}ServiceFactory;
 
+
+//Use this class to manage lifetime of android server with unreal backend service.
 public class Unreal{{Camel .Interface.Name }}ServiceStarter {
 
-    static Intent unreal_service = null;
+    static Intent androidService = null;
     private static final String TAG = "Unreal{{Camel .Interface.Name }}Starter";
 
-    public static void start(Context context) {
+
+
+    public static I{{Camel .Interface.Name }} start(Context context) {
         stop(context);
-        unreal_service = new Intent(context, {{Camel .Interface.Name }}ServiceAdapter.class);
+        androidService = new Intent(context, {{Camel .Interface.Name }}ServiceAdapter.class);
         Log.w(TAG, "starter: created intent");
-        context.startService(unreal_service);
+        context.startService(androidService);
         Log.w(TAG, "starter: started intent (service) ");
-        {{Camel .Interface.Name }}ServiceAdapter.setServiceFactory(Unreal{{Camel .Interface.Name}}ServiceFactory.get());
+        Unreal{{Camel .Interface.Name}}ServiceFactory factory = Unreal{{Camel .Interface.Name}}ServiceFactory.get();
         Log.w(TAG, "starter: factory set for Unreal{{Camel .Interface.Name}}ServiceFactory");
+        return {{Camel .Interface.Name }}ServiceAdapter.setService(factory);
     }
 
     public static void stop(Context context)
     {
-        if (unreal_service != null)
+        if (androidService != null)
         {
             Log.w(TAG, "starter: stop the service");
-            context.stopService(unreal_service);
+            context.stopService(androidService);
         }
-        unreal_service = null;
+        androidService = null;
     }
 
 }

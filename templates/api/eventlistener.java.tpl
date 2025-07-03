@@ -1,10 +1,10 @@
-package {{dot .Module.Name}}.api;
+package {{dot .Module.Name}}.{{dot .Module.Name}}_api;
 
 {{- range .Module.Structs }}
-import {{dot .Module.Name}}.api.{{Camel .Name}};
+import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Name}};
 {{- end }}
 {{- range .Module.Enums }}
-import {{dot .Module.Name}}.api.{{Camel .Name}};
+import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Name}};
 {{- end }}
 
   public interface I{{Camel .Interface.Name }}EventListener {

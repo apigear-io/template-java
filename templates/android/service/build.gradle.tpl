@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace '{{camel .Module.Name}}.android.service'
+    namespace '{{camel .Module.Name}}.{{camel .Module.Name}}_android_service'
     compileSdk 35
 
     defaultConfig {
@@ -19,7 +19,7 @@ android {
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation project(':api')
+    implementation project(':{{camel .Module.Name}}_api')
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.robolectric:robolectric:4.10.3'
     testImplementation 'org.mockito:mockito-core:5.12.0'

@@ -1,6 +1,6 @@
 //TODO later// Copyright Epic Games, Inc. All Rights Reserved.
 
-package {{camel .Module.Name}}.android.service;
+package {{camel .Module.Name}}.{{camel .Module.Name}}_android_service;
 
 import android.app.Service;
 import android.content.Context;
@@ -18,16 +18,16 @@ import android.util.Log;
 //import message type and parcelabe types
 
 {{- range .Module.Structs }}
-import {{dot .Module.Name}}.api.{{Camel .Name}};
+import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Name}};
 {{- end }}
 {{- range .Module.Enums }}
-import {{dot .Module.Name}}.api.{{Camel .Name}};
+import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Name}};
 {{- end }}
 
-import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }}EventListener;
-import {{camel .Module.Name}}.android.service.I{{Camel .Interface.Name}}ServiceFactory;
-import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }};
-import {{dot .Module.Name}}.api.Abstract{{Camel .Interface.Name}};
+import {{dot .Module.Name}}.{{dot .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.I{{Camel .Interface.Name}}ServiceFactory;
+import {{dot .Module.Name}}.{{dot .Module.Name}}_api.I{{Camel .Interface.Name }};
+import {{dot .Module.Name}}.{{dot .Module.Name}}_api.Abstract{{Camel .Interface.Name}};
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,7 +48,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 	{
 	}
 
-	public static void setServiceFactory(I{{Camel .Interface.Name}}ServiceFactory factory)
+	public static I{{Camel .Interface.Name}} setService(I{{Camel .Interface.Name}}ServiceFactory factory)
 	{
 		Log.i(TAG, "Setting factory: " + factory);
 		if (mServiceFactory  != factory)
@@ -57,6 +57,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 		}
 		mBackendService = mServiceFactory.getServiceInstance();
 		mBackendService.addEventListener(mHandler);
+		return mBackendService;
 	}
 
 
@@ -206,7 +207,8 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 		{{- range .Interface.Signals }}
 		@Override
 		public void on{{Camel .Name}}({{javaParams "" .Params}}){
-			Log.i(TAG, "New singal for {{Camel .Name}} = " + {{javaVars .Params}});
+			Log.i(TAG, "New singal for {{Camel .Name}} = "
+			{{- range .Params -}} + " " + {{javaVar .}}{{ end}};
 		}
 		{{- end }}
 	}

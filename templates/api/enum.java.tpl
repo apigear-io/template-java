@@ -1,4 +1,4 @@
-package {{dot .Module.Name}}.api.types;
+package {{dot .Module.Name}}.{{dot .Module.Name}}_api;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 

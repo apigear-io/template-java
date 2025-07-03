@@ -20,6 +20,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "{{camel .Module.Name}}"
-include ':android:service'
-include ':api'
+include ':{{camel .Module.Name}}_android_service'
+include ':{{camel .Module.Name}}_api'
 

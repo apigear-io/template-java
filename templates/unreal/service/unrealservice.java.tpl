@@ -1,22 +1,23 @@
-package {{camel .Module.Name}}.unreal.{{camel .Module.Name}}service;
+package {{camel .Module.Name}}.unreal_{{camel .Module.Name}}service;
 
 import android.os.Messenger;
 import android.util.Log;
 
-import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }};
-import {{dot .Module.Name}}.api.Abstract{{Camel .Interface.Name}};
-import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }}EventListener;
+import {{dot .Module.Name}}.{{dot .Module.Name}}_api.I{{Camel .Interface.Name }};
+import {{dot .Module.Name}}.{{dot .Module.Name}}_api.Abstract{{Camel .Interface.Name}};
+import {{dot .Module.Name}}.{{dot .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
 {{- range .Module.Structs }}
-import {{dot .Module.Name}}.api.{{Camel .Name}};
+import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Name}};
 {{- end }}
 {{- range .Module.Enums }}
-import {{dot .Module.Name}}.api.{{Camel .Name}};
+import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Name}};
 {{- end }}
 
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -49,8 +50,6 @@ public class Unreal{{Camel .Interface.Name}}Service extends Abstract{{Camel .Int
     // methods
   {{- range .Interface.Operations }}
 
-
-    {{javaReturn "" .Return}} {{camel .Name}}({{javaParams "" .Params}});
     @Override
     public {{javaReturn "" .Return}} {{camel .Name}}({{javaParams "" .Params}}) {
         Log.w(TAG, "request method {{camel .Name}} called, will call native");
@@ -73,31 +72,30 @@ public class Unreal{{Camel .Interface.Name}}Service extends Abstract{{Camel .Int
 
     // Called on Unreal Service
   {{- range .Interface.Properties }}
-    private static native void nativeSet{{Camel .Name}}({{javaParam "" .}});
-    private static native {{javaReturn "" . }} nativeSet{{Camel .Name}}();
+    private native void nativeSet{{Camel .Name}}({{javaParam "" .}});
+    private native {{javaReturn "" . }} nativeGet{{Camel .Name}}();
   {{ end }}
     // methods
   {{- range .Interface.Operations }}
-    private static native {{javaReturn "" .Return}} native{{Camel .Name}}({{javaParams "" .Params}});
+    private native {{javaReturn "" .Return}} native{{Camel .Name}}({{javaParams "" .Params}});
   {{- end }}
 
     // Called by Unreal Service
-    public static void unrealServiceReady(boolean value) {
+    public void unrealServiceReady(boolean value) {
         isUnrealServiceReady = value;
     }
 
     //In theory event listener interface
 
-    // TODO should those be static funcs? I don't think there is sense in having more than one those objects. 
     {{- range .Interface.Properties }}
-    public static void on{{Camel .Name}}Changed({{javaType "" .}} newValue)
+    public void on{{Camel .Name}}Changed({{javaType "" .}} newValue)
     {
          Log.i(TAG, "on{{Camel .Name}}Changed, will pass notification to all listeners");
          fire{{Camel .Name}}Changed(newValue);
     }
     {{- end}}
     {{- range .Interface.Signals }}
-    public static void on{{Camel .Name}}({{javaParams "" .Params}})
+    public void on{{Camel .Name}}({{javaParams "" .Params}})
     {
         Log.i(TAG, "on{{Camel .Name}}, will pass notification to all listeners");
         fire{{Camel .Name}}({{javaVars .Params}});

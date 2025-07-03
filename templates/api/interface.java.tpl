@@ -1,12 +1,14 @@
-package {{dot .Module.Name}}.api;
+package {{dot .Module.Name}}.{{dot .Module.Name}}_api;
 
-import {{dot .Module.Name}}.api.I{{Camel .Interface.Name }}EventListener;
+import {{dot .Module.Name}}.{{dot .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
 {{- range .Module.Structs }}
-import {{dot .Module.Name}}.api.{{Camel .Name}};
+import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Name}};
 {{- end }}
 {{- range .Module.Enums }}
-import {{dot .Module.Name}}.api.{{Camel .Name}};
+import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Name}};
 {{- end }}
+
+import java.util.concurrent.CompletableFuture;
 
 
   public interface I{{Camel .Interface.Name }} {
