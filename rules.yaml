@@ -77,4 +77,20 @@ features:
             target: "{{Camel .Interface.Name}}ServiceFactory.java"
           - source: "android/service/implservicestarter.java.tpl"
             target: "{{Camel .Interface.Name }}ServiceStarter.java"
-
+      - match: module
+        prefix: "{{dot .Module.Name}}/{{camel .Module.Name}}_android_messenger/"
+        documents:
+          - source: "android/messenger/build.gradle.tpl"
+            target: "build.gradle"
+          - source: "android/messenger/additions.gradle.tpl"
+            target: "additions.gradle"
+      - match: interface
+        prefix: "{{dot .Module.Name}}/{{camel .Module.Name}}_android_messenger/src/main/java/{{dot .Module.Name}}/{{camel .Module.Name}}_android_messenger/"
+        documents:
+          - source: "android/messenger/messages.java.tpl"
+            target: "{{Camel .Interface.Name}}MessageType.java"
+      - match: struct
+        prefix: "{{dot .Module.Name}}/{{dot .Module.Name}}_android_messenger/src/main/java/{{dot .Module.Name}}/{{dot .Module.Name}}_android_messenger/"
+        documents:
+          - source: "android/messenger/structparcelable.java.tpl"
+            target: "{{Camel .Struct.Name }}Parcelable.java"
