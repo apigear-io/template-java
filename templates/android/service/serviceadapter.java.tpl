@@ -19,15 +19,18 @@ import android.util.Log;
 
 {{- range .Module.Structs }}
 import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Name}};
+import {{dot .Module.Name}}.{{dot .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
 {{- end }}
 {{- range .Module.Enums }}
 import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Name}};
+import {{dot .Module.Name}}.{{dot .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
 {{- end }}
 
 import {{dot .Module.Name}}.{{dot .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.I{{Camel .Interface.Name}}ServiceFactory;
 import {{dot .Module.Name}}.{{dot .Module.Name}}_api.I{{Camel .Interface.Name }};
 import {{dot .Module.Name}}.{{dot .Module.Name}}_api.Abstract{{Camel .Interface.Name}};
+import {{dot .Module.Name}}.{{dot .Module.Name}}_android_messenger.{{Camel .Interface.Name}}MessageType;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -164,10 +167,100 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 		}
 
 		@Override
+		{{- $InterfaceName := Camel .Interface.Name}}
 		public void handleMessage(Message msg)
-		{
+			{
 			Log.i(TAG, "Handle msg " + msg);
-			//TODO switch on messages
+			if (mBackendService == null || !mBackendService._isReady())
+			{
+				if ({{Camel .Interface.Name}}MessageType.fromInteger(msg.what) != {{Camel .Interface.Name}}MessageType.REGISTER_CLIENT
+					&& {{Camel .Interface.Name}}MessageType.fromInteger(msg.what) != {{Camel .Interface.Name}}MessageType.UNREGISTER_CLIENT)
+				{
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: {{Camel .Interface.Name}}MessageType" + {{Camel .Interface.Name}}MessageType.fromInteger(msg.what) );
+					return;
+				}
+			}
+			switch ({{Camel .Interface.Name}}MessageType.fromInteger(msg.what))
+			{
+				case REGISTER_CLIENT:
+					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
+					break;
+				case UNREGISTER_CLIENT:
+					removeClientActivity(msg.getData().getString("connectionID"));
+					break;
+			//TODO ENUMS AND ARRAYS (for array just change the func to getXArray)
+			{{- range .Interface.Properties }}
+					case PROP_{{Camel .Name}}:
+					{
+						Bundle data = msg.getData();
+					{{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
+						{{javaReturn "" .}} newValue = data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1);
+					{{- else if (eq .KindType "bool")}}
+						{{javaReturn "" .}} newValue =  = data.getInt}("{{.Name}}", -1);
+					{{- else }}
+						data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
+						{{javaReturn "" .}} newValue = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}();
+					{{- end }}
+
+						mBackendService.set{{Camel .Name}}(newValue);
+						break;
+					}
+			{{- end }}
+			{{- range .Interface.Operations }}
+			// TODO ENUMS AND ARRAYS (for array just change the func to getXArray)
+			// TODO params may be different structs from different modules, there should be a custom class loader 
+			// with a list of class loaders required for this message
+			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
+				case RPC_{{Camel .Name}}Req: {
+
+					Bundle data = msg.getData();
+					int callId = data.getInt("callId");
+					{{- range .Params }}
+					{{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
+					{{javaReturn "" .}} {{javaVar .}} = data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1);
+					{{- else if (eq .KindType "bool")}}
+					{{javaReturn "" .}} {{javaVar .}} =  = data.getInt("{{.Name}}", -1);
+					{{- else }}
+					data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
+					{{javaReturn "" .}}Parcelable {{javaVar .}}Parcelable = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class);
+					{{javaReturn "" .}} {{javaVar .}} = {{javaVar .}}Parcelable.get{{Camel (javaReturn "" .)}}();
+					{{- end }}
+					{{- end }}
+
+					{{- if .Return.IsPrimitive }}
+					{{javaReturn "" .Return}} result = mBackendService.{{.Name}}({{javaVars .Params}});
+					{{- else }}
+					{{javaReturn "" .Return}} dataResult = mBackendService.{{.Name}}({{javaVars .Params}});
+					{{javaReturn "" .Return}}Parcelable result = new {{javaReturn "" .Return}}Parcelable(dataResult);
+					{{- end }}
+
+					Message respMsg = new Message();
+					respMsg.what = {{$InterfaceName}}MessageType.RPC_{{Camel .Name}}Resp.getValue();
+					Bundle resp_data = new Bundle();
+					resp_data.putInt("callId", callId);
+					{{- if and (.Return.IsPrimitive) (not (eq .Return.KindType "bool")) }}
+					resp_data.put{{ ( Camel  (javaType "" .Return) ) }}("result", result);
+					{{- else if (eq .Return.KindType "bool")}}
+					resp_data.putInt("result", result);
+					{{- else }}
+					resp_data.putParcelable("result", result);
+					{{- end }}
+					respMsg.setData(resp_data);
+
+					try {
+						msg.replyTo.send(respMsg);
+					} catch (RemoteException e) {
+						throw new RuntimeException(e);
+					}
+					break;
+
+				}
+			{{- end }}
+				default:
+					Log.e(TAG, "Receive Unsupported message: " + msg.what);
+					super.handleMessage(msg);
+					break;
+				}
 		}
 
 		@Override
@@ -196,6 +289,19 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 		@Override
 		public void on{{Camel .Name}}Changed({{javaType "" .}} newValue){
 			Log.i(TAG, "New value for {{Camel .Name}} from backend" + newValue);
+
+			Message msg = new Message();
+			msg.what = {{$InterfaceName}}MessageType.SET_{{Camel .Name}}.getValue();
+			Bundle data = new Bundle();
+			{{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
+			data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", newValue);
+			{{- else if (eq .KindType "bool")}}
+			data.putInt{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", newValue);
+			{{- else }}
+			data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable(newValue));
+			{{- end }}
+			msg.setData(data);
+			sendMessageToActivityClients(msg);
 		}
 		{{- end }}
 		{{- range .Interface.Signals }}
@@ -203,7 +309,22 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 		public void on{{Camel .Name}}({{javaParams "" .Params}}){
 			Log.i(TAG, "New singal for {{Camel .Name}} = "
 			{{- range .Params -}} + " " + {{javaVar .}}{{ end}});
+			Message msg = new Message();
+			msg.what = {{$InterfaceName}}MessageType.SIG_{{Camel .Name}}.getValue();
+			Bundle data = new Bundle();
+		{{- range .Params }}
+			{{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
+			data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{ javaVar .}});
+			{{- else if (eq .KindType "bool")}}
+			data.putInt{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{ javaVar .}});
+			{{- else }}
+			data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
+			{{- end }}
+		{{- end }}
+			msg.setData(data);
+			sendMessageToActivityClients(msg);
 		}
 		{{- end }}
+
 	}
 }

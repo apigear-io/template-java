@@ -5,7 +5,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 //TODO imports - may need some struct from this or imported module
 
