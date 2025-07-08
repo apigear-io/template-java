@@ -77,6 +77,11 @@ features:
             target: "{{Camel .Interface.Name}}ServiceFactory.java"
           - source: "android/service/implservicestarter.java.tpl"
             target: "{{Camel .Interface.Name }}ServiceStarter.java"
+      - match: interface
+        prefix: "{{dot .Module.Name}}/{{camel .Module.Name}}_android_service/src/test/java/{{dot .Module.Name}}/{{camel .Module.Name}}_android_service/"
+        documents:
+          - source: "android/service/serviceadaptertest.java.tpl"
+            target: "{{Camel .Interface.Name}}ServiceAdapterTest.java"
       - match: module
         prefix: "{{dot .Module.Name}}/{{camel .Module.Name}}_android_messenger/"
         documents:
