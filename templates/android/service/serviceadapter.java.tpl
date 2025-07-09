@@ -228,9 +228,9 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 					{{- end }}
 
 					{{- if .Return.IsPrimitive }}
-					{{javaReturn "" .Return}} result = mBackendService.{{.Name}}({{javaVars .Params}});
+					{{javaReturn "" .Return}} result = mBackendService.{{camel .Name}}({{javaVars .Params}});
 					{{- else }}
-					{{javaReturn "" .Return}} dataResult = mBackendService.{{.Name}}({{javaVars .Params}});
+					{{javaReturn "" .Return}} dataResult = mBackendService.{{camel .Name}}({{javaVars .Params}});
 					{{javaReturn "" .Return}}Parcelable result = new {{javaReturn "" .Return}}Parcelable(dataResult);
 					{{- end }}
 
