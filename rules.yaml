@@ -99,6 +99,23 @@ features:
         documents:
           - source: "android/messenger/structparcelable.java.tpl"
             target: "{{Camel .Struct.Name }}Parcelable.java"
+      - match: module
+        prefix: "{{dot .Module.Name}}/{{camel .Module.Name}}_android_client/"
+        documents:
+          - source: "android/client/build.gradle.tpl"
+            target: "build.gradle"
+          - source: "android/client/additions.gradle.tpl"
+            target: "additions.gradle"
+      - match: interface
+        prefix: "{{dot .Module.Name}}/{{camel .Module.Name}}_android_client/src/main/java/{{dot .Module.Name}}/{{camel .Module.Name}}_android_client/"
+        documents:
+          - source: "android/client/client.java.tpl"
+            target: "{{Camel .Interface.Name}}Client.java"
+      - match: interface
+        prefix: "{{dot .Module.Name}}/{{camel .Module.Name}}_android_client/src/test/java/{{dot .Module.Name}}/{{camel .Module.Name}}_android_client/"
+        documents:
+          - source: "android/client/clienttest.java.tpl"
+            target: "{{Camel .Interface.Name}}ClientTest.java"
   - name: jnibridge
     requires:
       - api
