@@ -22,6 +22,7 @@ dependencyResolutionManagement {
 rootProject.name = "{{camel .Module.Name}}"
 {{- if .Features.android }}
 include ':{{camel .Module.Name}}_android_service'
+include ':{{camel .Module.Name}}_android_client'
 include ':{{camel .Module.Name}}_android_messenger'
 {{- end -}}
 {{- if .Features.stub }}
