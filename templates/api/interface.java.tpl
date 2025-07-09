@@ -23,9 +23,9 @@ import java.util.concurrent.CompletableFuture;
     {{javaReturn "" .Return}} {{camel .Name}}({{javaParams "" .Params}});
     {{javaAsyncReturn "" .Return}} {{camel .Name}}Async({{javaParams "" .Params}});
   {{- end }}
-   {{- range .Interface.Signals }}
-   public void fire{{Camel .Name}}({{javaParams "" .Params}});
-   {{- end }}
+  {{- range .Interface.Signals }}
+    public void fire{{Camel .Name}}({{javaParams "" .Params}});
+  {{- end }}
     boolean _isReady();
     // signal listeners
     void addEventListener(I{{Camel .Interface.Name }}EventListener listener);
