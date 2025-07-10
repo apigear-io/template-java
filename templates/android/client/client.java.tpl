@@ -73,6 +73,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
         {
             mConnectionId = connectionId;
         }
+        mClientMessenger = new Messenger(mClientHandler);
 	}
 
 	public boolean isBoundToService()
@@ -88,8 +89,6 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
      */
     public boolean bindToService(String packageName)
     {
-        mClientMessenger = new Messenger(mClientHandler);
-
         Intent intent = new Intent();
         intent.setClassName(packageName, "com.example.helloservice.HelloServiceActivityAdapter");
         intent.putExtra("connectionID", mConnectionId);
@@ -274,7 +273,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 			{{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
 			data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{javaVar . }});
 			{{- else if (eq .KindType "bool")}}
-			data.putInt{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{javaVar . }});
+			data.putInt("{{.Name}}", {{javaVar . }});
 			{{- else }}
 			data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar . }}));
 			{{- end }}
@@ -333,7 +332,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 		{{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
 		data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{ javaVar .}});
 		{{- else if (eq .KindType "bool")}}
-		data.putInt{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{ javaVar .}});
+		data.putInt("{{.Name}}", {{ javaVar .}});
 		{{- else }}
 		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
 		{{- end }}
@@ -367,7 +366,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 
     @Override
     public boolean _isReady() {
-        return mIsBoundToService  && mServiceMessenger != null;;
+        return mIsBoundToService  && mServiceMessenger != null;
     }
 
 	// Should be called when message arrives
