@@ -296,7 +296,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 			{{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
 			data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", newValue);
 			{{- else if (eq .KindType "bool")}}
-			data.putInt{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", newValue);
+			data.putInt("{{.Name}}", newValue);
 			{{- else }}
 			data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable(newValue));
 			{{- end }}
@@ -316,7 +316,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 			{{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
 			data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{ javaVar .}});
 			{{- else if (eq .KindType "bool")}}
-			data.putInt{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{ javaVar .}});
+			data.putInt("{{.Name}}", {{ javaVar .}});
 			{{- else }}
 			data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
 			{{- end }}

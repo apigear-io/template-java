@@ -202,7 +202,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
 		data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", newValue);
 		{{- else if (eq .KindType "bool")}}
         {{javaReturn "" . }} newValue = {{javaTestValue "" . }};
-		data.putInt{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", newValue);
+		data.putInt("{{.Name}}", newValue);
 		{{- else }}
         {{javaReturn "" . }} newValue = {{javaDefault "" . }};
 		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable(newValue));
@@ -286,13 +286,15 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         // Create and send message
         Message msg = Message.obtain(null, {{$InterfaceName}}MessageType.RPC_{{Camel .Name}}Req.getValue());
         Bundle data = new Bundle();
+        int callId = 99;
+        data.putInt("callId", callId);
     {{- range .Params }}
         {{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
         {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
 		data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{javaVar .}});
 		{{- else if (eq .KindType "bool")}}
         {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
-		data.putInt{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{javaVar .}});
+		data.putInt("{{.Name}}", {{javaVar .}});
 		{{- else }}
         {{javaReturn "" . }} {{javaVar .}} = {{javaDefault "" . }};
 		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
@@ -313,12 +315,12 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
 
         //Now verify it was sent back to caller
         Robolectric.flushForegroundThreadScheduler();
-
         verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
         assertEquals({{$InterfaceName}}MessageType.RPC_{{Camel .Name}}Resp.getValue(), response.what);
         Bundle resp_data = response.getData();
+        assertEquals(callId, resp_data.getInt("callId", -1));
 	{{- if and (.Return.IsPrimitive) (not (eq .Return.KindType "bool")) }}
 		{{javaReturn "" .Return }} receivedByClient = resp_data.get{{ ( Camel  (javaType "" .Return) ) }}("result", -1);
 	{{- else if (eq .Return.KindType "bool")}}
