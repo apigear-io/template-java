@@ -31,6 +31,11 @@ public class Unreal{{Camel .Interface.Name}}Service extends Abstract{{Camel .Int
     private static boolean isUnrealServiceReady = false;
     private static final ExecutorService executor = Executors.newFixedThreadPool(1);
 
+    Unreal{{Camel .Interface.Name}}Service()
+    {
+        fire_readyStatusChanged(true);
+    }
+
 {{- range .Interface.Properties }}
     @Override
     public void set{{Camel .Name}}({{javaParam "" .}})

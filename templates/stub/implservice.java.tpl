@@ -26,7 +26,6 @@ import java.util.function.Supplier;
 
 public class {{Camel .Interface.Name}}Service extends Abstract{{Camel .Interface.Name}} {
 
-
     private final static String TAG = "{{Camel .Interface.Name}}Service";
     private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
     private static final ExecutorService executor = Executors.newFixedThreadPool(1);
@@ -34,6 +33,11 @@ public class {{Camel .Interface.Name}}Service extends Abstract{{Camel .Interface
     {{- range .Interface.Properties }}
     private {{javaReturn "" .}} m_{{javaVar  .}} = {{ javaDefault "" . }};
     {{- end}}
+
+    {{Camel .Interface.Name}}Service()
+    {
+        fire_readyStatusChanged(true);
+    }
 
 {{- range .Interface.Properties }}
     @Override

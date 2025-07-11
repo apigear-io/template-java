@@ -110,7 +110,6 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
             msg.getData().putString("connectionID", mConnectionId);
             mClientHandler.sendToService(msg);
             mApplicationContext.unbindService(this);
-            doCleanupForUnbinding("unbindFromService");
         }
     }
 
@@ -123,7 +122,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
         mIsBoundToService = true;
 
         requestRegisterClient();
-		// TODO INFORM _isReady(true);
+        fire_readyStatusChanged(true);
     }
 
     @Override
@@ -131,7 +130,6 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
     {
         Log.w(TAG, "onServiceDisconnected name=" + name);
         doCleanupForUnbinding("onServiceDisconnected name=" + name);
-		// TODO INFORM  _isReady(false);
     }
 
     @Override
@@ -158,6 +156,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
         mServiceMessenger = null;
         mClientMessenger = null;
         mIsBoundToService = false;
+        fire_readyStatusChanged(false);
     }
 
 
