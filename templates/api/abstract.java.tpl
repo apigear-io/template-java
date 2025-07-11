@@ -40,4 +40,10 @@ import java.util.HashSet;
     }
   {{ end }}
     
+    public void fire_readyStatusChanged(boolean isReady)
+    {
+        for ({{$interfaceName}}EventListener listener : listeners) {
+        listener.on_readyStatusChanged(isReady);
+      }
+    }
   }
