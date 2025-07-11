@@ -74,6 +74,7 @@ public class {{Camel .Interface.Name }}ClientTest
     private Handler mServiceHandler ;
     private String mTestConnectionID1 = "MyTestClient";
     InOrder inOrderServiceMessenger;
+    InOrder inOrderEventListener;
    
     private I{{Camel .Interface.Name }}ClientMessageGetter serviceMessagesStorage = mock(I{{Camel .Interface.Name }}ClientMessageGetter.class);
 
@@ -91,6 +92,8 @@ public class {{Camel .Interface.Name }}ClientTest
         Message register_msg = messageCaptor.getValue();
         assertEquals({{$InterfaceName}}MessageType.UNREGISTER_CLIENT.getValue(), register_msg.what);
         assertEquals(mTestConnectionID1, register_msg.getData().getString("connectionID", ""));
+
+        inOrderEventListener.verify(listenerMock, times(1)).on_readyStatusChanged(false);
 
         testedClient.removeEventListener(listenerMock);
     }
@@ -111,6 +114,7 @@ public class {{Camel .Interface.Name }}ClientTest
     public void setUp() throws RemoteException
     {
         inOrderServiceMessenger = inOrder(serviceMessagesStorage);
+        inOrderEventListener = inOrder(listenerMock);
         mServiceHandler = createServiceHandlerMock(serviceMessagesStorage);
         mServiceMessenger = new Messenger(mServiceHandler);
         IBinder serviceBinder = mServiceMessenger.getBinder();
@@ -130,6 +134,7 @@ public class {{Camel .Interface.Name }}ClientTest
         mClientMessenger = register_msg.replyTo;
         assertEquals(mTestConnectionID1, register_msg.getData().getString("connectionID", ""));
 
+        inOrderEventListener.verify(listenerMock, times(1)).on_readyStatusChanged(true);
         assertTrue(testedClient._isReady());
     }
 
@@ -154,7 +159,7 @@ public class {{Camel .Interface.Name }}ClientTest
         msg.setData(data);
         mClientMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        verify(listenerMock,times(1)).on{{Camel .Name}}Changed(newValue);
+        inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}Changed(newValue);
 	    
     }
 
@@ -210,7 +215,7 @@ public class {{Camel .Interface.Name }}ClientTest
         msg.setData(data);
         mClientMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        verify(listenerMock,times(1)).on{{Camel .Name}}({{javaVars .Params}});
+        inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}({{javaVars .Params}});
 
 }
 {{- end}}

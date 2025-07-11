@@ -31,6 +31,11 @@ public class {{Camel .Interface.Name}}JniService extends Abstract{{Camel .Interf
     private static boolean isServiceReady = false;
     private static final ExecutorService executor = Executors.newFixedThreadPool(1);
 
+    public {{Camel .Interface.Name}}JniService()
+    {
+        fire_readyStatusChanged(true);
+    }
+
 {{- range .Interface.Properties }}
     @Override
     public void set{{Camel .Name}}({{javaParam "" .}})

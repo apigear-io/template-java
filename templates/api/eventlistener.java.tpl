@@ -14,4 +14,5 @@ import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Name}};
   {{- range .Interface.Signals }}
     void on{{Camel .Name}}({{javaParams "" .Params}});
   {{- end }}
+  void on_readyStatusChanged(boolean isReady);
   }
