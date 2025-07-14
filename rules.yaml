@@ -130,3 +130,79 @@ features:
             target: "{{Camel .Interface.Name}}JniService.java"
           - source: "jnibridge/service/jnibridgeservicestarter.java.tpl"
             target: "{{Camel .Interface.Name }}JniServiceStarter.java"
+  - name: testclientapp
+    requires:
+      - api
+      - android
+    scopes:
+      - match: module
+        prefix: "{{dot .Module.Name}}/{{dot .Module.Name}}_client_example/"
+        documents:
+          - source: "testclientapp/build.gradle.tpl"
+            target: "build.gradle"
+      - match: module
+        prefix: "{{dot .Module.Name}}/{{dot .Module.Name}}_client_example/src/main/"
+        documents:
+          - source: "testclientapp/AndroidManifest.xml.tpl"
+            target: "AndroidManifest.xml"
+          - source: "testclientapp/application.java.tpl"
+            target: "java/{{dot .Module.Name}}/{{dot .Module.Name}}_client_example/{{Camel .Module.Name}}TestClientApp.java"
+          - source: "testclientapp/res/drawable/ic_launcher_background.xml"
+            target: "res/drawable/ic_launcher_background.xml"
+            raw: true
+          - source: "testclientapp/res/drawable/ic_launcher_foreground.xml"
+            target: "res/drawable/ic_launcher_foreground.xml"
+            raw: true
+          - source: "testclientapp/res/values/colors.xml"
+            target: "res/values/colors.xml"
+            raw: true
+          - source: "testclientapp/res/values/strings.xml.tpl"
+            target: "res/values/strings.xml"
+          - source: "testclientapp/res/values/themes.xml"
+            target: "res/values/themes.xml"
+            raw: true
+          - source: "testclientapp/res/values-night/themes.xml"
+            target: "res/values-night/themes.xml"
+            raw: true
+          - source: "testclientapp/res/xml/backup_rules.xml"
+            target: "res/xml/backup_rules.xml"
+            raw: true
+          - source: "testclientapp/res/xml/data_extraction_rules.xml"
+            target: "res/xml/data_extraction_rules.xml"
+            raw: true
+          - source: "testclientapp/res/mipmap-anydpi/ic_launcher.xml"
+            target: "res/mipmap-anydpi/ic_launcher.xml"
+            raw: true
+          - source: "testclientapp/res/mipmap-anydpi/ic_launcher_round.xml"
+            target: "res/mipmap-anydpi/ic_launcher_round.xml"
+            raw: true
+          - source: "testclientapp/res/mipmap-hdpi/ic_launcher.webp"
+            target: "res/mipmap-hdpi/ic_launcher.webp"
+            raw: true
+          - source: "testclientapp/res/mipmap-hdpi/ic_launcher_round.webp"
+            target: "res/mipmap-hdpi/ic_launcher_round.webp"
+            raw: true
+          - source: "testclientapp/res/mipmap-mdpi/ic_launcher.webp"
+            target: "res/mipmap-mdpi/ic_launcher.webp"
+            raw: true
+          - source: "testclientapp/res/mipmap-mdpi/ic_launcher_round.webp"
+            target: "res/mipmap-mdpi/ic_launcher_round.webp"
+            raw: true
+          - source: "testclientapp/res/mipmap-xhdpi/ic_launcher.webp"
+            target: "res/mipmap-xhdpi/ic_launcher.webp"
+            raw: true
+          - source: "testclientapp/res/mipmap-xhdpi/ic_launcher_round.webp"
+            target: "res/mipmap-xhdpi/ic_launcher_round.webp"
+            raw: true
+          - source: "testclientapp/res/mipmap-xxhdpi/ic_launcher.webp"
+            target: "res/mipmap-xxhdpi/ic_launcher.webp"
+            raw: true
+          - source: "testclientapp/res/mipmap-xxhdpi/ic_launcher_round.webp"
+            target: "res/mipmap-xxhdpi/ic_launcher_round.webp"
+            raw: true
+          - source: "testclientapp/res/mipmap-xxxhdpi/ic_launcher.webp"
+            target: "res/mipmap-xxxhdpi/ic_launcher.webp"
+            raw: true
+          - source: "testclientapp/res/mipmap-xxxhdpi/ic_launcher_round.webp"
+            target: "res/mipmap-xxxhdpi/ic_launcher_round.webp"
+            raw: true
