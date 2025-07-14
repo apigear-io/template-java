@@ -90,7 +90,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
     public boolean bindToService(String packageName)
     {
         Intent intent = new Intent();
-        intent.setClassName(packageName, "com.example.helloservice.HelloServiceActivityAdapter");
+        intent.setClassName(packageName, "{{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel .Interface.Name }}ServiceAdapter");
         intent.putExtra("connectionID", mConnectionId);
         Log.d(TAG, "Using context: " + mApplicationContext.getClass().getName());
         Log.d(TAG, "bindToService intent=" + intent + ", mServiceConnection=" + this);
