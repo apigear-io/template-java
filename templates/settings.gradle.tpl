@@ -25,10 +25,13 @@ include ':{{camel .Module.Name}}_android_service'
 include ':{{camel .Module.Name}}_android_client'
 include ':{{camel .Module.Name}}_android_messenger'
 {{- end -}}
-{{- if .Features.stub }}
+{{- if .Features.stubs }}
 include ':{{camel .Module.Name}}_impl'
 {{- end -}}
 {{- if .Features.api }}
 include ':{{camel .Module.Name}}_api'
+{{- end -}}
+{{- if .Features.testclientapp }}
+include ':{{dot .Module.Name}}_client_example'
 {{- end -}}
 

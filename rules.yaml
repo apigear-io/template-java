@@ -36,7 +36,7 @@ features:
         documents:
           - source: "api/enum.java.tpl"
             target: "{{Camel .Enum.Name }}.java"
-  - name: stub
+  - name: stubs
     requires:
       - api
     scopes:
@@ -55,7 +55,7 @@ features:
   - name: android
     requires:
       - api
-      - stub
+      - stubs
     scopes:
       - match: module
         prefix: "{{dot .Module.Name}}/{{camel .Module.Name}}_android_service/"
