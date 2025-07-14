@@ -325,6 +325,14 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 			sendMessageToActivityClients(msg);
 		}
 		{{- end }}
-
+		@Override
+		public void on_readyStatusChanged(boolean isReady) {
+			if (isReady){
+				Log.i(TAG, "Backend ready ");
+			}
+			else {
+				Log.i(TAG, "Backend not ready ");
+			}
+		}
 	}
 }
