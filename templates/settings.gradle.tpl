@@ -31,3 +31,6 @@ include ':{{camel .Module.Name}}_impl'
 {{- if .Features.api }}
 include ':{{camel .Module.Name}}_api'
 {{- end -}}
+{{- if .Features.testclientapp }}
+include ':{{dot .Module.Name}}_client_example'
+{{- end -}}
