@@ -34,7 +34,7 @@ public class {{Camel .Interface.Name}}Service extends Abstract{{Camel .Interface
     private {{javaReturn "" .}} m_{{javaVar  .}} = {{ javaDefault "" . }};
     {{- end}}
 
-    {{Camel .Interface.Name}}Service()
+    public {{Camel .Interface.Name}}Service()
     {
         fire_readyStatusChanged(true);
     }
