@@ -337,6 +337,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 		{{- end }}
 	{{- end }}
 		msg.setData(data);
+        msg.replyTo = mClientMessenger;
 		mClientHandler.sendToService(msg);
 
         {{javaAsyncReturn "" .Return}}  future = new CompletableFuture<>();
