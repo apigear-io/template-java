@@ -1,11 +1,11 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-package {{camel .Module.Name}}.unreal_{{camel .Module.Name}}service;
+package {{camel .Module.Name}}.unreal{{camel .Module.Name}}service;
 
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.I{{Camel .Interface.Name }}ServiceFactory;
 import {{dot .Module.Name}}.{{dot .Module.Name}}_api.I{{Camel .Interface.Name }};
 import {{dot .Module.Name}}.{{dot .Module.Name}}_api.Abstract{{Camel .Interface.Name }};
-import {{camel .Module.Name}}.unreal_{{camel .Module.Name}}service.Unreal{{Camel .Interface.Name}}Service;
+import {{camel .Module.Name}}.unreal{{camel .Module.Name}}service.Unreal{{Camel .Interface.Name}}Service;
 import android.util.Log;
 import android.os.HandlerThread;
 import android.os.Looper;

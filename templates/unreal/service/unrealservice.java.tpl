@@ -1,4 +1,4 @@
-package {{camel .Module.Name}}.unreal_{{camel .Module.Name}}service;
+package {{camel .Module.Name}}.unreal{{camel .Module.Name}}service;
 
 import android.os.Messenger;
 import android.util.Log;

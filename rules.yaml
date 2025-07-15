@@ -122,7 +122,7 @@ features:
       - android
     scopes:
       - match: interface
-        prefix: "{{dot .Module.Name}}/unreal_{{dot .Module.Name}}service/"
+        prefix: "{{dot .Module.Name}}/unreal{{dot .Module.Name}}service/"
         documents:
           - source: "unreal/service/unrealservicefactory.java.tpl"
             target: "Unreal{{Camel .Interface.Name}}ServiceFactory.java"

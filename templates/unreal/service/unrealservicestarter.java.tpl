@@ -1,4 +1,4 @@
-package {{camel .Module.Name}}.unreal_{{camel .Module.Name}}service;
+package {{camel .Module.Name}}.unreal{{camel .Module.Name}}service;
 
 import android.util.Log;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.content.Intent;
 import {{dot .Module.Name}}.{{dot .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
 import {{dot .Module.Name}}.{{dot .Module.Name}}_api.I{{Camel .Interface.Name }};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel .Interface.Name }}ServiceAdapter;
-import {{camel .Module.Name}}.unreal_{{camel .Module.Name}}service.Unreal{{Camel .Interface.Name}}ServiceFactory;
+import {{camel .Module.Name}}.unreal{{camel .Module.Name}}service.Unreal{{Camel .Interface.Name}}ServiceFactory;
 
 
 //Use this class to manage lifetime of android server with unreal backend service.
