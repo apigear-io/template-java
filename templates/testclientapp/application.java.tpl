@@ -230,7 +230,7 @@ public class {{Camel .Module.Name}}TestClientApp extends Activity implements I{{
     @Override
     public void on{{Camel .Name}}({{javaParams "" .Params}})
     {
-        String text = "Signal {{.Name}} {{- range .Params -}}" + " " + {{javaVar .}}{{ end}};
+        String text = "Signal {{.Name}} {{- range .Params -}} + " " + {{javaVar .}}{{ end}};
         outputTextViewSig.setText(text);
         Log.w(TAG, text);
     }
