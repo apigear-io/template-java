@@ -290,7 +290,7 @@ public class {{Camel .Interface.Name }}ClientTest
 	{{- end }}
 
         msg.setData(data);
-        mClientMessenger.send(msg);
+        method_request.replyTo.send(msg);
         Robolectric.flushForegroundThreadScheduler();
 
         assertTrue(receivedResp.get());
