@@ -214,14 +214,19 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 				case RPC_{{Camel .Name}}Req: {
 
 					Bundle data = msg.getData();
+					{{- range .Params }}
+					{{- if not .IsPrimitive }}
+					data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
+					{{- end }}
+					{{- end }}
 					int callId = data.getInt("callId");
+
 					{{- range .Params }}
 					{{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
 					{{javaReturn "" .}} {{javaVar .}} = data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1);
 					{{- else if (eq .KindType "bool")}}
 					{{javaReturn "" .}} {{javaVar .}} =  = data.getInt("{{.Name}}", -1);
 					{{- else }}
-					data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
 					{{javaReturn "" .}}Parcelable {{javaVar .}}Parcelable = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class);
 					{{javaReturn "" .}} {{javaVar .}} = {{javaVar .}}Parcelable.get{{Camel (javaReturn "" .)}}();
 					{{- end }}

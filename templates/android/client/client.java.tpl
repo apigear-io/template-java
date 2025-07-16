@@ -214,14 +214,17 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 			    case SIG_{{Camel .Name}}: {
 
 				    Bundle data = msg.getData();
-				    int callId = data.getInt("callId");
+                {{- range .Params }}
+                    {{- if not .IsPrimitive }}
+					data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
+					{{- end }}
+					{{- end }}
 			    {{- range .Params }}
 			    {{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
 				    {{javaReturn "" .}} {{javaVar .}} = data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1);
 			    {{- else if (eq .KindType "bool")}}
 				    {{javaReturn "" .}} {{javaVar .}} =  = data.getInt("{{.Name}}", -1);
 			    {{- else }}
-				    data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
 				    {{javaReturn "" .}}Parcelable {{javaVar .}}Parcelable = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class);
 				    {{javaReturn "" .}} {{javaVar .}} = {{javaVar .}}Parcelable.get{{Camel (javaReturn "" .)}}();
 			    {{- end }}
@@ -234,6 +237,11 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 			    case RPC_{{Camel .Name}}Resp: {
 
 				    Bundle data = msg.getData();
+                    {{- range .Params }}
+                    {{- if not .IsPrimitive }}
+					data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
+					{{- end }}
+					{{- end }}
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -348,7 +356,6 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 	    {{- else if (eq .Return.KindType "bool")}}
 		    {{javaReturn "" .Return }} result =  = bundle.getInt("result", -1);
 	    {{- else }}
-		    bundle.setClassLoader({{Camel .Return.Type}}Parcelable.class.getClassLoader());
 		    {{javaReturn "" .Return }} result = bundle.getParcelable("result", {{Camel .Return.Type}}Parcelable.class).get{{Camel (javaReturn "" .Return)}}();
 	    {{- end }}
 
