@@ -52,6 +52,17 @@ features:
         documents:
           - source: "stub/implservice.java.tpl"
             target: "{{Camel .Interface.Name}}Service.java"
+      - match: interface
+        prefix: "{{dot .Module.Name}}/{{camel .Module.Name}}_impl/src/test/java/{{dot .Module.Name}}/{{camel .Module.Name}}_impl/"
+        documents:
+          - source: "stub/impltest.java.tpl"
+            target: "{{Camel .Interface.Name}}Test.java"
+      - match: interface
+        prefix: "{{dot .Module.Name}}/{{camel .Module.Name}}_impl/src/test/java/android/util/"
+        documents:
+          - source: "stub/logstub.java"
+            target: "Log.java"
+            raw: true
   - name: android
     requires:
       - api
