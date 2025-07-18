@@ -138,6 +138,35 @@ public class {{Camel .Interface.Name }}ClientTest
         assertTrue(testedClient._isReady());
     }
 
+    @Test
+    public void onInitReceive()  throws RemoteException
+    {
+    //PREPARE message
+
+        Message msg = Message.obtain(null, {{$InterfaceName}}MessageType.INIT.getValue());
+        Bundle data = new Bundle();
+    {{- range .Interface.Properties}}
+        {{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
+        {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
+		data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{javaVar .}});
+		{{- else if (eq .KindType "bool")}}
+        {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
+		data.putInt("{{.Name}}", {{javaVar .}});
+		{{- else }}
+        {{javaReturn "" . }} {{javaVar .}} = {{javaDefault "" . }};
+		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
+		{{- end }}
+    {{- end }}
+
+    //setup mock expectations
+        msg.setData(data);
+        mClientMessenger.send(msg);
+        Robolectric.flushForegroundThreadScheduler();
+    {{- range .Interface.Properties}}
+        inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}Changed({{javaVar .}});
+    {{- end }}
+    }
+
 {{- range .Interface.Properties }}
 //TODO do not add when a property is readonly
     @Test

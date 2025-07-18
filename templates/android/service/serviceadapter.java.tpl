@@ -137,7 +137,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 	class IncomingHandler extends Handler implements I{{Camel .Interface.Name }}EventListener
 	{
 		private final Service mApplicationContext;
-		private final ConcurrentHashMap<String, Messenger> mActivityClients = new ConcurrentHashMap<>();
+		private final ConcurrentHashMap<String, Messenger> mClients = new ConcurrentHashMap<>();
 
 		IncomingHandler(Service context)
 		{
@@ -145,9 +145,9 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 			mApplicationContext = context;
 		}
 
-		private void sendMessageToActivityClients(Message msg)
+		private void sendMessageToClients(Message msg)
 		{
-			for (Map.Entry<String, Messenger> client : mActivityClients.entrySet())
+			for (Map.Entry<String, Messenger> client : mClients.entrySet())
 			{
 				Messenger reply = client.getValue();
 				if (reply != null)
@@ -181,6 +181,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
+					sendInit();
 					break;
 				case UNREGISTER_CLIENT:
 					removeClientActivity(msg.getData().getString("connectionID"));
@@ -273,15 +274,35 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 		{
 			if (serviceReply != null)
 			{
-				mActivityClients.put(connectionID, serviceReply);
+				mClients.put(connectionID, serviceReply);
 				Log.i(TAG, "Register event listener with connectionID = " + connectionID);
 			}
 		}
 
 		private void removeClientActivity(String connectionID)
 		{
-			mActivityClients.remove(connectionID);
+			mClients.remove(connectionID);
 			Log.i(TAG, "UnRegister event listener with connectionID = " + connectionID);
+		}
+
+		private void sendInit()
+		{
+			Message msg = new Message();
+			msg.what = {{$InterfaceName}}MessageType.INIT.getValue();
+			Bundle data = new Bundle();
+			//TODO ArrayProperties, enums
+			{{range .Interface.Properties}}
+			{{javaReturn "" .}} {{javaVar .}} = mBackendService.get{{Camel .Name}}();
+			{{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
+			data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{javaVar .}});
+			{{- else if (eq .KindType "bool")}}
+			data.putInt("{{.Name}}", {{javaVar .}});
+			{{- else }}
+			data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
+			{{- end }}
+			{{- end}}
+			msg.setData(data);
+			sendMessageToClients(msg);
 		}
 
 		{{- range .Interface.Properties }}
@@ -298,7 +319,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 			data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable(newValue));
 			{{- end }}
 			msg.setData(data);
-			sendMessageToActivityClients(msg);
+			sendMessageToClients(msg);
 		}
 		{{- end }}
 		{{- range .Interface.Signals }}
@@ -317,7 +338,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 			{{- end }}
 		{{- end }}
 			msg.setData(data);
-			sendMessageToActivityClients(msg);
+			sendMessageToClients(msg);
 		}
 		{{- end }}
 		@Override
