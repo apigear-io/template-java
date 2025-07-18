@@ -187,7 +187,27 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 
 		    switch ({{Camel .Interface.Name}}MessageType.fromInteger(msg.what))
 		    {
-		    //TODO ENUMS AND ARRAYS (for array just change the func to getXArray)
+                case INIT:
+                {
+                    Bundle data = msg.getData();
+                    {{range .Interface.Properties}}
+			        {{- if not .IsPrimitive }}
+				    data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
+			        {{- end }}
+			        {{- end }}
+			        {{range .Interface.Properties}}
+			        {{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
+				        {{javaReturn "" .}} {{javaVar .}} = data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1);
+			        {{- else if (eq .KindType "bool")}}
+				        {{javaReturn "" .}} {{javaVar .}} =  = data.getInt}("{{.Name}}", -1);
+			        {{- else }}
+				        {{javaReturn "" .}} {{javaVar .}} = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}();
+			        {{- end }}
+				    on{{Camel .Name}}({{javaVar .}});
+			        {{- end}}
+
+                    break;
+                }
 		    {{- range .Interface.Properties }}
 			    case SET_{{Camel .Name}}:
 			    {
