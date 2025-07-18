@@ -5,7 +5,8 @@ package {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger;
 public enum {{Camel .Interface.Name}}MessageType {
     REGISTER_CLIENT(0),
     UNREGISTER_CLIENT(1),
-    {{- $msgNum :=  1}}
+    INIT(2),
+    {{- $msgNum :=  2}}
 {{- range .Interface.Properties }}
     {{- $msgNum =  len (printf "%*s " $msgNum "" ) }}
     PROP_{{Camel .Name}}({{$msgNum}}),

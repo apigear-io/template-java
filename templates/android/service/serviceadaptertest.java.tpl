@@ -59,7 +59,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
-
 import androidx.annotation.NonNull;
 
 import org.junit.After;
@@ -69,6 +68,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.InOrder;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.android.controller.ServiceController;
@@ -83,6 +83,7 @@ interface I{{Camel .Interface.Name }}MessageGetter
 {
     public void getMessage(Message msg);
 }
+{{- $InterfaceName := Camel .Interface.Name}}
 
 @Config(sdk = 33, manifest = Config.NONE)
 @RunWith(RobolectricTestRunner.class)
@@ -95,9 +96,10 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
     private {{Camel .Interface.Name }}ServiceAdapter testedServiceAdapter;
     private Intent testedServiceAdapterIntent;
     private I{{Camel .Interface.Name }}EventListener testedAdapterAsEventListener;
-    //private ServiceController<{{Camel .Interface.Name }}ServiceAdapter> serviceController; TODO STARTED BY HAND
     private Messenger mServiceMessenger;
     private I{{Camel .Interface.Name }} backendServiceMock = mock(I{{Camel .Interface.Name }}.class);
+    InOrder inOrderBackendService;
+    InOrder inOrderClientMessagesHandler;
 
     private Handler clientReplyHandler ;
     private Messenger clientReplyMessenger;
@@ -124,7 +126,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
             mMockContext.stopService(testedServiceAdapterIntent);  
         }
         testedServiceAdapter.onDestroy();
-        verify(backendServiceMock, times(1)).removeEventListener(testedAdapterAsEventListener);
+        inOrderBackendService.verify(backendServiceMock, times(1)).removeEventListener(testedAdapterAsEventListener);
     }
 
     Handler createClientHandlerMock(I{{Camel .Interface.Name }}MessageGetter messageGetterMock)
@@ -141,6 +143,15 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
 
     void registerFakeActivityClient(Messenger messenger, String id)
     {
+        {{- range .Interface.Properties}}
+        {{- if .IsPrimitive }}
+        when(backendServiceMock.get{{Camel .Name}}()).thenReturn({{javaTestValue "" .}});
+        {{- else }}
+        when(backendServiceMock.get{{Camel .Name}}()).thenReturn({{javaDefault "" .}});
+		{{- end }}
+        {{- end }}
+
+
         Message registerMsg = Message.obtain(null, {{Camel .Interface.Name}}MessageType.REGISTER_CLIENT.ordinal());
         registerMsg.getData().putString("connectionID", id);
         registerMsg.replyTo = messenger;
@@ -151,6 +162,31 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
             throw new RuntimeException(e);
         }
         Robolectric.flushForegroundThreadScheduler();
+
+        {{- range .Interface.Properties}}
+        inOrderBackendService.verify(backendServiceMock, times(1)).get{{Camel .Name}}();
+        {{- end }}
+
+        inOrderClientMessagesHandler.verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
+        Message response = messageCaptor.getValue();
+
+        assertEquals({{$InterfaceName}}MessageType.INIT.getValue(), response.what);
+        Bundle data = response.getData();
+    {{- range .Interface.Properties}}
+    {{- if not .IsPrimitive }}
+		data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
+	{{- end }}
+	{{- end }}
+    {{- range .Interface.Properties}}
+        assertTrue(data.containsKey("{{.Name}}"));
+	{{- if .IsPrimitive }}
+		assertEquals(data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1), {{javaTestValue "" .}});
+	{{- else }}
+        //  TODO uncomment after adding comparision operator
+        // assertEquals(data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}(), {{javaDefault "" .}});
+	{{- end }}
+        {{- end }}
+
     }
 
     @Before
@@ -158,7 +194,8 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
     {
         clientReplyHandler = createClientHandlerMock(clientMessagesStorage);
         clientReplyMessenger = new Messenger(clientReplyHandler);
-	
+	    inOrderClientMessagesHandler = inOrder(clientMessagesStorage);
+	    inOrderBackendService = inOrder(backendServiceMock);
         mMockContext = RuntimeEnvironment.getApplication();
 
         when(backendServiceMock._isReady()).thenReturn(true);
@@ -179,7 +216,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         testedServiceAdapter.setService(serviceFactory);
 		// service adapter should pass its member to backend to get notifications on changes.
         ArgumentCaptor<I{{Camel .Interface.Name }}EventListener> eventListnerCaptor = ArgumentCaptor.forClass(I{{Camel .Interface.Name }}EventListener.class);
-        verify(backendServiceMock, times(1)).addEventListener(eventListnerCaptor.capture());
+        inOrderBackendService.verify(backendServiceMock, times(1)).addEventListener(eventListnerCaptor.capture());
         testedAdapterAsEventListener = eventListnerCaptor.getValue();
 
         // Register a fake client (the message handler form its service-connection)
@@ -187,7 +224,6 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         registerFakeActivityClient(clientReplyMessenger, mTestConnectionID1);
     }
 
-    {{- $InterfaceName := Camel .Interface.Name}}
 {{- range .Interface.Properties }}
 //TODO do not add when a property is readonly
     @Test
@@ -207,7 +243,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         msg.setData(data);
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        verify(backendServiceMock,times(1)).set{{Camel .Name}}(newValue);
+        inOrderBackendService.verify(backendServiceMock,times(1)).set{{Camel .Name}}(newValue);
 	    
     }
 
@@ -223,7 +259,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         testedAdapterAsEventListener.on{{Camel .Name}}Changed(newValue);
         Robolectric.flushForegroundThreadScheduler();
 
-        verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
+        inOrderClientMessagesHandler.verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
         assertEquals({{$InterfaceName}}MessageType.SET_{{Camel .Name}}.getValue(), response.what);
@@ -253,16 +289,20 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         testedAdapterAsEventListener.on{{Camel .Name}}({{javaVars .Params}});
         Robolectric.flushForegroundThreadScheduler();
 
-        verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
+        inOrderClientMessagesHandler.verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
         assertEquals({{$InterfaceName}}MessageType.SIG_{{Camel .Name}}.getValue(), response.what);
         Bundle data = response.getData();
+    {{- range .Params}}
+    {{- if not .IsPrimitive }}
+		data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
+	{{- end }}
+	{{- end }}
     {{- range .Params }}
 	{{- if .IsPrimitive }}
 		{{javaReturn "" . }} receivedByClient{{javaVar .}} = data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1);
 	{{- else }}
-		data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
 		{{javaReturn "" . }} receivedByClient{{javaVar .}} = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}();
 	{{- end }}
         assertEquals(receivedByClient{{javaVar .}}, {{javaVar .}});
@@ -300,12 +340,11 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         msg.setData(data);
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        verify(backendServiceMock,times(1)).{{camel .Name}}({{javaVars .Params}});
+        inOrderBackendService.verify(backendServiceMock,times(1)).{{camel .Name}}({{javaVars .Params}});
 
         //Now verify it was sent back to caller
         Robolectric.flushForegroundThreadScheduler();
-
-        verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
+        inOrderClientMessagesHandler.verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
         assertEquals({{$InterfaceName}}MessageType.RPC_{{Camel .Name}}Resp.getValue(), response.what);
