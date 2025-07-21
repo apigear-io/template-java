@@ -144,7 +144,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
     void registerFakeActivityClient(Messenger messenger, String id)
     {
         {{- range .Interface.Properties}}
-        {{- if .IsPrimitive }}
+        {{- if or .IsPrimitive (eq .KindType "enum" ) }}
         when(backendServiceMock.get{{Camel .Name}}()).thenReturn({{javaTestValue "" .}});
         {{- else }}
         when(backendServiceMock.get{{Camel .Name}}()).thenReturn({{javaDefault "" .}});
@@ -181,7 +181,9 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         assertTrue(data.containsKey("{{.Name}}"));
 	{{- if .IsPrimitive }}
 		assertEquals(data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1), {{javaTestValue "" .}});
-	{{- else }}
+	{{- else if eq .KindType "enum" }}
+        // assertEquals(data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}(), {{javaTestValue "" .}});
+    {{- else }}
         //  TODO uncomment after adding comparision operator
         // assertEquals(data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}(), {{javaDefault "" .}});
 	{{- end }}
@@ -235,7 +237,11 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         {{- if .IsPrimitive }}
         {{javaReturn "" . }} newValue = {{javaTestValue "" . }};
 		data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", newValue);
-		{{- else }}
+		data.putInt("{{.Name}}", newValue);
+		{{- else if (eq .KindType "enum") }}
+        {{javaReturn "" . }} newValue = {{javaTestValue "" . }};
+		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable(newValue));
+        {{- else }}
         {{javaReturn "" . }} newValue = {{javaDefault "" . }};
 		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable(newValue));
 		{{- end }}
@@ -250,7 +256,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
     @Test
      public void whenNotified{{.Name}}()
     {
-        {{- if and .IsPrimitive}}
+        {{- if or .IsPrimitive (eq .KindType "enum" ) }}
         {{javaReturn "" . }} newValue = {{javaTestValue "" . }};
 		{{- else }}
         {{javaReturn "" . }} newValue = {{javaDefault "" . }};
@@ -279,7 +285,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
     public void whenNotified{{.Name}}()
     {
         {{- range .Params }}
-        {{- if and .IsPrimitive}}
+        {{- if or .IsPrimitive (eq .KindType "enum" ) }}
         {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
 		{{- else }}
         {{javaReturn "" . }} {{javaVar .}} = {{javaDefault "" . }};
@@ -322,7 +328,10 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         {{- if .IsPrimitive }}
         {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
 		data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{javaVar .}});
-		{{- else }}
+		{{- else if eq .KindType "enum" }}
+        {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
+		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
+        {{- else }}
         {{javaReturn "" . }} {{javaVar .}} = {{javaDefault "" . }};
 		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
 		{{- end }}

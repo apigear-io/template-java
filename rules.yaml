@@ -99,6 +99,11 @@ features:
         documents:
           - source: "android/messenger/structparcelable.java.tpl"
             target: "{{Camel .Struct.Name }}Parcelable.java"
+      - match: enum
+        prefix: "{{dot .Module.Name}}/{{dot .Module.Name}}_android_messenger/src/main/java/{{dot .Module.Name}}/{{dot .Module.Name}}_android_messenger/"
+        documents:
+          - source: "android/messenger/enumparcelable.java.tpl"
+            target: "{{Camel .Enum.Name }}Parcelable.java"
       - match: module
         prefix: "{{dot .Module.Name}}/{{camel .Module.Name}}_android_client/"
         documents:
