@@ -24,6 +24,7 @@ import {{dot .Module.Name}}.{{dot .Module.Name}}_android_messenger.{{Camel .Name
 {{- end }}
 {{- range .Module.Enums }}
 import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Name}};
+import {{dot .Module.Name}}.{{dot .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
 {{- end }}
 
 import {{dot .Module.Name}}.{{dot .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;

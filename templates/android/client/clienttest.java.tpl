@@ -152,6 +152,9 @@ public class {{Camel .Interface.Name }}ClientTest
 		{{- else if (eq .KindType "bool")}}
         {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
 		data.putInt("{{.Name}}", {{javaVar .}});
+        {{- else if eq .KindType "enum"}}
+        {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
+		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
 		{{- else }}
         {{javaReturn "" . }} {{javaVar .}} = {{javaDefault "" . }};
 		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
@@ -174,12 +177,15 @@ public class {{Camel .Interface.Name }}ClientTest
         // Create and send message
         Message msg = Message.obtain(null, {{$InterfaceName}}MessageType.SET_{{Camel .Name}}.getValue());
         Bundle data = new Bundle();
-        {{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
+        {{- if and (.IsPrimitive) (not (eq .KindType "bool"))  }}
         {{javaReturn "" . }} newValue = {{javaTestValue "" . }};
 		data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", newValue);
 		{{- else if (eq .KindType "bool")}}
         {{javaReturn "" . }} newValue = {{javaTestValue "" . }};
 		data.putInt("{{.Name}}", newValue);
+        {{- else if eq .KindType "enum"}}
+        {{javaReturn "" . }} newValue = {{javaTestValue "" . }};
+		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable(newValue));
 		{{- else }}
         {{javaReturn "" . }} newValue = {{javaDefault "" . }};
 		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable(newValue));
@@ -195,7 +201,7 @@ public class {{Camel .Interface.Name }}ClientTest
     @Test
      public void setPropertyRequest{{.Name}}()
     {
-        {{- if and .IsPrimitive}}
+        {{- if or .IsPrimitive  (eq .KindType "enum") }}
         {{javaReturn "" . }} newValue = {{javaTestValue "" . }};
 		{{- else }}
         {{javaReturn "" . }} newValue = {{javaDefault "" . }};
@@ -235,6 +241,9 @@ public class {{Camel .Interface.Name }}ClientTest
 		{{- else if (eq .KindType "bool")}}
         {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
 		data.putInt("{{.Name}}", {{javaVar .}});
+        {{- else if eq .KindType "enum"}}
+        {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
+		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
 		{{- else }}
         {{javaReturn "" . }} {{javaVar . }} = {{javaDefault "" . }};
 		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
@@ -257,7 +266,7 @@ public class {{Camel .Interface.Name }}ClientTest
 
         // Execute method
     {{- range .Params }}
-    {{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
+    {{- if or (and (.IsPrimitive) (not (eq .KindType "bool")) ) (eq .KindType "enum") }}
         {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
 	{{- else if (eq .KindType "bool")}}
         {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
@@ -266,7 +275,7 @@ public class {{Camel .Interface.Name }}ClientTest
 	{{- end }}
 	{{- end }}
 
-        {{- if and .Return.IsPrimitive}}
+        {{- if or .Return.IsPrimitive (eq .Return.KindType "enum") }}
         {{javaReturn "" .Return }} expectedResult = {{javaTestValue "" .Return }};
 		{{- else }}
         {{javaReturn "" .Return }} expectedResult = {{javaDefault "" .Return }};
