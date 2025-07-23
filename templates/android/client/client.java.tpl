@@ -40,6 +40,48 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
 
+
+{{- define "getDataFromBundle"}}
+		        {{- if .IsPrimitive }}
+			        {{javaReturn "" .}} {{javaVar .}} = data.get{{ ( Camel  (javaElementType "" .) ) }}{{if .IsArray}}Array{{end}}("{{.Name}}"{{if not .IsArray}}, {{javaDefault "" .}}{{end}});
+		        {{- else if .IsArray }}
+                    {{javaReturn "" .}} {{javaVar .}} =  {{Camel .Type}}Parcelable.unwrapArray(({{Camel .Type}}Parcelable[])data.getParcelableArray("{{.Name}}", {{Camel .Type}}Parcelable.class));
+                {{- else }}
+			        {{javaReturn "" .}} {{javaVar .}} = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}();
+		        {{- end }}
+{{- end }}
+
+{{- define "putDataIntoBundle"}}
+		        {{- if and .IsPrimitive }}
+		        data.put{{ ( Camel  (javaElementType "" .) ) }}{{if .IsArray}}Array{{end}}("{{.Name}}", {{ javaVar .}});
+		        {{- else if .IsArray }}
+		        data.putParcelableArray("{{.Name}}", {{Camel (javaElementType "" .) }}Parcelable.wrapArray({{javaVar .}}));
+                {{- else }}
+		        data.putParcelable("{{.Name}}", new {{Camel (javaElementType "" .) }}Parcelable({{javaVar .}}));
+		        {{- end }}
+{{- end }}
+
+{{- define "getResultFromBundle"}}
+        {{- if and .Return.IsPrimitive }}
+		    {{javaReturn "" .Return }} result = bundle.get{{ ( Camel  (javaElementType "" .Return ) ) }}{{if .Return.IsArray}}Array{{end}}("result"{{if not .Return.IsArray}}, {{javaDefault "" .Return}}{{end}});
+        {{- else if .Return.IsArray }}
+            {{javaReturn "" .Return}} result =  {{Camel (javaElementType "" .Return) }}Parcelable.unwrapArray(({{Camel .Return.Type}}Parcelable[])bundle.getParcelableArray("result", {{Camel .Return.Type}}Parcelable.class));
+	    {{- else }}
+		    {{javaReturn "" .Return }} result = bundle.getParcelable("result", {{Camel .Return.Type}}Parcelable.class).get{{Camel (javaReturn "" .Return)}}();
+	    {{- end }}
+{{- end }}
+
+{{- define "putResultIntoBundle"}}
+		        {{- if and .Return.IsPrimitive }}
+		        resp_data.put{{ ( Camel  (javaElementType "" .Return) ) }}{{if .Return.IsArray}}Array{{end}}("result", result);
+		        {{- else if .Return.IsArray }}
+		        resp_data.putParcelableArray("result",{{Camel (javaElementType "" .Return) }}Parcelable.wrapArray(result));
+                {{- else }}
+		        resp_data.putParcelable("result", new {{Camel (javaElementType "" .Return) }}Parcelable(result));
+		        {{- end }}
+{{- end }}
+
+
 public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface.Name}} implements ServiceConnection
 {
 	private static final String TAG = "{{Camel .Interface.Name }}Client";
@@ -197,13 +239,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 			        {{- end }}
 			        {{- end }}
 			        {{range .Interface.Properties}}
-			        {{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
-				        {{javaReturn "" .}} {{javaVar .}} = data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1);
-			        {{- else if (eq .KindType "bool")}}
-				        {{javaReturn "" .}} {{javaVar .}} =  = data.getInt}("{{.Name}}", -1);
-			        {{- else }}
-				        {{javaReturn "" .}} {{javaVar .}} = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}();
-			        {{- end }}
+                    {{template "getDataFromBundle" . }}
 				    on{{Camel .Name}}({{javaVar .}});
 			        {{- end}}
 
@@ -213,18 +249,17 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 			    case SET_{{Camel .Name}}:
 			    {
 				    Bundle data = msg.getData();
-			    {{- .IsPrimitive }}
-				    {{javaReturn "" .}} newValue = data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1);
-			    {{- else }}
-				    data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
-				    {{javaReturn "" .}} newValue = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}();
-			    {{- end }}
 
-				    on{{Camel .Name}}(newValue);
+                    {{- if not .IsPrimitive }}
+				    data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
+			        {{- end }}
+
+                    {{template "getDataFromBundle" . }}
+
+				    on{{Camel .Name}}({{javaVar .}});
 				    break;
 			    }
 		    {{- end }}
-			    // TODO ENUMS AND ARRAYS (for array just change the func to getXArray)
 			    // TODO params may be different structs from different modules, there should be a custom class loader 
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
@@ -238,12 +273,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 					{{- end }}
 					{{- end }}
 			    {{- range .Params }}
-			    {{- if .IsPrimitive }}
-				    {{javaReturn "" .}} {{javaVar .}} = data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1);
-			    {{- else }}
-				    {{javaReturn "" .}}Parcelable {{javaVar .}}Parcelable = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class);
-				    {{javaReturn "" .}} {{javaVar .}} = {{javaVar .}}Parcelable.get{{Camel (javaReturn "" .)}}();
-			    {{- end }}
+                {{template "getDataFromBundle" . }}
 			    {{- end }}
 				    on{{Camel .Name}}({{javaVars .Params}});
 				    break;
@@ -282,7 +312,6 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 	    }
     };
 
-	// TODO handle arrays, enums, complex structs, imports, externs
 {{- range .Interface.Properties }}
     @Override
     public void set{{Camel .Name}}({{javaParam "" .}})
@@ -293,11 +322,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 			Message msg = new Message();
 			msg.what = {{$InterfaceName}}MessageType.PROP_{{Camel .Name}}.getValue();
 			Bundle data = new Bundle();
-			{{- if .IsPrimitive }}
-			data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{javaVar . }});
-			{{- else }}
-			data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar . }}));
-			{{- end }}
+            {{template "putDataIntoBundle" . }}
 			msg.setData(data);
 			mClientHandler.sendToService(msg);
         }
@@ -355,11 +380,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
         int msgId =  callIdsGetter.getAndIncrement();
         data.putInt("callId",msgId);
 	{{- range .Params }}
-		{{- if .IsPrimitive }}
-		data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{ javaVar .}});
-		{{- else }}
-		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
-		{{- end }}
+        {{template "putDataIntoBundle" . }}
 	{{- end }}
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
@@ -367,16 +388,11 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 
         {{javaAsyncReturn "" .Return}}  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
-
         {{- if .Return.IsVoid }}
             future.complete(null);
             Log.v(TAG, "resolve {{.Name }}");
         {{- else }}
-        {{- if (.Return.IsPrimitive)  }}
-		    {{javaReturn "" .Return }} result = bundle.get{{ ( Camel  (javaType "" .Return) ) }}("result", -1);
-	    {{- else }}
-		    {{javaReturn "" .Return }} result = bundle.getParcelable("result", {{Camel .Return.Type}}Parcelable.class).get{{Camel (javaReturn "" .Return)}}();
-	    {{- end }}
+            {{template "getResultFromBundle" . }}
             Log.v(TAG, "resolve {{.Name }}" + result);
             future.complete(result);
         {{- end }}

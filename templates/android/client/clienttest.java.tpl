@@ -59,6 +59,42 @@ interface I{{Camel .Interface.Name }}ClientMessageGetter
     public void getMessage(Message msg);
 }
 
+{{- define "getReceivedFromBundle"}}
+		{{- if .IsPrimitive }}
+			{{javaReturn "" .}} received{{javaVar .}} = data.get{{ ( Camel  (javaElementType "" .) ) }}{{if .IsArray}}Array{{end}}("{{.Name}}"{{if not .IsArray}}, {{javaDefault "" .}}{{end}});
+		{{- else if .IsArray }}
+            {{javaReturn "" .}} received{{javaVar .}} =  {{Camel .Type}}Parcelable.unwrapArray(({{Camel .Type}}Parcelable[])data.getParcelableArray("{{.Name}}", {{Camel .Type}}Parcelable.class));
+        {{- else }}
+			{{javaReturn "" .}} received{{javaVar .}} = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}();
+		{{- end }}
+{{- end }}
+
+{{- define "putTestDataIntoBundle"}}
+		{{- if .IsPrimitive }}
+		data.put{{ ( Camel  (javaElementType "" .) ) }}{{if .IsArray}}Array{{end}}("{{.Name}}", test{{ javaVar .}});
+		{{- else if .IsArray }}
+		data.putParcelableArray("{{.Name}}", {{Camel (javaElementType "" .) }}Parcelable.wrapArray(test{{javaVar .}}));
+        {{- else }}
+		data.putParcelable("{{.Name}}", new {{Camel (javaElementType "" .) }}Parcelable(test{{javaVar .}}));
+		{{- end }}
+{{- end }}
+
+{{- define "prepareTestValue"}}
+        {{- if .IsArray }}
+        {{javaElementType "" .}} element{{ javaVar .}} = {{javaTestValue "" . }};
+        // todo fill if is struct
+        {{javaReturn "" . }} test{{ javaVar .}} = new {{javaReturn "" . }}{element{{ javaVar .}}} ;
+		{{- else if (.IsPrimitive) }}
+		{{javaReturn "" . }} test{{ javaVar .}} = {{javaTestValue "" . }};
+        {{- else if eq .KindType "enum"}}
+        {{javaReturn "" . }} test{{ javaVar .}} = {{javaTestValue "" . }};
+		{{- else }}
+        {{javaReturn "" . }} test{{ javaVar .}} = {{javaTestValue "" . }};
+        //TODO fill fields
+		{{- end }}
+{{- end }}
+
+
 @Config(sdk = 33, manifest = Config.NONE)
 @RunWith(RobolectricTestRunner.class)
 public class {{Camel .Interface.Name }}ClientTest
@@ -146,19 +182,8 @@ public class {{Camel .Interface.Name }}ClientTest
         Message msg = Message.obtain(null, {{$InterfaceName}}MessageType.INIT.getValue());
         Bundle data = new Bundle();
     {{- range .Interface.Properties}}
-        {{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
-        {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
-		data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{javaVar .}});
-		{{- else if (eq .KindType "bool")}}
-        {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
-		data.putInt("{{.Name}}", {{javaVar .}});
-        {{- else if eq .KindType "enum"}}
-        {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
-		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
-		{{- else }}
-        {{javaReturn "" . }} {{javaVar .}} = {{javaDefault "" . }};
-		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
-		{{- end }}
+        {{- template "prepareTestValue" .}}
+        {{- template "putTestDataIntoBundle" .}}
     {{- end }}
 
     //setup mock expectations
@@ -166,7 +191,11 @@ public class {{Camel .Interface.Name }}ClientTest
         mClientMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
     {{- range .Interface.Properties}}
-        inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}Changed({{javaVar .}});
+		{{- if or (.IsPrimitive) (eq .KindType "enum") }}
+		inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}Changed(test{{javaVar .}});
+		{{- else }}
+        inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}Changed(any({{javaReturn "" . }}.class));
+		{{- end }}
     {{- end }}
     }
 
@@ -177,37 +206,25 @@ public class {{Camel .Interface.Name }}ClientTest
         // Create and send message
         Message msg = Message.obtain(null, {{$InterfaceName}}MessageType.SET_{{Camel .Name}}.getValue());
         Bundle data = new Bundle();
-        {{- if and (.IsPrimitive) (not (eq .KindType "bool"))  }}
-        {{javaReturn "" . }} newValue = {{javaTestValue "" . }};
-		data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", newValue);
-		{{- else if (eq .KindType "bool")}}
-        {{javaReturn "" . }} newValue = {{javaTestValue "" . }};
-		data.putInt("{{.Name}}", newValue);
-        {{- else if eq .KindType "enum"}}
-        {{javaReturn "" . }} newValue = {{javaTestValue "" . }};
-		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable(newValue));
-		{{- else }}
-        {{javaReturn "" . }} newValue = {{javaDefault "" . }};
-		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable(newValue));
-		{{- end }}
+        {{- template "prepareTestValue" .}}
+        {{- template "putTestDataIntoBundle" .}}
 
         msg.setData(data);
         mClientMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}Changed(newValue);
-	    
+        {{- if or (.IsPrimitive) (eq .KindType "enum") }}
+		inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}Changed(test{{javaVar .}});
+		{{- else }}
+        inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}Changed(any({{javaReturn "" . }}.class));
+		{{- end }}	    
     }
 
     @Test
      public void setPropertyRequest{{.Name}}()
     {
-        {{- if or .IsPrimitive  (eq .KindType "enum") }}
-        {{javaReturn "" . }} newValue = {{javaTestValue "" . }};
-		{{- else }}
-        {{javaReturn "" . }} newValue = {{javaDefault "" . }};
-		{{- end }}
+        {{- template "prepareTestValue" .}}
 
-        testedClient.set{{Camel .Name}}(newValue);
+        testedClient.set{{Camel .Name}}(test{{ javaVar .}});
         Robolectric.flushForegroundThreadScheduler();
 
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
@@ -215,15 +232,12 @@ public class {{Camel .Interface.Name }}ClientTest
 
         assertEquals({{$InterfaceName}}MessageType.PROP_{{Camel .Name}}.getValue(), response.what);
         Bundle data = response.getData();
-	{{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
-		{{javaReturn "" . }} receivedByService = data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1);
-	{{- else if (eq .KindType "bool")}}
-		{{javaReturn "" . }} receivedByService =  = data.getInt("{{.Name}}", -1);
-	{{- else }}
+	{{- if not (.IsPrimitive) }}
 		data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
-		{{javaReturn "" . }} receivedByService = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}();
 	{{- end }}
-        assertEquals(receivedByService, newValue);
+        {{template "getReceivedFromBundle" . }}
+        {{ if not (or (.IsPrimitive) (eq .KindType "enum")) }}// {{ end -}}
+        assertEquals(received{{javaVar .}}, test{{ javaVar .}});
     }
 {{- end}}
 
@@ -235,25 +249,18 @@ public class {{Camel .Interface.Name }}ClientTest
         Message msg = Message.obtain(null, {{$InterfaceName}}MessageType.SIG_{{Camel .Name}}.getValue());
         Bundle data = new Bundle();
     {{- range .Params }}
-        {{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
-        {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
-		data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{javaVar .}});
-		{{- else if (eq .KindType "bool")}}
-        {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
-		data.putInt("{{.Name}}", {{javaVar .}});
-        {{- else if eq .KindType "enum"}}
-        {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
-		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
-		{{- else }}
-        {{javaReturn "" . }} {{javaVar . }} = {{javaDefault "" . }};
-		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
-		{{- end }}
+        {{- template "prepareTestValue" .}}
+        {{- template "putTestDataIntoBundle" .}}
     {{- end }}
 
         msg.setData(data);
         mClientMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}({{javaVars .Params}});
+        
+        inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}(
+        {{- range $idx, $p :=.Params }}{{- if $idx}}, {{ end -}}
+        {{- if or (.IsPrimitive) (eq .KindType "enum") }}test{{javaVar $p}}{{- else }} any({{javaReturn "" . }}.class) {{- end -}}{{- end -}}
+        );
 
 }
 {{- end}}
@@ -266,30 +273,37 @@ public class {{Camel .Interface.Name }}ClientTest
 
         // Execute method
     {{- range .Params }}
-    {{- if or (and (.IsPrimitive) (not (eq .KindType "bool")) ) (eq .KindType "enum") }}
-        {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
-	{{- else if (eq .KindType "bool")}}
-        {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
-	{{- else }}
-        {{javaReturn "" . }} {{javaVar .}} = {{javaDefault "" . }};
+        {{- template "prepareTestValue" .}}
 	{{- end }}
-	{{- end }}
+    {{- if not .Return.IsVoid }}
 
-        {{- if or .Return.IsPrimitive (eq .Return.KindType "enum") }}
+        {{- if .Return.IsArray }}
+        {{javaElementType "" .Return}} elementForResult = {{javaTestValue "" .Return }};
+        // todo fill if is struct
+        {{javaReturn "" .Return }} expectedResult = new {{javaReturn "" .Return }}{elementForResult} ;
+		{{- else if (.Return.IsPrimitive) }}
+		{{javaReturn "" .Return }} expectedResult = {{javaTestValue "" .Return }};
+        {{- else if eq .Return.KindType "enum"}}
         {{javaReturn "" .Return }} expectedResult = {{javaTestValue "" .Return }};
 		{{- else }}
-        {{javaReturn "" .Return }} expectedResult = {{javaDefault "" .Return }};
+        {{javaReturn "" .Return }} expectedResult = {{javaTestValue "" .Return }};
+        //TODO fill fields
 		{{- end }}
+        {{- end }}
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
-        {{javaAsyncReturn "" .Return}} resFuture = testedClient.{{camel .Name}}Async({{javaVars .Params}});
+        {{javaAsyncReturn "" .Return}} resFuture = testedClient.{{camel .Name}}Async({{- range $idx, $p :=.Params }}{{- if $idx}}, {{ end -}}test{{javaVar $p}}{{- end }});
 
         resFuture.thenAccept(result -> {
-        {{- if and (.Return.IsPrimitive) (not (eq .Return.KindType "string")) }}
+        {{- if not .Return.IsVoid }}
+        {{- if .Return.IsArray }}
+            assertEquals(expectedResult, result);
+        {{- else if and (.Return.IsPrimitive) (not (eq .Return.KindType "string")) }}
             assertEquals(expectedResult, result.{{camel (javaType "" .Return)}}Value());
         {{- else }}
             assertEquals(expectedResult, result);
 		{{- end }}
+        {{- end }}
             receivedResp.set(true);
         });
         Robolectric.flushForegroundThreadScheduler();
@@ -297,38 +311,38 @@ public class {{Camel .Interface.Name }}ClientTest
         // Expect msg to be sent.
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
 
+
         Message method_request = messageCaptor.getValue();
         assertEquals({{$InterfaceName}}MessageType.RPC_{{Camel .Name}}Req.getValue(), method_request.what);
-
-        Bundle req_data = method_request.getData();
-    {{- range .Params }}
-	{{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
-		{{javaReturn "" . }} received{{javaVar .}} = req_data.get{{ ( Camel  (javaType "" .) ) }}("result", -1);
-	{{- else if (eq .KindType "bool")}}
-		{{javaReturn "" . }} received{{javaVar .}} =  = req_data.getInt("{{javaVar .}}", -1);
-	{{- else }}
-		req_data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
-		{{javaReturn "" . }} received{{javaVar .}} = req_data.getParcelable("result", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}();
-	{{- end }}
-        assertEquals(received{{javaVar .}}, {{javaVar .}});
+        Bundle data = method_request.getData();
+        {{- range .Params }}
+	    {{- if not (.IsPrimitive) }}
+		data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
+        {{- end }}
+        {{- end }}
+        {{- range .Params }}
+        {{template "getReceivedFromBundle" . }}
+        assertEquals(received{{javaVar .}}, test{{javaVar .}});
     	{{- end }}
-        int returnedCallId = req_data.getInt("callId", -1);
+        int returnedCallId = data.getInt("callId", -1);
 
         //Prepare response
 
         Message msg = Message.obtain(null, {{$InterfaceName}}MessageType.RPC_{{Camel .Name}}Resp.getValue());
 
-        Bundle data = new Bundle();
-		data.putInt("callId", returnedCallId);
-    {{- if not .Return.IsVoid }}
-    {{- if .Return.IsPrimitive }}
-		data.put{{ ( Camel  (javaType "" .Return) ) }}("result",expectedResult);
-	{{- else }}
-		data.putParcelable("result", new {{Camel .Return.Type}}Parcelable(expectedResult));
-	{{- end }}
-	{{- end }}
+        Bundle result_data = new Bundle();
+		result_data.putInt("callId", returnedCallId);
+        {{- if not .Return.IsVoid }}
+		{{- if .Return.IsPrimitive }}
+		result_data.put{{ ( Camel  (javaElementType "" .Return) ) }}{{if .Return.IsArray}}Array{{end}}("result", expectedResult);
+		{{- else if .Return.IsArray }}
+		result_data.putParcelableArray("result", {{Camel (javaElementType "" .Return) }}Parcelable.wrapArray(expectedResult));
+        {{- else }}
+		result_data.putParcelable("result", new {{Camel (javaElementType "" .Return) }}Parcelable(expectedResult));
+		{{- end }}
+        {{- end }}
 
-        msg.setData(data);
+        msg.setData(result_data);
         method_request.replyTo.send(msg);
         Robolectric.flushForegroundThreadScheduler();
 
