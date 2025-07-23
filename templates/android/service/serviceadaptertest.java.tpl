@@ -85,6 +85,21 @@ interface I{{Camel .Interface.Name }}MessageGetter
 }
 {{- $InterfaceName := Camel .Interface.Name}}
 
+{{- define "prepareInitValue"}}
+        {{- if .IsArray }}
+        {{javaElementType "" .}} init_element{{ javaVar .}} = {{javaTestValue "" . }};
+        // todo fill if is struct
+        {{javaReturn "" . }} init{{ javaVar .}} = new {{javaReturn "" . }}{ init_element{{ javaVar .}} } ;
+		{{- else if (.IsPrimitive) }}
+		{{javaReturn "" . }} init{{ javaVar .}} = {{javaTestValue "" . }};
+        {{- else if eq .KindType "enum"}}
+        {{javaReturn "" . }} init{{ javaVar .}} = {{javaTestValue "" . }};
+		{{- else }}
+        {{javaReturn "" . }} init{{ javaVar .}} = {{javaTestValue "" . }};
+        //TODO fill fields
+		{{- end }}
+{{- end }}
+
 @Config(sdk = 33, manifest = Config.NONE)
 @RunWith(RobolectricTestRunner.class)
 public class {{Camel .Interface.Name }}ServiceAdapterTest 
@@ -144,11 +159,8 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
     void registerFakeActivityClient(Messenger messenger, String id)
     {
         {{- range .Interface.Properties}}
-        {{- if or .IsPrimitive (eq .KindType "enum" ) }}
-        when(backendServiceMock.get{{Camel .Name}}()).thenReturn({{javaTestValue "" .}});
-        {{- else }}
-        when(backendServiceMock.get{{Camel .Name}}()).thenReturn({{javaDefault "" .}});
-		{{- end }}
+        {{- template "prepareInitValue" .}}
+        when(backendServiceMock.get{{Camel .Name}}()).thenReturn(init{{javaVar .}});
         {{- end }}
 
 
@@ -172,22 +184,18 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
 
         assertEquals({{$InterfaceName}}MessageType.INIT.getValue(), response.what);
         Bundle data = response.getData();
+        {{- range .Interface.Properties}}
+        {{ template "getReceivedFromBundle" .}}
+        {{- end }}
     {{- range .Interface.Properties}}
     {{- if not .IsPrimitive }}
 		data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
 	{{- end }}
 	{{- end }}
     {{- range .Interface.Properties}}
-        assertTrue(data.containsKey("{{.Name}}"));
-	{{- if .IsPrimitive }}
-		assertEquals(data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1), {{javaTestValue "" .}});
-	{{- else if eq .KindType "enum" }}
-        // assertEquals(data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}(), {{javaTestValue "" .}});
-    {{- else }}
-        //  TODO uncomment after adding comparision operator
-        // assertEquals(data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}(), {{javaDefault "" .}});
+        {{ if not (or (.IsPrimitive) (eq .KindType "enum")) }}// {{ end -}}
+        assertEquals(received{{javaVar .}}, init{{ javaVar .}});
 	{{- end }}
-        {{- end }}
 
     }
 
@@ -234,35 +242,22 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         Message msg = Message.obtain(null, {{$InterfaceName}}MessageType.PROP_{{Camel .Name}}.getValue());
         Bundle data = new Bundle();
 
-        {{- if .IsPrimitive }}
-        {{javaReturn "" . }} newValue = {{javaTestValue "" . }};
-		data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", newValue);
-		data.putInt("{{.Name}}", newValue);
-		{{- else if (eq .KindType "enum") }}
-        {{javaReturn "" . }} newValue = {{javaTestValue "" . }};
-		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable(newValue));
-        {{- else }}
-        {{javaReturn "" . }} newValue = {{javaDefault "" . }};
-		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable(newValue));
-		{{- end }}
+        {{- template "prepareTestValue" .}}
+        {{- template "putTestDataIntoBundle" .}}
 
         msg.setData(data);
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        inOrderBackendService.verify(backendServiceMock,times(1)).set{{Camel .Name}}(newValue);
+        inOrderBackendService.verify(backendServiceMock,times(1)).set{{Camel .Name}}({{- if or (.IsPrimitive) (eq .KindType "enum") }}test{{javaVar .}}{{- else }} any({{javaReturn "" . }}.class) {{- end -}});
 	    
     }
 
     @Test
      public void whenNotified{{.Name}}()
     {
-        {{- if or .IsPrimitive (eq .KindType "enum" ) }}
-        {{javaReturn "" . }} newValue = {{javaTestValue "" . }};
-		{{- else }}
-        {{javaReturn "" . }} newValue = {{javaDefault "" . }};
-		{{- end }}
+        {{- template "prepareTestValue" .}}
 
-        testedAdapterAsEventListener.on{{Camel .Name}}Changed(newValue);
+        testedAdapterAsEventListener.on{{Camel .Name}}Changed(test{{javaVar .}});
         Robolectric.flushForegroundThreadScheduler();
 
         inOrderClientMessagesHandler.verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
@@ -270,13 +265,11 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
 
         assertEquals({{$InterfaceName}}MessageType.SET_{{Camel .Name}}.getValue(), response.what);
         Bundle data = response.getData();
-	{{- if .IsPrimitive }}
-		{{javaReturn "" . }} receivedByClient = data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1);
-	{{- else }}
-		data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
-		{{javaReturn "" . }} receivedByClient = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}();
-	{{- end }}
-        assertEquals(receivedByClient, newValue);
+
+        {{template "getReceivedFromBundle" . }}
+        {{ if not (or (.IsPrimitive) (eq .KindType "enum")) }}// {{ end -}}
+        assertEquals(received{{javaVar .}}, test{{javaVar .}});
+
     }
 {{- end}}
 
@@ -285,14 +278,10 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
     public void whenNotified{{.Name}}()
     {
         {{- range .Params }}
-        {{- if or .IsPrimitive (eq .KindType "enum" ) }}
-        {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
-		{{- else }}
-        {{javaReturn "" . }} {{javaVar .}} = {{javaDefault "" . }};
-		{{- end }}
+        {{- template "prepareTestValue" .}}
         {{- end }}
 
-        testedAdapterAsEventListener.on{{Camel .Name}}({{javaVars .Params}});
+        testedAdapterAsEventListener.on{{Camel .Name}}({{- range $idx, $p :=.Params }}{{- if $idx}}, {{ end -}}test{{javaVar $p}}{{- end }});
         Robolectric.flushForegroundThreadScheduler();
 
         inOrderClientMessagesHandler.verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
@@ -306,12 +295,9 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
 	{{- end }}
 	{{- end }}
     {{- range .Params }}
-	{{- if .IsPrimitive }}
-		{{javaReturn "" . }} receivedByClient{{javaVar .}} = data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1);
-	{{- else }}
-		{{javaReturn "" . }} receivedByClient{{javaVar .}} = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}();
-	{{- end }}
-        assertEquals(receivedByClient{{javaVar .}}, {{javaVar .}});
+        {{template "getReceivedFromBundle" . }}
+        {{ if not (or (.IsPrimitive) (eq .KindType "enum")) }}// {{ end -}}
+        assertEquals(received{{javaVar .}}, test{{ javaVar .}});
     {{- end}}
 }
 {{- end}}
@@ -324,32 +310,39 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         // Create and send message
         Message msg = Message.obtain(null, {{$InterfaceName}}MessageType.RPC_{{Camel .Name}}Req.getValue());
         Bundle data = new Bundle();
-    {{- range .Params }}
-        {{- if .IsPrimitive }}
-        {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
-		data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{javaVar .}});
-		{{- else if eq .KindType "enum" }}
-        {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
-		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
-        {{- else }}
-        {{javaReturn "" . }} {{javaVar .}} = {{javaDefault "" . }};
-		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
-		{{- end }}
-	{{- end }}
 
+        int callId = 99;
+        data.putInt("callId", callId);
+        {{- range .Params }}
+        {{- template "prepareTestValue" .}}
+        {{- template "putTestDataIntoBundle" .}}
+        {{- end}}
         {{- if not .Return.IsVoid }}
-        {{- if and .Return.IsPrimitive}}
+        {{- if .Return.IsArray }}
+        {{javaElementType "" .Return}} elementForResult = {{javaTestValue "" .Return }};
+        // todo fill if is struct
+        {{javaReturn "" .Return }} returnedValue = new {{javaReturn "" .Return }}{elementForResult} ;
+		{{- else if (.Return.IsPrimitive) }}
+		{{javaReturn "" .Return }} returnedValue = {{javaTestValue "" .Return }};
+        {{- else if eq .Return.KindType "enum"}}
         {{javaReturn "" .Return }} returnedValue = {{javaTestValue "" .Return }};
 		{{- else }}
-        {{javaReturn "" .Return }} returnedValue = {{javaDefault "" .Return }};
+        {{javaReturn "" .Return }} returnedValue = {{javaTestValue "" .Return }};
+        //TODO fill fields
 		{{- end }}
-        when(backendServiceMock.{{camel .Name}}({{javaVars .Params}})).thenReturn(returnedValue);
+
+
+        when(backendServiceMock.{{camel .Name}}({{- range $idx, $p :=.Params }}{{- if $idx}}, {{ end -}}
+        {{- if or (.IsPrimitive) (eq .KindType "enum") }}test{{javaVar $p}}{{- else }} any({{javaReturn "" . }}.class) {{- end -}}{{- end -}}
+        )).thenReturn(returnedValue);
         {{- end}}
 
         msg.setData(data);
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        inOrderBackendService.verify(backendServiceMock,times(1)).{{camel .Name}}({{javaVars .Params}});
+        inOrderBackendService.verify(backendServiceMock,times(1)).{{camel .Name}}({{- range $idx, $p :=.Params }}{{- if $idx}}, {{ end -}}
+        {{- if or (.IsPrimitive) (eq .KindType "enum") }}test{{javaVar $p}}{{- else }} any({{javaReturn "" . }}.class) {{- end -}}{{- end -}}
+        );
 
         //Now verify it was sent back to caller
         Robolectric.flushForegroundThreadScheduler();
@@ -358,16 +351,21 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
 
         assertEquals({{$InterfaceName}}MessageType.RPC_{{Camel .Name}}Resp.getValue(), response.what);
         Bundle resp_data = response.getData();
+
     {{- if not .Return.IsVoid }}
 	{{- if .Return.IsPrimitive }}
-		{{javaReturn "" .Return }} receivedByClient = resp_data.get{{ ( Camel  (javaType "" .Return) ) }}("result", -1);
-	{{- else }}
+		{{javaReturn "" .Return }} receivedByClient = resp_data.get{{ ( Camel  (javaElementType "" .Return) ) }}{{if .Return.IsArray}}Array{{end}}("result"{{if not .Return.IsArray}}, {{javaDefault "" .Return}}{{end}});
+	{{- else if .Return.IsArray }}
+        resp_data.setClassLoader({{Camel .Return.Type}}Parcelable.class.getClassLoader());
+        {{javaReturn "" .Return }} receivedByClient =  {{Camel .Return.Type}}Parcelable.unwrapArray(({{Camel .Return.Type}}Parcelable[])resp_data.getParcelableArray("result", {{Camel .Return.Type}}Parcelable.class));
+    {{- else }}
 		resp_data.setClassLoader({{Camel .Return.Type}}Parcelable.class.getClassLoader());
 		{{javaReturn "" .Return }} receivedByClient = resp_data.getParcelable("result", {{Camel .Return.Type}}Parcelable.class).get{{Camel (javaReturn "" .Return)}}();
 	{{- end }}
-
         assertEquals(receivedByClient, returnedValue);
     {{- end}}
+    resp_data.getInt("callId", 0);
+    assertEquals(receivedByClientId, callId);
     }
 
 {{- end}}
