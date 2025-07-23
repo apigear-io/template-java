@@ -17,4 +17,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
     @JsonProperty("{{snake .Name}}")
     public {{javaType "" .}} {{camel .Name}};
   {{- end }}
+
+    public {{Camel .Struct.Name}}({{Camel .Struct.Name}} other) {
+{{- range .Struct.Fields }}
+    this.{{camel .Name}} = other.{{camel .Name}};
+  {{- end }}
+    //TODO deepcopy of structs and arrays this.x = new sth(other.x);
+}
+
   }
