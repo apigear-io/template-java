@@ -187,19 +187,15 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 				case UNREGISTER_CLIENT:
 					removeClientActivity(msg.getData().getString("connectionID"));
 					break;
-			//TODO ENUMS AND ARRAYS (for array just change the func to getXArray)
 			{{- range .Interface.Properties }}
 					case PROP_{{Camel .Name}}:
 					{
 						Bundle data = msg.getData();
-					{{- if .IsPrimitive }}
-						{{javaReturn "" .}} newValue = data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1);
-					{{- else }}
+						{{- if not (.IsPrimitive)}}
 						data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
-						{{javaReturn "" .}} newValue = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}();
-					{{- end }}
-
-						mBackendService.set{{Camel .Name}}(newValue);
+						{{- end}}
+						{{template "getDataFromBundle" . }}
+						mBackendService.set{{Camel .Name}}({{javaVar .}});
 						break;
 					}
 			{{- end }}
@@ -218,33 +214,17 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 					int callId = data.getInt("callId");
 
 					{{- range .Params }}
-					{{- if .IsPrimitive }}
-					{{javaReturn "" .}} {{javaVar .}} = data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1);
-					{{- else }}
-					{{javaReturn "" .}}Parcelable {{javaVar .}}Parcelable = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class);
-					{{javaReturn "" .}} {{javaVar .}} = {{javaVar .}}Parcelable.get{{Camel (javaReturn "" .)}}();
-					{{- end }}
+					{{template "getDataFromBundle" . }}
 					{{- end }}
 
-					{{- if .Return.IsPrimitive }}
-					{{ if not .Return.IsVoid }}{{javaReturn "" .Return}} result = {{- end }}mBackendService.{{camel .Name}}({{javaVars .Params}});
-					{{- else }}
-					{{ if not .Return.IsVoid }}{{javaReturn "" .Return}} result = {{- end }} mBackendService.{{camel .Name}}({{javaVars .Params}});
-					{{ if not .Return.IsVoid }}{{javaReturn "" .Return}}
-					{{javaReturn "" .Return}}Parcelable result = new {{javaReturn "" .Return}}Parcelable(dataResult);
-					{{- end }}
-					{{- end }}
+					{{ if not .Return.IsVoid }}{{javaReturn "" .Return}} result = {{ end}} mBackendService.{{camel .Name}}({{javaVars .Params}});
 
 					Message respMsg = new Message();
 					respMsg.what = {{$InterfaceName}}MessageType.RPC_{{Camel .Name}}Resp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
 					{{- if not .Return.IsVoid }}
-					{{- if (.Return.IsPrimitive) }}
-					resp_data.put{{ ( Camel  (javaType "" .Return) ) }}("result", result);
-					{{- else }}
-					resp_data.putParcelable("result", result);
-					{{- end }}
+					{{ template "putResultIntoBundle" . }}
 					{{- end }}
 					respMsg.setData(resp_data);
 
@@ -291,16 +271,9 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 			Message msg = new Message();
 			msg.what = {{$InterfaceName}}MessageType.INIT.getValue();
 			Bundle data = new Bundle();
-			//TODO ArrayProperties, enums
 			{{range .Interface.Properties}}
 			{{javaReturn "" .}} {{javaVar .}} = mBackendService.get{{Camel .Name}}();
-			{{- if and (.IsPrimitive) (not (eq .KindType "bool")) }}
-			data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{javaVar .}});
-			{{- else if (eq .KindType "bool")}}
-			data.putInt("{{.Name}}", {{javaVar .}});
-			{{- else }}
-			data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
-			{{- end }}
+			{{template "putDataIntoBundle" .}}
 			{{- end}}
 			msg.setData(data);
 			sendMessageToClients(msg);
@@ -308,17 +281,13 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 
 		{{- range .Interface.Properties }}
 		@Override
-		public void on{{Camel .Name}}Changed({{javaType "" .}} newValue){
-			Log.i(TAG, "New value for {{Camel .Name}} from backend" + newValue);
+		public void on{{Camel .Name}}Changed({{javaType "" .}} {{javaVar .}}){
+			Log.i(TAG, "New value for {{Camel .Name}} from backend" + {{javaVar .}});
 
 			Message msg = new Message();
 			msg.what = {{$InterfaceName}}MessageType.SET_{{Camel .Name}}.getValue();
 			Bundle data = new Bundle();
-			{{- if .IsPrimitive }}
-			data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", newValue);
-			{{- else }}
-			data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable(newValue));
-			{{- end }}
+			{{template "putDataIntoBundle" . }}
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
@@ -332,11 +301,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 			msg.what = {{$InterfaceName}}MessageType.SIG_{{Camel .Name}}.getValue();
 			Bundle data = new Bundle();
 		{{- range .Params }}
-			{{- if .IsPrimitive }}
-			data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{ javaVar .}});
-			{{- else }}
-			data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
-			{{- end }}
+			{{template "putDataIntoBundle" . }}
 		{{- end }}
 			msg.setData(data);
 			sendMessageToClients(msg);
