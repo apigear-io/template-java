@@ -18,7 +18,7 @@ import android.os.Parcelable;
 
     public {{Camel .Struct.Name}} get{{Camel .Struct.Name}}()
     {
-        return data;
+        return new {{Camel .Struct.Name}}(data);
     }
 
     protected {{Camel .Struct.Name}}Parcelable(Parcel in) {
@@ -58,8 +58,24 @@ import android.os.Parcelable;
     {{- end }}
         // TODO arrays in general
         // TODO add enums
-        // TODO write other structs same as enums - they all should be parcelable 
 
+    }
+        public static {{Camel .Struct.Name}}Parcelable[] wrapArray({{Camel .Struct.Name}}[] structs) {
+        if (structs == null) return null;
+        {{Camel .Struct.Name}}Parcelable[] out = new {{Camel .Struct.Name}}Parcelable[structs.length];
+        for (int i = 0; i < structs.length; i++) {
+            out[i] = new {{Camel .Struct.Name}}Parcelable(structs[i]);
+        }
+        return out;
+    }
+
+    public static {{Camel .Struct.Name}}[] unwrapArray({{Camel .Struct.Name}}Parcelable[] parcelables) {
+        if (parcelables == null) return null;
+        {{Camel .Struct.Name}}[] out = new {{Camel .Struct.Name}}[parcelables.length];
+        for (int i = 0; i < parcelables.length; i++) {
+            out[i] = parcelables[i].get{{Camel .Struct.Name}}();
+        }
+        return out;
     }
 
     @Override

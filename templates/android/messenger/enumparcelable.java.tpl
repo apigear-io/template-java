@@ -44,6 +44,24 @@ import android.os.Parcelable;
         dest.writeInt(data.getValue());
     }
 
+    public static {{Camel .Enum.Name }}Parcelable[] wrapArray({{Camel .Enum.Name }}[] enums) {
+        if (enums == null) return null;
+        {{Camel .Enum.Name }}Parcelable[] result = new {{Camel .Enum.Name }}Parcelable[enums.length];
+        for (int i = 0; i < enums.length; i++) {
+            result[i] = new {{Camel .Enum.Name }}Parcelable(enums[i]);
+        }
+        return result;
+    }
+
+    public static {{Camel .Enum.Name }}[] unwrapArray({{Camel .Enum.Name }}Parcelable[] parcelables) {
+        if (parcelables == null) return null;
+        {{Camel .Enum.Name }}[] out = new {{Camel .Enum.Name }}[parcelables.length];
+        for (int i = 0; i < parcelables.length; i++) {
+            out[i] = parcelables[i].get{{Camel .Enum.Name}}();
+        }
+        return out;
+    }
+
     @Override
     public int describeContents() {
         return 0;
