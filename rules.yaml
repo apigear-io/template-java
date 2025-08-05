@@ -2,6 +2,21 @@ languages: ["java"]
 features:
   - name: api
     scopes:
+      - match: module
+        prefix: "{{dot .Module.Name}}/"
+        documents:
+          - source: "libs.versions.toml"
+            target: "gradle/libs.versions.toml"
+            raw: true
+          - source: "settings.gradle.tpl"
+            target: "settings.gradle"
+          - source: "gradle.properties"
+            target: "gradle.properties"
+            raw: true
+          - source: "api/build.gradle.tpl"
+            target: "{{dot .Module.Name}}_api/build.gradle"
+          - source: "api/additions.gradle.tpl"
+            target: "{{dot .Module.Name}}_api/additions.gradle"
       - match: interface
         prefix: "{{dot .Module.Name}}/{{dot .Module.Name}}_api/src/main/java/{{dot .Module.Name}}/{{dot .Module.Name}}_api/"
         documents:
