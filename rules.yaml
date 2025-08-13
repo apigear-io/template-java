@@ -38,6 +38,15 @@ features:
             target: "{{Camel .Enum.Name }}.java"
   - name: android
     scopes:
+      - match: module
+        prefix: "{{dot .Module.Name}}/{{camel .Module.Name}}_android_service/"
+        documents:
+          - source: "android/service/build.gradle.tpl"
+            target: "build.gradle"
+          - source: "android/service/additions.gradle.tpl"
+            target: "additions.gradle"
+          - source: "android/service/AndroidManifest.xml.tpl"
+            target: "src/main/AndroidManifest.xml"
       - match: interface
         prefix: "{{dot .Module.Name}}/{{camel .Module.Name}}_android_service/src/main/java/{{dot .Module.Name}}/{{camel .Module.Name}}_android_service/"
         documents:
