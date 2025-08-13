@@ -36,3 +36,12 @@ features:
         documents:
           - source: "api/enum.java.tpl"
             target: "{{Camel .Enum.Name }}.java"
+  - name: android
+    scopes:
+      - match: interface
+        prefix: "{{dot .Module.Name}}/{{camel .Module.Name}}_android_service/src/main/java/{{dot .Module.Name}}/{{camel .Module.Name}}_android_service/"
+        documents:
+          - source: "android/service/iservicefactory.java.tpl"
+            target: "I{{Camel .Interface.Name}}ServiceFactory.java"
+          - source: "android/service/serviceadapter.java.tpl"
+            target: "{{Camel .Interface.Name}}ServiceAdapter.java"
