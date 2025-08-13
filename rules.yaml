@@ -99,3 +99,17 @@ features:
         documents:
           - source: "android/messenger/structparcelable.java.tpl"
             target: "{{Camel .Struct.Name }}Parcelable.java"
+  - name: jnibridge
+    requires:
+      - api
+      - android
+    scopes:
+      - match: interface
+        prefix: "{{dot .Module.Name}}/{{dot .Module.Name}}jniservice/"
+        documents:
+          - source: "jnibridge/service/jnibridgeservicefactory.java.tpl"
+            target: "{{Camel .Interface.Name}}JniServiceFactory.java"
+          - source: "jnibridge/service/jnibridgeservice.java.tpl"
+            target: "{{Camel .Interface.Name}}JniService.java"
+          - source: "jnibridge/service/jnibridgeservicestarter.java.tpl"
+            target: "{{Camel .Interface.Name }}JniServiceStarter.java"
