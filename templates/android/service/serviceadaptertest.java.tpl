@@ -104,7 +104,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
     private String mTestConnectionID1 = "MyTestClient";
    
     private I{{Camel .Interface.Name}}ServiceFactory serviceFactory = mock(I{{Camel .Interface.Name}}ServiceFactory.class);
-    private I{{Camel .Interface.Name }}MessageGetter msgMock = mock(I{{Camel .Interface.Name }}MessageGetter.class);
+    private I{{Camel .Interface.Name }}MessageGetter clientMessagesStorage = mock(I{{Camel .Interface.Name }}MessageGetter.class);
 
     ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
 
@@ -156,7 +156,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
     @Before
     public void setUp() throws RemoteException
     {
-        clientReplyHandler = createClientHandlerMock(msgMock);
+        clientReplyHandler = createClientHandlerMock(clientMessagesStorage);
         clientReplyMessenger = new Messenger(clientReplyHandler);
 	
         mMockContext = RuntimeEnvironment.getApplication();
@@ -189,12 +189,14 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
 
     {{- $InterfaceName := Camel .Interface.Name}}
 {{- range .Interface.Properties }}
+//TODO do not add when a property is readonly
     @Test
     public void onReceive{{.Name}}PropertyChangeTest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, {{$InterfaceName}}MessageType.PROP_{{Camel .Name}}.getValue());
         Bundle data = new Bundle();
-        {{- if.IsPrimitive }}
+
+        {{- if .IsPrimitive }}
         {{javaReturn "" . }} newValue = {{javaTestValue "" . }};
 		data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", newValue);
 		{{- else }}
@@ -208,5 +210,118 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         verify(backendServiceMock,times(1)).set{{Camel .Name}}(newValue);
 	    
     }
+
+    @Test
+     public void whenNotified{{.Name}}()
+    {
+        {{- if and .IsPrimitive}}
+        {{javaReturn "" . }} newValue = {{javaTestValue "" . }};
+		{{- else }}
+        {{javaReturn "" . }} newValue = {{javaDefault "" . }};
+		{{- end }}
+
+        testedAdapterAsEventListener.on{{Camel .Name}}Changed(newValue);
+        Robolectric.flushForegroundThreadScheduler();
+
+        verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
+        Message response = messageCaptor.getValue();
+
+        assertEquals({{$InterfaceName}}MessageType.SET_{{Camel .Name}}.getValue(), response.what);
+        Bundle data = response.getData();
+	{{- if .IsPrimitive }}
+		{{javaReturn "" . }} receivedByClient = data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1);
+	{{- else }}
+		data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
+		{{javaReturn "" . }} receivedByClient = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}();
+	{{- end }}
+        assertEquals(receivedByClient, newValue);
+    }
 {{- end}}
+
+{{- range .Interface.Signals }}
+    @Test
+    public void whenNotified{{.Name}}()
+    {
+        {{- range .Params }}
+        {{- if and .IsPrimitive}}
+        {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
+		{{- else }}
+        {{javaReturn "" . }} {{javaVar .}} = {{javaDefault "" . }};
+		{{- end }}
+        {{- end }}
+
+        testedAdapterAsEventListener.on{{Camel .Name}}({{javaVars .Params}});
+        Robolectric.flushForegroundThreadScheduler();
+
+        verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
+        Message response = messageCaptor.getValue();
+
+        assertEquals({{$InterfaceName}}MessageType.SIG_{{Camel .Name}}.getValue(), response.what);
+        Bundle data = response.getData();
+    {{- range .Params }}
+	{{- if .IsPrimitive }}
+		{{javaReturn "" . }} receivedByClient{{javaVar .}} = data.get{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", -1);
+	{{- else }}
+		data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
+		{{javaReturn "" . }} receivedByClient{{javaVar .}} = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}();
+	{{- end }}
+        assertEquals(receivedByClient{{javaVar .}}, {{javaVar .}});
+    {{- end}}
+}
+{{- end}}
+
+
+{{- range .Interface.Operations }}
+
+
+    public void on{{.Name}}Request() throws RemoteException {
+        // Create and send message
+        Message msg = Message.obtain(null, {{$InterfaceName}}MessageType.RPC_{{Camel .Name}}Req.getValue());
+        Bundle data = new Bundle();
+    {{- range .Params }}
+        {{- if .IsPrimitive }}
+        {{javaReturn "" . }} {{javaVar .}} = {{javaTestValue "" . }};
+		data.put{{ ( Camel  (javaType "" .) ) }}("{{.Name}}", {{javaVar .}});
+		{{- else }}
+        {{javaReturn "" . }} {{javaVar .}} = {{javaDefault "" . }};
+		data.putParcelable("{{.Name}}", new {{Camel .Type}}Parcelable({{javaVar .}}));
+		{{- end }}
+	{{- end }}
+
+        {{- if not .Return.IsVoid }}
+        {{- if and .Return.IsPrimitive}}
+        {{javaReturn "" .Return }} returnedValue = {{javaTestValue "" .Return }};
+		{{- else }}
+        {{javaReturn "" .Return }} returnedValue = {{javaDefault "" .Return }};
+		{{- end }}
+        when(backendServiceMock.{{camel .Name}}({{javaVars .Params}})).thenReturn(returnedValue);
+        {{- end}}
+
+        msg.setData(data);
+        mServiceMessenger.send(msg);
+        Robolectric.flushForegroundThreadScheduler();
+        verify(backendServiceMock,times(1)).{{camel .Name}}({{javaVars .Params}});
+
+        //Now verify it was sent back to caller
+        Robolectric.flushForegroundThreadScheduler();
+
+        verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
+        Message response = messageCaptor.getValue();
+
+        assertEquals({{$InterfaceName}}MessageType.RPC_{{Camel .Name}}Resp.getValue(), response.what);
+        Bundle resp_data = response.getData();
+    {{- if not .Return.IsVoid }}
+	{{- if .Return.IsPrimitive }}
+		{{javaReturn "" .Return }} receivedByClient = resp_data.get{{ ( Camel  (javaType "" .Return) ) }}("result", -1);
+	{{- else }}
+		resp_data.setClassLoader({{Camel .Return.Type}}Parcelable.class.getClassLoader());
+		{{javaReturn "" .Return }} receivedByClient = resp_data.getParcelable("result", {{Camel .Return.Type}}Parcelable.class).get{{Camel (javaReturn "" .Return)}}();
+	{{- end }}
+
+        assertEquals(receivedByClient, returnedValue);
+    {{- end}}
+    }
+
+{{- end}}
+
 }
