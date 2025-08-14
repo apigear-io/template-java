@@ -135,6 +135,11 @@ features:
             target: "{{Camel .Interface.Name}}JniService.java"
           - source: "jnibridge/service/jnibridgeservicestarter.java.tpl"
             target: "{{Camel .Interface.Name }}JniServiceStarter.java"
+      - match: interface
+        prefix: "{{dot .Module.Name}}/{{dot .Module.Name}}jniclient/"
+        documents:
+          - source: "jnibridge/client/jnibridgeclient.java.tpl"
+            target: "{{Camel .Interface.Name}}JniClient.java"
   - name: testclientapp
     requires:
       - api
