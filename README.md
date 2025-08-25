@@ -1,6 +1,7 @@
 # ApiGear Java Template
 
 This is a template for creating a Java project using ApiGear.
+For more details on *ApiGear* please visit [apigear.io](https://apigear.io) or the [*ApiGear* documentation](https://docs.apigear/).
 
 ## Usage
 
@@ -28,17 +29,19 @@ See the [ApiGear documentation](https://apigear.io/docs/intro) for more informat
 
 ## Supported Features
 
-This is a very basic template. It supports only the core features of ApiGear.
+This is not fully implemented template. It supports only some of the ApiGear features.
 
-## Features
-
-- API:
-    - Simple API using interfaces, enums, POJOs, etc.
+The template offers the following feature switches which can be enabled during code generation:
+* `api`: create interface files and an abstract implementation
+* `stubs`: create a stub implementation, that handles all the properties, but is missing the business logic.
+* `android`: create the adaptation layer for android messenger communication. Produces the client and the service sides for the interfaces.
+* `jnibridge`: create the java jni implementation, that is missing the c++ side and build files. See example of using it in the jni feature in unreal template.
+* `testclientapp`: create example messenger client application. This is not ready to use example - the logic for generated buttons should be filled (which values to send), the rest is already there. The app serves only first defined interface.
+* `testserviceapp`:   create example messenger service application. This is not ready to use example - the logic for generated buttons should be filled (which values to send), the rest is already there. The app serves only first defined interface.
 
 ## Planned Features
 
 - github workflow
-- scaffold: maven/gradle support
 - demo app
 - imports: support for importing other APIs 
 - extends: support for extending other APIs
