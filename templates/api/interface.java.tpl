@@ -1,11 +1,11 @@
-package {{dot .Module.Name}}.{{dot .Module.Name}}_api;
+package {{camel .Module.Name}}.{{camel .Module.Name}}_api;
 
-import {{dot .Module.Name}}.{{dot .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
 {{- range .Module.Structs }}
-import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Name}};
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
 {{- end }}
 {{- range .Module.Enums }}
-import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Name}};
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
 {{- end }}
 
 import java.util.concurrent.CompletableFuture;

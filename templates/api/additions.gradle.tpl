@@ -1,5 +1,5 @@
 android {
-    namespace '{{camel .Module.Name}}.{{dot .Module.Name}}_api'
+    namespace '{{camel .Module.Name}}.{{camel .Module.Name}}_api'
 }
 
 dependencies {

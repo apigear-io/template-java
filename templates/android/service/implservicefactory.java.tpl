@@ -3,8 +3,8 @@
 package {{camel .Module.Name}}.{{camel .Module.Name}}_android_service;
 
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.I{{Camel .Interface.Name }}ServiceFactory;
-import {{dot .Module.Name}}.{{dot .Module.Name}}_api.I{{Camel .Interface.Name }};
-import {{dot .Module.Name}}.{{dot .Module.Name}}_api.Abstract{{Camel .Interface.Name }};
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }};
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.Abstract{{Camel .Interface.Name }};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_impl.{{Camel .Interface.Name}}Service;
 import android.util.Log;
 import android.os.HandlerThread;

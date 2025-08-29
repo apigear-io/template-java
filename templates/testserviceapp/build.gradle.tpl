@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace '{{dot .Module.Name}}.{{dot .Module.Name}}serviceexample'
+    namespace '{{camel .Module.Name}}.{{camel .Module.Name}}serviceexample'
     compileSdk 35
 
     defaultConfig {
-        applicationId "{{dot .Module.Name}}.{{dot .Module.Name}}serviceexample"
+        applicationId "{{camel .Module.Name}}.{{camel .Module.Name}}serviceexample"
         minSdk 33
         targetSdk 35
         versionCode 1
