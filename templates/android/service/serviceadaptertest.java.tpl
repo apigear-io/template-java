@@ -194,7 +194,10 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
 	{{- end }}
     {{- range .Interface.Properties}}
         {{ if not (or (.IsPrimitive) (eq .KindType "enum")) }}// {{ end -}}
-        assertEquals(received{{javaVar .}}, init{{ javaVar .}});
+        assertEquals(received{{javaVar .}}, init{{ javaVar .}}
+        {{- if and (not .IsArray) (or (or (eq .KindType "float") (eq .KindType "float32") ) (eq .KindType "float64")) -}},
+        1e-6f{{end -}}
+        );
 	{{- end }}
 
     }
@@ -234,6 +237,15 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         registerFakeActivityClient(clientReplyMessenger, mTestConnectionID1);
     }
 
+
+    {{- if not ( or (len (.Interface.Signals)) ( or ( len (.Interface.Operations)) ( len (.Interface.Properties)))) }}
+    @Test
+    public void onlySetupAndTeardown()
+    {
+
+    }
+    {{- end }}
+
 {{- range .Interface.Properties }}
 //TODO do not add when a property is readonly
     @Test
@@ -267,9 +279,11 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         Bundle data = response.getData();
 
         {{template "getReceivedFromBundle" . }}
-        {{ if not (or (.IsPrimitive) (eq .KindType "enum")) }}// {{ end -}}
-        assertEquals(received{{javaVar .}}, test{{javaVar .}});
 
+        assertEquals(received{{javaVar .}}, test{{javaVar .}}
+        {{- if and (not .IsArray) (or (or (eq .KindType "float") (eq .KindType "float32") ) (eq .KindType "float64")) -}},
+        1e-6f{{end -}}
+        );
     }
 {{- end}}
 
@@ -296,8 +310,10 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
 	{{- end }}
     {{- range .Params }}
         {{template "getReceivedFromBundle" . }}
-        {{ if not (or (.IsPrimitive) (eq .KindType "enum")) }}// {{ end -}}
-        assertEquals(received{{javaVar .}}, test{{ javaVar .}});
+        assertEquals(received{{javaVar .}}, test{{ javaVar .}}
+        {{- if and (not .IsArray) (or (or (eq .KindType "float") (eq .KindType "float32") ) (eq .KindType "float64")) -}},
+        1e-6f{{end -}}
+        );
     {{- end}}
 }
 {{- end}}
@@ -362,9 +378,13 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
 		resp_data.setClassLoader({{Camel .Return.Type}}Parcelable.class.getClassLoader());
 		{{javaReturn "" .Return }} receivedByClient = resp_data.getParcelable("result", {{Camel .Return.Type}}Parcelable.class).get{{Camel (javaReturn "" .Return)}}();
 	{{- end }}
-        assertEquals(receivedByClient, returnedValue);
-    {{- end}}
-    assertEquals(callId, resp_data.getInt("callId", 0));
+
+        assertEquals(receivedByClient, returnedValue
+        {{- if and (not .Return.IsArray) (or (or (eq .Return.KindType "float") (eq .Return.KindType "float32") ) (eq .Return.KindType "float64")) -}},
+        1e-6f{{end -}}
+        );
+    {{- end }}
+        assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
 {{- end}}
