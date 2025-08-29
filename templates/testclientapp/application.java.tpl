@@ -1,4 +1,4 @@
-package {{dot .Module.Name}}.{{dot .Module.Name}}_client_example;
+package {{camel .Module.Name}}.{{camel .Module.Name}}_client_example;
 
 import android.app.Activity;
 import android.graphics.Color;
@@ -17,15 +17,15 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_android_client.{{Camel $Int
 
 //import message type and parcelabe types
 {{- range .Module.Structs }}
-import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Name}};
-import {{dot .Module.Name}}.{{dot .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
 {{- end }}
 {{- range .Module.Enums }}
-import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Name}};
-import {{dot .Module.Name}}.{{dot .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
 {{- end }}
 
-import {{dot .Module.Name}}.{{dot .Module.Name}}_api.I{{Camel $Interface.Name }}EventListener;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel $Interface.Name }}EventListener;
 import java.util.concurrent.CompletableFuture;
 
 
@@ -39,7 +39,7 @@ public class {{Camel .Module.Name}}TestClientApp extends Activity implements I{{
 
     //TODO ALIGN TO YOUR APP 
     private static String mModuleNameUnreal = "com.example.TestAndroid";
-    private static String mModuleNameStub = "{{dot .Module.Name}}.{{dot .Module.Name}}serviceexample.{{Camel .Module.Name}}TestServiceApp";
+    private static String mModuleNameStub = "{{camel .Module.Name}}.{{camel .Module.Name}}serviceexample.{{Camel .Module.Name}}TestServiceApp";
     private TextView outputTextViewProp;
     private TextView outputTextViewSig;
     private TextView outputTextVieMethodRes;

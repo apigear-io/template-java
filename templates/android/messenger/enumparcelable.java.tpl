@@ -1,6 +1,6 @@
-package {{dot .Module.Name}}.{{dot .Module.Name}}_android_messenger;
+package {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger;
 
-import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Enum.Name}};
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Enum.Name}};
 import android.os.Parcel;
 import android.os.Parcelable;
 
