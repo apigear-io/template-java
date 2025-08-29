@@ -19,20 +19,20 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel .In
 //import message type and parcelabe types
 
 {{- range .Module.Structs }}
-import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Name}};
-import {{dot .Module.Name}}.{{dot .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
 {{- end }}
 {{- range .Module.Enums }}
-import {{dot .Module.Name}}.{{dot .Module.Name}}_api.{{Camel .Name}};
-import {{dot .Module.Name}}.{{dot .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
 {{- end }}
 
 
-import {{dot .Module.Name}}.{{dot .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.I{{Camel .Interface.Name}}ServiceFactory;
-import {{dot .Module.Name}}.{{dot .Module.Name}}_api.I{{Camel .Interface.Name }};
-import {{dot .Module.Name}}.{{dot .Module.Name}}_api.Abstract{{Camel .Interface.Name}};
-import {{dot .Module.Name}}.{{dot .Module.Name}}_android_messenger.{{Camel .Interface.Name}}MessageType;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }};
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.Abstract{{Camel .Interface.Name}};
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Interface.Name}}MessageType;
 
 
 import static org.junit.Assert.assertEquals;

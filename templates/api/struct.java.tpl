@@ -1,4 +1,4 @@
-package {{dot .Module.Name}}.{{dot .Module.Name}}_api;
+package {{camel .Module.Name}}.{{camel .Module.Name}}_api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
