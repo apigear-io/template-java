@@ -364,8 +364,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
 	{{- end }}
         assertEquals(receivedByClient, returnedValue);
     {{- end}}
-    resp_data.getInt("callId", 0);
-    assertEquals(receivedByClientId, callId);
+    assertEquals(callId, resp_data.getInt("callId", 0));
     }
 
 {{- end}}
