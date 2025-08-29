@@ -4,16 +4,25 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Struct.Name}};
 import android.os.Parcel;
 import android.os.Parcelable;
 
-
-
-//TODO imports - may need some struct from this or imported module
+{{- $typesToImport := getEmptyStringList}}
+{{- $module := camel .Module.Name}}
+{{- range .Struct.Fields }}
+{{- if and (and (not .IsArray) (not .Schema.Import))  (not (or (.IsPrimitive) (eq .KindType "enum")) ) }}
+{{- $type :=  Camel (javaType "" .) }}
+{{- $typesToImport = (appendList $typesToImport $type) }}
+{{- end }}
+{{- end }}
+{{- $typesToImport = unique $typesToImport }}
+{{- range $typesToImport}}
+import {{$module}}.{{$module}}_api.{{.}};
+{{- end}}
 
   public  class {{Camel .Struct.Name}}Parcelable implements Parcelable {
 
     public {{Camel .Struct.Name}} data;
 
     public {{Camel .Struct.Name}}Parcelable({{Camel .Struct.Name}} data) {
-        this.data = data;
+        this.data = new {{Camel .Struct.Name}}(data);
     }
 
     public {{Camel .Struct.Name}} get{{Camel .Struct.Name}}()
@@ -22,18 +31,31 @@ import android.os.Parcelable;
     }
 
     protected {{Camel .Struct.Name}}Parcelable(Parcel in) {
-
+    this.data = new {{Camel .Struct.Name}}();
 {{- range .Struct.Fields }}
-{{- if .IsPrimitive }}
-     {{javaType "" .}} l_{{camel .Name}} = in.read{{ ( Camel  (javaType "" .) ) }}();
+{{- if .IsArray}}
+{{- if (eq .KindType "enum") }}
+        {{javaElementType "" . }}Parcelable[] l_parcelable{{camel .Name}} = in.createTypedArray({{javaElementType "" . }}Parcelable.CREATOR);
+        data.{{camel .Name}} = {{javaElementType "" . }}Parcelable.unwrapArray(l_parcelable{{camel .Name}});
+{{- else if .IsPrimitive }}
+        data.{{camel .Name}} = in.create{{ ( Camel  (javaElementType "" .) ) }}Array();
+{{- else }}
+        {{javaElementType "" . }}Parcelable[] l_parcelable{{camel .Name}} = in.createTypedArray({{javaElementType "" . }}Parcelable.CREATOR);
+        data.{{camel .Name}} = {{javaElementType "" . }}Parcelable.unwrapArray(l_parcelable{{camel .Name}});
+{{- end }}
+{{- else }}
+{{- if (eq .KindType "enum") }}
+        {{javaType "" .}}Parcelable l_parcelable{{camel .Name}} = in.readParcelable({{javaType "" .}}Parcelable.class.getClassLoader(), {{javaType "" .}}Parcelable.class);
+        data.{{camel .Name}} = l_parcelable{{camel .Name}} != null ? l_parcelable{{camel .Name}}.data : null;
+{{- else if .IsPrimitive }}
+        data.{{camel .Name}} = in.read{{ ( Camel  (javaType "" .) ) }}();
+{{- else }}
+        {{javaType "" .}}Parcelable l_parcelable{{camel .Name}} = in.readParcelable({{javaType "" .}}Parcelable.class.getClassLoader(), {{javaType "" .}}Parcelable.class);
+        data.{{camel .Name}} = l_parcelable{{camel .Name}} != null ? l_parcelable{{camel .Name}}.data : null;
 {{- end }}
 {{- end }}
-        // TODO arrays in general
-        // TODO add enums(Arrays) = MyEnumWrapper singleEnumWrapper = in.readParcelable(MyEnumWrapper.class.getClassLoader()); MyEnum singleEnum = singleEnumWrapper != null ? singleEnumWrapper.value : null;
-        // TODO read other structs same as enums - they all should be parcelable 
 
-        this.data = new {{Camel .Struct.Name}}(
-            {{- range $idx, $m :=.Struct.Fields }}{{- if $idx}}, {{ end -}}l_{{camel .Name}}{{- end }});
+{{- end }}
     }
 
     public static final Creator<{{Camel .Struct.Name}}Parcelable> CREATOR = new Creator<{{Camel .Struct.Name}}Parcelable>() {
@@ -50,14 +72,27 @@ import android.os.Parcelable;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
     {{- range .Struct.Fields }}
-    {{- if .IsPrimitive }}
+{{- if .IsArray}}
+{{- if (eq .KindType "enum") }}
+        dest.writeTypedArray({{javaElementType "" . }}Parcelable.wrapArray(data.{{camel .Name}}), flags);
+{{- else if .IsPrimitive }}
+        dest.write{{ ( Camel  (javaElementType "" .) ) }}Array(data.{{camel .Name}});
+{{- else }}
+        dest.writeTypedArray({{javaElementType "" . }}Parcelable.wrapArray(data.{{camel .Name}}), flags);
+{{- end }}
+{{- else }}
+{{- if (eq .KindType "enum") }}
+        dest.writeParcelable(new {{javaType "" .}}Parcelable(data.{{camel .Name}}), flags);
+{{- else if .IsPrimitive }}
         dest.write{{ ( Camel  (javaType "" .) ) }}(data.{{camel .Name}});
-    {{- end }}
-    {{- end }}
-        // TODO arrays in general
-        // TODO add enums
+{{- else }}
+        dest.writeParcelable(new {{javaType "" .}}Parcelable(data.{{camel .Name}}), flags);
+{{- end }}
+{{- end }}
+
+{{- end}}
+
 
     }
         public static {{Camel .Struct.Name}}Parcelable[] wrapArray({{Camel .Struct.Name}}[] structs) {
