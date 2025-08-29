@@ -1,6 +1,8 @@
 package {{camel .Module.Name}}.{{camel .Module.Name}}_api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Objects;
+import java.util.Arrays;
 
 public  class {{Camel .Struct.Name}} {
 
@@ -54,4 +56,44 @@ public  class {{Camel .Struct.Name}} {
 {{- end }}
     }
 
-  }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof {{Camel .Struct.Name}})) return false;
+        {{Camel .Struct.Name}} other = ({{Camel .Struct.Name}}) o;
+
+        return {{- if not (len (.Struct.Fields)) }} true{{else -}}
+{{- range $idx, $s :=.Struct.Fields }}
+{{- if .IsArray}}
+        {{ if $idx}}&&{{ end }} Arrays.equals(this.{{camel .Name}}, other.{{camel .Name}})
+{{- else if or .IsPrimitive ((eq .KindType "enum"))}}
+        {{ if $idx}}&&{{ end }} this.{{camel .Name}} == other.{{camel .Name}}
+{{- else }}
+        {{ if $idx}}&&{{ end }} Objects.equals(this.{{camel .Name}}, other.{{camel .Name}})
+{{- end }}
+{{- end }}
+{{- end }};
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 7;
+{{- range .Struct.Fields }}
+{{- if .IsArray}}
+        result = 31 * result + Arrays.hashCode({{camel .Name}});
+{{- else if or (eq .KindType "int") (eq .KindType "int32") }}
+        result = 31 * result + Integer.hashCode({{camel .Name}});
+{{- else if (eq .KindType "string")}}
+        result = 31 * result + ({{camel .Name}} != null ? {{camel .Name}}.hashCode() : 0);
+
+{{- else if .IsPrimitive}}
+        result = 31 * result + {{Camel (javaType "" .)}}.hashCode({{camel .Name}});
+{{- else }}
+        result = 31 * result + Objects.hashCode({{camel .Name}});
+{{- end }}
+{{- end }}
+        return result;
+    }
+
+
+}

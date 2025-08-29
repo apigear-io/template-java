@@ -236,8 +236,10 @@ public class {{Camel .Interface.Name }}ClientTest
 		data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
 	{{- end }}
         {{template "getReceivedFromBundle" . }}
-        {{ if not (or (.IsPrimitive) (eq .KindType "enum")) }}// {{ end -}}
-        assertEquals(received{{javaVar .}}, test{{ javaVar .}});
+        assertEquals(received{{javaVar .}}, test{{ javaVar .}}
+        {{- if and (not .IsArray) (or (or (eq .KindType "float") (eq .KindType "float32") ) (eq .KindType "float64")) -}}
+        , 1e-6f{{end -}}
+        );
     }
 {{- end}}
 
@@ -276,7 +278,6 @@ public class {{Camel .Interface.Name }}ClientTest
         {{- template "prepareTestValue" .}}
 	{{- end }}
     {{- if not .Return.IsVoid }}
-
         {{- if .Return.IsArray }}
         {{javaElementType "" .Return}} elementForResult = {{javaTestValue "" .Return }};
         // todo fill if is struct
@@ -290,7 +291,6 @@ public class {{Camel .Interface.Name }}ClientTest
         //TODO fill fields
 		{{- end }}
         {{- end }}
-
         AtomicBoolean receivedResp = new AtomicBoolean(false);
         {{javaAsyncReturn "" .Return}} resFuture = testedClient.{{camel .Name}}Async({{- range $idx, $p :=.Params }}{{- if $idx}}, {{ end -}}test{{javaVar $p}}{{- end }});
 
@@ -299,7 +299,10 @@ public class {{Camel .Interface.Name }}ClientTest
         {{- if .Return.IsArray }}
             assertEquals(expectedResult, result);
         {{- else if and (.Return.IsPrimitive) (not (eq .Return.KindType "string")) }}
-            assertEquals(expectedResult, result.{{camel (javaType "" .Return)}}Value());
+            assertEquals(expectedResult, result.{{camel (javaType "" .Return)}}Value()
+            {{- if or (or (eq .Return.KindType "float") (eq .Return.KindType "float32") ) (eq .Return.KindType "float64") -}}
+            , 1e-6f{{end -}}
+            );
         {{- else }}
             assertEquals(expectedResult, result);
 		{{- end }}
@@ -322,7 +325,10 @@ public class {{Camel .Interface.Name }}ClientTest
         {{- end }}
         {{- range .Params }}
         {{template "getReceivedFromBundle" . }}
-        assertEquals(received{{javaVar .}}, test{{javaVar .}});
+        assertEquals(received{{javaVar .}}, test{{javaVar .}}
+        {{- if and (not .IsArray) (or (or (eq .KindType "float") (eq .KindType "float32") ) (eq .KindType "float64")) -}}
+        , 1e-6f{{end -}}
+        );
     	{{- end }}
         int returnedCallId = data.getInt("callId", -1);
 
@@ -332,6 +338,7 @@ public class {{Camel .Interface.Name }}ClientTest
 
         Bundle result_data = new Bundle();
 		result_data.putInt("callId", returnedCallId);
+
         {{- if not .Return.IsVoid }}
 		{{- if .Return.IsPrimitive }}
 		result_data.put{{ ( Camel  (javaElementType "" .Return) ) }}{{if .Return.IsArray}}Array{{end}}("result", expectedResult);
