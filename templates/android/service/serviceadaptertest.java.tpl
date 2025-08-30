@@ -22,6 +22,7 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel .In
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
 {{- end }}
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Module.Name}}TestHelper;
 {{- range .Module.Enums }}
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
@@ -333,18 +334,20 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         {{- template "prepareTestValue" .}}
         {{- template "putTestDataIntoBundle" .}}
         {{- end}}
+
         {{- if not .Return.IsVoid }}
         {{- if .Return.IsArray }}
-        {{javaElementType "" .Return}} elementForResult = {{javaTestValue "" .Return }};
-        // todo fill if is struct
-        {{javaReturn "" .Return }} returnedValue = new {{javaReturn "" .Return }}{elementForResult} ;
-		{{- else if (.Return.IsPrimitive) }}
-		{{javaReturn "" .Return }} returnedValue = {{javaTestValue "" .Return }};
-        {{- else if eq .Return.KindType "enum"}}
+            {{- if or  (.Return.IsPrimitive) (eq .Return.KindType "enum")}}
+        {{javaType "" .Return }} returnedValue = new {{javaElementType "" .Return }}[1];
+        returnedValue[0] = {{javaTestValue "" .Return }};
+            {{- else }}
+        {{javaElementType "" .Return }}[] returnedValue = new {{javaElementType "" .Return }}[1];
+        returnedValue[0] = {{Camel .Return.Schema.Module.Name}}TestHelper.makeTest{{Camel (javaElementType "" .Return )}}();
+            {{- end}}
+		{{- else if or  (.Return.IsPrimitive) (eq .Return.KindType "enum") }}
         {{javaReturn "" .Return }} returnedValue = {{javaTestValue "" .Return }};
 		{{- else }}
-        {{javaReturn "" .Return }} returnedValue = {{javaTestValue "" .Return }};
-        //TODO fill fields
+        {{javaReturn "" .Return }} returnedValue = {{Camel .Return.Schema.Module.Name}}TestHelper.makeTest{{Camel (javaType "" .Return )}}();
 		{{- end }}
 
 

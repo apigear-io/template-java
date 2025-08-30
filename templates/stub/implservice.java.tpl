@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
+import java.util.Arrays;
 
 
 public class {{Camel .Interface.Name}}Service extends Abstract{{Camel .Interface.Name}} {
@@ -43,8 +44,14 @@ public class {{Camel .Interface.Name}}Service extends Abstract{{Camel .Interface
     @Override
     public void set{{Camel .Name}}({{javaParam "" .}})
     {
-        Log.i(TAG, "request set{{Camel .Name}} callede ");
+        Log.i(TAG, "request set{{Camel .Name}} called ");
+        {{- if .IsArray }}
+        if (! Arrays.equals(m_{{javaVar  .}}, {{javaVar  .}}))
+        {{- else if or .IsPrimitive  (eq .KindType "enum") }}
         if (m_{{javaVar  .}} != {{javaVar  .}})
+        {{- else }}
+        if (! m_{{javaVar  .}}.equals({{javaVar  .}}))
+        {{- end}}
         {
             m_{{javaVar  .}} = {{javaVar  .}};
             on{{Camel .Name}}Changed(m_{{javaVar  .}});
