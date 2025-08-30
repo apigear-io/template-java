@@ -17,6 +17,8 @@ features:
             target: "{{camel .Module.Name}}_api/build.gradle"
           - source: "api/additions.gradle.tpl"
             target: "{{camel .Module.Name}}_api/additions.gradle"
+          - source: "api/testhelper.java.tpl"
+            target: "{{camel .Module.Name}}_api/src/main/java/{{camel .Module.Name}}/{{camel .Module.Name}}_api/{{Camel .Module.Name}}TestHelper.java"
       - match: interface
         prefix: "{{camel .Module.Name}}/{{camel .Module.Name}}_api/src/main/java/{{camel .Module.Name}}/{{camel .Module.Name}}_api/"
         documents:
