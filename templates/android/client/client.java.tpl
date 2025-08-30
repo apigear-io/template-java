@@ -39,6 +39,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Arrays;
 
 
 {{- define "getDataFromBundle"}}
@@ -317,7 +318,13 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
     public void set{{Camel .Name}}({{javaParam "" .}})
     {
         Log.i(TAG, "request set{{Camel .Name}} called "+ {{javaVar . }});
+        {{- if .IsArray }}
+        if (! Arrays.equals(m_{{javaVar  .}}, {{javaVar  .}}))
+        {{- else if or .IsPrimitive  (eq .KindType "enum") }}
         if (m_{{javaVar  .}} != {{javaVar  .}})
+        {{- else }}
+        if (! m_{{javaVar  .}}.equals({{javaVar  .}}))
+        {{- end }}
         {
 			Message msg = new Message();
 			msg.what = {{$InterfaceName}}MessageType.PROP_{{Camel .Name}}.getValue();
@@ -332,7 +339,13 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 	public void on{{Camel .Name}}({{javaParam "" .}})
     {
         Log.i(TAG, "value received from service for {{Camel .Name}} ");
+        {{- if .IsArray }}
+        if (! Arrays.equals(m_{{javaVar  .}}, {{javaVar  .}}))
+        {{- else if or .IsPrimitive  (eq .KindType "enum") }}
         if (m_{{javaVar  .}} != {{javaVar  .}})
+        {{- else }}
+        if (! m_{{javaVar  .}}.equals({{javaVar  .}}))
+        {{- end }}
         {
             m_{{javaVar  .}} = {{javaVar  .}};
             fire{{Camel .Name}}Changed({{javaVar .}});

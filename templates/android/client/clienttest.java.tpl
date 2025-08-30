@@ -1,5 +1,4 @@
 //TODO later// Copyright Epic Games, Inc. All Rights Reserved.
-
 package {{camel .Module.Name}}.{{camel .Module.Name}}_android_client;
 
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_client.{{Camel .Interface.Name }}Client;
@@ -9,6 +8,7 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_android_client.{{Camel .Int
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
 {{- end }}
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Module.Name}}TestHelper;
 {{- range .Module.Enums }}
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
@@ -81,16 +81,17 @@ interface I{{Camel .Interface.Name }}ClientMessageGetter
 
 {{- define "prepareTestValue"}}
         {{- if .IsArray }}
-        {{javaElementType "" .}} element{{ javaVar .}} = {{javaTestValue "" . }};
-        // todo fill if is struct
-        {{javaReturn "" . }} test{{ javaVar .}} = new {{javaReturn "" . }}{element{{ javaVar .}}} ;
-		{{- else if (.IsPrimitive) }}
+            {{- if or  (.IsPrimitive) (eq .KindType "enum")}}
+        {{javaType "" .}} test{{ javaVar .}} = new {{javaElementType "" .}}[1];
+        test{{ javaVar .}}[0] = {{javaTestValue "" . }};
+            {{- else }}
+        {{javaElementType "" .}}[] test{{ javaVar .}} = new {{javaElementType "" .}}[1];
+        test{{ javaVar .}}[0] = {{Camel .Schema.Module.Name}}TestHelper.makeTest{{Camel (javaElementType "" . )}}();
+            {{- end}}
+		{{- else if or  (.IsPrimitive) (eq .KindType "enum") }}
 		{{javaReturn "" . }} test{{ javaVar .}} = {{javaTestValue "" . }};
-        {{- else if eq .KindType "enum"}}
-        {{javaReturn "" . }} test{{ javaVar .}} = {{javaTestValue "" . }};
 		{{- else }}
-        {{javaReturn "" . }} test{{ javaVar .}} = {{javaTestValue "" . }};
-        //TODO fill fields
+        {{javaReturn "" . }} test{{ javaVar .}} = {{Camel .Schema.Module.Name}}TestHelper.makeTest{{Camel (javaType "" . )}}();
 		{{- end }}
 {{- end }}
 
@@ -277,20 +278,23 @@ public class {{Camel .Interface.Name }}ClientTest
     {{- range .Params }}
         {{- template "prepareTestValue" .}}
 	{{- end }}
+
     {{- if not .Return.IsVoid }}
         {{- if .Return.IsArray }}
-        {{javaElementType "" .Return}} elementForResult = {{javaTestValue "" .Return }};
-        // todo fill if is struct
-        {{javaReturn "" .Return }} expectedResult = new {{javaReturn "" .Return }}{elementForResult} ;
-		{{- else if (.Return.IsPrimitive) }}
-		{{javaReturn "" .Return }} expectedResult = {{javaTestValue "" .Return }};
-        {{- else if eq .Return.KindType "enum"}}
+            {{- if or  (.Return.IsPrimitive) (eq .Return.KindType "enum")}}
+        {{javaType "" .Return }} expectedResult = new {{javaElementType "" .Return }}[1];
+        expectedResult[0] = {{javaTestValue "" .Return }};
+            {{- else }}
+        {{javaElementType "" .Return }}[] expectedResult = new {{javaElementType "" .Return }}[1];
+        expectedResult[0] = {{Camel .Return.Schema.Module.Name}}TestHelper.makeTest{{Camel (javaElementType "" .Return )}}();
+            {{- end}}
+		{{- else if or  ( .Return.IsPrimitive) (eq .Return.KindType "enum") }}
         {{javaReturn "" .Return }} expectedResult = {{javaTestValue "" .Return }};
 		{{- else }}
-        {{javaReturn "" .Return }} expectedResult = {{javaTestValue "" .Return }};
-        //TODO fill fields
+        {{javaReturn "" .Return }} expectedResult = {{Camel .Return.Schema.Module.Name}}TestHelper.makeTest{{Camel (javaType "" .Return )}}();
 		{{- end }}
-        {{- end }}
+    {{- end }}
+
         AtomicBoolean receivedResp = new AtomicBoolean(false);
         {{javaAsyncReturn "" .Return}} resFuture = testedClient.{{camel .Name}}Async({{- range $idx, $p :=.Params }}{{- if $idx}}, {{ end -}}test{{javaVar $p}}{{- end }});
 
