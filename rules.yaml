@@ -295,3 +295,35 @@ features:
           - source: "testappres/res/mipmap-xxxhdpi/ic_launcher_round.webp"
             target: "res/mipmap-xxxhdpi/ic_launcher_round.webp"
             raw: true
+
+  - name: example
+    requires:
+      - api
+      - stubs
+    scopes:
+      - match: system
+        documents:
+          - source: "example/rootbuild.gradle.tpl"
+            target: "build.gradle"
+          - source: "example/settings.gradle.tpl"
+            target: "settings.gradle"
+          - source: "example/gradle.properties"
+            target: "gradle.properties"
+            raw: true
+          - source: "libs.versions.toml"
+            target: "gradle/libs.versions.toml"
+            raw: true
+      - match: system
+        prefix: "{{camel .System.Name }}_example/"
+        documents:
+          - source: "example/build.gradle.tpl"
+            target: "build.gradle"
+      - match: system
+        prefix: "{{camel .System.Name }}_example/src/main/"
+        documents:
+          - source: "example/AndroidManifest.xml.tpl"
+            target: "AndroidManifest.xml"
+          - source: "example/mainactivity.java.tpl"
+            target: "java/{{camel .System.Name }}_example/{{Camel .System.Name }}MainActivity.java"
+          - source: "testappres/res/values/stringswholebuild.xml.tpl"
+            target: "res/values/strings.xml"
