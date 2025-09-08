@@ -2,6 +2,9 @@ plugins {
     id 'java-library'
 }
 
+group = "{{camel .Module.Name}}"
+version = "{{.Module.Version}}"
+
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
