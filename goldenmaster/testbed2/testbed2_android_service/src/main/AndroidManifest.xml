@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="testbed2.testbed2_android_service">
+
+    <permission android:name="testbed2.testbed2_android_service.PERMISSION_BIND"
+        android:protectionLevel="normal" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:allowBackup="true"><service
+			android:name="testbed2.testbed2_android_service.ManyParamInterfaceServiceAdapter"
+			android:enabled="true"
+			android:exported="true">
+		</service><service
+			android:name="testbed2.testbed2_android_service.NestedStruct1InterfaceServiceAdapter"
+			android:enabled="true"
+			android:exported="true">
+		</service><service
+			android:name="testbed2.testbed2_android_service.NestedStruct2InterfaceServiceAdapter"
+			android:enabled="true"
+			android:exported="true">
+		</service><service
+			android:name="testbed2.testbed2_android_service.NestedStruct3InterfaceServiceAdapter"
+			android:enabled="true"
+			android:exported="true">
+		</service>
+    </application>
+</manifest>

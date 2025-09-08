@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="tbSame2.tbSame2_android_service">
+
+    <permission android:name="tbSame2.tbSame2_android_service.PERMISSION_BIND"
+        android:protectionLevel="normal" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:allowBackup="true"><service
+			android:name="tbSame2.tbSame2_android_service.SameStruct1InterfaceServiceAdapter"
+			android:enabled="true"
+			android:exported="true">
+		</service><service
+			android:name="tbSame2.tbSame2_android_service.SameStruct2InterfaceServiceAdapter"
+			android:enabled="true"
+			android:exported="true">
+		</service><service
+			android:name="tbSame2.tbSame2_android_service.SameEnum1InterfaceServiceAdapter"
+			android:enabled="true"
+			android:exported="true">
+		</service><service
+			android:name="tbSame2.tbSame2_android_service.SameEnum2InterfaceServiceAdapter"
+			android:enabled="true"
+			android:exported="true">
+		</service>
+    </application>
+</manifest>

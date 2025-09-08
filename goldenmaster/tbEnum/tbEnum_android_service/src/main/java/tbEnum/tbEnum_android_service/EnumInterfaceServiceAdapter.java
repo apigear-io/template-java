@@ -1,0 +1,492 @@
+//TODO later// Copyright Epic Games, Inc. All Rights Reserved.
+
+package tbEnum.tbEnum_android_service;
+
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Binder;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
+import android.util.Log;
+import tbEnum.tbEnum_api.Enum0;
+import tbEnum.tbEnum_android_messenger.Enum0Parcelable;
+import tbEnum.tbEnum_api.Enum1;
+import tbEnum.tbEnum_android_messenger.Enum1Parcelable;
+import tbEnum.tbEnum_api.Enum2;
+import tbEnum.tbEnum_android_messenger.Enum2Parcelable;
+import tbEnum.tbEnum_api.Enum3;
+import tbEnum.tbEnum_android_messenger.Enum3Parcelable;
+
+import tbEnum.tbEnum_api.IEnumInterfaceEventListener;
+import tbEnum.tbEnum_android_service.IEnumInterfaceServiceFactory;
+import tbEnum.tbEnum_api.IEnumInterface;
+import tbEnum.tbEnum_api.AbstractEnumInterface;
+import tbEnum.tbEnum_android_messenger.EnumInterfaceMessageType;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+public class EnumInterfaceServiceAdapter extends Service
+{
+	private static final String TAG = "EnumInterfaceServiceAdapter";
+	/**
+	 * Target we publish for clients to send messages to IncomingHandler.
+	 */
+	private Messenger mMessenger;
+	private static IncomingHandler mHandler = null;
+	private static IEnumInterface mBackendService;
+	private static IEnumInterfaceServiceFactory mServiceFactory;
+
+	//private final List<Message> mMessagesQueue = new ArrayList<>();
+
+	public EnumInterfaceServiceAdapter()
+	{
+	}
+
+	public static IEnumInterface setService(IEnumInterfaceServiceFactory factory)
+	{
+		Log.i(TAG, "Setting factory: " + factory);
+		if (mServiceFactory  != factory)
+		{
+			mServiceFactory = factory;
+		}
+		mBackendService = mServiceFactory.getServiceInstance();
+		if (mHandler != null)
+		{
+			mBackendService.addEventListener(mHandler);
+		}
+		return mBackendService;
+	}
+
+
+	@Override
+	public void onCreate()
+	{
+		super.onCreate();
+		Log.i(TAG, "LIFECYCLE: onCreate(EnumInterfaceService) called. context = " + this);
+
+		mHandler = new IncomingHandler(this);
+		mMessenger = new Messenger(mHandler);
+		if (mBackendService != null)
+		{
+			mBackendService.addEventListener(mHandler);
+		}
+	}
+
+	// execution of service will start on calling this method
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId)
+	{
+		Log.i(TAG, "LIFECYCLE: EnumInterfaceService::onStartCommand called. context = " + this +
+				", startID=" + startId);
+
+		return START_STICKY;
+	}
+
+	// execution of the service will stop on calling this method
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		
+		Log.i(TAG, "LIFECYCLE: onDestroy(EnumInterfaceService) - proc = " + ", mMessenger = " + mMessenger
+		);
+
+		if (mBackendService != null)
+		{
+			Log.i(TAG, "LIFECYCLE: onDestroy(EnumInterfaceService) - proc = " + ", remove engine event callback!");
+
+			mBackendService.removeEventListener(mHandler);
+			mBackendService = null;
+		}
+	}
+
+	@Override
+	public IBinder onBind(Intent intent)
+	{
+		Log.i(TAG, "LIFECYCLE: onBind(intent) - proc=" +  ", intent=" + intent);
+
+		//Log.i(TAG, "binding attachId=" + attachId);
+		return mMessenger.getBinder();
+	}
+
+
+	@Override
+	public boolean onUnbind(Intent intent)
+	{
+		Log.i(TAG, "LIFECYCLE: onUnbind(intent) - proc=" + ", mMessenger=" + mMessenger
+				+ ", intent=" + intent);
+
+		return super.onUnbind(intent);
+	}
+
+	private static String Name(Context context)
+	{
+		return context.getPackageName() + ",context=" + context;
+	}
+	//TODO Listener for handling messanger
+
+	/**
+	 * Handler of incoming messages from clients.
+	 */
+	class IncomingHandler extends Handler implements IEnumInterfaceEventListener
+	{
+		private final Service mApplicationContext;
+		private final ConcurrentHashMap<String, Messenger> mClients = new ConcurrentHashMap<>();
+
+		IncomingHandler(Service context)
+		{
+			super(Looper.getMainLooper());
+			mApplicationContext = context;
+		}
+
+		private void sendMessageToClients(Message msg)
+		{
+			for (Map.Entry<String, Messenger> client : mClients.entrySet())
+			{
+				Messenger reply = client.getValue();
+				if (reply != null)
+				{
+					try
+					{
+						reply.send(msg);
+					} catch (RemoteException e)
+					{
+						Log.e(TAG, "Can't send reply " + e);
+					}
+				}
+			}
+		}
+
+		@Override
+		public void handleMessage(Message msg)
+			{
+			Log.i(TAG, "Handle msg " + msg);
+			if (mBackendService == null || !mBackendService._isReady())
+			{
+				if (EnumInterfaceMessageType.fromInteger(msg.what) != EnumInterfaceMessageType.REGISTER_CLIENT
+					&& EnumInterfaceMessageType.fromInteger(msg.what) != EnumInterfaceMessageType.UNREGISTER_CLIENT)
+				{
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: EnumInterfaceMessageType" + EnumInterfaceMessageType.fromInteger(msg.what) );
+					return;
+				}
+			}
+			switch (EnumInterfaceMessageType.fromInteger(msg.what))
+			{
+				case REGISTER_CLIENT:
+					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
+					sendInit();
+					break;
+				case UNREGISTER_CLIENT:
+					removeClientActivity(msg.getData().getString("connectionID"));
+					break;
+					case PROP_Prop0:
+					{
+						Bundle data = msg.getData();
+						data.setClassLoader(Enum0Parcelable.class.getClassLoader());
+						
+			        Enum0 prop0 = data.getParcelable("prop0", Enum0Parcelable.class).getEnum0();
+						mBackendService.setProp0(prop0);
+						break;
+					}
+					case PROP_Prop1:
+					{
+						Bundle data = msg.getData();
+						data.setClassLoader(Enum1Parcelable.class.getClassLoader());
+						
+			        Enum1 prop1 = data.getParcelable("prop1", Enum1Parcelable.class).getEnum1();
+						mBackendService.setProp1(prop1);
+						break;
+					}
+					case PROP_Prop2:
+					{
+						Bundle data = msg.getData();
+						data.setClassLoader(Enum2Parcelable.class.getClassLoader());
+						
+			        Enum2 prop2 = data.getParcelable("prop2", Enum2Parcelable.class).getEnum2();
+						mBackendService.setProp2(prop2);
+						break;
+					}
+					case PROP_Prop3:
+					{
+						Bundle data = msg.getData();
+						data.setClassLoader(Enum3Parcelable.class.getClassLoader());
+						
+			        Enum3 prop3 = data.getParcelable("prop3", Enum3Parcelable.class).getEnum3();
+						mBackendService.setProp3(prop3);
+						break;
+					}
+			// TODO params may be different structs from different modules, there should be a custom class loader 
+			// with a list of class loaders required for this message
+			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
+				case RPC_Func0Req: {
+
+					Bundle data = msg.getData();
+					data.setClassLoader(Enum0Parcelable.class.getClassLoader());
+					int callId = data.getInt("callId");
+					
+			        Enum0 param0 = data.getParcelable("param0", Enum0Parcelable.class).getEnum0();
+
+					Enum0 result =  mBackendService.func0(param0);
+
+					Message respMsg = new Message();
+					respMsg.what = EnumInterfaceMessageType.RPC_Func0Resp.getValue();
+					Bundle resp_data = new Bundle();
+					resp_data.putInt("callId", callId);
+					
+		        resp_data.putParcelable("result", new Enum0Parcelable(result));
+					respMsg.setData(resp_data);
+
+					try {
+						msg.replyTo.send(respMsg);
+					} catch (RemoteException e) {
+						throw new RuntimeException(e);
+					}
+					break;
+
+				}
+			// TODO params may be different structs from different modules, there should be a custom class loader 
+			// with a list of class loaders required for this message
+			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
+				case RPC_Func1Req: {
+
+					Bundle data = msg.getData();
+					data.setClassLoader(Enum1Parcelable.class.getClassLoader());
+					int callId = data.getInt("callId");
+					
+			        Enum1 param1 = data.getParcelable("param1", Enum1Parcelable.class).getEnum1();
+
+					Enum1 result =  mBackendService.func1(param1);
+
+					Message respMsg = new Message();
+					respMsg.what = EnumInterfaceMessageType.RPC_Func1Resp.getValue();
+					Bundle resp_data = new Bundle();
+					resp_data.putInt("callId", callId);
+					
+		        resp_data.putParcelable("result", new Enum1Parcelable(result));
+					respMsg.setData(resp_data);
+
+					try {
+						msg.replyTo.send(respMsg);
+					} catch (RemoteException e) {
+						throw new RuntimeException(e);
+					}
+					break;
+
+				}
+			// TODO params may be different structs from different modules, there should be a custom class loader 
+			// with a list of class loaders required for this message
+			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
+				case RPC_Func2Req: {
+
+					Bundle data = msg.getData();
+					data.setClassLoader(Enum2Parcelable.class.getClassLoader());
+					int callId = data.getInt("callId");
+					
+			        Enum2 param2 = data.getParcelable("param2", Enum2Parcelable.class).getEnum2();
+
+					Enum2 result =  mBackendService.func2(param2);
+
+					Message respMsg = new Message();
+					respMsg.what = EnumInterfaceMessageType.RPC_Func2Resp.getValue();
+					Bundle resp_data = new Bundle();
+					resp_data.putInt("callId", callId);
+					
+		        resp_data.putParcelable("result", new Enum2Parcelable(result));
+					respMsg.setData(resp_data);
+
+					try {
+						msg.replyTo.send(respMsg);
+					} catch (RemoteException e) {
+						throw new RuntimeException(e);
+					}
+					break;
+
+				}
+			// TODO params may be different structs from different modules, there should be a custom class loader 
+			// with a list of class loaders required for this message
+			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
+				case RPC_Func3Req: {
+
+					Bundle data = msg.getData();
+					data.setClassLoader(Enum3Parcelable.class.getClassLoader());
+					int callId = data.getInt("callId");
+					
+			        Enum3 param3 = data.getParcelable("param3", Enum3Parcelable.class).getEnum3();
+
+					Enum3 result =  mBackendService.func3(param3);
+
+					Message respMsg = new Message();
+					respMsg.what = EnumInterfaceMessageType.RPC_Func3Resp.getValue();
+					Bundle resp_data = new Bundle();
+					resp_data.putInt("callId", callId);
+					
+		        resp_data.putParcelable("result", new Enum3Parcelable(result));
+					respMsg.setData(resp_data);
+
+					try {
+						msg.replyTo.send(respMsg);
+					} catch (RemoteException e) {
+						throw new RuntimeException(e);
+					}
+					break;
+
+				}
+				default:
+					Log.e(TAG, "Receive Unsupported message: " + msg.what);
+					super.handleMessage(msg);
+					break;
+				}
+		}
+
+		@Override
+		protected void finalize() throws Throwable
+		{
+			super.finalize();
+			Log.i(TAG, "LIFECYCLE: IncomingHandler(finalize)");
+		}
+
+		private void addClientActivity(Messenger serviceReply, String connectionID)
+		{
+			if (serviceReply != null)
+			{
+				mClients.put(connectionID, serviceReply);
+				Log.i(TAG, "Register event listener with connectionID = " + connectionID);
+			}
+		}
+
+		private void removeClientActivity(String connectionID)
+		{
+			mClients.remove(connectionID);
+			Log.i(TAG, "UnRegister event listener with connectionID = " + connectionID);
+		}
+
+		private void sendInit()
+		{
+			Message msg = new Message();
+			msg.what = EnumInterfaceMessageType.INIT.getValue();
+			Bundle data = new Bundle();
+			
+			Enum0 prop0 = mBackendService.getProp0();
+			
+		        data.putParcelable("prop0", new Enum0Parcelable(prop0));
+			Enum1 prop1 = mBackendService.getProp1();
+			
+		        data.putParcelable("prop1", new Enum1Parcelable(prop1));
+			Enum2 prop2 = mBackendService.getProp2();
+			
+		        data.putParcelable("prop2", new Enum2Parcelable(prop2));
+			Enum3 prop3 = mBackendService.getProp3();
+			
+		        data.putParcelable("prop3", new Enum3Parcelable(prop3));
+			msg.setData(data);
+			sendMessageToClients(msg);
+		}
+		@Override
+		public void onProp0Changed(Enum0 prop0){
+			Log.i(TAG, "New value for Prop0 from backend" + prop0);
+
+			Message msg = new Message();
+			msg.what = EnumInterfaceMessageType.SET_Prop0.getValue();
+			Bundle data = new Bundle();
+			
+		        data.putParcelable("prop0", new Enum0Parcelable(prop0));
+			msg.setData(data);
+			sendMessageToClients(msg);
+		}
+		@Override
+		public void onProp1Changed(Enum1 prop1){
+			Log.i(TAG, "New value for Prop1 from backend" + prop1);
+
+			Message msg = new Message();
+			msg.what = EnumInterfaceMessageType.SET_Prop1.getValue();
+			Bundle data = new Bundle();
+			
+		        data.putParcelable("prop1", new Enum1Parcelable(prop1));
+			msg.setData(data);
+			sendMessageToClients(msg);
+		}
+		@Override
+		public void onProp2Changed(Enum2 prop2){
+			Log.i(TAG, "New value for Prop2 from backend" + prop2);
+
+			Message msg = new Message();
+			msg.what = EnumInterfaceMessageType.SET_Prop2.getValue();
+			Bundle data = new Bundle();
+			
+		        data.putParcelable("prop2", new Enum2Parcelable(prop2));
+			msg.setData(data);
+			sendMessageToClients(msg);
+		}
+		@Override
+		public void onProp3Changed(Enum3 prop3){
+			Log.i(TAG, "New value for Prop3 from backend" + prop3);
+
+			Message msg = new Message();
+			msg.what = EnumInterfaceMessageType.SET_Prop3.getValue();
+			Bundle data = new Bundle();
+			
+		        data.putParcelable("prop3", new Enum3Parcelable(prop3));
+			msg.setData(data);
+			sendMessageToClients(msg);
+		}
+		@Override
+		public void onSig0(Enum0 param0){
+			Log.i(TAG, "New singal for Sig0 = "+ " " + param0);
+			Message msg = new Message();
+			msg.what = EnumInterfaceMessageType.SIG_Sig0.getValue();
+			Bundle data = new Bundle();
+			
+		        data.putParcelable("param0", new Enum0Parcelable(param0));
+			msg.setData(data);
+			sendMessageToClients(msg);
+		}
+		@Override
+		public void onSig1(Enum1 param1){
+			Log.i(TAG, "New singal for Sig1 = "+ " " + param1);
+			Message msg = new Message();
+			msg.what = EnumInterfaceMessageType.SIG_Sig1.getValue();
+			Bundle data = new Bundle();
+			
+		        data.putParcelable("param1", new Enum1Parcelable(param1));
+			msg.setData(data);
+			sendMessageToClients(msg);
+		}
+		@Override
+		public void onSig2(Enum2 param2){
+			Log.i(TAG, "New singal for Sig2 = "+ " " + param2);
+			Message msg = new Message();
+			msg.what = EnumInterfaceMessageType.SIG_Sig2.getValue();
+			Bundle data = new Bundle();
+			
+		        data.putParcelable("param2", new Enum2Parcelable(param2));
+			msg.setData(data);
+			sendMessageToClients(msg);
+		}
+		@Override
+		public void onSig3(Enum3 param3){
+			Log.i(TAG, "New singal for Sig3 = "+ " " + param3);
+			Message msg = new Message();
+			msg.what = EnumInterfaceMessageType.SIG_Sig3.getValue();
+			Bundle data = new Bundle();
+			
+		        data.putParcelable("param3", new Enum3Parcelable(param3));
+			msg.setData(data);
+			sendMessageToClients(msg);
+		}
+		@Override
+		public void on_readyStatusChanged(boolean isReady) {
+			if (isReady){
+				Log.i(TAG, "Backend ready ");
+			}
+			else {
+				Log.i(TAG, "Backend not ready ");
+			}
+		}
+	}
+}

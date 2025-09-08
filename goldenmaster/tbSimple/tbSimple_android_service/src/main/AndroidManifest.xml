@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="tbSimple.tbSimple_android_service">
+
+    <permission android:name="tbSimple.tbSimple_android_service.PERMISSION_BIND"
+        android:protectionLevel="normal" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:allowBackup="true"><service
+			android:name="tbSimple.tbSimple_android_service.VoidInterfaceServiceAdapter"
+			android:enabled="true"
+			android:exported="true">
+		</service><service
+			android:name="tbSimple.tbSimple_android_service.SimpleInterfaceServiceAdapter"
+			android:enabled="true"
+			android:exported="true">
+		</service><service
+			android:name="tbSimple.tbSimple_android_service.SimpleArrayInterfaceServiceAdapter"
+			android:enabled="true"
+			android:exported="true">
+		</service><service
+			android:name="tbSimple.tbSimple_android_service.NoPropertiesInterfaceServiceAdapter"
+			android:enabled="true"
+			android:exported="true">
+		</service><service
+			android:name="tbSimple.tbSimple_android_service.NoOperationsInterfaceServiceAdapter"
+			android:enabled="true"
+			android:exported="true">
+		</service><service
+			android:name="tbSimple.tbSimple_android_service.NoSignalsInterfaceServiceAdapter"
+			android:enabled="true"
+			android:exported="true">
+		</service><service
+			android:name="tbSimple.tbSimple_android_service.EmptyInterfaceServiceAdapter"
+			android:enabled="true"
+			android:exported="true">
+		</service>
+    </application>
+</manifest>
