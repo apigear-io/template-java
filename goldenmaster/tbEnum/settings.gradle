@@ -1,0 +1,29 @@
+pluginManagement {
+    repositories {
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "tbEnum"
+include ':tbEnum_android_service'
+include ':tbEnum_android_client'
+include ':tbEnum_android_messenger'
+include ':tbEnum_impl'
+include ':tbEnum_api'
+include ':tbEnum_client_example'
+include ':tbEnumserviceexample'

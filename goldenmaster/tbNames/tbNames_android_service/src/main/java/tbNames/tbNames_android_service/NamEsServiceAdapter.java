@@ -1,0 +1,371 @@
+//TODO later// Copyright Epic Games, Inc. All Rights Reserved.
+
+package tbNames.tbNames_android_service;
+
+import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Binder;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
+import android.util.Log;
+
+import tbNames.tbNames_api.INamEsEventListener;
+import tbNames.tbNames_android_service.INamEsServiceFactory;
+import tbNames.tbNames_api.INamEs;
+import tbNames.tbNames_api.AbstractNamEs;
+import tbNames.tbNames_android_messenger.NamEsMessageType;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+public class NamEsServiceAdapter extends Service
+{
+	private static final String TAG = "NamEsServiceAdapter";
+	/**
+	 * Target we publish for clients to send messages to IncomingHandler.
+	 */
+	private Messenger mMessenger;
+	private static IncomingHandler mHandler = null;
+	private static INamEs mBackendService;
+	private static INamEsServiceFactory mServiceFactory;
+
+	//private final List<Message> mMessagesQueue = new ArrayList<>();
+
+	public NamEsServiceAdapter()
+	{
+	}
+
+	public static INamEs setService(INamEsServiceFactory factory)
+	{
+		Log.i(TAG, "Setting factory: " + factory);
+		if (mServiceFactory  != factory)
+		{
+			mServiceFactory = factory;
+		}
+		mBackendService = mServiceFactory.getServiceInstance();
+		if (mHandler != null)
+		{
+			mBackendService.addEventListener(mHandler);
+		}
+		return mBackendService;
+	}
+
+
+	@Override
+	public void onCreate()
+	{
+		super.onCreate();
+		Log.i(TAG, "LIFECYCLE: onCreate(NamEsService) called. context = " + this);
+
+		mHandler = new IncomingHandler(this);
+		mMessenger = new Messenger(mHandler);
+		if (mBackendService != null)
+		{
+			mBackendService.addEventListener(mHandler);
+		}
+	}
+
+	// execution of service will start on calling this method
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId)
+	{
+		Log.i(TAG, "LIFECYCLE: NamEsService::onStartCommand called. context = " + this +
+				", startID=" + startId);
+
+		return START_STICKY;
+	}
+
+	// execution of the service will stop on calling this method
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+		
+		Log.i(TAG, "LIFECYCLE: onDestroy(NamEsService) - proc = " + ", mMessenger = " + mMessenger
+		);
+
+		if (mBackendService != null)
+		{
+			Log.i(TAG, "LIFECYCLE: onDestroy(NamEsService) - proc = " + ", remove engine event callback!");
+
+			mBackendService.removeEventListener(mHandler);
+			mBackendService = null;
+		}
+	}
+
+	@Override
+	public IBinder onBind(Intent intent)
+	{
+		Log.i(TAG, "LIFECYCLE: onBind(intent) - proc=" +  ", intent=" + intent);
+
+		//Log.i(TAG, "binding attachId=" + attachId);
+		return mMessenger.getBinder();
+	}
+
+
+	@Override
+	public boolean onUnbind(Intent intent)
+	{
+		Log.i(TAG, "LIFECYCLE: onUnbind(intent) - proc=" + ", mMessenger=" + mMessenger
+				+ ", intent=" + intent);
+
+		return super.onUnbind(intent);
+	}
+
+	private static String Name(Context context)
+	{
+		return context.getPackageName() + ",context=" + context;
+	}
+	//TODO Listener for handling messanger
+
+	/**
+	 * Handler of incoming messages from clients.
+	 */
+	class IncomingHandler extends Handler implements INamEsEventListener
+	{
+		private final Service mApplicationContext;
+		private final ConcurrentHashMap<String, Messenger> mClients = new ConcurrentHashMap<>();
+
+		IncomingHandler(Service context)
+		{
+			super(Looper.getMainLooper());
+			mApplicationContext = context;
+		}
+
+		private void sendMessageToClients(Message msg)
+		{
+			for (Map.Entry<String, Messenger> client : mClients.entrySet())
+			{
+				Messenger reply = client.getValue();
+				if (reply != null)
+				{
+					try
+					{
+						reply.send(msg);
+					} catch (RemoteException e)
+					{
+						Log.e(TAG, "Can't send reply " + e);
+					}
+				}
+			}
+		}
+
+		@Override
+		public void handleMessage(Message msg)
+			{
+			Log.i(TAG, "Handle msg " + msg);
+			if (mBackendService == null || !mBackendService._isReady())
+			{
+				if (NamEsMessageType.fromInteger(msg.what) != NamEsMessageType.REGISTER_CLIENT
+					&& NamEsMessageType.fromInteger(msg.what) != NamEsMessageType.UNREGISTER_CLIENT)
+				{
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: NamEsMessageType" + NamEsMessageType.fromInteger(msg.what) );
+					return;
+				}
+			}
+			switch (NamEsMessageType.fromInteger(msg.what))
+			{
+				case REGISTER_CLIENT:
+					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
+					sendInit();
+					break;
+				case UNREGISTER_CLIENT:
+					removeClientActivity(msg.getData().getString("connectionID"));
+					break;
+					case PROP_Switch:
+					{
+						Bundle data = msg.getData();
+						
+			        boolean Switch = data.getBoolean("Switch", false);
+						mBackendService.setSwitch(Switch);
+						break;
+					}
+					case PROP_SomeProperty:
+					{
+						Bundle data = msg.getData();
+						
+			        int SOME_PROPERTY = data.getInt("SOME_PROPERTY", 0);
+						mBackendService.setSomeProperty(SOME_PROPERTY);
+						break;
+					}
+					case PROP_SomePoperty2:
+					{
+						Bundle data = msg.getData();
+						
+			        int Some_Poperty2 = data.getInt("Some_Poperty2", 0);
+						mBackendService.setSomePoperty2(Some_Poperty2);
+						break;
+					}
+			// TODO params may be different structs from different modules, there should be a custom class loader 
+			// with a list of class loaders required for this message
+			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
+				case RPC_SomeFunctionReq: {
+
+					Bundle data = msg.getData();
+					int callId = data.getInt("callId");
+					
+			        boolean SOME_PARAM = data.getBoolean("SOME_PARAM", false);
+
+					 mBackendService.someFunction(SOME_PARAM);
+
+					Message respMsg = new Message();
+					respMsg.what = NamEsMessageType.RPC_SomeFunctionResp.getValue();
+					Bundle resp_data = new Bundle();
+					resp_data.putInt("callId", callId);
+					respMsg.setData(resp_data);
+
+					try {
+						msg.replyTo.send(respMsg);
+					} catch (RemoteException e) {
+						throw new RuntimeException(e);
+					}
+					break;
+
+				}
+			// TODO params may be different structs from different modules, there should be a custom class loader 
+			// with a list of class loaders required for this message
+			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
+				case RPC_SomeFunction2Req: {
+
+					Bundle data = msg.getData();
+					int callId = data.getInt("callId");
+					
+			        boolean Some_Param = data.getBoolean("Some_Param", false);
+
+					 mBackendService.someFunction2(Some_Param);
+
+					Message respMsg = new Message();
+					respMsg.what = NamEsMessageType.RPC_SomeFunction2Resp.getValue();
+					Bundle resp_data = new Bundle();
+					resp_data.putInt("callId", callId);
+					respMsg.setData(resp_data);
+
+					try {
+						msg.replyTo.send(respMsg);
+					} catch (RemoteException e) {
+						throw new RuntimeException(e);
+					}
+					break;
+
+				}
+				default:
+					Log.e(TAG, "Receive Unsupported message: " + msg.what);
+					super.handleMessage(msg);
+					break;
+				}
+		}
+
+		@Override
+		protected void finalize() throws Throwable
+		{
+			super.finalize();
+			Log.i(TAG, "LIFECYCLE: IncomingHandler(finalize)");
+		}
+
+		private void addClientActivity(Messenger serviceReply, String connectionID)
+		{
+			if (serviceReply != null)
+			{
+				mClients.put(connectionID, serviceReply);
+				Log.i(TAG, "Register event listener with connectionID = " + connectionID);
+			}
+		}
+
+		private void removeClientActivity(String connectionID)
+		{
+			mClients.remove(connectionID);
+			Log.i(TAG, "UnRegister event listener with connectionID = " + connectionID);
+		}
+
+		private void sendInit()
+		{
+			Message msg = new Message();
+			msg.what = NamEsMessageType.INIT.getValue();
+			Bundle data = new Bundle();
+			
+			boolean Switch = mBackendService.getSwitch();
+			
+		        data.putBoolean("Switch", Switch);
+			int SOME_PROPERTY = mBackendService.getSomeProperty();
+			
+		        data.putInt("SOME_PROPERTY", SOME_PROPERTY);
+			int Some_Poperty2 = mBackendService.getSomePoperty2();
+			
+		        data.putInt("Some_Poperty2", Some_Poperty2);
+			msg.setData(data);
+			sendMessageToClients(msg);
+		}
+		@Override
+		public void onSwitchChanged(boolean Switch){
+			Log.i(TAG, "New value for Switch from backend" + Switch);
+
+			Message msg = new Message();
+			msg.what = NamEsMessageType.SET_Switch.getValue();
+			Bundle data = new Bundle();
+			
+		        data.putBoolean("Switch", Switch);
+			msg.setData(data);
+			sendMessageToClients(msg);
+		}
+		@Override
+		public void onSomePropertyChanged(int SOME_PROPERTY){
+			Log.i(TAG, "New value for SomeProperty from backend" + SOME_PROPERTY);
+
+			Message msg = new Message();
+			msg.what = NamEsMessageType.SET_SomeProperty.getValue();
+			Bundle data = new Bundle();
+			
+		        data.putInt("SOME_PROPERTY", SOME_PROPERTY);
+			msg.setData(data);
+			sendMessageToClients(msg);
+		}
+		@Override
+		public void onSomePoperty2Changed(int Some_Poperty2){
+			Log.i(TAG, "New value for SomePoperty2 from backend" + Some_Poperty2);
+
+			Message msg = new Message();
+			msg.what = NamEsMessageType.SET_SomePoperty2.getValue();
+			Bundle data = new Bundle();
+			
+		        data.putInt("Some_Poperty2", Some_Poperty2);
+			msg.setData(data);
+			sendMessageToClients(msg);
+		}
+		@Override
+		public void onSomeSignal(boolean SOME_PARAM){
+			Log.i(TAG, "New singal for SomeSignal = "+ " " + SOME_PARAM);
+			Message msg = new Message();
+			msg.what = NamEsMessageType.SIG_SomeSignal.getValue();
+			Bundle data = new Bundle();
+			
+		        data.putBoolean("SOME_PARAM", SOME_PARAM);
+			msg.setData(data);
+			sendMessageToClients(msg);
+		}
+		@Override
+		public void onSomeSignal2(boolean Some_Param){
+			Log.i(TAG, "New singal for SomeSignal2 = "+ " " + Some_Param);
+			Message msg = new Message();
+			msg.what = NamEsMessageType.SIG_SomeSignal2.getValue();
+			Bundle data = new Bundle();
+			
+		        data.putBoolean("Some_Param", Some_Param);
+			msg.setData(data);
+			sendMessageToClients(msg);
+		}
+		@Override
+		public void on_readyStatusChanged(boolean isReady) {
+			if (isReady){
+				Log.i(TAG, "Backend ready ");
+			}
+			else {
+				Log.i(TAG, "Backend not ready ");
+			}
+		}
+	}
+}

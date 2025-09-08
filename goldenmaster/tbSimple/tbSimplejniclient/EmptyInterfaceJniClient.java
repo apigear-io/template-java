@@ -1,0 +1,68 @@
+package tbSimple.tbSimplejniclient;
+
+import tbSimple.tbSimple_api.IEmptyInterface;
+import tbSimple.tbSimple_api.AbstractEmptyInterface;
+import tbSimple.tbSimple_api.IEmptyInterfaceEventListener;
+
+import tbSimple.tbSimple_android_client.EmptyInterfaceClient;
+import android.content.Context;
+
+import android.os.Bundle;
+import java.util.concurrent.CompletableFuture;
+import android.util.Log;
+
+
+
+public class EmptyInterfaceJniClient extends AbstractEmptyInterface implements IEmptyInterfaceEventListener
+{
+
+    private static final String TAG = "EmptyInterfaceJniClient";
+
+    private EmptyInterfaceClient mMessengerClient = null;
+
+
+    private static String ModuleName = "tbSimple.tbSimplejniservice.EmptyInterfaceJniService";
+    private String lastServicePackage ="";
+
+    @Override
+    public boolean _isReady()
+    {
+        return mMessengerClient._isReady();
+    }
+
+    public boolean bind(Context ctx, String packageName, String connectionID){
+        Log.v(TAG, "natice client: bind " + packageName);
+        return initServiceConnection(ctx, packageName, connectionID);
+    }
+
+    public void unbind(){
+        Log.v(TAG, "native client: unbind " + lastServicePackage);
+        mMessengerClient.unbindFromService();
+    }
+
+    private boolean initServiceConnection(Context ctx, String servicePackage, String connectionID)
+    {
+        if (mMessengerClient == null)
+        {
+            mMessengerClient = new EmptyInterfaceClient(ctx, connectionID);
+            Log.w(TAG, "client created ");
+            mMessengerClient.addEventListener(this);
+        }
+        if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
+            unbind();
+        }
+        lastServicePackage = servicePackage;
+        boolean res = mMessengerClient.bindToService(lastServicePackage);
+        Log.v(TAG, "Bind " + res+": to "+lastServicePackage);
+        return res;
+    }
+
+    @Override
+    public void on_readyStatusChanged(boolean isReady) {
+        Log.w(TAG, "Connection state changed "+isReady);
+        nativeIsReady(isReady);
+    }
+
+    //Event listener
+    private native void nativeIsReady(boolean isReady);
+}

@@ -1,0 +1,57 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+
+}
+
+tasks.register('runAll') {
+
+    description = "Builds app and all included builds (modulex, moduley) with all submodules"
+    group = "build"
+    dependsOn gradle.includedBuild('testbed2').task(':testbed2_android_service:build')
+    dependsOn gradle.includedBuild('testbed2').task(':testbed2_android_client:build')
+    dependsOn gradle.includedBuild('testbed2').task(':testbed2_android_messenger:build')
+    dependsOn gradle.includedBuild('testbed2').task(':testbed2_impl:build')
+    dependsOn gradle.includedBuild('testbed2').task(':testbed2_api:build')
+    dependsOn gradle.includedBuild('tbEnum').task(':tbEnum_android_service:build')
+    dependsOn gradle.includedBuild('tbEnum').task(':tbEnum_android_client:build')
+    dependsOn gradle.includedBuild('tbEnum').task(':tbEnum_android_messenger:build')
+    dependsOn gradle.includedBuild('tbEnum').task(':tbEnum_impl:build')
+    dependsOn gradle.includedBuild('tbEnum').task(':tbEnum_api:build')
+    dependsOn gradle.includedBuild('tbNames').task(':tbNames_android_service:build')
+    dependsOn gradle.includedBuild('tbNames').task(':tbNames_android_client:build')
+    dependsOn gradle.includedBuild('tbNames').task(':tbNames_android_messenger:build')
+    dependsOn gradle.includedBuild('tbNames').task(':tbNames_impl:build')
+    dependsOn gradle.includedBuild('tbNames').task(':tbNames_api:build')
+    dependsOn gradle.includedBuild('tbSame1').task(':tbSame1_android_service:build')
+    dependsOn gradle.includedBuild('tbSame1').task(':tbSame1_android_client:build')
+    dependsOn gradle.includedBuild('tbSame1').task(':tbSame1_android_messenger:build')
+    dependsOn gradle.includedBuild('tbSame1').task(':tbSame1_impl:build')
+    dependsOn gradle.includedBuild('tbSame1').task(':tbSame1_api:build')
+    dependsOn gradle.includedBuild('tbSame2').task(':tbSame2_android_service:build')
+    dependsOn gradle.includedBuild('tbSame2').task(':tbSame2_android_client:build')
+    dependsOn gradle.includedBuild('tbSame2').task(':tbSame2_android_messenger:build')
+    dependsOn gradle.includedBuild('tbSame2').task(':tbSame2_impl:build')
+    dependsOn gradle.includedBuild('tbSame2').task(':tbSame2_api:build')
+    dependsOn gradle.includedBuild('tbSimple').task(':tbSimple_android_service:build')
+    dependsOn gradle.includedBuild('tbSimple').task(':tbSimple_android_client:build')
+    dependsOn gradle.includedBuild('tbSimple').task(':tbSimple_android_messenger:build')
+    dependsOn gradle.includedBuild('tbSimple').task(':tbSimple_impl:build')
+    dependsOn gradle.includedBuild('tbSimple').task(':tbSimple_api:build')
+    dependsOn gradle.includedBuild('testbed1').task(':testbed1_android_service:build')
+    dependsOn gradle.includedBuild('testbed1').task(':testbed1_android_client:build')
+    dependsOn gradle.includedBuild('testbed1').task(':testbed1_android_messenger:build')
+    dependsOn gradle.includedBuild('testbed1').task(':testbed1_impl:build')
+    dependsOn gradle.includedBuild('testbed1').task(':testbed1_api:build')
+
+    dependsOn project(':goldenmaster_example').tasks.named('build')
+
+}
+
+tasks.register("runJavaUnitTests") {
+    description = "Runs all tests in all submodules"
+    dependsOn subprojects.collect { it.tasks.withType(Test) }
+}

@@ -14,7 +14,7 @@ targets:
       - ../test-apis/testbed.same2.module.yaml
       - ../test-apis/testbed.simple.module.yaml
       - ../test-apis/testbed.struct.module.yaml
-    output: ../test
+    output: ../test2
     template: ..
     force: true
     features: ["all"]
