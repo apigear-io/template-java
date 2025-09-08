@@ -1,0 +1,7 @@
+android {
+    namespace 'tbSame1.tbSame1_api'
+}
+
+dependencies {
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.17.0'
+}

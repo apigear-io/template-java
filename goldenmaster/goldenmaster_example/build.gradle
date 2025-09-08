@@ -1,0 +1,57 @@
+plugins {
+    alias(libs.plugins.android.library)
+}
+android {
+    namespace 'goldenmaster_example'
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 33
+		targetSdk 34
+		versionCode 1
+		versionName "1.0"
+
+		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+	}
+
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation("testbed2:testbed2_android_service:1.0.0")
+    implementation("testbed2:testbed2_android_client:1.0.0")
+    implementation("testbed2:testbed2_android_messenger:1.0.0")
+    implementation("testbed2:testbed2_impl:1.0.0")
+    implementation("testbed2:testbed2_api:1.0.0")
+    implementation("tbEnum:tbEnum_android_service:1.0.0")
+    implementation("tbEnum:tbEnum_android_client:1.0.0")
+    implementation("tbEnum:tbEnum_android_messenger:1.0.0")
+    implementation("tbEnum:tbEnum_impl:1.0.0")
+    implementation("tbEnum:tbEnum_api:1.0.0")
+    implementation("tbNames:tbNames_android_service:1.0.0")
+    implementation("tbNames:tbNames_android_client:1.0.0")
+    implementation("tbNames:tbNames_android_messenger:1.0.0")
+    implementation("tbNames:tbNames_impl:1.0.0")
+    implementation("tbNames:tbNames_api:1.0.0")
+    implementation("tbSame1:tbSame1_android_service:1.0.0")
+    implementation("tbSame1:tbSame1_android_client:1.0.0")
+    implementation("tbSame1:tbSame1_android_messenger:1.0.0")
+    implementation("tbSame1:tbSame1_impl:1.0.0")
+    implementation("tbSame1:tbSame1_api:1.0.0")
+    implementation("tbSame2:tbSame2_android_service:1.0.0")
+    implementation("tbSame2:tbSame2_android_client:1.0.0")
+    implementation("tbSame2:tbSame2_android_messenger:1.0.0")
+    implementation("tbSame2:tbSame2_impl:1.0.0")
+    implementation("tbSame2:tbSame2_api:1.0.0")
+    implementation("tbSimple:tbSimple_android_service:1.0.0")
+    implementation("tbSimple:tbSimple_android_client:1.0.0")
+    implementation("tbSimple:tbSimple_android_messenger:1.0.0")
+    implementation("tbSimple:tbSimple_impl:1.0.0")
+    implementation("tbSimple:tbSimple_api:1.0.0")
+    implementation("testbed1:testbed1_android_service:1.0.0")
+    implementation("testbed1:testbed1_android_client:1.0.0")
+    implementation("testbed1:testbed1_android_messenger:1.0.0")
+    implementation("testbed1:testbed1_impl:1.0.0")
+    implementation("testbed1:testbed1_api:1.0.0")
+
+}

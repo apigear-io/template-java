@@ -1,0 +1,39 @@
+pluginManagement {
+    repositories {
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+                includeGroupByRegex("org\\.jetbrains.*") // allow Kotlin
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+
+rootProject.name = "goldenmaster"
+include ':goldenmaster_example'
+includeBuild 'testbed2'
+includeBuild 'tbEnum'
+includeBuild 'tbNames'
+includeBuild 'tbSame1'
+includeBuild 'tbSame2'
+includeBuild 'tbSimple'
+includeBuild 'testbed1'
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+    versionCatalogs {
+        create("libs") {
+            // your libs.versions.toml will be picked up automatically
+        }
+    }
+
+}

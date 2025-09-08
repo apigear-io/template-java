@@ -1,0 +1,29 @@
+pluginManagement {
+    repositories {
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "tbNames"
+include ':tbNames_android_service'
+include ':tbNames_android_client'
+include ':tbNames_android_messenger'
+include ':tbNames_impl'
+include ':tbNames_api'
+include ':tbNames_client_example'
+include ':tbNamesserviceexample'

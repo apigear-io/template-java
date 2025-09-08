@@ -1,0 +1,29 @@
+pluginManagement {
+    repositories {
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "tbSimple"
+include ':tbSimple_android_service'
+include ':tbSimple_android_client'
+include ':tbSimple_android_messenger'
+include ':tbSimple_impl'
+include ':tbSimple_api'
+include ':tbSimple_client_example'
+include ':tbSimpleserviceexample'

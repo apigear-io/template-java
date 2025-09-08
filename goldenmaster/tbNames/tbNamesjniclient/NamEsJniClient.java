@@ -1,0 +1,180 @@
+package tbNames.tbNamesjniclient;
+
+import tbNames.tbNames_api.INamEs;
+import tbNames.tbNames_api.AbstractNamEs;
+import tbNames.tbNames_api.INamEsEventListener;
+
+import tbNames.tbNames_android_client.NamEsClient;
+import android.content.Context;
+
+import android.os.Bundle;
+import java.util.concurrent.CompletableFuture;
+import android.util.Log;
+
+
+
+public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
+{
+
+    private static final String TAG = "NamEsJniClient";
+
+    private NamEsClient mMessengerClient = null;
+
+
+    private static String ModuleName = "tbNames.tbNamesjniservice.NamEsJniService";
+    private String lastServicePackage ="";
+
+    @Override
+    public boolean _isReady()
+    {
+        return mMessengerClient._isReady();
+    }
+    @Override
+    public void setSwitch(boolean Switch)
+    {
+        Log.i(TAG, "got request from ue, setSwitch" + (Switch));
+        mMessengerClient.setSwitch(Switch);
+    }
+    @Override
+    public boolean getSwitch()
+    {
+        Log.i(TAG, "got request from ue, getSwitch");
+        return mMessengerClient.getSwitch();
+    }
+    
+    @Override
+    public void setSomeProperty(int SOME_PROPERTY)
+    {
+        Log.i(TAG, "got request from ue, setSomeProperty" + (SOME_PROPERTY));
+        mMessengerClient.setSomeProperty(SOME_PROPERTY);
+    }
+    @Override
+    public int getSomeProperty()
+    {
+        Log.i(TAG, "got request from ue, getSomeProperty");
+        return mMessengerClient.getSomeProperty();
+    }
+    
+    @Override
+    public void setSomePoperty2(int Some_Poperty2)
+    {
+        Log.i(TAG, "got request from ue, setSomePoperty2" + (Some_Poperty2));
+        mMessengerClient.setSomePoperty2(Some_Poperty2);
+    }
+    @Override
+    public int getSomePoperty2()
+    {
+        Log.i(TAG, "got request from ue, getSomePoperty2");
+        return mMessengerClient.getSomePoperty2();
+    }
+    
+     public void someFunction(boolean SOME_PARAM)
+     {
+        Log.v(TAG, "Blocking callsomeFunction - should not be used ");
+         mMessengerClient.someFunction(SOME_PARAM);
+    }
+
+    public void someFunctionAsync(String callId, boolean SOME_PARAM){
+        Log.v(TAG, "non blocking call someFunction ");
+        mMessengerClient.someFunctionAsync(SOME_PARAM).thenAccept(i -> {
+            nativeOnSomeFunctionResult(callId);});
+    }
+
+    //Should not be called directly, use someFunctionAsync(String callId, boolean SOME_PARAM)
+    public CompletableFuture<Void> someFunctionAsync(boolean SOME_PARAM)
+    {
+        Log.v(TAG, "NON Blocking call method ");
+        return mMessengerClient.someFunctionAsync(SOME_PARAM);
+    }
+     public void someFunction2(boolean Some_Param)
+     {
+        Log.v(TAG, "Blocking callsomeFunction2 - should not be used ");
+         mMessengerClient.someFunction2(Some_Param);
+    }
+
+    public void someFunction2Async(String callId, boolean Some_Param){
+        Log.v(TAG, "non blocking call someFunction2 ");
+        mMessengerClient.someFunction2Async(Some_Param).thenAccept(i -> {
+            nativeOnSomeFunction2Result(callId);});
+    }
+
+    //Should not be called directly, use someFunction2Async(String callId, boolean Some_Param)
+    public CompletableFuture<Void> someFunction2Async(boolean Some_Param)
+    {
+        Log.v(TAG, "NON Blocking call method ");
+        return mMessengerClient.someFunction2Async(Some_Param);
+    }
+
+    public boolean bind(Context ctx, String packageName, String connectionID){
+        Log.v(TAG, "natice client: bind " + packageName);
+        return initServiceConnection(ctx, packageName, connectionID);
+    }
+
+    public void unbind(){
+        Log.v(TAG, "native client: unbind " + lastServicePackage);
+        mMessengerClient.unbindFromService();
+    }
+
+    private boolean initServiceConnection(Context ctx, String servicePackage, String connectionID)
+    {
+        if (mMessengerClient == null)
+        {
+            mMessengerClient = new NamEsClient(ctx, connectionID);
+            Log.w(TAG, "client created ");
+            mMessengerClient.addEventListener(this);
+        }
+        if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
+            unbind();
+        }
+        lastServicePackage = servicePackage;
+        boolean res = mMessengerClient.bindToService(lastServicePackage);
+        Log.v(TAG, "Bind " + res+": to "+lastServicePackage);
+        return res;
+    }
+
+    @Override
+    public void on_readyStatusChanged(boolean isReady) {
+        Log.w(TAG, "Connection state changed "+isReady);
+        nativeIsReady(isReady);
+    }
+
+    //Event listener
+    @Override
+    public void onSwitchChanged(boolean newValue)
+    {
+        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        nativeOnSwitchChanged(newValue);
+    }
+    @Override
+    public void onSomePropertyChanged(int newValue)
+    {
+        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        nativeOnSomePropertyChanged(newValue);
+    }
+    @Override
+    public void onSomePoperty2Changed(int newValue)
+    {
+        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        nativeOnSomePoperty2Changed(newValue);
+    }
+    @Override
+    public void onSomeSignal(boolean SOME_PARAM)
+    {
+        Log.w(TAG, "NOTIFICATION from messenger client Signal SOME_SIGNAL "+ " " + SOME_PARAM);
+        nativeOnSomeSignal(SOME_PARAM);
+    }
+    @Override
+    public void onSomeSignal2(boolean Some_Param)
+    {
+        Log.w(TAG, "NOTIFICATION from messenger client Signal Some_Signal2 "+ " " + Some_Param);
+        nativeOnSomeSignal2(Some_Param);
+    }
+     private native void nativeOnSwitchChanged(boolean Switch);
+     private native void nativeOnSomePropertyChanged(int SOME_PROPERTY);
+     private native void nativeOnSomePoperty2Changed(int Some_Poperty2);
+    private native void nativeOnSomeSignal(boolean SOME_PARAM);
+    private native void nativeOnSomeSignal2(boolean Some_Param);
+    private native void nativeOnSomeFunctionResult(String callId);
+    private native void nativeOnSomeFunction2Result(String callId);
+    private native void nativeIsReady(boolean isReady);
+}

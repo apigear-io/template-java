@@ -1,0 +1,35 @@
+plugins {
+    alias(libs.plugins.android.library)
+}
+
+group = "tbSame1"
+version = "1.0.0"
+
+android {
+    namespace 'tbSame1.tbSame1_android_client'
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 33
+		targetSdk 34
+		versionCode 1
+		versionName "1.0"
+
+		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+	}
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
+
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation project(':tbSame1_api')
+    implementation project(':tbSame1_android_messenger')
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.10.3'
+    testImplementation 'org.mockito:mockito-core:5.12.0'
+    testImplementation 'org.mockito:mockito-inline:5.2.0'
+}

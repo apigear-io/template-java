@@ -1,0 +1,71 @@
+package testbed2.testbed2_android_messenger;
+
+import testbed2.testbed2_api.NestedStruct2;
+import android.os.Parcel;
+import android.os.Parcelable;
+import testbed2.testbed2_api.Struct1;
+import testbed2.testbed2_api.Struct2;
+
+  public  class NestedStruct2Parcelable implements Parcelable {
+
+    public NestedStruct2 data;
+
+    public NestedStruct2Parcelable(NestedStruct2 data) {
+        this.data = new NestedStruct2(data);
+    }
+
+    public NestedStruct2 getNestedStruct2()
+    {
+        return new NestedStruct2(data);
+    }
+
+    protected NestedStruct2Parcelable(Parcel in) {
+    this.data = new NestedStruct2();
+        Struct1Parcelable l_parcelablefield1 = in.readParcelable(Struct1Parcelable.class.getClassLoader(), Struct1Parcelable.class);
+        data.field1 = l_parcelablefield1 != null ? l_parcelablefield1.data : null;
+        Struct2Parcelable l_parcelablefield2 = in.readParcelable(Struct2Parcelable.class.getClassLoader(), Struct2Parcelable.class);
+        data.field2 = l_parcelablefield2 != null ? l_parcelablefield2.data : null;
+    }
+
+    public static final Creator<NestedStruct2Parcelable> CREATOR = new Creator<NestedStruct2Parcelable>() {
+        @Override
+        public NestedStruct2Parcelable createFromParcel(Parcel in) {
+            return new NestedStruct2Parcelable(in);
+        }
+
+        @Override
+        public NestedStruct2Parcelable[] newArray(int size) {
+            return new NestedStruct2Parcelable[size];
+        }
+    };
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(new Struct1Parcelable(data.field1), flags);
+        dest.writeParcelable(new Struct2Parcelable(data.field2), flags);
+
+
+    }
+        public static NestedStruct2Parcelable[] wrapArray(NestedStruct2[] structs) {
+        if (structs == null) return null;
+        NestedStruct2Parcelable[] out = new NestedStruct2Parcelable[structs.length];
+        for (int i = 0; i < structs.length; i++) {
+            out[i] = new NestedStruct2Parcelable(structs[i]);
+        }
+        return out;
+    }
+
+    public static NestedStruct2[] unwrapArray(NestedStruct2Parcelable[] parcelables) {
+        if (parcelables == null) return null;
+        NestedStruct2[] out = new NestedStruct2[parcelables.length];
+        for (int i = 0; i < parcelables.length; i++) {
+            out[i] = parcelables[i].getNestedStruct2();
+        }
+        return out;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+  }

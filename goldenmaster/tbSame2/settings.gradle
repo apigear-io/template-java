@@ -1,0 +1,29 @@
+pluginManagement {
+    repositories {
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "tbSame2"
+include ':tbSame2_android_service'
+include ':tbSame2_android_client'
+include ':tbSame2_android_messenger'
+include ':tbSame2_impl'
+include ':tbSame2_api'
+include ':tbSame2_client_example'
+include ':tbSame2serviceexample'
