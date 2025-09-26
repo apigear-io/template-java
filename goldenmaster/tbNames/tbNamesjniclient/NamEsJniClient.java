@@ -112,7 +112,10 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
 
     public void unbind(){
         Log.v(TAG, "native client: unbind " + lastServicePackage);
-        mMessengerClient.unbindFromService();
+        if (mMessengerClient != null)
+        {
+            mMessengerClient.unbindFromService();
+        }
     }
 
     private boolean initServiceConnection(Context ctx, String servicePackage, String connectionID)
