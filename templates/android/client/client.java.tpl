@@ -18,14 +18,61 @@ import android.util.Log;
 
 //import message type and parcelabe types
 
-{{- range .Module.Structs }}
-import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
-import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
+{{- $typesToImport := getEmptyStringList}}
+{{- $interfacesToImport := getEmptyStringList}}
+{{- $module := camel .Module.Name}}
+{{- range .Interface.Properties }}
+    {{- if and (not .Schema.Import)  (not .IsPrimitive)  }}
+{{- $type :=  Camel .Type }}
+        {{- if eq .KindType "interface" }}
+{{- $interfacesToImport = (appendList $typesToImport $type) }}
+        {{- else }}
+{{- $typesToImport = (appendList $typesToImport $type) }}
+        {{- end }}
+    {{- end }}
 {{- end }}
-{{- range .Module.Enums }}
-import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
-import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
+{{- range .Interface.Operations }}
+    {{- range .Params }}
+    {{- if and (not .Schema.Import)  (not .IsPrimitive)  }}
+{{- $type :=  Camel .Type }}
+        {{- if eq .KindType "interface" }}
+{{- $interfacesToImport = (appendList $typesToImport $type) }}
+        {{- else }}
+{{- $typesToImport = (appendList $typesToImport $type) }}
+        {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- if and (and (not .Return.Schema.Import)  (not .Return.IsPrimitive))  (not .Return.IsVoid) }}
+{{- $type :=  Camel .Return.Type }}
+        {{- if eq .Return.KindType "interface" }}
+{{- $interfacesToImport = (appendList $typesToImport $type) }}
+        {{- else }}
+{{- $typesToImport = (appendList $typesToImport $type) }}
+        {{- end }}
+    {{- end }}
 {{- end }}
+{{- range .Interface.Signals }}
+    {{- range .Params }}
+    {{- if and (not .Schema.Import)  (not .IsPrimitive)  }}
+{{- $type :=  Camel .Type }}
+        {{- if eq .KindType "interface" }}
+{{- $interfacesToImport = (appendList $typesToImport $type) }}
+        {{- else }}
+{{- $typesToImport = (appendList $typesToImport $type) }}
+        {{- end }}
+    {{- end }}
+    {{- end }}
+{{- end }}
+{{- $typesToImport = unique $typesToImport }}
+{{- $interfacesToImport = unique $interfacesToImport }}
+{{- range $typesToImport}}
+import {{$module}}.{{$module}}_api.{{.}};
+import {{$module}}.{{$module}}_android_messenger.{{.}}Parcelable;
+{{- end}}
+{{- range $interfacesToImport}}
+import {{$module}}.{{$module}}_api.I{{.}};
+import {{$module}}.{{$module}}_android_messenger.{{.}}Parcelable;
+{{- end}}
 
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }};
@@ -46,9 +93,9 @@ import java.util.Arrays;
 		        {{- if .IsPrimitive }}
 			        {{javaReturn "" .}} {{javaVar .}} = data.get{{ ( Camel  (javaElementType "" .) ) }}{{if .IsArray}}Array{{end}}("{{.Name}}"{{if not .IsArray}}, {{javaDefault "" .}}{{end}});
 		        {{- else if .IsArray }}
-                    {{javaReturn "" .}} {{javaVar .}} =  {{Camel .Type}}Parcelable.unwrapArray(({{Camel .Type}}Parcelable[])data.getParcelableArray("{{.Name}}", {{Camel .Type}}Parcelable.class));
+                    {{javaReturn "" .}} {{javaVar .}} =  {{template "getParcelable" . }}.unwrapArray(({{template "getParcelable" . }}[])data.getParcelableArray("{{.Name}}", {{template "getParcelable" . }}.class));
                 {{- else }}
-			        {{javaReturn "" .}} {{javaVar .}} = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}();
+			        {{javaReturn "" .}} {{javaVar .}} = data.getParcelable("{{.Name}}", {{template "getParcelable" . }}.class).get{{Camel .Type}}();
 		        {{- end }}
 {{- end }}
 
@@ -56,9 +103,9 @@ import java.util.Arrays;
 		        {{- if and .IsPrimitive }}
 		        data.put{{ ( Camel  (javaElementType "" .) ) }}{{if .IsArray}}Array{{end}}("{{.Name}}", {{ javaVar .}});
 		        {{- else if .IsArray }}
-		        data.putParcelableArray("{{.Name}}", {{Camel (javaElementType "" .) }}Parcelable.wrapArray({{javaVar .}}));
+		        data.putParcelableArray("{{.Name}}", {{template "getParcelable" . }}.wrapArray({{javaVar .}}));
                 {{- else }}
-		        data.putParcelable("{{.Name}}", new {{Camel (javaElementType "" .) }}Parcelable({{javaVar .}}));
+		        data.putParcelable("{{.Name}}", new {{template "getParcelable" . }}({{javaVar .}}));
 		        {{- end }}
 {{- end }}
 
@@ -66,9 +113,9 @@ import java.util.Arrays;
         {{- if and .Return.IsPrimitive }}
 		    {{javaReturn "" .Return }} result = bundle.get{{ ( Camel  (javaElementType "" .Return ) ) }}{{if .Return.IsArray}}Array{{end}}("result"{{if not .Return.IsArray}}, {{javaDefault "" .Return}}{{end}});
         {{- else if .Return.IsArray }}
-            {{javaReturn "" .Return}} result =  {{Camel (javaElementType "" .Return) }}Parcelable.unwrapArray(({{Camel .Return.Type}}Parcelable[])bundle.getParcelableArray("result", {{Camel .Return.Type}}Parcelable.class));
+            {{javaReturn "" .Return}} result =  {{template "getParcelable" .Return }}.unwrapArray(({{template "getParcelable" .Return }}[])bundle.getParcelableArray("result", {{template "getParcelable" .Return }}.class));
 	    {{- else }}
-		    {{javaReturn "" .Return }} result = bundle.getParcelable("result", {{Camel .Return.Type}}Parcelable.class).get{{Camel (javaReturn "" .Return)}}();
+		    {{javaReturn "" .Return }} result = bundle.getParcelable("result", {{template "getParcelable" .Return }}.class).get{{Camel .Return.Type}}();
 	    {{- end }}
 {{- end }}
 
@@ -76,10 +123,46 @@ import java.util.Arrays;
 		        {{- if and .Return.IsPrimitive }}
 		        resp_data.put{{ ( Camel  (javaElementType "" .Return) ) }}{{if .Return.IsArray}}Array{{end}}("result", result);
 		        {{- else if .Return.IsArray }}
-		        resp_data.putParcelableArray("result",{{Camel (javaElementType "" .Return) }}Parcelable.wrapArray(result));
+		        resp_data.putParcelableArray("result",{{template "getParcelable" .Return }}.wrapArray(result));
                 {{- else }}
-		        resp_data.putParcelable("result", new {{Camel (javaElementType "" .Return) }}Parcelable(result));
+		        resp_data.putParcelable("result", new {{template "getParcelable" .Return }}(result));
 		        {{- end }}
+{{- end }}
+
+
+{{- define "setClassLoaderIfNeeded" }}
+    {{- $numOfStructsSameModule := 0 }}
+    {{- $numOfStructsOtherModule := 0 }}
+    {{- $parcelableFromSameModule := "" }}
+    {{- $parcelableFromOtherModule := "" }}
+    {{- range .}}
+	{{- if not .IsPrimitive }}
+        {{- if (eq (.Schema.Import )  "" ) -}}
+            {{- if eq   $numOfStructsSameModule  0   }}
+                {{- $parcelableFromSameModule =   .  }}
+            {{- end }}
+            {{- $numOfStructsSameModule = len (printf "%*s " $numOfStructsSameModule "")  }}
+        {{- else }}
+            {{- if eq $numOfStructsOtherModule  0 }}
+                {{- $parcelableFromOtherModule =  . }}
+            {{- end }}
+            {{- $numOfStructsOtherModule = len (printf "%*s " $numOfStructsOtherModule "") }}
+	    {{- end }}
+	{{- end }}
+	{{- end }}
+
+    {{- if $numOfStructsSameModule }}
+        {{- if ge $numOfStructsOtherModule 1 }}
+    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it. 
+        {{- end }}
+        data.setClassLoader({{template "getParcelable" $parcelableFromSameModule }}.class.getClassLoader());
+
+    {{- else if $numOfStructsOtherModule}}
+        {{- if ge  $numOfStructsOtherModule 1 }}
+    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it. 
+        {{- end }}
+        data.setClassLoader({{template "getParcelable" $parcelableFromOtherModule }}.class.getClassLoader());
+	{{- end }}
 {{- end }}
 
 
@@ -234,11 +317,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
                 case INIT:
                 {
                     Bundle data = msg.getData();
-                    {{range .Interface.Properties}}
-			        {{- if not .IsPrimitive }}
-				    data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
-			        {{- end }}
-			        {{- end }}
+                    {{template "setClassLoaderIfNeeded" .Interface.Properties}}
 			        {{range .Interface.Properties}}
                     {{template "getDataFromBundle" . }}
 				    on{{Camel .Name}}({{javaVar .}});
@@ -252,7 +331,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 				    Bundle data = msg.getData();
 
                     {{- if not .IsPrimitive }}
-				    data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
+				    data.setClassLoader({{template "getParcelable" . }}.class.getClassLoader());
 			        {{- end }}
 
                     {{template "getDataFromBundle" . }}
@@ -268,11 +347,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 			    case SIG_{{Camel .Name}}: {
 
 				    Bundle data = msg.getData();
-                {{- range .Params }}
-                    {{- if not .IsPrimitive }}
-					data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
-					{{- end }}
-					{{- end }}
+                    {{template "setClassLoaderIfNeeded" .Params}}
 			    {{- range .Params }}
                 {{template "getDataFromBundle" . }}
 			    {{- end }}
@@ -284,11 +359,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 			    case RPC_{{Camel .Name}}Resp: {
 
 				    Bundle data = msg.getData();
-                    {{- range .Params }}
-                    {{- if not .IsPrimitive }}
-					data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
-					{{- end }}
-					{{- end }}
+                    {{template "setClassLoaderIfNeeded" .Params}}
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

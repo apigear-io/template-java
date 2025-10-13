@@ -11,20 +11,66 @@ import android.widget.TextView;
 
 
 //TODO for each interface there coudl be a tab? now only first one is added
+{{- if len (.Module.Interfaces) }}
 {{- $Interface := (index .Module.Interfaces 0) }}
 
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_client.{{Camel $Interface.Name }}Client;
 
-//import message type and parcelabe types
-{{- range .Module.Structs }}
-import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
-import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
+{{- $typesToImport := getEmptyStringList}}
+{{- $interfacesToImport := getEmptyStringList}}
+{{- $module := camel .Module.Name}}
+{{- range $Interface.Properties }}
+    {{- if and (not .Schema.Import)  (not .IsPrimitive)  }}
+    {{- $type :=  Camel .Type }}
+        {{- if eq .KindType "interface" }}
+            {{- $interfacesToImport = (appendList $typesToImport $type) }}
+        {{- else }}
+        {{- $typesToImport = (appendList $typesToImport $type) }}
+        {{- end }}
+    {{- end }}
 {{- end }}
-{{- range .Module.Enums }}
-import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
-import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
+{{- range $Interface.Operations }}
+    {{- range .Params }}
+    {{- if and (not .Schema.Import)  (not .IsPrimitive)  }}
+{{- $type :=  Camel .Type }}
+        {{- if eq .KindType "interface" }}
+{{- $interfacesToImport = (appendList $typesToImport $type) }}
+        {{- else }}
+{{- $typesToImport = (appendList $typesToImport $type) }}
+        {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- if and (and (not .Return.Schema.Import)  (not .Return.IsPrimitive))  (not .Return.IsVoid) }}
+{{- $type :=  Camel .Return.Type }}
+        {{- if eq .Return.KindType "interface" }}
+{{- $interfacesToImport = (appendList $typesToImport $type) }}
+        {{- else }}
+{{- $typesToImport = (appendList $typesToImport $type) }}
+        {{- end }}
+    {{- end }}
 {{- end }}
-
+{{- range $Interface.Signals }}
+    {{- range .Params }}
+    {{- if and (not .Schema.Import)  (not .IsPrimitive)  }}
+{{- $type :=  Camel .Type }}
+        {{- if eq .KindType "interface" }}
+{{- $interfacesToImport = (appendList $typesToImport $type) }}
+        {{- else }}
+{{- $typesToImport = (appendList $typesToImport $type) }}
+        {{- end }}
+    {{- end }}
+    {{- end }}
+{{- end }}
+{{- $typesToImport = unique $typesToImport }}
+{{- $interfacesToImport = unique $interfacesToImport }}
+{{- range $typesToImport}}
+import {{$module}}.{{$module}}_api.{{.}};
+import {{$module}}.{{$module}}_android_messenger.{{.}}Parcelable;
+{{- end}}
+{{- range $interfacesToImport}}
+import {{$module}}.{{$module}}_api.I{{.}};
+import {{$module}}.{{$module}}_android_messenger.{{.}}Parcelable;
+{{- end}}
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel $Interface.Name }}EventListener;
 import java.util.concurrent.CompletableFuture;
 
@@ -253,3 +299,4 @@ public class {{Camel .Module.Name}}TestClientApp extends Activity implements I{{
     }
 
 }
+{{- end }}

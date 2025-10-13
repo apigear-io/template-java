@@ -19,6 +19,8 @@ dependencyResolutionManagement {
     }
 }
 
+{{- $features := .Features}}
+
 rootProject.name = "{{camel .Module.Name}}"
 {{- if .Features.android }}
 include ':{{camel .Module.Name}}_android_service'

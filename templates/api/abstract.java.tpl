@@ -2,7 +2,7 @@ package {{camel .Module.Name}}.{{camel .Module.Name}}_api;
 
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }};
-//TODO imported/extern modules
+
 {{- range .Module.Structs }}
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
 {{- end }}

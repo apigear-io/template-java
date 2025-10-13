@@ -14,7 +14,12 @@ targets:
       - ../test-apis/testbed.same2.module.yaml
       - ../test-apis/testbed.simple.module.yaml
       - ../test-apis/testbed.struct.module.yaml
-    output: ../test2
+      - ../test-apis/custom_types.module.yaml
+      - ../test-apis/extern_types.module.yaml
+      - ../test-apis/counter.module.yaml
+      - ../test-apis/testbed.ifaceimport.module.yaml
+      - ../test-apis/testbed.refifaces.module.yaml
+    output: ../test
     template: ..
     force: true
     features: ["all"]
