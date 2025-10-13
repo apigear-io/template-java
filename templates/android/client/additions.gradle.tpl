@@ -8,10 +8,14 @@ android {
 	}
 }
 
+
 dependencies {
 	implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation project(':{{camel .Module.Name}}_api')
     implementation project(':{{camel .Module.Name}}_android_messenger')
+    {{- range .Module.Imports}}
+    api project(':{{camel .Name}}_android_messenger')
+    {{- end }}
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.robolectric:robolectric:4.10.3'
     testImplementation 'org.mockito:mockito-core:5.12.0'

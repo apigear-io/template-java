@@ -96,6 +96,8 @@ features:
         documents:
           - source: "android/messenger/messages.java.tpl"
             target: "{{Camel .Interface.Name}}MessageType.java"
+          - source: "android/messenger/interfaceparcelable.java.tpl"
+            target: "{{Camel .Interface.Name }}Parcelable.java"
       - match: struct
         prefix: "{{camel .Module.Name}}/{{camel .Module.Name}}_android_messenger/src/main/java/{{camel .Module.Name}}/{{camel .Module.Name}}_android_messenger/"
         documents:
@@ -106,6 +108,11 @@ features:
         documents:
           - source: "android/messenger/enumparcelable.java.tpl"
             target: "{{Camel .Enum.Name }}Parcelable.java"
+      - match: extern
+        prefix: "{{camel .Module.Name}}/{{camel .Module.Name}}_android_messenger/src/main/java/{{camel .Module.Name}}/{{camel .Module.Name}}_android_messenger/"
+        documents:
+          - source: "android/messenger/externparcelable.java.tpl"
+            target: "{{Camel .Extern.Name }}Parcelable.java"
       - match: module
         prefix: "{{camel .Module.Name}}/{{camel .Module.Name}}_android_client/"
         documents:

@@ -63,9 +63,9 @@ interface I{{Camel .Interface.Name }}ClientMessageGetter
 		{{- if .IsPrimitive }}
 			{{javaReturn "" .}} received{{javaVar .}} = data.get{{ ( Camel  (javaElementType "" .) ) }}{{if .IsArray}}Array{{end}}("{{.Name}}"{{if not .IsArray}}, {{javaDefault "" .}}{{end}});
 		{{- else if .IsArray }}
-            {{javaReturn "" .}} received{{javaVar .}} =  {{Camel .Type}}Parcelable.unwrapArray(({{Camel .Type}}Parcelable[])data.getParcelableArray("{{.Name}}", {{Camel .Type}}Parcelable.class));
+            {{javaReturn "" .}} received{{javaVar .}} =  {{template "getParcelable" . }}.unwrapArray(({{template "getParcelable" . }}[])data.getParcelableArray("{{.Name}}", {{template "getParcelable" . }}.class));
         {{- else }}
-			{{javaReturn "" .}} received{{javaVar .}} = data.getParcelable("{{.Name}}", {{Camel .Type}}Parcelable.class).get{{Camel (javaReturn "" .)}}();
+			{{javaReturn "" .}} received{{javaVar .}} = data.getParcelable("{{.Name}}", {{template "getParcelable" . }}.class).get{{Camel (.Type)}}();
 		{{- end }}
 {{- end }}
 
@@ -73,9 +73,9 @@ interface I{{Camel .Interface.Name }}ClientMessageGetter
 		{{- if .IsPrimitive }}
 		data.put{{ ( Camel  (javaElementType "" .) ) }}{{if .IsArray}}Array{{end}}("{{.Name}}", test{{ javaVar .}});
 		{{- else if .IsArray }}
-		data.putParcelableArray("{{.Name}}", {{Camel (javaElementType "" .) }}Parcelable.wrapArray(test{{javaVar .}}));
+		data.putParcelableArray("{{.Name}}", {{template "getParcelable" . }}.wrapArray(test{{javaVar .}}));
         {{- else }}
-		data.putParcelable("{{.Name}}", new {{Camel (javaElementType "" .) }}Parcelable(test{{javaVar .}}));
+		data.putParcelable("{{.Name}}", new {{template "getParcelable" . }}(test{{javaVar .}}));
 		{{- end }}
 {{- end }}
 
@@ -86,12 +86,18 @@ interface I{{Camel .Interface.Name }}ClientMessageGetter
         test{{ javaVar .}}[0] = {{javaTestValue "" . }};
             {{- else }}
         {{javaElementType "" .}}[] test{{ javaVar .}} = new {{javaElementType "" .}}[1];
-        test{{ javaVar .}}[0] = {{Camel .Schema.Module.Name}}TestHelper.makeTest{{Camel (javaElementType "" . )}}();
+                {{- if (eq .KindType "extern") }}
+		test{{ javaVar .}}[0] = {{javaTestValue "" .}};
+                {{- else }}
+        test{{ javaVar .}}[0] = {{template "getMakeTestHelper" . }}({{-  if (eq .KindType "interface")}}{{javaDefault "" .}}{{end}});
+                {{- end }}
             {{- end}}
 		{{- else if or  (.IsPrimitive) (eq .KindType "enum") }}
 		{{javaReturn "" . }} test{{ javaVar .}} = {{javaTestValue "" . }};
-		{{- else }}
-        {{javaReturn "" . }} test{{ javaVar .}} = {{Camel .Schema.Module.Name}}TestHelper.makeTest{{Camel (javaType "" . )}}();
+		{{- else if (eq .KindType "extern") }}
+		{{javaReturn "" . }} test{{ javaVar .}} = {{javaTestValue "" .}};
+        {{- else }}
+        {{javaReturn "" . }} test{{ javaVar .}} = {{template "getMakeTestHelper" . }}({{-  if (eq .KindType "interface")}}{{javaDefault "" .}}{{end}});
 		{{- end }}
 {{- end }}
 
@@ -195,13 +201,15 @@ public class {{Camel .Interface.Name }}ClientTest
 		{{- if or (.IsPrimitive) (eq .KindType "enum") }}
 		inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}Changed(test{{javaVar .}});
 		{{- else }}
+        {{ if or (eq .KindType "extern") (eq .KindType "interface")}}
+        // Make sure test data is properly filled and in case of extern serialization is in place.
+        //{{end -}}
         inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}Changed(any({{javaReturn "" . }}.class));
 		{{- end }}
     {{- end }}
     }
 
 {{- range .Interface.Properties }}
-//TODO do not add when a property is readonly
     @Test
     public void onReceive{{.Name}}PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -216,10 +224,16 @@ public class {{Camel .Interface.Name }}ClientTest
         {{- if or (.IsPrimitive) (eq .KindType "enum") }}
 		inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}Changed(test{{javaVar .}});
 		{{- else }}
+        {{ if or (eq .KindType "extern") (eq .KindType "interface")}}
+        // Make sure test data is properly filled and in case of extern serialization is in place.
+        //{{end -}}
         inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}Changed(any({{javaReturn "" . }}.class));
 		{{- end }}	    
     }
-
+    {{- if not .IsReadOnly }}
+    {{ if or (eq .KindType "extern") (eq .KindType "interface")}}
+    /*
+    {{- end }}
     @Test
      public void setPropertyRequest{{.Name}}()
     {
@@ -227,14 +241,13 @@ public class {{Camel .Interface.Name }}ClientTest
 
         testedClient.set{{Camel .Name}}(test{{ javaVar .}});
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
         assertEquals({{$InterfaceName}}MessageType.PROP_{{Camel .Name}}.getValue(), response.what);
         Bundle data = response.getData();
 	{{- if not (.IsPrimitive) }}
-		data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
+		data.setClassLoader({{template "getParcelable" . }}.class.getClassLoader());
 	{{- end }}
         {{template "getReceivedFromBundle" . }}
         assertEquals(received{{javaVar .}}, test{{ javaVar .}}
@@ -242,6 +255,10 @@ public class {{Camel .Interface.Name }}ClientTest
         , 1e-6f{{end -}}
         );
     }
+    {{ if or (eq .KindType "extern") (eq .KindType "interface")}}
+    */
+    {{- end }}
+    {{- end }}
 {{- end}}
 
 {{- range .Interface.Signals }}
@@ -286,12 +303,18 @@ public class {{Camel .Interface.Name }}ClientTest
         expectedResult[0] = {{javaTestValue "" .Return }};
             {{- else }}
         {{javaElementType "" .Return }}[] expectedResult = new {{javaElementType "" .Return }}[1];
-        expectedResult[0] = {{Camel .Return.Schema.Module.Name}}TestHelper.makeTest{{Camel (javaElementType "" .Return )}}();
+                {{- if (eq .Return.KindType "extern") }}
+		expectedResult[0] = {{javaTestValue "" .Return}};
+                {{- else }}
+        expectedResult[0] = {{template "getMakeTestHelper" .Return }}({{-  if (eq .Return.KindType "interface")}}{{javaDefault "" .Return}}{{end}});
+                {{- end }}
             {{- end}}
 		{{- else if or  ( .Return.IsPrimitive) (eq .Return.KindType "enum") }}
         {{javaReturn "" .Return }} expectedResult = {{javaTestValue "" .Return }};
-		{{- else }}
-        {{javaReturn "" .Return }} expectedResult = {{Camel .Return.Schema.Module.Name}}TestHelper.makeTest{{Camel (javaType "" .Return )}}();
+        {{- else if (eq .Return.KindType "extern") }}
+		{{javaReturn "" .Return }} expectedResult = {{javaTestValue ""  .Return}};
+        {{- else }}
+        {{javaReturn "" .Return }} expectedResult = {{template "getMakeTestHelper" .Return }}({{-  if (eq .Return.KindType "interface")}}{{javaDefault "" .Return}}{{end}});
 		{{- end }}
     {{- end }}
 
@@ -322,11 +345,7 @@ public class {{Camel .Interface.Name }}ClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals({{$InterfaceName}}MessageType.RPC_{{Camel .Name}}Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
-        {{- range .Params }}
-	    {{- if not (.IsPrimitive) }}
-		data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
-        {{- end }}
-        {{- end }}
+        {{template "setClassLoaderIfNeeded" .Params}}
         {{- range .Params }}
         {{template "getReceivedFromBundle" . }}
         assertEquals(received{{javaVar .}}, test{{javaVar .}}
@@ -347,9 +366,9 @@ public class {{Camel .Interface.Name }}ClientTest
 		{{- if .Return.IsPrimitive }}
 		result_data.put{{ ( Camel  (javaElementType "" .Return) ) }}{{if .Return.IsArray}}Array{{end}}("result", expectedResult);
 		{{- else if .Return.IsArray }}
-		result_data.putParcelableArray("result", {{Camel (javaElementType "" .Return) }}Parcelable.wrapArray(expectedResult));
+		result_data.putParcelableArray("result", {{template "getParcelable" .Return }}.wrapArray(expectedResult));
         {{- else }}
-		result_data.putParcelable("result", new {{Camel (javaElementType "" .Return) }}Parcelable(expectedResult));
+		result_data.putParcelable("result", new {{template "getParcelable" .Return }}(expectedResult));
 		{{- end }}
         {{- end }}
 

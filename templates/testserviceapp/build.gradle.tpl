@@ -2,6 +2,10 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+group = "{{camel .Module.Name}}"
+version = "{{.Module.Version}}"
+
+
 android {
     namespace '{{camel .Module.Name}}.{{camel .Module.Name}}serviceexample'
     compileSdk 35

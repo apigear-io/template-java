@@ -188,11 +188,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         {{- range .Interface.Properties}}
         {{ template "getReceivedFromBundle" .}}
         {{- end }}
-    {{- range .Interface.Properties}}
-    {{- if not .IsPrimitive }}
-		data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
-	{{- end }}
-	{{- end }}
+        {{template "setClassLoaderIfNeeded" .Interface.Properties}}
     {{- range .Interface.Properties}}
         {{ if not (or (.IsPrimitive) (eq .KindType "enum")) }}// {{ end -}}
         assertEquals(received{{javaVar .}}, init{{ javaVar .}}
@@ -248,7 +244,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
     {{- end }}
 
 {{- range .Interface.Properties }}
-//TODO do not add when a property is readonly
+    {{- if not .IsReadOnly }}
     @Test
     public void onReceive{{.Name}}PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -264,6 +260,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         inOrderBackendService.verify(backendServiceMock,times(1)).set{{Camel .Name}}({{- if or (.IsPrimitive) (eq .KindType "enum") }}test{{javaVar .}}{{- else }} any({{javaReturn "" . }}.class) {{- end -}});
 	    
     }
+    {{- end }}
 
     @Test
      public void whenNotified{{.Name}}()
@@ -304,11 +301,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
 
         assertEquals({{$InterfaceName}}MessageType.SIG_{{Camel .Name}}.getValue(), response.what);
         Bundle data = response.getData();
-    {{- range .Params}}
-    {{- if not .IsPrimitive }}
-		data.setClassLoader({{Camel .Type}}Parcelable.class.getClassLoader());
-	{{- end }}
-	{{- end }}
+        {{template "setClassLoaderIfNeeded" .Params}}
     {{- range .Params }}
         {{template "getReceivedFromBundle" . }}
         assertEquals(received{{javaVar .}}, test{{ javaVar .}}
@@ -342,12 +335,18 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         returnedValue[0] = {{javaTestValue "" .Return }};
             {{- else }}
         {{javaElementType "" .Return }}[] returnedValue = new {{javaElementType "" .Return }}[1];
-        returnedValue[0] = {{Camel .Return.Schema.Module.Name}}TestHelper.makeTest{{Camel (javaElementType "" .Return )}}();
+                {{- if (eq .Return.KindType "extern") }}
+		returnedValue[0] = {{javaTestValue "" .Return}};
+                {{- else }}
+        returnedValue[0] = {{template "getMakeTestHelper" .Return }}({{-  if (eq .Return.KindType "interface")}}{{javaDefault "" .Return}}{{end}});
+                {{- end }}
             {{- end}}
-		{{- else if or  (.Return.IsPrimitive) (eq .Return.KindType "enum") }}
+		{{- else if or  ( .Return.IsPrimitive) (eq .Return.KindType "enum") }}
         {{javaReturn "" .Return }} returnedValue = {{javaTestValue "" .Return }};
-		{{- else }}
-        {{javaReturn "" .Return }} returnedValue = {{Camel .Return.Schema.Module.Name}}TestHelper.makeTest{{Camel (javaType "" .Return )}}();
+        {{- else if (eq .Return.KindType "extern") }}
+		{{javaReturn "" .Return }} returnedValue = {{javaTestValue "" .Return}};
+        {{- else }}
+        {{javaReturn "" .Return }} returnedValue = {{template "getMakeTestHelper" .Return }}({{-  if (eq .Return.KindType "interface")}}{{javaDefault "" .Return}}{{end}});
 		{{- end }}
 
 
@@ -375,11 +374,11 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
 	{{- if .Return.IsPrimitive }}
 		{{javaReturn "" .Return }} receivedByClient = resp_data.get{{ ( Camel  (javaElementType "" .Return) ) }}{{if .Return.IsArray}}Array{{end}}("result"{{if not .Return.IsArray}}, {{javaDefault "" .Return}}{{end}});
 	{{- else if .Return.IsArray }}
-        resp_data.setClassLoader({{Camel .Return.Type}}Parcelable.class.getClassLoader());
-        {{javaReturn "" .Return }} receivedByClient =  {{Camel .Return.Type}}Parcelable.unwrapArray(({{Camel .Return.Type}}Parcelable[])resp_data.getParcelableArray("result", {{Camel .Return.Type}}Parcelable.class));
+        resp_data.setClassLoader({{template "getParcelable" .Return }}.class.getClassLoader());
+        {{javaReturn "" .Return }} receivedByClient =  {{template "getParcelable" .Return }}.unwrapArray(({{template "getParcelable" .Return }}[])resp_data.getParcelableArray("result", {{template "getParcelable" .Return }}.class));
     {{- else }}
-		resp_data.setClassLoader({{Camel .Return.Type}}Parcelable.class.getClassLoader());
-		{{javaReturn "" .Return }} receivedByClient = resp_data.getParcelable("result", {{Camel .Return.Type}}Parcelable.class).get{{Camel (javaReturn "" .Return)}}();
+		resp_data.setClassLoader({{template "getParcelable" .Return }}.class.getClassLoader());
+		{{javaReturn "" .Return }} receivedByClient = resp_data.getParcelable("result", {{template "getParcelable" .Return }}.class).get{{Camel .Return.Type }}();
 	{{- end }}
 
         assertEquals(receivedByClient, returnedValue

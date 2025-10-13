@@ -6,13 +6,61 @@ import android.util.Log;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.Abstract{{Camel .Interface.Name}};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
-{{- range .Module.Structs }}
-import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
+{{- $typesToImport := getEmptyStringList}}
+{{- $interfacesToImport := getEmptyStringList}}
+{{- $module := camel .Module.Name}}
+{{- range .Interface.Properties }}
+    {{- if and (not .Schema.Import)  (not .IsPrimitive)  }}
+{{- $type :=  Camel .Type }}
+        {{- if eq .KindType "interface" }}
+{{- $interfacesToImport = (appendList $typesToImport $type) }}
+        {{- else }}
+{{- $typesToImport = (appendList $typesToImport $type) }}
+        {{- end }}
+    {{- end }}
 {{- end }}
-{{- range .Module.Enums }}
-import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
+{{- range .Interface.Operations }}
+    {{- range .Params }}
+    {{- if and (not .Schema.Import)  (not .IsPrimitive)  }}
+{{- $type :=  Camel .Type }}
+        {{- if eq .KindType "interface" }}
+{{- $interfacesToImport = (appendList $typesToImport $type) }}
+        {{- else }}
+{{- $typesToImport = (appendList $typesToImport $type) }}
+        {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- if and (and (not .Return.Schema.Import)  (not .Return.IsPrimitive))  (not .Return.IsVoid) }}
+{{- $type :=  Camel .Return.Type }}
+        {{- if eq .Return.KindType "interface" }}
+{{- $interfacesToImport = (appendList $typesToImport $type) }}
+        {{- else }}
+{{- $typesToImport = (appendList $typesToImport $type) }}
+        {{- end }}
+    {{- end }}
 {{- end }}
-
+{{- range .Interface.Signals }}
+    {{- range .Params }}
+    {{- if and (not .Schema.Import)  (not .IsPrimitive)  }}
+{{- $type :=  Camel .Type }}
+        {{- if eq .KindType "interface" }}
+{{- $interfacesToImport = (appendList $typesToImport $type) }}
+        {{- else }}
+{{- $typesToImport = (appendList $typesToImport $type) }}
+        {{- end }}
+    {{- end }}
+    {{- end }}
+{{- end }}
+{{- $typesToImport = unique $typesToImport }}
+{{- $interfacesToImport = unique $interfacesToImport }}
+{{- range $typesToImport}}
+import {{$module}}.{{$module}}_api.{{.}};
+import {{$module}}.{{$module}}_android_messenger.{{.}}Parcelable;
+{{- end}}
+{{- range $interfacesToImport}}
+import {{$module}}.{{$module}}_api.I{{.}};
+import {{$module}}.{{$module}}_android_messenger.{{.}}Parcelable;
+{{- end}}
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
