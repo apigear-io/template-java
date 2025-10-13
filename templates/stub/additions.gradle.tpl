@@ -1,3 +1,4 @@
+
 android {
     namespace '{{camel .Module.Name}}.{{camel .Module.Name}}_impl'
 

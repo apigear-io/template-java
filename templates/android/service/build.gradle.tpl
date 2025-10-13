@@ -5,7 +5,6 @@ plugins {
 group = "{{camel .Module.Name}}"
 version = "{{.Module.Version}}"
 
-
 android {
     namespace '{{camel .Module.Name}}.{{camel .Module.Name}}_android_service'
     compileSdk 35
@@ -28,8 +27,17 @@ android {
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation project(':{{camel .Module.Name}}_api')
+    {{- if len (.Module.Interfaces)}}
     implementation project(':{{camel .Module.Name}}_impl')
+    {{- end }}
     implementation project(':{{camel .Module.Name}}_android_messenger')
+    {{- range .Module.Imports}}
+    api '{{camel .Name}}:{{camel .Name}}_android_messenger:{{ ($.System.LookupModule .Name).Version }}'
+    {{- $importModule := ($.System.LookupModule .Name) }}
+    {{- if len $importModule.Interfaces}}
+    implementation '{{camel .Name}}:{{camel .Name}}_impl:{{ $importModule.Version }}'
+    {{- end }}
+    {{- end }}
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.robolectric:robolectric:4.10.3'
     testImplementation 'org.mockito:mockito-core:5.12.0'

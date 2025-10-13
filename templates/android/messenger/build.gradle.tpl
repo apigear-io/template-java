@@ -27,4 +27,7 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:4.10.3'
     testImplementation 'org.mockito:mockito-core:5.12.0'
     testImplementation 'org.mockito:mockito-inline:5.2.0'
+    {{- range .Module.Imports}}
+    api '{{camel .Name}}:{{camel .Name}}_android_messenger:{{ ($.System.LookupModule .Name).Version }}'
+    {{- end }}
 }
