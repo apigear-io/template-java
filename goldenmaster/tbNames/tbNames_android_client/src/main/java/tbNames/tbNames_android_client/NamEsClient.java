@@ -17,6 +17,8 @@ import android.content.ComponentName;
 import android.util.Log;
 
 //import message type and parcelabe types
+import tbNames.tbNames_api.EnumWithUnderScores;
+import tbNames.tbNames_android_messenger.EnumWithUnderScoresParcelable;
 
 import tbNames.tbNames_api.INamEsEventListener;
 import tbNames.tbNames_api.INamEs;
@@ -50,6 +52,7 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
     private boolean m_Switch = false;
     private int m_SOME_PROPERTY = 0;
     private int m_Some_Poperty2 = 0;
+    private EnumWithUnderScores m_enum_property = EnumWithUnderScores.FirstValue;
 
 
 	public NamEsClient(Context applicationContext, String connectionId)
@@ -182,6 +185,7 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
                 {
                     Bundle data = msg.getData();
                     
+        data.setClassLoader(EnumWithUnderScoresParcelable.class.getClassLoader());
 			        
                     
 			        boolean Switch = data.getBoolean("Switch", false);
@@ -192,6 +196,9 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
                     
 			        int Some_Poperty2 = data.getInt("Some_Poperty2", 0);
 				    onSomePoperty2(Some_Poperty2);
+                    
+			        EnumWithUnderScores enum_property = data.getParcelable("enum_property", EnumWithUnderScoresParcelable.class).getEnumWithUnderScores();
+				    onEnumProperty(enum_property);
 
                     break;
                 }
@@ -225,12 +232,24 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
 				    onSomePoperty2(Some_Poperty2);
 				    break;
 			    }
+			    case SET_EnumProperty:
+			    {
+				    Bundle data = msg.getData();
+				    data.setClassLoader(EnumWithUnderScoresParcelable.class.getClassLoader());
+
+                    
+			        EnumWithUnderScores enum_property = data.getParcelable("enum_property", EnumWithUnderScoresParcelable.class).getEnumWithUnderScores();
+
+				    onEnumProperty(enum_property);
+				    break;
+			    }
 			    // TODO params may be different structs from different modules, there should be a custom class loader 
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 			    case SIG_SomeSignal: {
 
 				    Bundle data = msg.getData();
+                    
                 
 			        boolean SOME_PARAM = data.getBoolean("SOME_PARAM", false);
 				    onSomeSignal(SOME_PARAM);
@@ -239,6 +258,7 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
 			    case SIG_SomeSignal2: {
 
 				    Bundle data = msg.getData();
+                    
                 
 			        boolean Some_Param = data.getBoolean("Some_Param", false);
 				    onSomeSignal2(Some_Param);
@@ -247,6 +267,7 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
 			    case RPC_SomeFunctionResp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -264,6 +285,7 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
 			    case RPC_SomeFunction2Resp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -391,6 +413,42 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
     {
         Log.i(TAG, "request getSomePoperty2 called, returning local");
         return m_Some_Poperty2;
+    }
+
+  
+    @Override
+    public void setEnumProperty(EnumWithUnderScores enum_property)
+    {
+        Log.i(TAG, "request setEnumProperty called "+ enum_property);
+        if (m_enum_property != enum_property)
+        {
+			Message msg = new Message();
+			msg.what = NamEsMessageType.PROP_EnumProperty.getValue();
+			Bundle data = new Bundle();
+            
+		        data.putParcelable("enum_property", new EnumWithUnderScoresParcelable(enum_property));
+			msg.setData(data);
+			mClientHandler.sendToService(msg);
+        }
+
+    }
+
+	public void onEnumProperty(EnumWithUnderScores enum_property)
+    {
+        Log.i(TAG, "value received from service for EnumProperty ");
+        if (m_enum_property != enum_property)
+        {
+            m_enum_property = enum_property;
+            fireEnumPropertyChanged(enum_property);
+        }
+
+    }
+
+    @Override
+    public EnumWithUnderScores getEnumProperty()
+    {
+        Log.i(TAG, "request getEnumProperty called, returning local");
+        return m_enum_property;
     }
 
   

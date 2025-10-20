@@ -13,17 +13,14 @@ import android.widget.TextView;
 //TODO for each interface there coudl be a tab? now only first one is added
 
 import testbed1.testbed1_android_client.StructInterfaceClient;
-
-//import message type and parcelabe types
 import testbed1.testbed1_api.StructBool;
 import testbed1.testbed1_android_messenger.StructBoolParcelable;
-import testbed1.testbed1_api.StructInt;
-import testbed1.testbed1_android_messenger.StructIntParcelable;
 import testbed1.testbed1_api.StructFloat;
 import testbed1.testbed1_android_messenger.StructFloatParcelable;
+import testbed1.testbed1_api.StructInt;
+import testbed1.testbed1_android_messenger.StructIntParcelable;
 import testbed1.testbed1_api.StructString;
 import testbed1.testbed1_android_messenger.StructStringParcelable;
-
 import testbed1.testbed1_api.IStructInterfaceEventListener;
 import java.util.concurrent.CompletableFuture;
 

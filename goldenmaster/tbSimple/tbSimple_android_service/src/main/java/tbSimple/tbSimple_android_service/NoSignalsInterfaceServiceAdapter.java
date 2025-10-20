@@ -29,10 +29,11 @@ public class NoSignalsInterfaceServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private Messenger mMessenger;
+	private static Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
 	private static INoSignalsInterface mBackendService;
 	private static INoSignalsInterfaceServiceFactory mServiceFactory;
+	private static final Object mutex = new Object();
 
 	//private final List<Message> mMessagesQueue = new ArrayList<>();
 
@@ -47,10 +48,19 @@ public class NoSignalsInterfaceServiceAdapter extends Service
 		{
 			mServiceFactory = factory;
 		}
-		mBackendService = mServiceFactory.getServiceInstance();
-		if (mHandler != null)
+		synchronized (mutex)
 		{
-			mBackendService.addEventListener(mHandler);
+			if (mHandler != null && mBackendService != null)
+			{
+				// remove old event listener (backend is about to change)
+				mBackendService.removeEventListener(mHandler);
+			}
+			mBackendService = mServiceFactory.getServiceInstance();
+			if (mHandler != null)
+			{
+				Log.i(TAG, "LIFECYCLE: setService(NoSignalsInterface) called. For handler " + mHandler);
+				mBackendService.addEventListener(mHandler);
+			}
 		}
 		return mBackendService;
 	}
@@ -61,13 +71,25 @@ public class NoSignalsInterfaceServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(NoSignalsInterfaceService) called. context = " + this);
-
-		mHandler = new IncomingHandler(this);
-		mMessenger = new Messenger(mHandler);
-		if (mBackendService != null)
-		{
-			mBackendService.addEventListener(mHandler);
+		synchronized (mutex) {
+			if (mHandler != null && mBackendService != null)
+			{
+				// The handler (event listener) is about to change.
+				mBackendService.removeEventListener(mHandler);
+			}
+			if (mHandler != null)
+			{
+				mHandler.removeCallbacksAndMessages(null);
+			}
+			mHandler = new IncomingHandler(this);
+			mMessenger = new Messenger(mHandler);
+			if (mBackendService != null)
+			{
+				Log.i(TAG, "LIFECYCLE: Add event listern to a backend called for handler " + mHandler);
+				mBackendService.addEventListener(mHandler);
+			}
 		}
+
 	}
 
 	// execution of service will start on calling this method
@@ -84,18 +106,21 @@ public class NoSignalsInterfaceServiceAdapter extends Service
 	@Override
 	public void onDestroy()
 	{
-		super.onDestroy();
-		
-		Log.i(TAG, "LIFECYCLE: onDestroy(NoSignalsInterfaceService) - proc = " + ", mMessenger = " + mMessenger
-		);
+		Log.i(TAG, "LIFECYCLE: onDestroy(NoSignalsInterfaceService) - proc = " + ", mMessenger = " + mMessenger);
 
-		if (mBackendService != null)
+		if (mHandler != null)
 		{
-			Log.i(TAG, "LIFECYCLE: onDestroy(NoSignalsInterfaceService) - proc = " + ", remove engine event callback!");
-
-			mBackendService.removeEventListener(mHandler);
-			mBackendService = null;
+			if (mBackendService != null)
+			{
+				mBackendService.removeEventListener(mHandler);
+			}
+			mHandler.removeCallbacksAndMessages(null);
+			mHandler = null;
 		}
+		mBackendService = null;
+		mMessenger = null;
+
+		super.onDestroy();
 	}
 
 	@Override
@@ -199,6 +224,7 @@ public class NoSignalsInterfaceServiceAdapter extends Service
 				case RPC_FuncVoidReq: {
 
 					Bundle data = msg.getData();
+					
 					int callId = data.getInt("callId");
 
 					 mBackendService.funcVoid();
@@ -223,6 +249,7 @@ public class NoSignalsInterfaceServiceAdapter extends Service
 				case RPC_FuncBoolReq: {
 
 					Bundle data = msg.getData();
+					
 					int callId = data.getInt("callId");
 					
 			        boolean paramBool = data.getBoolean("paramBool", false);

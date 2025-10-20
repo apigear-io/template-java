@@ -1,6 +1,7 @@
 package tbNames.tbNames_api;
 
 import tbNames.tbNames_api.INamEsEventListener;
+import tbNames.tbNames_api.EnumWithUnderScores;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -18,6 +19,10 @@ import java.util.concurrent.CompletableFuture;
     void setSomePoperty2(int Some_Poperty2);
     int getSomePoperty2();
     void fireSomePoperty2Changed(int newValue);
+  
+    void setEnumProperty(EnumWithUnderScores enum_property);
+    EnumWithUnderScores getEnumProperty();
+    void fireEnumPropertyChanged(EnumWithUnderScores newValue);
   
     // methods
     void someFunction(boolean SOME_PARAM);

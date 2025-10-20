@@ -13,9 +13,8 @@ import android.widget.TextView;
 //TODO for each interface there coudl be a tab? now only first one is added
 
 import tbNames.tbNames_android_client.NamEsClient;
-
-//import message type and parcelabe types
-
+import tbNames.tbNames_api.EnumWithUnderScores;
+import tbNames.tbNames_android_messenger.EnumWithUnderScoresParcelable;
 import tbNames.tbNames_api.INamEsEventListener;
 import java.util.concurrent.CompletableFuture;
 
@@ -96,6 +95,18 @@ public class TbNamesTestClientApp extends Activity implements INamEsEventListene
             mClient.setSomePoperty2(newSomePoperty2);
         });
         propertyButtonsLine.addView(bSomePoperty2);
+        Button bEnumProperty = new Button(this);
+        bEnumProperty.setText("Set enum_property");
+        bEnumProperty.setBackgroundColor(Color.GREEN);
+
+        bEnumProperty.setOnClickListener(v -> {
+            EnumWithUnderScores newEnumProperty = mClient.getEnumProperty();
+            
+            //TODO increment
+            Log.i(TAG, "SET enum_property" + newEnumProperty);
+            mClient.setEnumProperty(newEnumProperty);
+        });
+        propertyButtonsLine.addView(bEnumProperty);
 
         layout.addView(propertyButtonsLine);
 
@@ -257,6 +268,12 @@ public class TbNamesTestClientApp extends Activity implements INamEsEventListene
     {
         outputTextViewProp.setText("Property from service: Some_Poperty2 " + newValue);
         Log.w(TAG, "Property from service: Some_Poperty2 " + newValue);
+     }
+    @Override
+    public void onEnumPropertyChanged(EnumWithUnderScores newValue)
+    {
+        outputTextViewProp.setText("Property from service: enum_property " + newValue);
+        Log.w(TAG, "Property from service: enum_property " + newValue);
      }
     @Override
     public void onSomeSignal(boolean SOME_PARAM)

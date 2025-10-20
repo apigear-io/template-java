@@ -192,6 +192,7 @@ public class ManyParamInterfaceServiceAdapterTest
 			int receivedprop3 = data.getInt("prop3", 0);
         
 			int receivedprop4 = data.getInt("prop4", 0);
+        
         assertEquals(receivedprop1, initprop1);
         assertEquals(receivedprop2, initprop2);
         assertEquals(receivedprop3, initprop3);
@@ -233,7 +234,6 @@ public class ManyParamInterfaceServiceAdapterTest
         // All emitted signals and property changes are forwarded to it.
         registerFakeActivityClient(clientReplyMessenger, mTestConnectionID1);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop1PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -268,7 +268,6 @@ public class ManyParamInterfaceServiceAdapterTest
 
         assertEquals(receivedprop1, testprop1);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop2PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -303,7 +302,6 @@ public class ManyParamInterfaceServiceAdapterTest
 
         assertEquals(receivedprop2, testprop2);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop3PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -338,7 +336,6 @@ public class ManyParamInterfaceServiceAdapterTest
 
         assertEquals(receivedprop3, testprop3);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop4PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -387,6 +384,7 @@ public class ManyParamInterfaceServiceAdapterTest
         assertEquals(ManyParamInterfaceMessageType.SIG_Sig1.getValue(), response.what);
         Bundle data = response.getData();
         
+        
 			int receivedparam1 = data.getInt("param1", 0);
         assertEquals(receivedparam1, testparam1);
 }
@@ -404,6 +402,7 @@ public class ManyParamInterfaceServiceAdapterTest
 
         assertEquals(ManyParamInterfaceMessageType.SIG_Sig2.getValue(), response.what);
         Bundle data = response.getData();
+        
         
 			int receivedparam1 = data.getInt("param1", 0);
         assertEquals(receivedparam1, testparam1);
@@ -426,6 +425,7 @@ public class ManyParamInterfaceServiceAdapterTest
 
         assertEquals(ManyParamInterfaceMessageType.SIG_Sig3.getValue(), response.what);
         Bundle data = response.getData();
+        
         
 			int receivedparam1 = data.getInt("param1", 0);
         assertEquals(receivedparam1, testparam1);
@@ -452,6 +452,7 @@ public class ManyParamInterfaceServiceAdapterTest
 
         assertEquals(ManyParamInterfaceMessageType.SIG_Sig4.getValue(), response.what);
         Bundle data = response.getData();
+        
         
 			int receivedparam1 = data.getInt("param1", 0);
         assertEquals(receivedparam1, testparam1);

@@ -25,7 +25,25 @@ import testbed1.testbed1_api.StructFloat;
 import testbed1.testbed1_android_messenger.StructFloatParcelable;
 import testbed1.testbed1_api.StructString;
 import testbed1.testbed1_android_messenger.StructStringParcelable;
+import testbed1.testbed1_api.StructStruct;
+import testbed1.testbed1_android_messenger.StructStructParcelable;
+import testbed1.testbed1_api.StructEnum;
+import testbed1.testbed1_android_messenger.StructEnumParcelable;
+import testbed1.testbed1_api.StructBoolWithArray;
+import testbed1.testbed1_android_messenger.StructBoolWithArrayParcelable;
+import testbed1.testbed1_api.StructIntWithArray;
+import testbed1.testbed1_android_messenger.StructIntWithArrayParcelable;
+import testbed1.testbed1_api.StructFloatWithArray;
+import testbed1.testbed1_android_messenger.StructFloatWithArrayParcelable;
+import testbed1.testbed1_api.StructStringWithArray;
+import testbed1.testbed1_android_messenger.StructStringWithArrayParcelable;
+import testbed1.testbed1_api.StructStructWithArray;
+import testbed1.testbed1_android_messenger.StructStructWithArrayParcelable;
+import testbed1.testbed1_api.StructEnumWithArray;
+import testbed1.testbed1_android_messenger.StructEnumWithArrayParcelable;
 import testbed1.testbed1_api.Testbed1TestHelper;
+import testbed1.testbed1_api.Enum0;
+import testbed1.testbed1_android_messenger.Enum0Parcelable;
 
 
 import testbed1.testbed1_api.IStructInterfaceEventListener;
@@ -184,10 +202,8 @@ public class StructInterfaceServiceAdapterTest
 			StructFloat receivedpropFloat = data.getParcelable("propFloat", StructFloatParcelable.class).getStructFloat();
         
 			StructString receivedpropString = data.getParcelable("propString", StructStringParcelable.class).getStructString();
-		data.setClassLoader(StructBoolParcelable.class.getClassLoader());
-		data.setClassLoader(StructIntParcelable.class.getClassLoader());
-		data.setClassLoader(StructFloatParcelable.class.getClassLoader());
-		data.setClassLoader(StructStringParcelable.class.getClassLoader());
+        
+        data.setClassLoader(StructBoolParcelable.class.getClassLoader());
         // assertEquals(receivedpropBool, initpropBool);
         // assertEquals(receivedpropInt, initpropInt);
         // assertEquals(receivedpropFloat, initpropFloat);
@@ -229,7 +245,6 @@ public class StructInterfaceServiceAdapterTest
         // All emitted signals and property changes are forwarded to it.
         registerFakeActivityClient(clientReplyMessenger, mTestConnectionID1);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropBoolPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -264,7 +279,6 @@ public class StructInterfaceServiceAdapterTest
 
         assertEquals(receivedpropBool, testpropBool);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropIntPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -299,7 +313,6 @@ public class StructInterfaceServiceAdapterTest
 
         assertEquals(receivedpropInt, testpropInt);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropFloatPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -334,7 +347,6 @@ public class StructInterfaceServiceAdapterTest
 
         assertEquals(receivedpropFloat, testpropFloat);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropStringPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -382,7 +394,8 @@ public class StructInterfaceServiceAdapterTest
 
         assertEquals(StructInterfaceMessageType.SIG_SigBool.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(StructBoolParcelable.class.getClassLoader());
+        
+        data.setClassLoader(StructBoolParcelable.class.getClassLoader());
         
 			StructBool receivedparamBool = data.getParcelable("paramBool", StructBoolParcelable.class).getStructBool();
         assertEquals(receivedparamBool, testparamBool);
@@ -400,7 +413,8 @@ public class StructInterfaceServiceAdapterTest
 
         assertEquals(StructInterfaceMessageType.SIG_SigInt.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(StructIntParcelable.class.getClassLoader());
+        
+        data.setClassLoader(StructIntParcelable.class.getClassLoader());
         
 			StructInt receivedparamInt = data.getParcelable("paramInt", StructIntParcelable.class).getStructInt();
         assertEquals(receivedparamInt, testparamInt);
@@ -418,7 +432,8 @@ public class StructInterfaceServiceAdapterTest
 
         assertEquals(StructInterfaceMessageType.SIG_SigFloat.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(StructFloatParcelable.class.getClassLoader());
+        
+        data.setClassLoader(StructFloatParcelable.class.getClassLoader());
         
 			StructFloat receivedparamFloat = data.getParcelable("paramFloat", StructFloatParcelable.class).getStructFloat();
         assertEquals(receivedparamFloat, testparamFloat);
@@ -436,7 +451,8 @@ public class StructInterfaceServiceAdapterTest
 
         assertEquals(StructInterfaceMessageType.SIG_SigString.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(StructStringParcelable.class.getClassLoader());
+        
+        data.setClassLoader(StructStringParcelable.class.getClassLoader());
         
 			StructString receivedparamString = data.getParcelable("paramString", StructStringParcelable.class).getStructString();
         assertEquals(receivedparamString, testparamString);

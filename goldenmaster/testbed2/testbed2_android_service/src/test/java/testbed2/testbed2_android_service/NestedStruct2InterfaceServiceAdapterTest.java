@@ -184,8 +184,8 @@ public class NestedStruct2InterfaceServiceAdapterTest
 			NestedStruct1 receivedprop1 = data.getParcelable("prop1", NestedStruct1Parcelable.class).getNestedStruct1();
         
 			NestedStruct2 receivedprop2 = data.getParcelable("prop2", NestedStruct2Parcelable.class).getNestedStruct2();
-		data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
-		data.setClassLoader(NestedStruct2Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
         // assertEquals(receivedprop1, initprop1);
         // assertEquals(receivedprop2, initprop2);
 
@@ -225,7 +225,6 @@ public class NestedStruct2InterfaceServiceAdapterTest
         // All emitted signals and property changes are forwarded to it.
         registerFakeActivityClient(clientReplyMessenger, mTestConnectionID1);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop1PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -260,7 +259,6 @@ public class NestedStruct2InterfaceServiceAdapterTest
 
         assertEquals(receivedprop1, testprop1);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop2PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -308,7 +306,8 @@ public class NestedStruct2InterfaceServiceAdapterTest
 
         assertEquals(NestedStruct2InterfaceMessageType.SIG_Sig1.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
         
 			NestedStruct1 receivedparam1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
         assertEquals(receivedparam1, testparam1);
@@ -327,8 +326,8 @@ public class NestedStruct2InterfaceServiceAdapterTest
 
         assertEquals(NestedStruct2InterfaceMessageType.SIG_Sig2.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
-		data.setClassLoader(NestedStruct2Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
         
 			NestedStruct1 receivedparam1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
         assertEquals(receivedparam1, testparam1);

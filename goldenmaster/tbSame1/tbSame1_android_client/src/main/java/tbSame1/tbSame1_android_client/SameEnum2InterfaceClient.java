@@ -17,10 +17,6 @@ import android.content.ComponentName;
 import android.util.Log;
 
 //import message type and parcelabe types
-import tbSame1.tbSame1_api.Struct1;
-import tbSame1.tbSame1_android_messenger.Struct1Parcelable;
-import tbSame1.tbSame1_api.Struct2;
-import tbSame1.tbSame1_android_messenger.Struct2Parcelable;
 import tbSame1.tbSame1_api.Enum1;
 import tbSame1.tbSame1_android_messenger.Enum1Parcelable;
 import tbSame1.tbSame1_api.Enum2;
@@ -189,8 +185,7 @@ public class SameEnum2InterfaceClient extends AbstractSameEnum2Interface impleme
                 {
                     Bundle data = msg.getData();
                     
-				    data.setClassLoader(Enum1Parcelable.class.getClassLoader());
-				    data.setClassLoader(Enum2Parcelable.class.getClassLoader());
+        data.setClassLoader(Enum1Parcelable.class.getClassLoader());
 			        
                     
 			        Enum1 prop1 = data.getParcelable("prop1", Enum1Parcelable.class).getEnum1();
@@ -229,7 +224,8 @@ public class SameEnum2InterfaceClient extends AbstractSameEnum2Interface impleme
 			    case SIG_Sig1: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(Enum1Parcelable.class.getClassLoader());
+                    
+        data.setClassLoader(Enum1Parcelable.class.getClassLoader());
                 
 			        Enum1 param1 = data.getParcelable("param1", Enum1Parcelable.class).getEnum1();
 				    onSig1(param1);
@@ -238,8 +234,8 @@ public class SameEnum2InterfaceClient extends AbstractSameEnum2Interface impleme
 			    case SIG_Sig2: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(Enum1Parcelable.class.getClassLoader());
-					data.setClassLoader(Enum2Parcelable.class.getClassLoader());
+                    
+        data.setClassLoader(Enum1Parcelable.class.getClassLoader());
                 
 			        Enum1 param1 = data.getParcelable("param1", Enum1Parcelable.class).getEnum1();
                 
@@ -250,7 +246,8 @@ public class SameEnum2InterfaceClient extends AbstractSameEnum2Interface impleme
 			    case RPC_Func1Resp: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(Enum1Parcelable.class.getClassLoader());
+                    
+        data.setClassLoader(Enum1Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -268,8 +265,8 @@ public class SameEnum2InterfaceClient extends AbstractSameEnum2Interface impleme
 			    case RPC_Func2Resp: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(Enum1Parcelable.class.getClassLoader());
-					data.setClassLoader(Enum2Parcelable.class.getClassLoader());
+                    
+        data.setClassLoader(Enum1Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

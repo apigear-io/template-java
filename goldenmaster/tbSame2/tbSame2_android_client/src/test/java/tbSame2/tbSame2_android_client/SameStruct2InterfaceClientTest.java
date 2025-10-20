@@ -156,7 +156,6 @@ public class SameStruct2InterfaceClientTest
         inOrderEventListener.verify(listenerMock,times(1)).onProp1Changed(any(Struct2.class));
         inOrderEventListener.verify(listenerMock,times(1)).onProp2Changed(any(Struct2.class));
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop1PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -170,7 +169,7 @@ public class SameStruct2InterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
         inOrderEventListener.verify(listenerMock,times(1)).onProp1Changed(any(Struct2.class));	    
     }
-
+    
     @Test
      public void setPropertyRequestprop1()
     {
@@ -178,7 +177,6 @@ public class SameStruct2InterfaceClientTest
 
         testedClient.setProp1(testprop1);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -189,7 +187,7 @@ public class SameStruct2InterfaceClientTest
 			Struct2 receivedprop1 = data.getParcelable("prop1", Struct2Parcelable.class).getStruct2();
         assertEquals(receivedprop1, testprop1);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceiveprop2PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -203,7 +201,7 @@ public class SameStruct2InterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
         inOrderEventListener.verify(listenerMock,times(1)).onProp2Changed(any(Struct2.class));	    
     }
-
+    
     @Test
      public void setPropertyRequestprop2()
     {
@@ -211,7 +209,6 @@ public class SameStruct2InterfaceClientTest
 
         testedClient.setProp2(testprop2);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -222,6 +219,7 @@ public class SameStruct2InterfaceClientTest
 			Struct2 receivedprop2 = data.getParcelable("prop2", Struct2Parcelable.class).getStruct2();
         assertEquals(receivedprop2, testprop2);
     }
+    
     @Test
     public void whenNotifiedsig1() throws RemoteException
     {
@@ -280,7 +278,8 @@ public class SameStruct2InterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(SameStruct2InterfaceMessageType.RPC_Func1Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
-		data.setClassLoader(Struct1Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(Struct1Parcelable.class.getClassLoader());
         
 			Struct1 receivedparam1 = data.getParcelable("param1", Struct1Parcelable.class).getStruct1();
         assertEquals(receivedparam1, testparam1);
@@ -326,8 +325,8 @@ public class SameStruct2InterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(SameStruct2InterfaceMessageType.RPC_Func2Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
-		data.setClassLoader(Struct1Parcelable.class.getClassLoader());
-		data.setClassLoader(Struct2Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(Struct1Parcelable.class.getClassLoader());
         
 			Struct1 receivedparam1 = data.getParcelable("param1", Struct1Parcelable.class).getStruct1();
         assertEquals(receivedparam1, testparam1);

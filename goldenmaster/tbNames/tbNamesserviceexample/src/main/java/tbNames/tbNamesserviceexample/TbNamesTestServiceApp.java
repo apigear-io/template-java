@@ -18,6 +18,8 @@ import tbNames.tbNames_android_service.NamEsServiceFactory;
 import tbNames.tbNames_android_service.NamEsServiceStarter;
 
 //import message type and parcelabe types
+import tbNames.tbNames_api.EnumWithUnderScores;
+import tbNames.tbNames_android_messenger.EnumWithUnderScoresParcelable;
 
 import tbNames.tbNames_api.INamEsEventListener;
 import tbNames.tbNames_api.INamEs;
@@ -97,6 +99,17 @@ public class TbNamesTestServiceApp extends Activity implements INamEsEventListen
             mBackend.setSomePoperty2(newSomePoperty2);
         });
         propertyButtonsLine.addView(bSomePoperty2);
+        Button bEnumProperty = new Button(this);
+        bEnumProperty.setText("Set enum_property");
+        bEnumProperty.setBackgroundColor(Color.GREEN);
+
+        bEnumProperty.setOnClickListener(v -> {
+            EnumWithUnderScores newEnumProperty = mBackend.getEnumProperty();
+            //TODO increment
+            Log.i(TAG, "SET enum_property" + newEnumProperty);
+            mBackend.setEnumProperty(newEnumProperty);
+        });
+        propertyButtonsLine.addView(bEnumProperty);
 
         layout.addView(propertyButtonsLine);
 
@@ -221,6 +234,12 @@ public class TbNamesTestServiceApp extends Activity implements INamEsEventListen
     {
         outputTextViewProp.setText("Property from service: Some_Poperty2 " + newValue);
         Log.w(TAG, "Property from service: Some_Poperty2 " + newValue);
+     }
+    @Override
+    public void onEnumPropertyChanged(EnumWithUnderScores newValue)
+    {
+        outputTextViewProp.setText("Property from service: enum_property " + newValue);
+        Log.w(TAG, "Property from service: enum_property " + newValue);
      }
     @Override
     public void onSomeSignal(boolean SOME_PARAM)

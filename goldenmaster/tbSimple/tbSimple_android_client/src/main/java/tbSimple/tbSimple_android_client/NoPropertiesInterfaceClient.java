@@ -189,12 +189,14 @@ public class NoPropertiesInterfaceClient extends AbstractNoPropertiesInterface i
 			    case SIG_SigVoid: {
 
 				    Bundle data = msg.getData();
+                    
 				    onSigVoid();
 				    break;
 			    }
 			    case SIG_SigBool: {
 
 				    Bundle data = msg.getData();
+                    
                 
 			        boolean paramBool = data.getBoolean("paramBool", false);
 				    onSigBool(paramBool);
@@ -203,6 +205,7 @@ public class NoPropertiesInterfaceClient extends AbstractNoPropertiesInterface i
 			    case RPC_FuncVoidResp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -220,6 +223,7 @@ public class NoPropertiesInterfaceClient extends AbstractNoPropertiesInterface i
 			    case RPC_FuncBoolResp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

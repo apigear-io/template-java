@@ -7,10 +7,7 @@ import tbSame2.tbSame2_api.ISameStruct1Interface;
 import tbSame2.tbSame2_api.AbstractSameStruct1Interface;
 import tbSame2.tbSame2_api.ISameStruct1InterfaceEventListener;
 import tbSame2.tbSame2_api.Struct1;
-import tbSame2.tbSame2_api.Struct2;
-import tbSame2.tbSame2_api.Enum1;
-import tbSame2.tbSame2_api.Enum2;
-
+import tbSame2.tbSame2_android_messenger.Struct1Parcelable;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;

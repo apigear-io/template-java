@@ -2,7 +2,6 @@ package tbSimple.tbSimple_api;
 
 import tbSimple.tbSimple_api.ISimpleInterfaceEventListener;
 import tbSimple.tbSimple_api.ISimpleInterface;
-//TODO imported/extern modules
 
 import java.util.Collection;
 import java.util.HashSet;

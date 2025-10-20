@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+group = "tbEnum"
+version = "1.0.0"
+
 android {
     namespace 'tbEnum.tbEnum_client_example'
     compileSdk 35

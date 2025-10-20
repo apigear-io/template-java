@@ -18,6 +18,8 @@ import tbNames.tbNames_android_service.NamEsServiceAdapter;
 
 //import message type and parcelabe types
 import tbNames.tbNames_api.TbNamesTestHelper;
+import tbNames.tbNames_api.EnumWithUnderScores;
+import tbNames.tbNames_android_messenger.EnumWithUnderScoresParcelable;
 
 
 import tbNames.tbNames_api.INamEsEventListener;
@@ -140,6 +142,8 @@ public class NamEsServiceAdapterTest
         when(backendServiceMock.getSomeProperty()).thenReturn(initSOME_PROPERTY);
 		int initSome_Poperty2 = 1;
         when(backendServiceMock.getSomePoperty2()).thenReturn(initSome_Poperty2);
+        EnumWithUnderScores initenum_property = EnumWithUnderScores.SecondValue;
+        when(backendServiceMock.getEnumProperty()).thenReturn(initenum_property);
 
 
         Message registerMsg = Message.obtain(null, NamEsMessageType.REGISTER_CLIENT.ordinal());
@@ -155,6 +159,7 @@ public class NamEsServiceAdapterTest
         inOrderBackendService.verify(backendServiceMock, times(1)).getSwitch();
         inOrderBackendService.verify(backendServiceMock, times(1)).getSomeProperty();
         inOrderBackendService.verify(backendServiceMock, times(1)).getSomePoperty2();
+        inOrderBackendService.verify(backendServiceMock, times(1)).getEnumProperty();
 
         inOrderClientMessagesHandler.verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
@@ -167,9 +172,14 @@ public class NamEsServiceAdapterTest
 			int receivedSOME_PROPERTY = data.getInt("SOME_PROPERTY", 0);
         
 			int receivedSome_Poperty2 = data.getInt("Some_Poperty2", 0);
+        
+			EnumWithUnderScores receivedenum_property = data.getParcelable("enum_property", EnumWithUnderScoresParcelable.class).getEnumWithUnderScores();
+        
+        data.setClassLoader(EnumWithUnderScoresParcelable.class.getClassLoader());
         assertEquals(receivedSwitch, initSwitch);
         assertEquals(receivedSOME_PROPERTY, initSOME_PROPERTY);
         assertEquals(receivedSome_Poperty2, initSome_Poperty2);
+        assertEquals(receivedenum_property, initenum_property);
 
     }
 
@@ -207,7 +217,6 @@ public class NamEsServiceAdapterTest
         // All emitted signals and property changes are forwarded to it.
         registerFakeActivityClient(clientReplyMessenger, mTestConnectionID1);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveSwitchPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -242,7 +251,6 @@ public class NamEsServiceAdapterTest
 
         assertEquals(receivedSwitch, testSwitch);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveSOME_PROPERTYPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -277,7 +285,6 @@ public class NamEsServiceAdapterTest
 
         assertEquals(receivedSOME_PROPERTY, testSOME_PROPERTY);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveSome_Poperty2PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -313,6 +320,40 @@ public class NamEsServiceAdapterTest
         assertEquals(receivedSome_Poperty2, testSome_Poperty2);
     }
     @Test
+    public void onReceiveenum_propertyPropertyChangeTest() throws RemoteException {
+        // Create and send message
+        Message msg = Message.obtain(null, NamEsMessageType.PROP_EnumProperty.getValue());
+        Bundle data = new Bundle();
+		EnumWithUnderScores testenum_property = EnumWithUnderScores.SecondValue;
+		data.putParcelable("enum_property", new EnumWithUnderScoresParcelable(testenum_property));
+
+        msg.setData(data);
+        mServiceMessenger.send(msg);
+        Robolectric.flushForegroundThreadScheduler();
+        inOrderBackendService.verify(backendServiceMock,times(1)).setEnumProperty(testenum_property);
+	    
+    }
+
+    @Test
+     public void whenNotifiedenum_property()
+    {
+		EnumWithUnderScores testenum_property = EnumWithUnderScores.SecondValue;
+
+        testedAdapterAsEventListener.onEnumPropertyChanged(testenum_property);
+        Robolectric.flushForegroundThreadScheduler();
+
+        inOrderClientMessagesHandler.verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
+        Message response = messageCaptor.getValue();
+
+        assertEquals(NamEsMessageType.SET_EnumProperty.getValue(), response.what);
+        Bundle data = response.getData();
+
+        
+			EnumWithUnderScores receivedenum_property = data.getParcelable("enum_property", EnumWithUnderScoresParcelable.class).getEnumWithUnderScores();
+
+        assertEquals(receivedenum_property, testenum_property);
+    }
+    @Test
     public void whenNotifiedSOME_SIGNAL()
     {
 		boolean testSOME_PARAM = true;
@@ -325,6 +366,7 @@ public class NamEsServiceAdapterTest
 
         assertEquals(NamEsMessageType.SIG_SomeSignal.getValue(), response.what);
         Bundle data = response.getData();
+        
         
 			boolean receivedSOME_PARAM = data.getBoolean("SOME_PARAM", false);
         assertEquals(receivedSOME_PARAM, testSOME_PARAM);
@@ -342,6 +384,7 @@ public class NamEsServiceAdapterTest
 
         assertEquals(NamEsMessageType.SIG_SomeSignal2.getValue(), response.what);
         Bundle data = response.getData();
+        
         
 			boolean receivedSome_Param = data.getBoolean("Some_Param", false);
         assertEquals(receivedSome_Param, testSome_Param);

@@ -14,6 +14,8 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
+import tbNames.tbNames_api.EnumWithUnderScores;
+import tbNames.tbNames_android_messenger.EnumWithUnderScoresParcelable;
 
 import tbNames.tbNames_api.INamEsEventListener;
 import tbNames.tbNames_android_service.INamEsServiceFactory;
@@ -29,10 +31,11 @@ public class NamEsServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private Messenger mMessenger;
+	private static Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
 	private static INamEs mBackendService;
 	private static INamEsServiceFactory mServiceFactory;
+	private static final Object mutex = new Object();
 
 	//private final List<Message> mMessagesQueue = new ArrayList<>();
 
@@ -47,10 +50,19 @@ public class NamEsServiceAdapter extends Service
 		{
 			mServiceFactory = factory;
 		}
-		mBackendService = mServiceFactory.getServiceInstance();
-		if (mHandler != null)
+		synchronized (mutex)
 		{
-			mBackendService.addEventListener(mHandler);
+			if (mHandler != null && mBackendService != null)
+			{
+				// remove old event listener (backend is about to change)
+				mBackendService.removeEventListener(mHandler);
+			}
+			mBackendService = mServiceFactory.getServiceInstance();
+			if (mHandler != null)
+			{
+				Log.i(TAG, "LIFECYCLE: setService(NamEs) called. For handler " + mHandler);
+				mBackendService.addEventListener(mHandler);
+			}
 		}
 		return mBackendService;
 	}
@@ -61,13 +73,25 @@ public class NamEsServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(NamEsService) called. context = " + this);
-
-		mHandler = new IncomingHandler(this);
-		mMessenger = new Messenger(mHandler);
-		if (mBackendService != null)
-		{
-			mBackendService.addEventListener(mHandler);
+		synchronized (mutex) {
+			if (mHandler != null && mBackendService != null)
+			{
+				// The handler (event listener) is about to change.
+				mBackendService.removeEventListener(mHandler);
+			}
+			if (mHandler != null)
+			{
+				mHandler.removeCallbacksAndMessages(null);
+			}
+			mHandler = new IncomingHandler(this);
+			mMessenger = new Messenger(mHandler);
+			if (mBackendService != null)
+			{
+				Log.i(TAG, "LIFECYCLE: Add event listern to a backend called for handler " + mHandler);
+				mBackendService.addEventListener(mHandler);
+			}
 		}
+
 	}
 
 	// execution of service will start on calling this method
@@ -84,18 +108,21 @@ public class NamEsServiceAdapter extends Service
 	@Override
 	public void onDestroy()
 	{
-		super.onDestroy();
-		
-		Log.i(TAG, "LIFECYCLE: onDestroy(NamEsService) - proc = " + ", mMessenger = " + mMessenger
-		);
+		Log.i(TAG, "LIFECYCLE: onDestroy(NamEsService) - proc = " + ", mMessenger = " + mMessenger);
 
-		if (mBackendService != null)
+		if (mHandler != null)
 		{
-			Log.i(TAG, "LIFECYCLE: onDestroy(NamEsService) - proc = " + ", remove engine event callback!");
-
-			mBackendService.removeEventListener(mHandler);
-			mBackendService = null;
+			if (mBackendService != null)
+			{
+				mBackendService.removeEventListener(mHandler);
+			}
+			mHandler.removeCallbacksAndMessages(null);
+			mHandler = null;
 		}
+		mBackendService = null;
+		mMessenger = null;
+
+		super.onDestroy();
 	}
 
 	@Override
@@ -201,12 +228,22 @@ public class NamEsServiceAdapter extends Service
 						mBackendService.setSomePoperty2(Some_Poperty2);
 						break;
 					}
+					case PROP_EnumProperty:
+					{
+						Bundle data = msg.getData();
+						data.setClassLoader(EnumWithUnderScoresParcelable.class.getClassLoader());
+						
+			        EnumWithUnderScores enum_property = data.getParcelable("enum_property", EnumWithUnderScoresParcelable.class).getEnumWithUnderScores();
+						mBackendService.setEnumProperty(enum_property);
+						break;
+					}
 			// TODO params may be different structs from different modules, there should be a custom class loader 
 			// with a list of class loaders required for this message
 			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 				case RPC_SomeFunctionReq: {
 
 					Bundle data = msg.getData();
+					
 					int callId = data.getInt("callId");
 					
 			        boolean SOME_PARAM = data.getBoolean("SOME_PARAM", false);
@@ -233,6 +270,7 @@ public class NamEsServiceAdapter extends Service
 				case RPC_SomeFunction2Req: {
 
 					Bundle data = msg.getData();
+					
 					int callId = data.getInt("callId");
 					
 			        boolean Some_Param = data.getBoolean("Some_Param", false);
@@ -297,6 +335,9 @@ public class NamEsServiceAdapter extends Service
 			int Some_Poperty2 = mBackendService.getSomePoperty2();
 			
 		        data.putInt("Some_Poperty2", Some_Poperty2);
+			EnumWithUnderScores enum_property = mBackendService.getEnumProperty();
+			
+		        data.putParcelable("enum_property", new EnumWithUnderScoresParcelable(enum_property));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
@@ -333,6 +374,18 @@ public class NamEsServiceAdapter extends Service
 			Bundle data = new Bundle();
 			
 		        data.putInt("Some_Poperty2", Some_Poperty2);
+			msg.setData(data);
+			sendMessageToClients(msg);
+		}
+		@Override
+		public void onEnumPropertyChanged(EnumWithUnderScores enum_property){
+			Log.i(TAG, "New value for EnumProperty from backend" + enum_property);
+
+			Message msg = new Message();
+			msg.what = NamEsMessageType.SET_EnumProperty.getValue();
+			Bundle data = new Bundle();
+			
+		        data.putParcelable("enum_property", new EnumWithUnderScoresParcelable(enum_property));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}

@@ -14,26 +14,10 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
-import testbed2.testbed2_api.Struct1;
-import testbed2.testbed2_android_messenger.Struct1Parcelable;
-import testbed2.testbed2_api.Struct2;
-import testbed2.testbed2_android_messenger.Struct2Parcelable;
-import testbed2.testbed2_api.Struct3;
-import testbed2.testbed2_android_messenger.Struct3Parcelable;
-import testbed2.testbed2_api.Struct4;
-import testbed2.testbed2_android_messenger.Struct4Parcelable;
 import testbed2.testbed2_api.NestedStruct1;
 import testbed2.testbed2_android_messenger.NestedStruct1Parcelable;
 import testbed2.testbed2_api.NestedStruct2;
 import testbed2.testbed2_android_messenger.NestedStruct2Parcelable;
-import testbed2.testbed2_api.NestedStruct3;
-import testbed2.testbed2_android_messenger.NestedStruct3Parcelable;
-import testbed2.testbed2_api.Enum1;
-import testbed2.testbed2_android_messenger.Enum1Parcelable;
-import testbed2.testbed2_api.Enum2;
-import testbed2.testbed2_android_messenger.Enum2Parcelable;
-import testbed2.testbed2_api.Enum3;
-import testbed2.testbed2_android_messenger.Enum3Parcelable;
 
 import testbed2.testbed2_api.INestedStruct2InterfaceEventListener;
 import testbed2.testbed2_android_service.INestedStruct2InterfaceServiceFactory;
@@ -49,10 +33,11 @@ public class NestedStruct2InterfaceServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private Messenger mMessenger;
+	private static Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
 	private static INestedStruct2Interface mBackendService;
 	private static INestedStruct2InterfaceServiceFactory mServiceFactory;
+	private static final Object mutex = new Object();
 
 	//private final List<Message> mMessagesQueue = new ArrayList<>();
 
@@ -67,10 +52,19 @@ public class NestedStruct2InterfaceServiceAdapter extends Service
 		{
 			mServiceFactory = factory;
 		}
-		mBackendService = mServiceFactory.getServiceInstance();
-		if (mHandler != null)
+		synchronized (mutex)
 		{
-			mBackendService.addEventListener(mHandler);
+			if (mHandler != null && mBackendService != null)
+			{
+				// remove old event listener (backend is about to change)
+				mBackendService.removeEventListener(mHandler);
+			}
+			mBackendService = mServiceFactory.getServiceInstance();
+			if (mHandler != null)
+			{
+				Log.i(TAG, "LIFECYCLE: setService(NestedStruct2Interface) called. For handler " + mHandler);
+				mBackendService.addEventListener(mHandler);
+			}
 		}
 		return mBackendService;
 	}
@@ -81,13 +75,25 @@ public class NestedStruct2InterfaceServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(NestedStruct2InterfaceService) called. context = " + this);
-
-		mHandler = new IncomingHandler(this);
-		mMessenger = new Messenger(mHandler);
-		if (mBackendService != null)
-		{
-			mBackendService.addEventListener(mHandler);
+		synchronized (mutex) {
+			if (mHandler != null && mBackendService != null)
+			{
+				// The handler (event listener) is about to change.
+				mBackendService.removeEventListener(mHandler);
+			}
+			if (mHandler != null)
+			{
+				mHandler.removeCallbacksAndMessages(null);
+			}
+			mHandler = new IncomingHandler(this);
+			mMessenger = new Messenger(mHandler);
+			if (mBackendService != null)
+			{
+				Log.i(TAG, "LIFECYCLE: Add event listern to a backend called for handler " + mHandler);
+				mBackendService.addEventListener(mHandler);
+			}
 		}
+
 	}
 
 	// execution of service will start on calling this method
@@ -104,18 +110,21 @@ public class NestedStruct2InterfaceServiceAdapter extends Service
 	@Override
 	public void onDestroy()
 	{
-		super.onDestroy();
-		
-		Log.i(TAG, "LIFECYCLE: onDestroy(NestedStruct2InterfaceService) - proc = " + ", mMessenger = " + mMessenger
-		);
+		Log.i(TAG, "LIFECYCLE: onDestroy(NestedStruct2InterfaceService) - proc = " + ", mMessenger = " + mMessenger);
 
-		if (mBackendService != null)
+		if (mHandler != null)
 		{
-			Log.i(TAG, "LIFECYCLE: onDestroy(NestedStruct2InterfaceService) - proc = " + ", remove engine event callback!");
-
-			mBackendService.removeEventListener(mHandler);
-			mBackendService = null;
+			if (mBackendService != null)
+			{
+				mBackendService.removeEventListener(mHandler);
+			}
+			mHandler.removeCallbacksAndMessages(null);
+			mHandler = null;
 		}
+		mBackendService = null;
+		mMessenger = null;
+
+		super.onDestroy();
 	}
 
 	@Override
@@ -221,7 +230,8 @@ public class NestedStruct2InterfaceServiceAdapter extends Service
 				case RPC_Func1Req: {
 
 					Bundle data = msg.getData();
-					data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
+					
+        data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
 			        NestedStruct1 param1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
@@ -250,8 +260,8 @@ public class NestedStruct2InterfaceServiceAdapter extends Service
 				case RPC_Func2Req: {
 
 					Bundle data = msg.getData();
-					data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
-					data.setClassLoader(NestedStruct2Parcelable.class.getClassLoader());
+					
+        data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
 			        NestedStruct1 param1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();

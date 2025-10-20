@@ -1,0 +1,16 @@
+plugins {
+    id 'java-library'
+}
+
+group = "externTypes"
+version = "1.0.0"
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+dependencies {
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.17.0'
+    api 'org.apache.commons:commons-math3:3.6.1'
+}

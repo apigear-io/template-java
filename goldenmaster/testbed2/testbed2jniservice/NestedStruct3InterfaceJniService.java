@@ -6,17 +6,12 @@ import android.util.Log;
 import testbed2.testbed2_api.INestedStruct3Interface;
 import testbed2.testbed2_api.AbstractNestedStruct3Interface;
 import testbed2.testbed2_api.INestedStruct3InterfaceEventListener;
-import testbed2.testbed2_api.Struct1;
-import testbed2.testbed2_api.Struct2;
-import testbed2.testbed2_api.Struct3;
-import testbed2.testbed2_api.Struct4;
 import testbed2.testbed2_api.NestedStruct1;
+import testbed2.testbed2_android_messenger.NestedStruct1Parcelable;
 import testbed2.testbed2_api.NestedStruct2;
+import testbed2.testbed2_android_messenger.NestedStruct2Parcelable;
 import testbed2.testbed2_api.NestedStruct3;
-import testbed2.testbed2_api.Enum1;
-import testbed2.testbed2_api.Enum2;
-import testbed2.testbed2_api.Enum3;
-
+import testbed2.testbed2_android_messenger.NestedStruct3Parcelable;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;

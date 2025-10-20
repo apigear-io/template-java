@@ -7,7 +7,6 @@ import tbSimple.tbSimple_api.ISimpleArrayInterface;
 import tbSimple.tbSimple_api.AbstractSimpleArrayInterface;
 import tbSimple.tbSimple_api.ISimpleArrayInterfaceEventListener;
 
-
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;

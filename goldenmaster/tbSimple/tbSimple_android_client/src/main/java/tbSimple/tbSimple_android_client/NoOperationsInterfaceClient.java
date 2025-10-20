@@ -217,12 +217,14 @@ public class NoOperationsInterfaceClient extends AbstractNoOperationsInterface i
 			    case SIG_SigVoid: {
 
 				    Bundle data = msg.getData();
+                    
 				    onSigVoid();
 				    break;
 			    }
 			    case SIG_SigBool: {
 
 				    Bundle data = msg.getData();
+                    
                 
 			        boolean paramBool = data.getBoolean("paramBool", false);
 				    onSigBool(paramBool);

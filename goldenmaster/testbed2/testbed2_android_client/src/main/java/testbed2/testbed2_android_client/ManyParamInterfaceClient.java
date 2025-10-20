@@ -17,26 +17,6 @@ import android.content.ComponentName;
 import android.util.Log;
 
 //import message type and parcelabe types
-import testbed2.testbed2_api.Struct1;
-import testbed2.testbed2_android_messenger.Struct1Parcelable;
-import testbed2.testbed2_api.Struct2;
-import testbed2.testbed2_android_messenger.Struct2Parcelable;
-import testbed2.testbed2_api.Struct3;
-import testbed2.testbed2_android_messenger.Struct3Parcelable;
-import testbed2.testbed2_api.Struct4;
-import testbed2.testbed2_android_messenger.Struct4Parcelable;
-import testbed2.testbed2_api.NestedStruct1;
-import testbed2.testbed2_android_messenger.NestedStruct1Parcelable;
-import testbed2.testbed2_api.NestedStruct2;
-import testbed2.testbed2_android_messenger.NestedStruct2Parcelable;
-import testbed2.testbed2_api.NestedStruct3;
-import testbed2.testbed2_android_messenger.NestedStruct3Parcelable;
-import testbed2.testbed2_api.Enum1;
-import testbed2.testbed2_android_messenger.Enum1Parcelable;
-import testbed2.testbed2_api.Enum2;
-import testbed2.testbed2_android_messenger.Enum2Parcelable;
-import testbed2.testbed2_api.Enum3;
-import testbed2.testbed2_android_messenger.Enum3Parcelable;
 
 import testbed2.testbed2_api.IManyParamInterfaceEventListener;
 import testbed2.testbed2_api.IManyParamInterface;
@@ -265,6 +245,7 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 			    case SIG_Sig1: {
 
 				    Bundle data = msg.getData();
+                    
                 
 			        int param1 = data.getInt("param1", 0);
 				    onSig1(param1);
@@ -273,6 +254,7 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 			    case SIG_Sig2: {
 
 				    Bundle data = msg.getData();
+                    
                 
 			        int param1 = data.getInt("param1", 0);
                 
@@ -283,6 +265,7 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 			    case SIG_Sig3: {
 
 				    Bundle data = msg.getData();
+                    
                 
 			        int param1 = data.getInt("param1", 0);
                 
@@ -295,6 +278,7 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 			    case SIG_Sig4: {
 
 				    Bundle data = msg.getData();
+                    
                 
 			        int param1 = data.getInt("param1", 0);
                 
@@ -309,6 +293,7 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 			    case RPC_Func1Resp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -326,6 +311,7 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 			    case RPC_Func2Resp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -343,6 +329,7 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 			    case RPC_Func3Resp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -360,6 +347,7 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 			    case RPC_Func4Resp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

@@ -7,7 +7,6 @@ import tbSimple.tbSimple_api.IVoidInterface;
 import tbSimple.tbSimple_api.AbstractVoidInterface;
 import tbSimple.tbSimple_api.IVoidInterfaceEventListener;
 
-
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;

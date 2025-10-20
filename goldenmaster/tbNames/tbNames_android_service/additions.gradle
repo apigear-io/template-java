@@ -11,8 +11,8 @@ android {
 dependencies {
 	implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation project(':tbNames_api')
-    implementation project(':tbNames_impl')
-    implementation project(':tbNames_android_messenger')
+    api project(':tbNames_impl')
+    api project(':tbNames_android_messenger')
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.robolectric:robolectric:4.10.3'
     testImplementation 'org.mockito:mockito-core:5.12.0'

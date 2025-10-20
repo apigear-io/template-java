@@ -18,6 +18,10 @@
 			android:name="testbed1.testbed1_android_service.StructArrayInterfaceServiceAdapter"
 			android:enabled="true"
 			android:exported="true">
+		</service><service
+			android:name="testbed1.testbed1_android_service.StructArray2InterfaceServiceAdapter"
+			android:enabled="true"
+			android:exported="true">
 		</service>
     </application>
 </manifest>

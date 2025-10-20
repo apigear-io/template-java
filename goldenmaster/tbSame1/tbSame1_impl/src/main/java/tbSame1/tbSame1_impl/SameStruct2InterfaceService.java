@@ -8,8 +8,6 @@ import tbSame1.tbSame1_api.AbstractSameStruct2Interface;
 import tbSame1.tbSame1_api.ISameStruct2InterfaceEventListener;
 import tbSame1.tbSame1_api.Struct1;
 import tbSame1.tbSame1_api.Struct2;
-import tbSame1.tbSame1_api.Enum1;
-import tbSame1.tbSame1_api.Enum2;
 
 
 import java.util.Map;

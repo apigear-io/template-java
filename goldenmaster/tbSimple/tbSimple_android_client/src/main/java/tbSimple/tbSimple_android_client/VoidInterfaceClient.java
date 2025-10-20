@@ -189,12 +189,14 @@ public class VoidInterfaceClient extends AbstractVoidInterface implements Servic
 			    case SIG_SigVoid: {
 
 				    Bundle data = msg.getData();
+                    
 				    onSigVoid();
 				    break;
 			    }
 			    case RPC_FuncVoidResp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

@@ -16,10 +16,10 @@ import android.os.RemoteException;
 import android.util.Log;
 import testbed1.testbed1_api.StructBool;
 import testbed1.testbed1_android_messenger.StructBoolParcelable;
-import testbed1.testbed1_api.StructInt;
-import testbed1.testbed1_android_messenger.StructIntParcelable;
 import testbed1.testbed1_api.StructFloat;
 import testbed1.testbed1_android_messenger.StructFloatParcelable;
+import testbed1.testbed1_api.StructInt;
+import testbed1.testbed1_android_messenger.StructIntParcelable;
 import testbed1.testbed1_api.StructString;
 import testbed1.testbed1_android_messenger.StructStringParcelable;
 
@@ -37,10 +37,11 @@ public class StructInterfaceServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private Messenger mMessenger;
+	private static Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
 	private static IStructInterface mBackendService;
 	private static IStructInterfaceServiceFactory mServiceFactory;
+	private static final Object mutex = new Object();
 
 	//private final List<Message> mMessagesQueue = new ArrayList<>();
 
@@ -55,10 +56,19 @@ public class StructInterfaceServiceAdapter extends Service
 		{
 			mServiceFactory = factory;
 		}
-		mBackendService = mServiceFactory.getServiceInstance();
-		if (mHandler != null)
+		synchronized (mutex)
 		{
-			mBackendService.addEventListener(mHandler);
+			if (mHandler != null && mBackendService != null)
+			{
+				// remove old event listener (backend is about to change)
+				mBackendService.removeEventListener(mHandler);
+			}
+			mBackendService = mServiceFactory.getServiceInstance();
+			if (mHandler != null)
+			{
+				Log.i(TAG, "LIFECYCLE: setService(StructInterface) called. For handler " + mHandler);
+				mBackendService.addEventListener(mHandler);
+			}
 		}
 		return mBackendService;
 	}
@@ -69,13 +79,25 @@ public class StructInterfaceServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(StructInterfaceService) called. context = " + this);
-
-		mHandler = new IncomingHandler(this);
-		mMessenger = new Messenger(mHandler);
-		if (mBackendService != null)
-		{
-			mBackendService.addEventListener(mHandler);
+		synchronized (mutex) {
+			if (mHandler != null && mBackendService != null)
+			{
+				// The handler (event listener) is about to change.
+				mBackendService.removeEventListener(mHandler);
+			}
+			if (mHandler != null)
+			{
+				mHandler.removeCallbacksAndMessages(null);
+			}
+			mHandler = new IncomingHandler(this);
+			mMessenger = new Messenger(mHandler);
+			if (mBackendService != null)
+			{
+				Log.i(TAG, "LIFECYCLE: Add event listern to a backend called for handler " + mHandler);
+				mBackendService.addEventListener(mHandler);
+			}
 		}
+
 	}
 
 	// execution of service will start on calling this method
@@ -92,18 +114,21 @@ public class StructInterfaceServiceAdapter extends Service
 	@Override
 	public void onDestroy()
 	{
-		super.onDestroy();
-		
-		Log.i(TAG, "LIFECYCLE: onDestroy(StructInterfaceService) - proc = " + ", mMessenger = " + mMessenger
-		);
+		Log.i(TAG, "LIFECYCLE: onDestroy(StructInterfaceService) - proc = " + ", mMessenger = " + mMessenger);
 
-		if (mBackendService != null)
+		if (mHandler != null)
 		{
-			Log.i(TAG, "LIFECYCLE: onDestroy(StructInterfaceService) - proc = " + ", remove engine event callback!");
-
-			mBackendService.removeEventListener(mHandler);
-			mBackendService = null;
+			if (mBackendService != null)
+			{
+				mBackendService.removeEventListener(mHandler);
+			}
+			mHandler.removeCallbacksAndMessages(null);
+			mHandler = null;
 		}
+		mBackendService = null;
+		mMessenger = null;
+
+		super.onDestroy();
 	}
 
 	@Override
@@ -227,7 +252,8 @@ public class StructInterfaceServiceAdapter extends Service
 				case RPC_FuncBoolReq: {
 
 					Bundle data = msg.getData();
-					data.setClassLoader(StructBoolParcelable.class.getClassLoader());
+					
+        data.setClassLoader(StructBoolParcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
 			        StructBool paramBool = data.getParcelable("paramBool", StructBoolParcelable.class).getStructBool();
@@ -256,7 +282,8 @@ public class StructInterfaceServiceAdapter extends Service
 				case RPC_FuncIntReq: {
 
 					Bundle data = msg.getData();
-					data.setClassLoader(StructIntParcelable.class.getClassLoader());
+					
+        data.setClassLoader(StructIntParcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
 			        StructInt paramInt = data.getParcelable("paramInt", StructIntParcelable.class).getStructInt();
@@ -285,7 +312,8 @@ public class StructInterfaceServiceAdapter extends Service
 				case RPC_FuncFloatReq: {
 
 					Bundle data = msg.getData();
-					data.setClassLoader(StructFloatParcelable.class.getClassLoader());
+					
+        data.setClassLoader(StructFloatParcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
 			        StructFloat paramFloat = data.getParcelable("paramFloat", StructFloatParcelable.class).getStructFloat();
@@ -314,7 +342,8 @@ public class StructInterfaceServiceAdapter extends Service
 				case RPC_FuncStringReq: {
 
 					Bundle data = msg.getData();
-					data.setClassLoader(StructStringParcelable.class.getClassLoader());
+					
+        data.setClassLoader(StructStringParcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
 			        StructString paramString = data.getParcelable("paramString", StructStringParcelable.class).getStructString();

@@ -12,7 +12,25 @@ import testbed1.testbed1_api.StructFloat;
 import testbed1.testbed1_android_messenger.StructFloatParcelable;
 import testbed1.testbed1_api.StructString;
 import testbed1.testbed1_android_messenger.StructStringParcelable;
+import testbed1.testbed1_api.StructStruct;
+import testbed1.testbed1_android_messenger.StructStructParcelable;
+import testbed1.testbed1_api.StructEnum;
+import testbed1.testbed1_android_messenger.StructEnumParcelable;
+import testbed1.testbed1_api.StructBoolWithArray;
+import testbed1.testbed1_android_messenger.StructBoolWithArrayParcelable;
+import testbed1.testbed1_api.StructIntWithArray;
+import testbed1.testbed1_android_messenger.StructIntWithArrayParcelable;
+import testbed1.testbed1_api.StructFloatWithArray;
+import testbed1.testbed1_android_messenger.StructFloatWithArrayParcelable;
+import testbed1.testbed1_api.StructStringWithArray;
+import testbed1.testbed1_android_messenger.StructStringWithArrayParcelable;
+import testbed1.testbed1_api.StructStructWithArray;
+import testbed1.testbed1_android_messenger.StructStructWithArrayParcelable;
+import testbed1.testbed1_api.StructEnumWithArray;
+import testbed1.testbed1_android_messenger.StructEnumWithArrayParcelable;
 import testbed1.testbed1_api.Testbed1TestHelper;
+import testbed1.testbed1_api.Enum0;
+import testbed1.testbed1_android_messenger.Enum0Parcelable;
 
 import testbed1.testbed1_api.IStructArrayInterfaceEventListener;
 import testbed1.testbed1_api.IStructArrayInterface;
@@ -156,6 +174,9 @@ public class StructArrayInterfaceClientTest
         StructString[] testpropString = new StructString[1];
         testpropString[0] = Testbed1TestHelper.makeTestStructString();
 		data.putParcelableArray("propString", StructStringParcelable.wrapArray(testpropString));
+        Enum0[] testpropEnum = new Enum0[1];
+        testpropEnum[0] = Enum0.Value1;
+		data.putParcelableArray("propEnum", Enum0Parcelable.wrapArray(testpropEnum));
 
     //setup mock expectations
         msg.setData(data);
@@ -165,8 +186,8 @@ public class StructArrayInterfaceClientTest
         inOrderEventListener.verify(listenerMock,times(1)).onPropIntChanged(any(StructInt[].class));
         inOrderEventListener.verify(listenerMock,times(1)).onPropFloatChanged(any(StructFloat[].class));
         inOrderEventListener.verify(listenerMock,times(1)).onPropStringChanged(any(StructString[].class));
+		inOrderEventListener.verify(listenerMock,times(1)).onPropEnumChanged(testpropEnum);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropBoolPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -181,7 +202,7 @@ public class StructArrayInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
         inOrderEventListener.verify(listenerMock,times(1)).onPropBoolChanged(any(StructBool[].class));	    
     }
-
+    
     @Test
      public void setPropertyRequestpropBool()
     {
@@ -190,7 +211,6 @@ public class StructArrayInterfaceClientTest
 
         testedClient.setPropBool(testpropBool);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -201,7 +221,7 @@ public class StructArrayInterfaceClientTest
             StructBool[] receivedpropBool =  StructBoolParcelable.unwrapArray((StructBoolParcelable[])data.getParcelableArray("propBool", StructBoolParcelable.class));
         assertEquals(receivedpropBool, testpropBool);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceivepropIntPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -216,7 +236,7 @@ public class StructArrayInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
         inOrderEventListener.verify(listenerMock,times(1)).onPropIntChanged(any(StructInt[].class));	    
     }
-
+    
     @Test
      public void setPropertyRequestpropInt()
     {
@@ -225,7 +245,6 @@ public class StructArrayInterfaceClientTest
 
         testedClient.setPropInt(testpropInt);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -236,7 +255,7 @@ public class StructArrayInterfaceClientTest
             StructInt[] receivedpropInt =  StructIntParcelable.unwrapArray((StructIntParcelable[])data.getParcelableArray("propInt", StructIntParcelable.class));
         assertEquals(receivedpropInt, testpropInt);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceivepropFloatPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -251,7 +270,7 @@ public class StructArrayInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
         inOrderEventListener.verify(listenerMock,times(1)).onPropFloatChanged(any(StructFloat[].class));	    
     }
-
+    
     @Test
      public void setPropertyRequestpropFloat()
     {
@@ -260,7 +279,6 @@ public class StructArrayInterfaceClientTest
 
         testedClient.setPropFloat(testpropFloat);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -271,7 +289,7 @@ public class StructArrayInterfaceClientTest
             StructFloat[] receivedpropFloat =  StructFloatParcelable.unwrapArray((StructFloatParcelable[])data.getParcelableArray("propFloat", StructFloatParcelable.class));
         assertEquals(receivedpropFloat, testpropFloat);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceivepropStringPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -286,7 +304,7 @@ public class StructArrayInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
         inOrderEventListener.verify(listenerMock,times(1)).onPropStringChanged(any(StructString[].class));	    
     }
-
+    
     @Test
      public void setPropertyRequestpropString()
     {
@@ -295,7 +313,6 @@ public class StructArrayInterfaceClientTest
 
         testedClient.setPropString(testpropString);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -306,6 +323,41 @@ public class StructArrayInterfaceClientTest
             StructString[] receivedpropString =  StructStringParcelable.unwrapArray((StructStringParcelable[])data.getParcelableArray("propString", StructStringParcelable.class));
         assertEquals(receivedpropString, testpropString);
     }
+    
+    @Test
+    public void onReceivepropEnumPropertyChangeTest() throws RemoteException {
+        // Create and send message
+        Message msg = Message.obtain(null, StructArrayInterfaceMessageType.SET_PropEnum.getValue());
+        Bundle data = new Bundle();
+        Enum0[] testpropEnum = new Enum0[1];
+        testpropEnum[0] = Enum0.Value1;
+		data.putParcelableArray("propEnum", Enum0Parcelable.wrapArray(testpropEnum));
+
+        msg.setData(data);
+        mClientMessenger.send(msg);
+        Robolectric.flushForegroundThreadScheduler();
+		inOrderEventListener.verify(listenerMock,times(1)).onPropEnumChanged(testpropEnum);	    
+    }
+    
+    @Test
+     public void setPropertyRequestpropEnum()
+    {
+        Enum0[] testpropEnum = new Enum0[1];
+        testpropEnum[0] = Enum0.Value1;
+
+        testedClient.setPropEnum(testpropEnum);
+        Robolectric.flushForegroundThreadScheduler();
+        inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
+        Message response = messageCaptor.getValue();
+
+        assertEquals(StructArrayInterfaceMessageType.PROP_PropEnum.getValue(), response.what);
+        Bundle data = response.getData();
+		data.setClassLoader(Enum0Parcelable.class.getClassLoader());
+        
+            Enum0[] receivedpropEnum =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("propEnum", Enum0Parcelable.class));
+        assertEquals(receivedpropEnum, testpropEnum);
+    }
+    
     @Test
     public void whenNotifiedsigBool() throws RemoteException
     {
@@ -374,6 +426,23 @@ public class StructArrayInterfaceClientTest
         inOrderEventListener.verify(listenerMock,times(1)).onSigString( any(StructString[].class));
 
 }
+    @Test
+    public void whenNotifiedsigEnum() throws RemoteException
+    {
+
+        Message msg = Message.obtain(null, StructArrayInterfaceMessageType.SIG_SigEnum.getValue());
+        Bundle data = new Bundle();
+        Enum0[] testparamEnum = new Enum0[1];
+        testparamEnum[0] = Enum0.Value1;
+		data.putParcelableArray("paramEnum", Enum0Parcelable.wrapArray(testparamEnum));
+
+        msg.setData(data);
+        mClientMessenger.send(msg);
+        Robolectric.flushForegroundThreadScheduler();
+        
+        inOrderEventListener.verify(listenerMock,times(1)).onSigEnum(testparamEnum);
+
+}
 
 
     public void onfuncBoolRequest() throws RemoteException {
@@ -400,7 +469,8 @@ public class StructArrayInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(StructArrayInterfaceMessageType.RPC_FuncBoolReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
-		data.setClassLoader(StructBoolParcelable.class.getClassLoader());
+        
+        data.setClassLoader(StructBoolParcelable.class.getClassLoader());
         
             StructBool[] receivedparamBool =  StructBoolParcelable.unwrapArray((StructBoolParcelable[])data.getParcelableArray("paramBool", StructBoolParcelable.class));
         assertEquals(receivedparamBool, testparamBool);
@@ -447,7 +517,8 @@ public class StructArrayInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(StructArrayInterfaceMessageType.RPC_FuncIntReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
-		data.setClassLoader(StructIntParcelable.class.getClassLoader());
+        
+        data.setClassLoader(StructIntParcelable.class.getClassLoader());
         
             StructInt[] receivedparamInt =  StructIntParcelable.unwrapArray((StructIntParcelable[])data.getParcelableArray("paramInt", StructIntParcelable.class));
         assertEquals(receivedparamInt, testparamInt);
@@ -494,7 +565,8 @@ public class StructArrayInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(StructArrayInterfaceMessageType.RPC_FuncFloatReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
-		data.setClassLoader(StructFloatParcelable.class.getClassLoader());
+        
+        data.setClassLoader(StructFloatParcelable.class.getClassLoader());
         
             StructFloat[] receivedparamFloat =  StructFloatParcelable.unwrapArray((StructFloatParcelable[])data.getParcelableArray("paramFloat", StructFloatParcelable.class));
         assertEquals(receivedparamFloat, testparamFloat);
@@ -541,7 +613,8 @@ public class StructArrayInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(StructArrayInterfaceMessageType.RPC_FuncStringReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
-		data.setClassLoader(StructStringParcelable.class.getClassLoader());
+        
+        data.setClassLoader(StructStringParcelable.class.getClassLoader());
         
             StructString[] receivedparamString =  StructStringParcelable.unwrapArray((StructStringParcelable[])data.getParcelableArray("paramString", StructStringParcelable.class));
         assertEquals(receivedparamString, testparamString);
@@ -554,6 +627,54 @@ public class StructArrayInterfaceClientTest
         Bundle result_data = new Bundle();
 		result_data.putInt("callId", returnedCallId);
 		result_data.putParcelableArray("result", StructStringParcelable.wrapArray(expectedResult));
+
+        msg.setData(result_data);
+        method_request.replyTo.send(msg);
+        Robolectric.flushForegroundThreadScheduler();
+
+        assertTrue(receivedResp.get());
+
+    }
+
+
+    public void onfuncEnumRequest() throws RemoteException {
+
+        // Execute method
+        Enum0[] testparamEnum = new Enum0[1];
+        testparamEnum[0] = Enum0.Value1;
+        Enum0[] expectedResult = new Enum0[1];
+        expectedResult[0] = Enum0.Value1;
+
+        AtomicBoolean receivedResp = new AtomicBoolean(false);
+        CompletableFuture<Enum0[]> resFuture = testedClient.funcEnumAsync(testparamEnum);
+
+        resFuture.thenAccept(result -> {
+            assertEquals(expectedResult, result);
+            receivedResp.set(true);
+        });
+        Robolectric.flushForegroundThreadScheduler();
+
+        // Expect msg to be sent.
+        inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
+
+
+        Message method_request = messageCaptor.getValue();
+        assertEquals(StructArrayInterfaceMessageType.RPC_FuncEnumReq.getValue(), method_request.what);
+        Bundle data = method_request.getData();
+        
+        data.setClassLoader(Enum0Parcelable.class.getClassLoader());
+        
+            Enum0[] receivedparamEnum =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("paramEnum", Enum0Parcelable.class));
+        assertEquals(receivedparamEnum, testparamEnum);
+        int returnedCallId = data.getInt("callId", -1);
+
+        //Prepare response
+
+        Message msg = Message.obtain(null, StructArrayInterfaceMessageType.RPC_FuncEnumResp.getValue());
+
+        Bundle result_data = new Bundle();
+		result_data.putInt("callId", returnedCallId);
+		result_data.putParcelableArray("result", Enum0Parcelable.wrapArray(expectedResult));
 
         msg.setData(result_data);
         method_request.replyTo.send(msg);

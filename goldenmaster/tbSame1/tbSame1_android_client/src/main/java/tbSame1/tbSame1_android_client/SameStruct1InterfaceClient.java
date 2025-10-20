@@ -19,12 +19,6 @@ import android.util.Log;
 //import message type and parcelabe types
 import tbSame1.tbSame1_api.Struct1;
 import tbSame1.tbSame1_android_messenger.Struct1Parcelable;
-import tbSame1.tbSame1_api.Struct2;
-import tbSame1.tbSame1_android_messenger.Struct2Parcelable;
-import tbSame1.tbSame1_api.Enum1;
-import tbSame1.tbSame1_android_messenger.Enum1Parcelable;
-import tbSame1.tbSame1_api.Enum2;
-import tbSame1.tbSame1_android_messenger.Enum2Parcelable;
 
 import tbSame1.tbSame1_api.ISameStruct1InterfaceEventListener;
 import tbSame1.tbSame1_api.ISameStruct1Interface;
@@ -188,7 +182,7 @@ public class SameStruct1InterfaceClient extends AbstractSameStruct1Interface imp
                 {
                     Bundle data = msg.getData();
                     
-				    data.setClassLoader(Struct1Parcelable.class.getClassLoader());
+        data.setClassLoader(Struct1Parcelable.class.getClassLoader());
 			        
                     
 			        Struct1 prop1 = data.getParcelable("prop1", Struct1Parcelable.class).getStruct1();
@@ -213,7 +207,8 @@ public class SameStruct1InterfaceClient extends AbstractSameStruct1Interface imp
 			    case SIG_Sig1: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(Struct1Parcelable.class.getClassLoader());
+                    
+        data.setClassLoader(Struct1Parcelable.class.getClassLoader());
                 
 			        Struct1 param1 = data.getParcelable("param1", Struct1Parcelable.class).getStruct1();
 				    onSig1(param1);
@@ -222,7 +217,8 @@ public class SameStruct1InterfaceClient extends AbstractSameStruct1Interface imp
 			    case RPC_Func1Resp: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(Struct1Parcelable.class.getClassLoader());
+                    
+        data.setClassLoader(Struct1Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

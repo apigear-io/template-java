@@ -17,26 +17,10 @@ import android.content.ComponentName;
 import android.util.Log;
 
 //import message type and parcelabe types
-import testbed2.testbed2_api.Struct1;
-import testbed2.testbed2_android_messenger.Struct1Parcelable;
-import testbed2.testbed2_api.Struct2;
-import testbed2.testbed2_android_messenger.Struct2Parcelable;
-import testbed2.testbed2_api.Struct3;
-import testbed2.testbed2_android_messenger.Struct3Parcelable;
-import testbed2.testbed2_api.Struct4;
-import testbed2.testbed2_android_messenger.Struct4Parcelable;
 import testbed2.testbed2_api.NestedStruct1;
 import testbed2.testbed2_android_messenger.NestedStruct1Parcelable;
 import testbed2.testbed2_api.NestedStruct2;
 import testbed2.testbed2_android_messenger.NestedStruct2Parcelable;
-import testbed2.testbed2_api.NestedStruct3;
-import testbed2.testbed2_android_messenger.NestedStruct3Parcelable;
-import testbed2.testbed2_api.Enum1;
-import testbed2.testbed2_android_messenger.Enum1Parcelable;
-import testbed2.testbed2_api.Enum2;
-import testbed2.testbed2_android_messenger.Enum2Parcelable;
-import testbed2.testbed2_api.Enum3;
-import testbed2.testbed2_android_messenger.Enum3Parcelable;
 
 import testbed2.testbed2_api.INestedStruct2InterfaceEventListener;
 import testbed2.testbed2_api.INestedStruct2Interface;
@@ -201,8 +185,7 @@ public class NestedStruct2InterfaceClient extends AbstractNestedStruct2Interface
                 {
                     Bundle data = msg.getData();
                     
-				    data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
-				    data.setClassLoader(NestedStruct2Parcelable.class.getClassLoader());
+        data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
 			        
                     
 			        NestedStruct1 prop1 = data.getParcelable("prop1", NestedStruct1Parcelable.class).getNestedStruct1();
@@ -241,7 +224,8 @@ public class NestedStruct2InterfaceClient extends AbstractNestedStruct2Interface
 			    case SIG_Sig1: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
+                    
+        data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
                 
 			        NestedStruct1 param1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
 				    onSig1(param1);
@@ -250,8 +234,8 @@ public class NestedStruct2InterfaceClient extends AbstractNestedStruct2Interface
 			    case SIG_Sig2: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
-					data.setClassLoader(NestedStruct2Parcelable.class.getClassLoader());
+                    
+        data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
                 
 			        NestedStruct1 param1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
                 
@@ -262,7 +246,8 @@ public class NestedStruct2InterfaceClient extends AbstractNestedStruct2Interface
 			    case RPC_Func1Resp: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
+                    
+        data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -280,8 +265,8 @@ public class NestedStruct2InterfaceClient extends AbstractNestedStruct2Interface
 			    case RPC_Func2Resp: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
-					data.setClassLoader(NestedStruct2Parcelable.class.getClassLoader());
+                    
+        data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

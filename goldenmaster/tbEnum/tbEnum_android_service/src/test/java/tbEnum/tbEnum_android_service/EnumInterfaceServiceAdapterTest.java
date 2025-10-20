@@ -180,10 +180,8 @@ public class EnumInterfaceServiceAdapterTest
 			Enum2 receivedprop2 = data.getParcelable("prop2", Enum2Parcelable.class).getEnum2();
         
 			Enum3 receivedprop3 = data.getParcelable("prop3", Enum3Parcelable.class).getEnum3();
-		data.setClassLoader(Enum0Parcelable.class.getClassLoader());
-		data.setClassLoader(Enum1Parcelable.class.getClassLoader());
-		data.setClassLoader(Enum2Parcelable.class.getClassLoader());
-		data.setClassLoader(Enum3Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(Enum0Parcelable.class.getClassLoader());
         assertEquals(receivedprop0, initprop0);
         assertEquals(receivedprop1, initprop1);
         assertEquals(receivedprop2, initprop2);
@@ -225,7 +223,6 @@ public class EnumInterfaceServiceAdapterTest
         // All emitted signals and property changes are forwarded to it.
         registerFakeActivityClient(clientReplyMessenger, mTestConnectionID1);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop0PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -260,7 +257,6 @@ public class EnumInterfaceServiceAdapterTest
 
         assertEquals(receivedprop0, testprop0);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop1PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -295,7 +291,6 @@ public class EnumInterfaceServiceAdapterTest
 
         assertEquals(receivedprop1, testprop1);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop2PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -330,7 +325,6 @@ public class EnumInterfaceServiceAdapterTest
 
         assertEquals(receivedprop2, testprop2);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop3PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -378,7 +372,8 @@ public class EnumInterfaceServiceAdapterTest
 
         assertEquals(EnumInterfaceMessageType.SIG_Sig0.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(Enum0Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(Enum0Parcelable.class.getClassLoader());
         
 			Enum0 receivedparam0 = data.getParcelable("param0", Enum0Parcelable.class).getEnum0();
         assertEquals(receivedparam0, testparam0);
@@ -396,7 +391,8 @@ public class EnumInterfaceServiceAdapterTest
 
         assertEquals(EnumInterfaceMessageType.SIG_Sig1.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(Enum1Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(Enum1Parcelable.class.getClassLoader());
         
 			Enum1 receivedparam1 = data.getParcelable("param1", Enum1Parcelable.class).getEnum1();
         assertEquals(receivedparam1, testparam1);
@@ -414,7 +410,8 @@ public class EnumInterfaceServiceAdapterTest
 
         assertEquals(EnumInterfaceMessageType.SIG_Sig2.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(Enum2Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(Enum2Parcelable.class.getClassLoader());
         
 			Enum2 receivedparam2 = data.getParcelable("param2", Enum2Parcelable.class).getEnum2();
         assertEquals(receivedparam2, testparam2);
@@ -432,7 +429,8 @@ public class EnumInterfaceServiceAdapterTest
 
         assertEquals(EnumInterfaceMessageType.SIG_Sig3.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(Enum3Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(Enum3Parcelable.class.getClassLoader());
         
 			Enum3 receivedparam3 = data.getParcelable("param3", Enum3Parcelable.class).getEnum3();
         assertEquals(receivedparam3, testparam3);

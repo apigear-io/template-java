@@ -6,11 +6,16 @@ import android.util.Log;
 import testbed1.testbed1_api.IStructArrayInterface;
 import testbed1.testbed1_api.AbstractStructArrayInterface;
 import testbed1.testbed1_api.IStructArrayInterfaceEventListener;
+import testbed1.testbed1_api.Enum0;
+import testbed1.testbed1_android_messenger.Enum0Parcelable;
 import testbed1.testbed1_api.StructBool;
-import testbed1.testbed1_api.StructInt;
+import testbed1.testbed1_android_messenger.StructBoolParcelable;
 import testbed1.testbed1_api.StructFloat;
+import testbed1.testbed1_android_messenger.StructFloatParcelable;
+import testbed1.testbed1_api.StructInt;
+import testbed1.testbed1_android_messenger.StructIntParcelable;
 import testbed1.testbed1_api.StructString;
-
+import testbed1.testbed1_android_messenger.StructStringParcelable;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -93,6 +98,21 @@ public class StructArrayInterfaceJniService extends AbstractStructArrayInterface
     }
 
   
+    @Override
+    public void setPropEnum(Enum0[] propEnum)
+    {
+        Log.i(TAG, "request setPropEnum called, will call native ");
+        nativeSetPropEnum(propEnum);
+    }
+
+    @Override
+    public Enum0[] getPropEnum()
+    {
+        Log.i(TAG, "request getPropEnum called, will call native ");
+        return nativeGetPropEnum();
+    }
+
+  
     // methods
 
     @Override
@@ -145,6 +165,19 @@ public class StructArrayInterfaceJniService extends AbstractStructArrayInterface
         return CompletableFuture.supplyAsync(
                 () -> {return funcString(paramString); },
                 executor);
+    }
+
+    @Override
+    public Enum0[] funcEnum(Enum0[] paramEnum) {
+        Log.w(TAG, "request method funcEnum called, will call native");
+        return nativeFuncEnum(paramEnum);
+    }
+
+    @Override
+    public  CompletableFuture<Enum0[]> funcEnumAsync(Enum0[] paramEnum) {
+        return CompletableFuture.supplyAsync(
+                () -> {return funcEnum(paramEnum); },
+                executor);
     }    
 
     @Override
@@ -165,11 +198,15 @@ public class StructArrayInterfaceJniService extends AbstractStructArrayInterface
     private native void nativeSetPropString(StructString[] propString);
     private native StructString[] nativeGetPropString();
   
+    private native void nativeSetPropEnum(Enum0[] propEnum);
+    private native Enum0[] nativeGetPropEnum();
+  
     // methods
     private native StructBool[] nativeFuncBool(StructBool[] paramBool);
     private native StructInt[] nativeFuncInt(StructInt[] paramInt);
     private native StructFloat[] nativeFuncFloat(StructFloat[] paramFloat);
     private native StructString[] nativeFuncString(StructString[] paramString);
+    private native Enum0[] nativeFuncEnum(Enum0[] paramEnum);
 
     // Called by Native Impl Service
     public void nativeServiceReady(boolean value) {
@@ -197,6 +234,11 @@ public class StructArrayInterfaceJniService extends AbstractStructArrayInterface
          Log.i(TAG, "onPropStringChanged, will pass notification to all listeners");
          firePropStringChanged(newValue);
     }
+    public void onPropEnumChanged(Enum0[] newValue)
+    {
+         Log.i(TAG, "onPropEnumChanged, will pass notification to all listeners");
+         firePropEnumChanged(newValue);
+    }
     public void onSigBool(StructBool[] paramBool)
     {
         Log.i(TAG, "onSigBool, will pass notification to all listeners");
@@ -216,6 +258,11 @@ public class StructArrayInterfaceJniService extends AbstractStructArrayInterface
     {
         Log.i(TAG, "onSigString, will pass notification to all listeners");
         fireSigString(paramString);
+    }
+    public void onSigEnum(Enum0[] paramEnum)
+    {
+        Log.i(TAG, "onSigEnum, will pass notification to all listeners");
+        fireSigEnum(paramEnum);
     }
 
 }

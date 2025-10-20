@@ -18,10 +18,6 @@ import tbSame2.tbSame2_api.Struct1;
 import tbSame2.tbSame2_android_messenger.Struct1Parcelable;
 import tbSame2.tbSame2_api.Struct2;
 import tbSame2.tbSame2_android_messenger.Struct2Parcelable;
-import tbSame2.tbSame2_api.Enum1;
-import tbSame2.tbSame2_android_messenger.Enum1Parcelable;
-import tbSame2.tbSame2_api.Enum2;
-import tbSame2.tbSame2_android_messenger.Enum2Parcelable;
 
 import tbSame2.tbSame2_api.ISameStruct2InterfaceEventListener;
 import tbSame2.tbSame2_android_service.ISameStruct2InterfaceServiceFactory;
@@ -37,10 +33,11 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private Messenger mMessenger;
+	private static Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
 	private static ISameStruct2Interface mBackendService;
 	private static ISameStruct2InterfaceServiceFactory mServiceFactory;
+	private static final Object mutex = new Object();
 
 	//private final List<Message> mMessagesQueue = new ArrayList<>();
 
@@ -55,10 +52,19 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 		{
 			mServiceFactory = factory;
 		}
-		mBackendService = mServiceFactory.getServiceInstance();
-		if (mHandler != null)
+		synchronized (mutex)
 		{
-			mBackendService.addEventListener(mHandler);
+			if (mHandler != null && mBackendService != null)
+			{
+				// remove old event listener (backend is about to change)
+				mBackendService.removeEventListener(mHandler);
+			}
+			mBackendService = mServiceFactory.getServiceInstance();
+			if (mHandler != null)
+			{
+				Log.i(TAG, "LIFECYCLE: setService(SameStruct2Interface) called. For handler " + mHandler);
+				mBackendService.addEventListener(mHandler);
+			}
 		}
 		return mBackendService;
 	}
@@ -69,13 +75,25 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(SameStruct2InterfaceService) called. context = " + this);
-
-		mHandler = new IncomingHandler(this);
-		mMessenger = new Messenger(mHandler);
-		if (mBackendService != null)
-		{
-			mBackendService.addEventListener(mHandler);
+		synchronized (mutex) {
+			if (mHandler != null && mBackendService != null)
+			{
+				// The handler (event listener) is about to change.
+				mBackendService.removeEventListener(mHandler);
+			}
+			if (mHandler != null)
+			{
+				mHandler.removeCallbacksAndMessages(null);
+			}
+			mHandler = new IncomingHandler(this);
+			mMessenger = new Messenger(mHandler);
+			if (mBackendService != null)
+			{
+				Log.i(TAG, "LIFECYCLE: Add event listern to a backend called for handler " + mHandler);
+				mBackendService.addEventListener(mHandler);
+			}
 		}
+
 	}
 
 	// execution of service will start on calling this method
@@ -92,18 +110,21 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 	@Override
 	public void onDestroy()
 	{
-		super.onDestroy();
-		
-		Log.i(TAG, "LIFECYCLE: onDestroy(SameStruct2InterfaceService) - proc = " + ", mMessenger = " + mMessenger
-		);
+		Log.i(TAG, "LIFECYCLE: onDestroy(SameStruct2InterfaceService) - proc = " + ", mMessenger = " + mMessenger);
 
-		if (mBackendService != null)
+		if (mHandler != null)
 		{
-			Log.i(TAG, "LIFECYCLE: onDestroy(SameStruct2InterfaceService) - proc = " + ", remove engine event callback!");
-
-			mBackendService.removeEventListener(mHandler);
-			mBackendService = null;
+			if (mBackendService != null)
+			{
+				mBackendService.removeEventListener(mHandler);
+			}
+			mHandler.removeCallbacksAndMessages(null);
+			mHandler = null;
 		}
+		mBackendService = null;
+		mMessenger = null;
+
+		super.onDestroy();
 	}
 
 	@Override
@@ -209,7 +230,8 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 				case RPC_Func1Req: {
 
 					Bundle data = msg.getData();
-					data.setClassLoader(Struct1Parcelable.class.getClassLoader());
+					
+        data.setClassLoader(Struct1Parcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
 			        Struct1 param1 = data.getParcelable("param1", Struct1Parcelable.class).getStruct1();
@@ -238,8 +260,8 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 				case RPC_Func2Req: {
 
 					Bundle data = msg.getData();
-					data.setClassLoader(Struct1Parcelable.class.getClassLoader());
-					data.setClassLoader(Struct2Parcelable.class.getClassLoader());
+					
+        data.setClassLoader(Struct1Parcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
 			        Struct1 param1 = data.getParcelable("param1", Struct1Parcelable.class).getStruct1();

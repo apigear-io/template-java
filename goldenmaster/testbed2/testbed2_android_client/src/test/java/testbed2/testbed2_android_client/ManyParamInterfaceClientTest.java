@@ -174,7 +174,6 @@ public class ManyParamInterfaceClientTest
 		inOrderEventListener.verify(listenerMock,times(1)).onProp3Changed(testprop3);
 		inOrderEventListener.verify(listenerMock,times(1)).onProp4Changed(testprop4);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop1PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -188,7 +187,7 @@ public class ManyParamInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onProp1Changed(testprop1);	    
     }
-
+    
     @Test
      public void setPropertyRequestprop1()
     {
@@ -196,7 +195,6 @@ public class ManyParamInterfaceClientTest
 
         testedClient.setProp1(testprop1);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -206,7 +204,7 @@ public class ManyParamInterfaceClientTest
 			int receivedprop1 = data.getInt("prop1", 0);
         assertEquals(receivedprop1, testprop1);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceiveprop2PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -220,7 +218,7 @@ public class ManyParamInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onProp2Changed(testprop2);	    
     }
-
+    
     @Test
      public void setPropertyRequestprop2()
     {
@@ -228,7 +226,6 @@ public class ManyParamInterfaceClientTest
 
         testedClient.setProp2(testprop2);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -238,7 +235,7 @@ public class ManyParamInterfaceClientTest
 			int receivedprop2 = data.getInt("prop2", 0);
         assertEquals(receivedprop2, testprop2);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceiveprop3PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -252,7 +249,7 @@ public class ManyParamInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onProp3Changed(testprop3);	    
     }
-
+    
     @Test
      public void setPropertyRequestprop3()
     {
@@ -260,7 +257,6 @@ public class ManyParamInterfaceClientTest
 
         testedClient.setProp3(testprop3);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -270,7 +266,7 @@ public class ManyParamInterfaceClientTest
 			int receivedprop3 = data.getInt("prop3", 0);
         assertEquals(receivedprop3, testprop3);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceiveprop4PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -284,7 +280,7 @@ public class ManyParamInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onProp4Changed(testprop4);	    
     }
-
+    
     @Test
      public void setPropertyRequestprop4()
     {
@@ -292,7 +288,6 @@ public class ManyParamInterfaceClientTest
 
         testedClient.setProp4(testprop4);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -302,6 +297,7 @@ public class ManyParamInterfaceClientTest
 			int receivedprop4 = data.getInt("prop4", 0);
         assertEquals(receivedprop4, testprop4);
     }
+    
     @Test
     public void whenNotifiedsig1() throws RemoteException
     {
@@ -403,6 +399,7 @@ public class ManyParamInterfaceClientTest
         assertEquals(ManyParamInterfaceMessageType.RPC_Func1Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
         
+        
 			int receivedparam1 = data.getInt("param1", 0);
         assertEquals(receivedparam1, testparam1);
         int returnedCallId = data.getInt("callId", -1);
@@ -447,6 +444,7 @@ public class ManyParamInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(ManyParamInterfaceMessageType.RPC_Func2Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
+        
         
 			int receivedparam1 = data.getInt("param1", 0);
         assertEquals(receivedparam1, testparam1);
@@ -496,6 +494,7 @@ public class ManyParamInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(ManyParamInterfaceMessageType.RPC_Func3Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
+        
         
 			int receivedparam1 = data.getInt("param1", 0);
         assertEquals(receivedparam1, testparam1);
@@ -549,6 +548,7 @@ public class ManyParamInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(ManyParamInterfaceMessageType.RPC_Func4Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
+        
         
 			int receivedparam1 = data.getInt("param1", 0);
         assertEquals(receivedparam1, testparam1);
