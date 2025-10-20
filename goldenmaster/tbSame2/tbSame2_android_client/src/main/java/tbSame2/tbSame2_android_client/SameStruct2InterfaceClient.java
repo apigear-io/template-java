@@ -21,10 +21,6 @@ import tbSame2.tbSame2_api.Struct1;
 import tbSame2.tbSame2_android_messenger.Struct1Parcelable;
 import tbSame2.tbSame2_api.Struct2;
 import tbSame2.tbSame2_android_messenger.Struct2Parcelable;
-import tbSame2.tbSame2_api.Enum1;
-import tbSame2.tbSame2_android_messenger.Enum1Parcelable;
-import tbSame2.tbSame2_api.Enum2;
-import tbSame2.tbSame2_android_messenger.Enum2Parcelable;
 
 import tbSame2.tbSame2_api.ISameStruct2InterfaceEventListener;
 import tbSame2.tbSame2_api.ISameStruct2Interface;
@@ -189,8 +185,7 @@ public class SameStruct2InterfaceClient extends AbstractSameStruct2Interface imp
                 {
                     Bundle data = msg.getData();
                     
-				    data.setClassLoader(Struct2Parcelable.class.getClassLoader());
-				    data.setClassLoader(Struct2Parcelable.class.getClassLoader());
+        data.setClassLoader(Struct2Parcelable.class.getClassLoader());
 			        
                     
 			        Struct2 prop1 = data.getParcelable("prop1", Struct2Parcelable.class).getStruct2();
@@ -229,7 +224,8 @@ public class SameStruct2InterfaceClient extends AbstractSameStruct2Interface imp
 			    case SIG_Sig1: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(Struct1Parcelable.class.getClassLoader());
+                    
+        data.setClassLoader(Struct1Parcelable.class.getClassLoader());
                 
 			        Struct1 param1 = data.getParcelable("param1", Struct1Parcelable.class).getStruct1();
 				    onSig1(param1);
@@ -238,8 +234,8 @@ public class SameStruct2InterfaceClient extends AbstractSameStruct2Interface imp
 			    case SIG_Sig2: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(Struct1Parcelable.class.getClassLoader());
-					data.setClassLoader(Struct2Parcelable.class.getClassLoader());
+                    
+        data.setClassLoader(Struct1Parcelable.class.getClassLoader());
                 
 			        Struct1 param1 = data.getParcelable("param1", Struct1Parcelable.class).getStruct1();
                 
@@ -250,7 +246,8 @@ public class SameStruct2InterfaceClient extends AbstractSameStruct2Interface imp
 			    case RPC_Func1Resp: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(Struct1Parcelable.class.getClassLoader());
+                    
+        data.setClassLoader(Struct1Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -268,8 +265,8 @@ public class SameStruct2InterfaceClient extends AbstractSameStruct2Interface imp
 			    case RPC_Func2Resp: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(Struct1Parcelable.class.getClassLoader());
-					data.setClassLoader(Struct2Parcelable.class.getClassLoader());
+                    
+        data.setClassLoader(Struct1Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

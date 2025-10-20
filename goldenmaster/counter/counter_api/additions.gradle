@@ -1,0 +1,9 @@
+android {
+    namespace 'counter.counter_api'
+}
+
+dependencies {
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.17.0'
+    api project(':customTypes_api')
+    api project(':externTypes_api')
+}

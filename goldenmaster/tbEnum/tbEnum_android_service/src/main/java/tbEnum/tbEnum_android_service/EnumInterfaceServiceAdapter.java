@@ -37,10 +37,11 @@ public class EnumInterfaceServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private Messenger mMessenger;
+	private static Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
 	private static IEnumInterface mBackendService;
 	private static IEnumInterfaceServiceFactory mServiceFactory;
+	private static final Object mutex = new Object();
 
 	//private final List<Message> mMessagesQueue = new ArrayList<>();
 
@@ -55,10 +56,19 @@ public class EnumInterfaceServiceAdapter extends Service
 		{
 			mServiceFactory = factory;
 		}
-		mBackendService = mServiceFactory.getServiceInstance();
-		if (mHandler != null)
+		synchronized (mutex)
 		{
-			mBackendService.addEventListener(mHandler);
+			if (mHandler != null && mBackendService != null)
+			{
+				// remove old event listener (backend is about to change)
+				mBackendService.removeEventListener(mHandler);
+			}
+			mBackendService = mServiceFactory.getServiceInstance();
+			if (mHandler != null)
+			{
+				Log.i(TAG, "LIFECYCLE: setService(EnumInterface) called. For handler " + mHandler);
+				mBackendService.addEventListener(mHandler);
+			}
 		}
 		return mBackendService;
 	}
@@ -69,13 +79,25 @@ public class EnumInterfaceServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(EnumInterfaceService) called. context = " + this);
-
-		mHandler = new IncomingHandler(this);
-		mMessenger = new Messenger(mHandler);
-		if (mBackendService != null)
-		{
-			mBackendService.addEventListener(mHandler);
+		synchronized (mutex) {
+			if (mHandler != null && mBackendService != null)
+			{
+				// The handler (event listener) is about to change.
+				mBackendService.removeEventListener(mHandler);
+			}
+			if (mHandler != null)
+			{
+				mHandler.removeCallbacksAndMessages(null);
+			}
+			mHandler = new IncomingHandler(this);
+			mMessenger = new Messenger(mHandler);
+			if (mBackendService != null)
+			{
+				Log.i(TAG, "LIFECYCLE: Add event listern to a backend called for handler " + mHandler);
+				mBackendService.addEventListener(mHandler);
+			}
 		}
+
 	}
 
 	// execution of service will start on calling this method
@@ -92,18 +114,21 @@ public class EnumInterfaceServiceAdapter extends Service
 	@Override
 	public void onDestroy()
 	{
-		super.onDestroy();
-		
-		Log.i(TAG, "LIFECYCLE: onDestroy(EnumInterfaceService) - proc = " + ", mMessenger = " + mMessenger
-		);
+		Log.i(TAG, "LIFECYCLE: onDestroy(EnumInterfaceService) - proc = " + ", mMessenger = " + mMessenger);
 
-		if (mBackendService != null)
+		if (mHandler != null)
 		{
-			Log.i(TAG, "LIFECYCLE: onDestroy(EnumInterfaceService) - proc = " + ", remove engine event callback!");
-
-			mBackendService.removeEventListener(mHandler);
-			mBackendService = null;
+			if (mBackendService != null)
+			{
+				mBackendService.removeEventListener(mHandler);
+			}
+			mHandler.removeCallbacksAndMessages(null);
+			mHandler = null;
 		}
+		mBackendService = null;
+		mMessenger = null;
+
+		super.onDestroy();
 	}
 
 	@Override
@@ -227,7 +252,8 @@ public class EnumInterfaceServiceAdapter extends Service
 				case RPC_Func0Req: {
 
 					Bundle data = msg.getData();
-					data.setClassLoader(Enum0Parcelable.class.getClassLoader());
+					
+        data.setClassLoader(Enum0Parcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
 			        Enum0 param0 = data.getParcelable("param0", Enum0Parcelable.class).getEnum0();
@@ -256,7 +282,8 @@ public class EnumInterfaceServiceAdapter extends Service
 				case RPC_Func1Req: {
 
 					Bundle data = msg.getData();
-					data.setClassLoader(Enum1Parcelable.class.getClassLoader());
+					
+        data.setClassLoader(Enum1Parcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
 			        Enum1 param1 = data.getParcelable("param1", Enum1Parcelable.class).getEnum1();
@@ -285,7 +312,8 @@ public class EnumInterfaceServiceAdapter extends Service
 				case RPC_Func2Req: {
 
 					Bundle data = msg.getData();
-					data.setClassLoader(Enum2Parcelable.class.getClassLoader());
+					
+        data.setClassLoader(Enum2Parcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
 			        Enum2 param2 = data.getParcelable("param2", Enum2Parcelable.class).getEnum2();
@@ -314,7 +342,8 @@ public class EnumInterfaceServiceAdapter extends Service
 				case RPC_Func3Req: {
 
 					Bundle data = msg.getData();
-					data.setClassLoader(Enum3Parcelable.class.getClassLoader());
+					
+        data.setClassLoader(Enum3Parcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
 			        Enum3 param3 = data.getParcelable("param3", Enum3Parcelable.class).getEnum3();

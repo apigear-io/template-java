@@ -13,9 +13,6 @@ import android.widget.TextView;
 //TODO for each interface there coudl be a tab? now only first one is added
 
 import tbSimple.tbSimple_android_client.VoidInterfaceClient;
-
-//import message type and parcelabe types
-
 import tbSimple.tbSimple_api.IVoidInterfaceEventListener;
 import java.util.concurrent.CompletableFuture;
 

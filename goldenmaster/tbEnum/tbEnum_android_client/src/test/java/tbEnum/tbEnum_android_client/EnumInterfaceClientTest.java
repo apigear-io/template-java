@@ -162,7 +162,6 @@ public class EnumInterfaceClientTest
 		inOrderEventListener.verify(listenerMock,times(1)).onProp2Changed(testprop2);
 		inOrderEventListener.verify(listenerMock,times(1)).onProp3Changed(testprop3);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop0PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -176,7 +175,7 @@ public class EnumInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onProp0Changed(testprop0);	    
     }
-
+    
     @Test
      public void setPropertyRequestprop0()
     {
@@ -184,7 +183,6 @@ public class EnumInterfaceClientTest
 
         testedClient.setProp0(testprop0);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -195,7 +193,7 @@ public class EnumInterfaceClientTest
 			Enum0 receivedprop0 = data.getParcelable("prop0", Enum0Parcelable.class).getEnum0();
         assertEquals(receivedprop0, testprop0);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceiveprop1PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -209,7 +207,7 @@ public class EnumInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onProp1Changed(testprop1);	    
     }
-
+    
     @Test
      public void setPropertyRequestprop1()
     {
@@ -217,7 +215,6 @@ public class EnumInterfaceClientTest
 
         testedClient.setProp1(testprop1);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -228,7 +225,7 @@ public class EnumInterfaceClientTest
 			Enum1 receivedprop1 = data.getParcelable("prop1", Enum1Parcelable.class).getEnum1();
         assertEquals(receivedprop1, testprop1);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceiveprop2PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -242,7 +239,7 @@ public class EnumInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onProp2Changed(testprop2);	    
     }
-
+    
     @Test
      public void setPropertyRequestprop2()
     {
@@ -250,7 +247,6 @@ public class EnumInterfaceClientTest
 
         testedClient.setProp2(testprop2);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -261,7 +257,7 @@ public class EnumInterfaceClientTest
 			Enum2 receivedprop2 = data.getParcelable("prop2", Enum2Parcelable.class).getEnum2();
         assertEquals(receivedprop2, testprop2);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceiveprop3PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -275,7 +271,7 @@ public class EnumInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onProp3Changed(testprop3);	    
     }
-
+    
     @Test
      public void setPropertyRequestprop3()
     {
@@ -283,7 +279,6 @@ public class EnumInterfaceClientTest
 
         testedClient.setProp3(testprop3);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -294,6 +289,7 @@ public class EnumInterfaceClientTest
 			Enum3 receivedprop3 = data.getParcelable("prop3", Enum3Parcelable.class).getEnum3();
         assertEquals(receivedprop3, testprop3);
     }
+    
     @Test
     public void whenNotifiedsig0() throws RemoteException
     {
@@ -382,7 +378,8 @@ public class EnumInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(EnumInterfaceMessageType.RPC_Func0Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
-		data.setClassLoader(Enum0Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(Enum0Parcelable.class.getClassLoader());
         
 			Enum0 receivedparam0 = data.getParcelable("param0", Enum0Parcelable.class).getEnum0();
         assertEquals(receivedparam0, testparam0);
@@ -427,7 +424,8 @@ public class EnumInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(EnumInterfaceMessageType.RPC_Func1Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
-		data.setClassLoader(Enum1Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(Enum1Parcelable.class.getClassLoader());
         
 			Enum1 receivedparam1 = data.getParcelable("param1", Enum1Parcelable.class).getEnum1();
         assertEquals(receivedparam1, testparam1);
@@ -472,7 +470,8 @@ public class EnumInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(EnumInterfaceMessageType.RPC_Func2Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
-		data.setClassLoader(Enum2Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(Enum2Parcelable.class.getClassLoader());
         
 			Enum2 receivedparam2 = data.getParcelable("param2", Enum2Parcelable.class).getEnum2();
         assertEquals(receivedparam2, testparam2);
@@ -517,7 +516,8 @@ public class EnumInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(EnumInterfaceMessageType.RPC_Func3Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
-		data.setClassLoader(Enum3Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(Enum3Parcelable.class.getClassLoader());
         
 			Enum3 receivedparam3 = data.getParcelable("param3", Enum3Parcelable.class).getEnum3();
         assertEquals(receivedparam3, testparam3);

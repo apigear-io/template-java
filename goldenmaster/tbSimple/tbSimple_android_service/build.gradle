@@ -5,7 +5,6 @@ plugins {
 group = "tbSimple"
 version = "1.0.0"
 
-
 android {
     namespace 'tbSimple.tbSimple_android_service'
     compileSdk 35

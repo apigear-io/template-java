@@ -20,12 +20,6 @@ import tbSame2.tbSame2_android_service.SameStruct1InterfaceServiceStarter;
 //import message type and parcelabe types
 import tbSame2.tbSame2_api.Struct1;
 import tbSame2.tbSame2_android_messenger.Struct1Parcelable;
-import tbSame2.tbSame2_api.Struct2;
-import tbSame2.tbSame2_android_messenger.Struct2Parcelable;
-import tbSame2.tbSame2_api.Enum1;
-import tbSame2.tbSame2_android_messenger.Enum1Parcelable;
-import tbSame2.tbSame2_api.Enum2;
-import tbSame2.tbSame2_android_messenger.Enum2Parcelable;
 
 import tbSame2.tbSame2_api.ISameStruct1InterfaceEventListener;
 import tbSame2.tbSame2_api.ISameStruct1Interface;

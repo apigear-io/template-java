@@ -1,0 +1,19 @@
+
+android {
+    namespace 'tbIfaceimport.tbIfaceimport_impl'
+
+	tasks.register('packageSources', Jar) {
+		archiveClassifier.set('sources')
+		from android.sourceSets.main.java.srcDirs
+		include '**/*.java'
+	}
+}
+
+dependencies {
+	implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation project(':tbIfaceimport_api')
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.10.3'
+    testImplementation 'org.mockito:mockito-core:5.12.0'
+    testImplementation 'org.mockito:mockito-inline:5.2.0'
+}

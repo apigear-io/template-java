@@ -177,7 +177,6 @@ public class SimpleArrayInterfaceClientTest
 		inOrderEventListener.verify(listenerMock,times(1)).onPropStringChanged(testpropString);
 		inOrderEventListener.verify(listenerMock,times(1)).onPropReadOnlyStringChanged(testpropReadOnlyString);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropBoolPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -192,7 +191,7 @@ public class SimpleArrayInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onPropBoolChanged(testpropBool);	    
     }
-
+    
     @Test
      public void setPropertyRequestpropBool()
     {
@@ -201,7 +200,6 @@ public class SimpleArrayInterfaceClientTest
 
         testedClient.setPropBool(testpropBool);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -211,7 +209,7 @@ public class SimpleArrayInterfaceClientTest
 			boolean[] receivedpropBool = data.getBooleanArray("propBool");
         assertEquals(receivedpropBool, testpropBool);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceivepropIntPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -226,7 +224,7 @@ public class SimpleArrayInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onPropIntChanged(testpropInt);	    
     }
-
+    
     @Test
      public void setPropertyRequestpropInt()
     {
@@ -235,7 +233,6 @@ public class SimpleArrayInterfaceClientTest
 
         testedClient.setPropInt(testpropInt);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -245,7 +242,7 @@ public class SimpleArrayInterfaceClientTest
 			int[] receivedpropInt = data.getIntArray("propInt");
         assertEquals(receivedpropInt, testpropInt);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceivepropInt32PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -260,7 +257,7 @@ public class SimpleArrayInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onPropInt32Changed(testpropInt32);	    
     }
-
+    
     @Test
      public void setPropertyRequestpropInt32()
     {
@@ -269,7 +266,6 @@ public class SimpleArrayInterfaceClientTest
 
         testedClient.setPropInt32(testpropInt32);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -279,7 +275,7 @@ public class SimpleArrayInterfaceClientTest
 			int[] receivedpropInt32 = data.getIntArray("propInt32");
         assertEquals(receivedpropInt32, testpropInt32);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceivepropInt64PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -294,7 +290,7 @@ public class SimpleArrayInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onPropInt64Changed(testpropInt64);	    
     }
-
+    
     @Test
      public void setPropertyRequestpropInt64()
     {
@@ -303,7 +299,6 @@ public class SimpleArrayInterfaceClientTest
 
         testedClient.setPropInt64(testpropInt64);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -313,7 +308,7 @@ public class SimpleArrayInterfaceClientTest
 			long[] receivedpropInt64 = data.getLongArray("propInt64");
         assertEquals(receivedpropInt64, testpropInt64);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceivepropFloatPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -328,7 +323,7 @@ public class SimpleArrayInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onPropFloatChanged(testpropFloat);	    
     }
-
+    
     @Test
      public void setPropertyRequestpropFloat()
     {
@@ -337,7 +332,6 @@ public class SimpleArrayInterfaceClientTest
 
         testedClient.setPropFloat(testpropFloat);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -347,7 +341,7 @@ public class SimpleArrayInterfaceClientTest
 			float[] receivedpropFloat = data.getFloatArray("propFloat");
         assertEquals(receivedpropFloat, testpropFloat);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceivepropFloat32PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -362,7 +356,7 @@ public class SimpleArrayInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onPropFloat32Changed(testpropFloat32);	    
     }
-
+    
     @Test
      public void setPropertyRequestpropFloat32()
     {
@@ -371,7 +365,6 @@ public class SimpleArrayInterfaceClientTest
 
         testedClient.setPropFloat32(testpropFloat32);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -381,7 +374,7 @@ public class SimpleArrayInterfaceClientTest
 			float[] receivedpropFloat32 = data.getFloatArray("propFloat32");
         assertEquals(receivedpropFloat32, testpropFloat32);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceivepropFloat64PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -396,7 +389,7 @@ public class SimpleArrayInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onPropFloat64Changed(testpropFloat64);	    
     }
-
+    
     @Test
      public void setPropertyRequestpropFloat64()
     {
@@ -405,7 +398,6 @@ public class SimpleArrayInterfaceClientTest
 
         testedClient.setPropFloat64(testpropFloat64);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -415,7 +407,7 @@ public class SimpleArrayInterfaceClientTest
 			double[] receivedpropFloat64 = data.getDoubleArray("propFloat64");
         assertEquals(receivedpropFloat64, testpropFloat64);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceivepropStringPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -430,7 +422,7 @@ public class SimpleArrayInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onPropStringChanged(testpropString);	    
     }
-
+    
     @Test
      public void setPropertyRequestpropString()
     {
@@ -439,7 +431,6 @@ public class SimpleArrayInterfaceClientTest
 
         testedClient.setPropString(testpropString);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -449,7 +440,7 @@ public class SimpleArrayInterfaceClientTest
 			String[] receivedpropString = data.getStringArray("propString");
         assertEquals(receivedpropString, testpropString);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceivepropReadOnlyStringPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -462,24 +453,6 @@ public class SimpleArrayInterfaceClientTest
         mClientMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onPropReadOnlyStringChanged(testpropReadOnlyString);	    
-    }
-
-    @Test
-     public void setPropertyRequestpropReadOnlyString()
-    {
-		String testpropReadOnlyString = new String("xyz");
-
-        testedClient.setPropReadOnlyString(testpropReadOnlyString);
-        Robolectric.flushForegroundThreadScheduler();
-
-        inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
-        Message response = messageCaptor.getValue();
-
-        assertEquals(SimpleArrayInterfaceMessageType.PROP_PropReadOnlyString.getValue(), response.what);
-        Bundle data = response.getData();
-        
-			String receivedpropReadOnlyString = data.getString("propReadOnlyString", new String());
-        assertEquals(receivedpropReadOnlyString, testpropReadOnlyString);
     }
     @Test
     public void whenNotifiedsigBool() throws RemoteException
@@ -644,6 +617,7 @@ public class SimpleArrayInterfaceClientTest
         assertEquals(SimpleArrayInterfaceMessageType.RPC_FuncBoolReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
         
+        
 			boolean[] receivedparamBool = data.getBooleanArray("paramBool");
         assertEquals(receivedparamBool, testparamBool);
         int returnedCallId = data.getInt("callId", -1);
@@ -689,6 +663,7 @@ public class SimpleArrayInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(SimpleArrayInterfaceMessageType.RPC_FuncIntReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
+        
         
 			int[] receivedparamInt = data.getIntArray("paramInt");
         assertEquals(receivedparamInt, testparamInt);
@@ -736,6 +711,7 @@ public class SimpleArrayInterfaceClientTest
         assertEquals(SimpleArrayInterfaceMessageType.RPC_FuncInt32Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
         
+        
 			int[] receivedparamInt32 = data.getIntArray("paramInt32");
         assertEquals(receivedparamInt32, testparamInt32);
         int returnedCallId = data.getInt("callId", -1);
@@ -781,6 +757,7 @@ public class SimpleArrayInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(SimpleArrayInterfaceMessageType.RPC_FuncInt64Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
+        
         
 			long[] receivedparamInt64 = data.getLongArray("paramInt64");
         assertEquals(receivedparamInt64, testparamInt64);
@@ -828,6 +805,7 @@ public class SimpleArrayInterfaceClientTest
         assertEquals(SimpleArrayInterfaceMessageType.RPC_FuncFloatReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
         
+        
 			float[] receivedparamFloat = data.getFloatArray("paramFloat");
         assertEquals(receivedparamFloat, testparamFloat);
         int returnedCallId = data.getInt("callId", -1);
@@ -873,6 +851,7 @@ public class SimpleArrayInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(SimpleArrayInterfaceMessageType.RPC_FuncFloat32Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
+        
         
 			float[] receivedparamFloat32 = data.getFloatArray("paramFloat32");
         assertEquals(receivedparamFloat32, testparamFloat32);
@@ -920,6 +899,7 @@ public class SimpleArrayInterfaceClientTest
         assertEquals(SimpleArrayInterfaceMessageType.RPC_FuncFloat64Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
         
+        
 			double[] receivedparamFloat = data.getDoubleArray("paramFloat");
         assertEquals(receivedparamFloat, testparamFloat);
         int returnedCallId = data.getInt("callId", -1);
@@ -965,6 +945,7 @@ public class SimpleArrayInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(SimpleArrayInterfaceMessageType.RPC_FuncStringReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
+        
         
 			String[] receivedparamString = data.getStringArray("paramString");
         assertEquals(receivedparamString, testparamString);

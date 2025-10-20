@@ -2,11 +2,19 @@ package testbed1.testbed1_api;
 
 import testbed1.testbed1_api.IStructArrayInterfaceEventListener;
 import testbed1.testbed1_api.IStructArrayInterface;
-//TODO imported/extern modules
 import testbed1.testbed1_api.StructBool;
 import testbed1.testbed1_api.StructInt;
 import testbed1.testbed1_api.StructFloat;
 import testbed1.testbed1_api.StructString;
+import testbed1.testbed1_api.StructStruct;
+import testbed1.testbed1_api.StructEnum;
+import testbed1.testbed1_api.StructBoolWithArray;
+import testbed1.testbed1_api.StructIntWithArray;
+import testbed1.testbed1_api.StructFloatWithArray;
+import testbed1.testbed1_api.StructStringWithArray;
+import testbed1.testbed1_api.StructStructWithArray;
+import testbed1.testbed1_api.StructEnumWithArray;
+import testbed1.testbed1_api.Enum0;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -48,6 +56,13 @@ import java.util.HashSet;
     }
   
     @Override
+    public void firePropEnumChanged(Enum0[] newValue) {
+      for (IStructArrayInterfaceEventListener listener : listeners) {
+        listener.onPropEnumChanged(newValue);
+      }
+    }
+  
+    @Override
     public void fireSigBool(StructBool[] paramBool) {
       for (IStructArrayInterfaceEventListener listener : listeners) {
         listener.onSigBool(paramBool);
@@ -72,6 +87,13 @@ import java.util.HashSet;
     public void fireSigString(StructString[] paramString) {
       for (IStructArrayInterfaceEventListener listener : listeners) {
         listener.onSigString(paramString);
+      }
+    }
+  
+    @Override
+    public void fireSigEnum(Enum0[] paramEnum) {
+      for (IStructArrayInterfaceEventListener listener : listeners) {
+        listener.onSigEnum(paramEnum);
       }
     }
   

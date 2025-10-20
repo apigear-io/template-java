@@ -148,7 +148,6 @@ public class NoSignalsInterfaceClientTest
 		inOrderEventListener.verify(listenerMock,times(1)).onPropBoolChanged(testpropBool);
 		inOrderEventListener.verify(listenerMock,times(1)).onPropIntChanged(testpropInt);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropBoolPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -162,7 +161,7 @@ public class NoSignalsInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onPropBoolChanged(testpropBool);	    
     }
-
+    
     @Test
      public void setPropertyRequestpropBool()
     {
@@ -170,7 +169,6 @@ public class NoSignalsInterfaceClientTest
 
         testedClient.setPropBool(testpropBool);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -180,7 +178,7 @@ public class NoSignalsInterfaceClientTest
 			boolean receivedpropBool = data.getBoolean("propBool", false);
         assertEquals(receivedpropBool, testpropBool);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceivepropIntPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -194,7 +192,7 @@ public class NoSignalsInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onPropIntChanged(testpropInt);	    
     }
-
+    
     @Test
      public void setPropertyRequestpropInt()
     {
@@ -202,7 +200,6 @@ public class NoSignalsInterfaceClientTest
 
         testedClient.setPropInt(testpropInt);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -212,6 +209,7 @@ public class NoSignalsInterfaceClientTest
 			int receivedpropInt = data.getInt("propInt", 0);
         assertEquals(receivedpropInt, testpropInt);
     }
+    
 
 
     public void onfuncVoidRequest() throws RemoteException {
@@ -233,6 +231,7 @@ public class NoSignalsInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(NoSignalsInterfaceMessageType.RPC_FuncVoidReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
+        
         int returnedCallId = data.getInt("callId", -1);
 
         //Prepare response
@@ -273,6 +272,7 @@ public class NoSignalsInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(NoSignalsInterfaceMessageType.RPC_FuncBoolReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
+        
         
 			boolean receivedparamBool = data.getBoolean("paramBool", false);
         assertEquals(receivedparamBool, testparamBool);

@@ -13,8 +13,6 @@ import android.widget.TextView;
 //TODO for each interface there coudl be a tab? now only first one is added
 
 import tbEnum.tbEnum_android_client.EnumInterfaceClient;
-
-//import message type and parcelabe types
 import tbEnum.tbEnum_api.Enum0;
 import tbEnum.tbEnum_android_messenger.Enum0Parcelable;
 import tbEnum.tbEnum_api.Enum1;
@@ -23,7 +21,6 @@ import tbEnum.tbEnum_api.Enum2;
 import tbEnum.tbEnum_android_messenger.Enum2Parcelable;
 import tbEnum.tbEnum_api.Enum3;
 import tbEnum.tbEnum_android_messenger.Enum3Parcelable;
-
 import tbEnum.tbEnum_api.IEnumInterfaceEventListener;
 import java.util.concurrent.CompletableFuture;
 

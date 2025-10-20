@@ -155,6 +155,41 @@ public class GoldenmasterMainActivity extends Activity {
         sb.append("Made instance of testbed1.testbed1_android_service.StructArrayInterfaceServiceAdapter\n");
         testbed1.testbed1_impl.StructArrayInterfaceService testbed1_structArrayInterface_local_impl =  new testbed1.testbed1_impl.StructArrayInterfaceService();
         sb.append("Made instance of testbed1.testbed1_impl.StructArrayInterfaceService\n");
+        testbed1.testbed1_android_client.StructArray2InterfaceClient testbed1_structArray2Interface_client =  new testbed1.testbed1_android_client.StructArray2InterfaceClient(this.getApplicationContext(), "conn_testbed1_structArray2Interface_client");
+        sb.append("Made instance of testbed1.testbed1_android_client.StructArray2InterfaceClient\n");
+        testbed1.testbed1_android_service.StructArray2InterfaceServiceAdapter testbed1_structArray2Interface_service =  new testbed1.testbed1_android_service.StructArray2InterfaceServiceAdapter();
+        sb.append("Made instance of testbed1.testbed1_android_service.StructArray2InterfaceServiceAdapter\n");
+        testbed1.testbed1_impl.StructArray2InterfaceService testbed1_structArray2Interface_local_impl =  new testbed1.testbed1_impl.StructArray2InterfaceService();
+        sb.append("Made instance of testbed1.testbed1_impl.StructArray2InterfaceService\n");
+        
+        
+        
+        counter.counter_android_client.CounterClient counter_counter_client =  new counter.counter_android_client.CounterClient(this.getApplicationContext(), "conn_counter_counter_client");
+        sb.append("Made instance of counter.counter_android_client.CounterClient\n");
+        counter.counter_android_service.CounterServiceAdapter counter_counter_service =  new counter.counter_android_service.CounterServiceAdapter();
+        sb.append("Made instance of counter.counter_android_service.CounterServiceAdapter\n");
+        counter.counter_impl.CounterService counter_counter_local_impl =  new counter.counter_impl.CounterService();
+        sb.append("Made instance of counter.counter_impl.CounterService\n");
+        
+        tbIfaceimport.tbIfaceimport_android_client.EmptyIfClient tbIfaceimport_emptyIf_client =  new tbIfaceimport.tbIfaceimport_android_client.EmptyIfClient(this.getApplicationContext(), "conn_tbIfaceimport_emptyIf_client");
+        sb.append("Made instance of tbIfaceimport.tbIfaceimport_android_client.EmptyIfClient\n");
+        tbIfaceimport.tbIfaceimport_android_service.EmptyIfServiceAdapter tbIfaceimport_emptyIf_service =  new tbIfaceimport.tbIfaceimport_android_service.EmptyIfServiceAdapter();
+        sb.append("Made instance of tbIfaceimport.tbIfaceimport_android_service.EmptyIfServiceAdapter\n");
+        tbIfaceimport.tbIfaceimport_impl.EmptyIfService tbIfaceimport_emptyIf_local_impl =  new tbIfaceimport.tbIfaceimport_impl.EmptyIfService();
+        sb.append("Made instance of tbIfaceimport.tbIfaceimport_impl.EmptyIfService\n");
+        
+        tbRefIfaces.tbRefIfaces_android_client.SimpleLocalIfClient tbRefIfaces_simpleLocalIf_client =  new tbRefIfaces.tbRefIfaces_android_client.SimpleLocalIfClient(this.getApplicationContext(), "conn_tbRefIfaces_simpleLocalIf_client");
+        sb.append("Made instance of tbRefIfaces.tbRefIfaces_android_client.SimpleLocalIfClient\n");
+        tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfServiceAdapter tbRefIfaces_simpleLocalIf_service =  new tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfServiceAdapter();
+        sb.append("Made instance of tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfServiceAdapter\n");
+        tbRefIfaces.tbRefIfaces_impl.SimpleLocalIfService tbRefIfaces_simpleLocalIf_local_impl =  new tbRefIfaces.tbRefIfaces_impl.SimpleLocalIfService();
+        sb.append("Made instance of tbRefIfaces.tbRefIfaces_impl.SimpleLocalIfService\n");
+        tbRefIfaces.tbRefIfaces_android_client.ParentIfClient tbRefIfaces_parentIf_client =  new tbRefIfaces.tbRefIfaces_android_client.ParentIfClient(this.getApplicationContext(), "conn_tbRefIfaces_parentIf_client");
+        sb.append("Made instance of tbRefIfaces.tbRefIfaces_android_client.ParentIfClient\n");
+        tbRefIfaces.tbRefIfaces_android_service.ParentIfServiceAdapter tbRefIfaces_parentIf_service =  new tbRefIfaces.tbRefIfaces_android_service.ParentIfServiceAdapter();
+        sb.append("Made instance of tbRefIfaces.tbRefIfaces_android_service.ParentIfServiceAdapter\n");
+        tbRefIfaces.tbRefIfaces_impl.ParentIfService tbRefIfaces_parentIf_local_impl =  new tbRefIfaces.tbRefIfaces_impl.ParentIfService();
+        sb.append("Made instance of tbRefIfaces.tbRefIfaces_impl.ParentIfService\n");
 
         // Show output on screen
         TextView tv = new TextView(this);

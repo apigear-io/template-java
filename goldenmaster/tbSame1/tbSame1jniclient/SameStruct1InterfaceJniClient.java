@@ -6,9 +6,7 @@ import tbSame1.tbSame1_api.ISameStruct1InterfaceEventListener;
 
 import tbSame1.tbSame1_android_client.SameStruct1InterfaceClient;
 import tbSame1.tbSame1_api.Struct1;
-import tbSame1.tbSame1_api.Struct2;
-import tbSame1.tbSame1_api.Enum1;
-import tbSame1.tbSame1_api.Enum2;
+import tbSame1.tbSame1_android_messenger.Struct1Parcelable;
 import android.content.Context;
 
 import android.os.Bundle;

@@ -6,6 +6,7 @@ import android.util.Log;
 import tbNames.tbNames_api.INamEs;
 import tbNames.tbNames_api.AbstractNamEs;
 import tbNames.tbNames_api.INamEsEventListener;
+import tbNames.tbNames_api.EnumWithUnderScores;
 
 
 import java.util.Map;
@@ -27,6 +28,7 @@ public class NamEsService extends AbstractNamEs {
     private boolean m_Switch = false;
     private int m_SOME_PROPERTY = 0;
     private int m_Some_Poperty2 = 0;
+    private EnumWithUnderScores m_enum_property = EnumWithUnderScores.FirstValue;
 
     public NamEsService()
     {
@@ -92,6 +94,26 @@ public class NamEsService extends AbstractNamEs {
     }
 
   
+    @Override
+    public void setEnumProperty(EnumWithUnderScores enum_property)
+    {
+        Log.i(TAG, "request setEnumProperty called ");
+        if (m_enum_property != enum_property)
+        {
+            m_enum_property = enum_property;
+            onEnumPropertyChanged(m_enum_property);
+        }
+
+    }
+
+    @Override
+    public EnumWithUnderScores getEnumProperty()
+    {
+        Log.i(TAG, "request getEnumProperty called,");
+        return m_enum_property;
+    }
+
+  
     // methods
 
     @Override
@@ -140,6 +162,11 @@ public class NamEsService extends AbstractNamEs {
     {
          Log.i(TAG, "onSomePoperty2Changed, will pass notification to all listeners");
          fireSomePoperty2Changed(newValue);
+    }
+    private void onEnumPropertyChanged(EnumWithUnderScores newValue)
+    {
+         Log.i(TAG, "onEnumPropertyChanged, will pass notification to all listeners");
+         fireEnumPropertyChanged(newValue);
     }
     public void onSomeSignal(boolean SOME_PARAM)
     {

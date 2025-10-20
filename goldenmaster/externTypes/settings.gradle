@@ -1,0 +1,29 @@
+pluginManagement {
+    repositories {
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "externTypes"
+include ':externTypes_android_service'
+include ':externTypes_android_client'
+include ':externTypes_android_messenger'
+include ':externTypes_impl'
+include ':externTypes_api'
+include ':externTypes_client_example'
+include ':externTypesserviceexample'

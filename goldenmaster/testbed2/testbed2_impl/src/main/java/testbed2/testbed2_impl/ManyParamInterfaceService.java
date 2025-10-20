@@ -6,16 +6,6 @@ import android.util.Log;
 import testbed2.testbed2_api.IManyParamInterface;
 import testbed2.testbed2_api.AbstractManyParamInterface;
 import testbed2.testbed2_api.IManyParamInterfaceEventListener;
-import testbed2.testbed2_api.Struct1;
-import testbed2.testbed2_api.Struct2;
-import testbed2.testbed2_api.Struct3;
-import testbed2.testbed2_api.Struct4;
-import testbed2.testbed2_api.NestedStruct1;
-import testbed2.testbed2_api.NestedStruct2;
-import testbed2.testbed2_api.NestedStruct3;
-import testbed2.testbed2_api.Enum1;
-import testbed2.testbed2_api.Enum2;
-import testbed2.testbed2_api.Enum3;
 
 
 import java.util.Map;

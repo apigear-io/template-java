@@ -10,12 +10,14 @@ public enum NamEsMessageType {
     SET_SomeProperty(6),
     PROP_SomePoperty2(7),
     SET_SomePoperty2(8),
-    SIG_SomeSignal(9),
-    SIG_SomeSignal2(10),
-    RPC_SomeFunctionReq(11),
-    RPC_SomeFunctionResp(12),
-    RPC_SomeFunction2Req(13),
-    RPC_SomeFunction2Resp(14),
+    PROP_EnumProperty(9),
+    SET_EnumProperty(10),
+    SIG_SomeSignal(11),
+    SIG_SomeSignal2(12),
+    RPC_SomeFunctionReq(13),
+    RPC_SomeFunctionResp(14),
+    RPC_SomeFunction2Req(15),
+    RPC_SomeFunction2Resp(16),
     NamEsMessageType_UNKNOWN(Integer.MAX_VALUE);
 
     private final int value;

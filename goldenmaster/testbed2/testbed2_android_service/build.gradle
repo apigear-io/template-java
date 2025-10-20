@@ -5,7 +5,6 @@ plugins {
 group = "testbed2"
 version = "1.0.0"
 
-
 android {
     namespace 'testbed2.testbed2_android_service'
     compileSdk 35

@@ -190,9 +190,8 @@ public class NestedStruct3InterfaceServiceAdapterTest
 			NestedStruct2 receivedprop2 = data.getParcelable("prop2", NestedStruct2Parcelable.class).getNestedStruct2();
         
 			NestedStruct3 receivedprop3 = data.getParcelable("prop3", NestedStruct3Parcelable.class).getNestedStruct3();
-		data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
-		data.setClassLoader(NestedStruct2Parcelable.class.getClassLoader());
-		data.setClassLoader(NestedStruct3Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
         // assertEquals(receivedprop1, initprop1);
         // assertEquals(receivedprop2, initprop2);
         // assertEquals(receivedprop3, initprop3);
@@ -233,7 +232,6 @@ public class NestedStruct3InterfaceServiceAdapterTest
         // All emitted signals and property changes are forwarded to it.
         registerFakeActivityClient(clientReplyMessenger, mTestConnectionID1);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop1PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -268,7 +266,6 @@ public class NestedStruct3InterfaceServiceAdapterTest
 
         assertEquals(receivedprop1, testprop1);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop2PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -303,7 +300,6 @@ public class NestedStruct3InterfaceServiceAdapterTest
 
         assertEquals(receivedprop2, testprop2);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop3PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -351,7 +347,8 @@ public class NestedStruct3InterfaceServiceAdapterTest
 
         assertEquals(NestedStruct3InterfaceMessageType.SIG_Sig1.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
         
 			NestedStruct1 receivedparam1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
         assertEquals(receivedparam1, testparam1);
@@ -370,8 +367,8 @@ public class NestedStruct3InterfaceServiceAdapterTest
 
         assertEquals(NestedStruct3InterfaceMessageType.SIG_Sig2.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
-		data.setClassLoader(NestedStruct2Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
         
 			NestedStruct1 receivedparam1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
         assertEquals(receivedparam1, testparam1);
@@ -394,9 +391,8 @@ public class NestedStruct3InterfaceServiceAdapterTest
 
         assertEquals(NestedStruct3InterfaceMessageType.SIG_Sig3.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
-		data.setClassLoader(NestedStruct2Parcelable.class.getClassLoader());
-		data.setClassLoader(NestedStruct3Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
         
 			NestedStruct1 receivedparam1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
         assertEquals(receivedparam1, testparam1);

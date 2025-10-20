@@ -25,7 +25,25 @@ import testbed1.testbed1_api.StructFloat;
 import testbed1.testbed1_android_messenger.StructFloatParcelable;
 import testbed1.testbed1_api.StructString;
 import testbed1.testbed1_android_messenger.StructStringParcelable;
+import testbed1.testbed1_api.StructStruct;
+import testbed1.testbed1_android_messenger.StructStructParcelable;
+import testbed1.testbed1_api.StructEnum;
+import testbed1.testbed1_android_messenger.StructEnumParcelable;
+import testbed1.testbed1_api.StructBoolWithArray;
+import testbed1.testbed1_android_messenger.StructBoolWithArrayParcelable;
+import testbed1.testbed1_api.StructIntWithArray;
+import testbed1.testbed1_android_messenger.StructIntWithArrayParcelable;
+import testbed1.testbed1_api.StructFloatWithArray;
+import testbed1.testbed1_android_messenger.StructFloatWithArrayParcelable;
+import testbed1.testbed1_api.StructStringWithArray;
+import testbed1.testbed1_android_messenger.StructStringWithArrayParcelable;
+import testbed1.testbed1_api.StructStructWithArray;
+import testbed1.testbed1_android_messenger.StructStructWithArrayParcelable;
+import testbed1.testbed1_api.StructEnumWithArray;
+import testbed1.testbed1_android_messenger.StructEnumWithArrayParcelable;
 import testbed1.testbed1_api.Testbed1TestHelper;
+import testbed1.testbed1_api.Enum0;
+import testbed1.testbed1_android_messenger.Enum0Parcelable;
 
 
 import testbed1.testbed1_api.IStructArrayInterfaceEventListener;
@@ -158,6 +176,10 @@ public class StructArrayInterfaceServiceAdapterTest
         // todo fill if is struct
         StructString[] initpropString = new StructString[]{ init_elementpropString } ;
         when(backendServiceMock.getPropString()).thenReturn(initpropString);
+        Enum0 init_elementpropEnum = Enum0.Value1;
+        // todo fill if is struct
+        Enum0[] initpropEnum = new Enum0[]{ init_elementpropEnum } ;
+        when(backendServiceMock.getPropEnum()).thenReturn(initpropEnum);
 
 
         Message registerMsg = Message.obtain(null, StructArrayInterfaceMessageType.REGISTER_CLIENT.ordinal());
@@ -174,6 +196,7 @@ public class StructArrayInterfaceServiceAdapterTest
         inOrderBackendService.verify(backendServiceMock, times(1)).getPropInt();
         inOrderBackendService.verify(backendServiceMock, times(1)).getPropFloat();
         inOrderBackendService.verify(backendServiceMock, times(1)).getPropString();
+        inOrderBackendService.verify(backendServiceMock, times(1)).getPropEnum();
 
         inOrderClientMessagesHandler.verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
@@ -188,14 +211,15 @@ public class StructArrayInterfaceServiceAdapterTest
             StructFloat[] receivedpropFloat =  StructFloatParcelable.unwrapArray((StructFloatParcelable[])data.getParcelableArray("propFloat", StructFloatParcelable.class));
         
             StructString[] receivedpropString =  StructStringParcelable.unwrapArray((StructStringParcelable[])data.getParcelableArray("propString", StructStringParcelable.class));
-		data.setClassLoader(StructBoolParcelable.class.getClassLoader());
-		data.setClassLoader(StructIntParcelable.class.getClassLoader());
-		data.setClassLoader(StructFloatParcelable.class.getClassLoader());
-		data.setClassLoader(StructStringParcelable.class.getClassLoader());
+        
+            Enum0[] receivedpropEnum =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("propEnum", Enum0Parcelable.class));
+        
+        data.setClassLoader(StructBoolParcelable.class.getClassLoader());
         // assertEquals(receivedpropBool, initpropBool);
         // assertEquals(receivedpropInt, initpropInt);
         // assertEquals(receivedpropFloat, initpropFloat);
         // assertEquals(receivedpropString, initpropString);
+        assertEquals(receivedpropEnum, initpropEnum);
 
     }
 
@@ -233,7 +257,6 @@ public class StructArrayInterfaceServiceAdapterTest
         // All emitted signals and property changes are forwarded to it.
         registerFakeActivityClient(clientReplyMessenger, mTestConnectionID1);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropBoolPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -270,7 +293,6 @@ public class StructArrayInterfaceServiceAdapterTest
 
         assertEquals(receivedpropBool, testpropBool);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropIntPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -307,7 +329,6 @@ public class StructArrayInterfaceServiceAdapterTest
 
         assertEquals(receivedpropInt, testpropInt);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropFloatPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -344,7 +365,6 @@ public class StructArrayInterfaceServiceAdapterTest
 
         assertEquals(receivedpropFloat, testpropFloat);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropStringPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -382,6 +402,42 @@ public class StructArrayInterfaceServiceAdapterTest
         assertEquals(receivedpropString, testpropString);
     }
     @Test
+    public void onReceivepropEnumPropertyChangeTest() throws RemoteException {
+        // Create and send message
+        Message msg = Message.obtain(null, StructArrayInterfaceMessageType.PROP_PropEnum.getValue());
+        Bundle data = new Bundle();
+        Enum0[] testpropEnum = new Enum0[1];
+        testpropEnum[0] = Enum0.Value1;
+		data.putParcelableArray("propEnum", Enum0Parcelable.wrapArray(testpropEnum));
+
+        msg.setData(data);
+        mServiceMessenger.send(msg);
+        Robolectric.flushForegroundThreadScheduler();
+        inOrderBackendService.verify(backendServiceMock,times(1)).setPropEnum(testpropEnum);
+	    
+    }
+
+    @Test
+     public void whenNotifiedpropEnum()
+    {
+        Enum0[] testpropEnum = new Enum0[1];
+        testpropEnum[0] = Enum0.Value1;
+
+        testedAdapterAsEventListener.onPropEnumChanged(testpropEnum);
+        Robolectric.flushForegroundThreadScheduler();
+
+        inOrderClientMessagesHandler.verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
+        Message response = messageCaptor.getValue();
+
+        assertEquals(StructArrayInterfaceMessageType.SET_PropEnum.getValue(), response.what);
+        Bundle data = response.getData();
+
+        
+            Enum0[] receivedpropEnum =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("propEnum", Enum0Parcelable.class));
+
+        assertEquals(receivedpropEnum, testpropEnum);
+    }
+    @Test
     public void whenNotifiedsigBool()
     {
         StructBool[] testparamBool = new StructBool[1];
@@ -395,7 +451,8 @@ public class StructArrayInterfaceServiceAdapterTest
 
         assertEquals(StructArrayInterfaceMessageType.SIG_SigBool.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(StructBoolParcelable.class.getClassLoader());
+        
+        data.setClassLoader(StructBoolParcelable.class.getClassLoader());
         
             StructBool[] receivedparamBool =  StructBoolParcelable.unwrapArray((StructBoolParcelable[])data.getParcelableArray("paramBool", StructBoolParcelable.class));
         assertEquals(receivedparamBool, testparamBool);
@@ -414,7 +471,8 @@ public class StructArrayInterfaceServiceAdapterTest
 
         assertEquals(StructArrayInterfaceMessageType.SIG_SigInt.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(StructIntParcelable.class.getClassLoader());
+        
+        data.setClassLoader(StructIntParcelable.class.getClassLoader());
         
             StructInt[] receivedparamInt =  StructIntParcelable.unwrapArray((StructIntParcelable[])data.getParcelableArray("paramInt", StructIntParcelable.class));
         assertEquals(receivedparamInt, testparamInt);
@@ -433,7 +491,8 @@ public class StructArrayInterfaceServiceAdapterTest
 
         assertEquals(StructArrayInterfaceMessageType.SIG_SigFloat.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(StructFloatParcelable.class.getClassLoader());
+        
+        data.setClassLoader(StructFloatParcelable.class.getClassLoader());
         
             StructFloat[] receivedparamFloat =  StructFloatParcelable.unwrapArray((StructFloatParcelable[])data.getParcelableArray("paramFloat", StructFloatParcelable.class));
         assertEquals(receivedparamFloat, testparamFloat);
@@ -452,10 +511,31 @@ public class StructArrayInterfaceServiceAdapterTest
 
         assertEquals(StructArrayInterfaceMessageType.SIG_SigString.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(StructStringParcelable.class.getClassLoader());
+        
+        data.setClassLoader(StructStringParcelable.class.getClassLoader());
         
             StructString[] receivedparamString =  StructStringParcelable.unwrapArray((StructStringParcelable[])data.getParcelableArray("paramString", StructStringParcelable.class));
         assertEquals(receivedparamString, testparamString);
+}
+    @Test
+    public void whenNotifiedsigEnum()
+    {
+        Enum0[] testparamEnum = new Enum0[1];
+        testparamEnum[0] = Enum0.Value1;
+
+        testedAdapterAsEventListener.onSigEnum(testparamEnum);
+        Robolectric.flushForegroundThreadScheduler();
+
+        inOrderClientMessagesHandler.verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
+        Message response = messageCaptor.getValue();
+
+        assertEquals(StructArrayInterfaceMessageType.SIG_SigEnum.getValue(), response.what);
+        Bundle data = response.getData();
+        
+        data.setClassLoader(Enum0Parcelable.class.getClassLoader());
+        
+            Enum0[] receivedparamEnum =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("paramEnum", Enum0Parcelable.class));
+        assertEquals(receivedparamEnum, testparamEnum);
 }
 
 
@@ -597,6 +677,42 @@ public class StructArrayInterfaceServiceAdapterTest
         Bundle resp_data = response.getData();
         resp_data.setClassLoader(StructStringParcelable.class.getClassLoader());
         StructString[] receivedByClient =  StructStringParcelable.unwrapArray((StructStringParcelable[])resp_data.getParcelableArray("result", StructStringParcelable.class));
+
+        assertEquals(receivedByClient, returnedValue);
+        assertEquals(callId, resp_data.getInt("callId", -1));
+    }
+
+
+    public void onfuncEnumRequest() throws RemoteException {
+        // Create and send message
+        Message msg = Message.obtain(null, StructArrayInterfaceMessageType.RPC_FuncEnumReq.getValue());
+        Bundle data = new Bundle();
+
+        int callId = 99;
+        data.putInt("callId", callId);
+        Enum0[] testparamEnum = new Enum0[1];
+        testparamEnum[0] = Enum0.Value1;
+		data.putParcelableArray("paramEnum", Enum0Parcelable.wrapArray(testparamEnum));
+        Enum0[] returnedValue = new Enum0[1];
+        returnedValue[0] = Enum0.Value1;
+
+
+        when(backendServiceMock.funcEnum(testparamEnum)).thenReturn(returnedValue);
+
+        msg.setData(data);
+        mServiceMessenger.send(msg);
+        Robolectric.flushForegroundThreadScheduler();
+        inOrderBackendService.verify(backendServiceMock,times(1)).funcEnum(testparamEnum);
+
+        //Now verify it was sent back to caller
+        Robolectric.flushForegroundThreadScheduler();
+        inOrderClientMessagesHandler.verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
+        Message response = messageCaptor.getValue();
+
+        assertEquals(StructArrayInterfaceMessageType.RPC_FuncEnumResp.getValue(), response.what);
+        Bundle resp_data = response.getData();
+        resp_data.setClassLoader(Enum0Parcelable.class.getClassLoader());
+        Enum0[] receivedByClient =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])resp_data.getParcelableArray("result", Enum0Parcelable.class));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));

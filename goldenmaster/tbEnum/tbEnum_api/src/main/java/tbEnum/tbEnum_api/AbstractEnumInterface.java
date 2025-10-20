@@ -2,7 +2,6 @@ package tbEnum.tbEnum_api;
 
 import tbEnum.tbEnum_api.IEnumInterfaceEventListener;
 import tbEnum.tbEnum_api.IEnumInterface;
-//TODO imported/extern modules
 import tbEnum.tbEnum_api.Enum0;
 import tbEnum.tbEnum_api.Enum1;
 import tbEnum.tbEnum_api.Enum2;

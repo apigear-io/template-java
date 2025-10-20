@@ -2,7 +2,7 @@ package tbNames.tbNames_api;
 
 import tbNames.tbNames_api.INamEsEventListener;
 import tbNames.tbNames_api.INamEs;
-//TODO imported/extern modules
+import tbNames.tbNames_api.EnumWithUnderScores;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -33,6 +33,13 @@ import java.util.HashSet;
     public void fireSomePoperty2Changed(int newValue) {
       for (INamEsEventListener listener : listeners) {
         listener.onSomePoperty2Changed(newValue);
+      }
+    }
+  
+    @Override
+    public void fireEnumPropertyChanged(EnumWithUnderScores newValue) {
+      for (INamEsEventListener listener : listeners) {
+        listener.onEnumPropertyChanged(newValue);
       }
     }
   

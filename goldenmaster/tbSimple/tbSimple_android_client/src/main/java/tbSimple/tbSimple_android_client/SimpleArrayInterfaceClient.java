@@ -315,6 +315,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case SIG_SigBool: {
 
 				    Bundle data = msg.getData();
+                    
                 
 			        boolean[] paramBool = data.getBooleanArray("paramBool");
 				    onSigBool(paramBool);
@@ -323,6 +324,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case SIG_SigInt: {
 
 				    Bundle data = msg.getData();
+                    
                 
 			        int[] paramInt = data.getIntArray("paramInt");
 				    onSigInt(paramInt);
@@ -331,6 +333,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case SIG_SigInt32: {
 
 				    Bundle data = msg.getData();
+                    
                 
 			        int[] paramInt32 = data.getIntArray("paramInt32");
 				    onSigInt32(paramInt32);
@@ -339,6 +342,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case SIG_SigInt64: {
 
 				    Bundle data = msg.getData();
+                    
                 
 			        long[] paramInt64 = data.getLongArray("paramInt64");
 				    onSigInt64(paramInt64);
@@ -347,6 +351,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case SIG_SigFloat: {
 
 				    Bundle data = msg.getData();
+                    
                 
 			        float[] paramFloat = data.getFloatArray("paramFloat");
 				    onSigFloat(paramFloat);
@@ -355,6 +360,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case SIG_SigFloat32: {
 
 				    Bundle data = msg.getData();
+                    
                 
 			        float[] paramFloa32 = data.getFloatArray("paramFloa32");
 				    onSigFloat32(paramFloa32);
@@ -363,6 +369,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case SIG_SigFloat64: {
 
 				    Bundle data = msg.getData();
+                    
                 
 			        double[] paramFloat64 = data.getDoubleArray("paramFloat64");
 				    onSigFloat64(paramFloat64);
@@ -371,6 +378,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case SIG_SigString: {
 
 				    Bundle data = msg.getData();
+                    
                 
 			        String[] paramString = data.getStringArray("paramString");
 				    onSigString(paramString);
@@ -379,6 +387,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case RPC_FuncBoolResp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -396,6 +405,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case RPC_FuncIntResp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -413,6 +423,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case RPC_FuncInt32Resp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -430,6 +441,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case RPC_FuncInt64Resp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -447,6 +459,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case RPC_FuncFloatResp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -464,6 +477,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case RPC_FuncFloat32Resp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -481,6 +495,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case RPC_FuncFloat64Resp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -498,6 +513,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case RPC_FuncStringResp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

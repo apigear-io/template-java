@@ -29,10 +29,11 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private Messenger mMessenger;
+	private static Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
 	private static ISimpleArrayInterface mBackendService;
 	private static ISimpleArrayInterfaceServiceFactory mServiceFactory;
+	private static final Object mutex = new Object();
 
 	//private final List<Message> mMessagesQueue = new ArrayList<>();
 
@@ -47,10 +48,19 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 		{
 			mServiceFactory = factory;
 		}
-		mBackendService = mServiceFactory.getServiceInstance();
-		if (mHandler != null)
+		synchronized (mutex)
 		{
-			mBackendService.addEventListener(mHandler);
+			if (mHandler != null && mBackendService != null)
+			{
+				// remove old event listener (backend is about to change)
+				mBackendService.removeEventListener(mHandler);
+			}
+			mBackendService = mServiceFactory.getServiceInstance();
+			if (mHandler != null)
+			{
+				Log.i(TAG, "LIFECYCLE: setService(SimpleArrayInterface) called. For handler " + mHandler);
+				mBackendService.addEventListener(mHandler);
+			}
 		}
 		return mBackendService;
 	}
@@ -61,13 +71,25 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(SimpleArrayInterfaceService) called. context = " + this);
-
-		mHandler = new IncomingHandler(this);
-		mMessenger = new Messenger(mHandler);
-		if (mBackendService != null)
-		{
-			mBackendService.addEventListener(mHandler);
+		synchronized (mutex) {
+			if (mHandler != null && mBackendService != null)
+			{
+				// The handler (event listener) is about to change.
+				mBackendService.removeEventListener(mHandler);
+			}
+			if (mHandler != null)
+			{
+				mHandler.removeCallbacksAndMessages(null);
+			}
+			mHandler = new IncomingHandler(this);
+			mMessenger = new Messenger(mHandler);
+			if (mBackendService != null)
+			{
+				Log.i(TAG, "LIFECYCLE: Add event listern to a backend called for handler " + mHandler);
+				mBackendService.addEventListener(mHandler);
+			}
 		}
+
 	}
 
 	// execution of service will start on calling this method
@@ -84,18 +106,21 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 	@Override
 	public void onDestroy()
 	{
-		super.onDestroy();
-		
-		Log.i(TAG, "LIFECYCLE: onDestroy(SimpleArrayInterfaceService) - proc = " + ", mMessenger = " + mMessenger
-		);
+		Log.i(TAG, "LIFECYCLE: onDestroy(SimpleArrayInterfaceService) - proc = " + ", mMessenger = " + mMessenger);
 
-		if (mBackendService != null)
+		if (mHandler != null)
 		{
-			Log.i(TAG, "LIFECYCLE: onDestroy(SimpleArrayInterfaceService) - proc = " + ", remove engine event callback!");
-
-			mBackendService.removeEventListener(mHandler);
-			mBackendService = null;
+			if (mBackendService != null)
+			{
+				mBackendService.removeEventListener(mHandler);
+			}
+			mHandler.removeCallbacksAndMessages(null);
+			mHandler = null;
 		}
+		mBackendService = null;
+		mMessenger = null;
+
+		super.onDestroy();
 	}
 
 	@Override
@@ -255,6 +280,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 				case RPC_FuncBoolReq: {
 
 					Bundle data = msg.getData();
+					
 					int callId = data.getInt("callId");
 					
 			        boolean[] paramBool = data.getBooleanArray("paramBool");
@@ -283,6 +309,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 				case RPC_FuncIntReq: {
 
 					Bundle data = msg.getData();
+					
 					int callId = data.getInt("callId");
 					
 			        int[] paramInt = data.getIntArray("paramInt");
@@ -311,6 +338,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 				case RPC_FuncInt32Req: {
 
 					Bundle data = msg.getData();
+					
 					int callId = data.getInt("callId");
 					
 			        int[] paramInt32 = data.getIntArray("paramInt32");
@@ -339,6 +367,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 				case RPC_FuncInt64Req: {
 
 					Bundle data = msg.getData();
+					
 					int callId = data.getInt("callId");
 					
 			        long[] paramInt64 = data.getLongArray("paramInt64");
@@ -367,6 +396,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 				case RPC_FuncFloatReq: {
 
 					Bundle data = msg.getData();
+					
 					int callId = data.getInt("callId");
 					
 			        float[] paramFloat = data.getFloatArray("paramFloat");
@@ -395,6 +425,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 				case RPC_FuncFloat32Req: {
 
 					Bundle data = msg.getData();
+					
 					int callId = data.getInt("callId");
 					
 			        float[] paramFloat32 = data.getFloatArray("paramFloat32");
@@ -423,6 +454,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 				case RPC_FuncFloat64Req: {
 
 					Bundle data = msg.getData();
+					
 					int callId = data.getInt("callId");
 					
 			        double[] paramFloat = data.getDoubleArray("paramFloat");
@@ -451,6 +483,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 				case RPC_FuncStringReq: {
 
 					Bundle data = msg.getData();
+					
 					int callId = data.getInt("callId");
 					
 			        String[] paramString = data.getStringArray("paramString");

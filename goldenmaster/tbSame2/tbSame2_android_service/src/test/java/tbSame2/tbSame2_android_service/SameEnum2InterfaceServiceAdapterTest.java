@@ -170,8 +170,8 @@ public class SameEnum2InterfaceServiceAdapterTest
 			Enum1 receivedprop1 = data.getParcelable("prop1", Enum1Parcelable.class).getEnum1();
         
 			Enum2 receivedprop2 = data.getParcelable("prop2", Enum2Parcelable.class).getEnum2();
-		data.setClassLoader(Enum1Parcelable.class.getClassLoader());
-		data.setClassLoader(Enum2Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(Enum1Parcelable.class.getClassLoader());
         assertEquals(receivedprop1, initprop1);
         assertEquals(receivedprop2, initprop2);
 
@@ -211,7 +211,6 @@ public class SameEnum2InterfaceServiceAdapterTest
         // All emitted signals and property changes are forwarded to it.
         registerFakeActivityClient(clientReplyMessenger, mTestConnectionID1);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop1PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -246,7 +245,6 @@ public class SameEnum2InterfaceServiceAdapterTest
 
         assertEquals(receivedprop1, testprop1);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop2PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -294,7 +292,8 @@ public class SameEnum2InterfaceServiceAdapterTest
 
         assertEquals(SameEnum2InterfaceMessageType.SIG_Sig1.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(Enum1Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(Enum1Parcelable.class.getClassLoader());
         
 			Enum1 receivedparam1 = data.getParcelable("param1", Enum1Parcelable.class).getEnum1();
         assertEquals(receivedparam1, testparam1);
@@ -313,8 +312,8 @@ public class SameEnum2InterfaceServiceAdapterTest
 
         assertEquals(SameEnum2InterfaceMessageType.SIG_Sig2.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(Enum1Parcelable.class.getClassLoader());
-		data.setClassLoader(Enum2Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(Enum1Parcelable.class.getClassLoader());
         
 			Enum1 receivedparam1 = data.getParcelable("param1", Enum1Parcelable.class).getEnum1();
         assertEquals(receivedparam1, testparam1);

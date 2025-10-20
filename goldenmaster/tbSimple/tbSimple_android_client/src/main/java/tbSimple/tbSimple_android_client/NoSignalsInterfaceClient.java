@@ -217,6 +217,7 @@ public class NoSignalsInterfaceClient extends AbstractNoSignalsInterface impleme
 			    case RPC_FuncVoidResp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -234,6 +235,7 @@ public class NoSignalsInterfaceClient extends AbstractNoSignalsInterface impleme
 			    case RPC_FuncBoolResp: {
 
 				    Bundle data = msg.getData();
+                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

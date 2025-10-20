@@ -5,6 +5,8 @@ import tbNames.tbNames_api.AbstractNamEs;
 import tbNames.tbNames_api.INamEsEventListener;
 
 import tbNames.tbNames_android_client.NamEsClient;
+import tbNames.tbNames_api.EnumWithUnderScores;
+import tbNames.tbNames_android_messenger.EnumWithUnderScoresParcelable;
 import android.content.Context;
 
 import android.os.Bundle;
@@ -66,6 +68,19 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
     {
         Log.i(TAG, "got request from ue, getSomePoperty2");
         return mMessengerClient.getSomePoperty2();
+    }
+    
+    @Override
+    public void setEnumProperty(EnumWithUnderScores enum_property)
+    {
+        Log.i(TAG, "got request from ue, setEnumProperty" + (enum_property));
+        mMessengerClient.setEnumProperty(enum_property);
+    }
+    @Override
+    public EnumWithUnderScores getEnumProperty()
+    {
+        Log.i(TAG, "got request from ue, getEnumProperty");
+        return mMessengerClient.getEnumProperty();
     }
     
      public void someFunction(boolean SOME_PARAM)
@@ -161,6 +176,12 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
         nativeOnSomePoperty2Changed(newValue);
     }
     @Override
+    public void onEnumPropertyChanged(EnumWithUnderScores newValue)
+    {
+        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        nativeOnEnumPropertyChanged(newValue);
+    }
+    @Override
     public void onSomeSignal(boolean SOME_PARAM)
     {
         Log.w(TAG, "NOTIFICATION from messenger client Signal SOME_SIGNAL "+ " " + SOME_PARAM);
@@ -175,6 +196,7 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
      private native void nativeOnSwitchChanged(boolean Switch);
      private native void nativeOnSomePropertyChanged(int SOME_PROPERTY);
      private native void nativeOnSomePoperty2Changed(int Some_Poperty2);
+     private native void nativeOnEnumPropertyChanged(EnumWithUnderScores enum_property);
     private native void nativeOnSomeSignal(boolean SOME_PARAM);
     private native void nativeOnSomeSignal2(boolean Some_Param);
     private native void nativeOnSomeFunctionResult(String callId);

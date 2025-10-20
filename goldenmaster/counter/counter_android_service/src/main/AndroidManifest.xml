@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="counter.counter_android_service">
+
+    <permission android:name="counter.counter_android_service.PERMISSION_BIND"
+        android:protectionLevel="normal" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:allowBackup="true"><service
+			android:name="counter.counter_android_service.CounterServiceAdapter"
+			android:enabled="true"
+			android:exported="true">
+		</service>
+    </application>
+</manifest>

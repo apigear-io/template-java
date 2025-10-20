@@ -152,6 +152,7 @@ public class VoidInterfaceServiceAdapterTest
 
         assertEquals(VoidInterfaceMessageType.INIT.getValue(), response.what);
         Bundle data = response.getData();
+        
 
     }
 
@@ -201,6 +202,7 @@ public class VoidInterfaceServiceAdapterTest
 
         assertEquals(VoidInterfaceMessageType.SIG_SigVoid.getValue(), response.what);
         Bundle data = response.getData();
+        
 }
 
 

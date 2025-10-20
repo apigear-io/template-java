@@ -2,7 +2,6 @@ package testbed2.testbed2_api;
 
 import testbed2.testbed2_api.IManyParamInterfaceEventListener;
 import testbed2.testbed2_api.IManyParamInterface;
-//TODO imported/extern modules
 import testbed2.testbed2_api.Struct1;
 import testbed2.testbed2_api.Struct2;
 import testbed2.testbed2_api.Struct3;

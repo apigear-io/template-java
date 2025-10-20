@@ -5,6 +5,8 @@ import tbNames.tbNames_android_client.NamEsClient;
 
 //import message type and parcelabe types
 import tbNames.tbNames_api.TbNamesTestHelper;
+import tbNames.tbNames_api.EnumWithUnderScores;
+import tbNames.tbNames_android_messenger.EnumWithUnderScoresParcelable;
 
 import tbNames.tbNames_api.INamEsEventListener;
 import tbNames.tbNames_api.INamEs;
@@ -142,6 +144,8 @@ public class NamEsClientTest
 		data.putInt("SOME_PROPERTY", testSOME_PROPERTY);
 		int testSome_Poperty2 = 1;
 		data.putInt("Some_Poperty2", testSome_Poperty2);
+		EnumWithUnderScores testenum_property = EnumWithUnderScores.SecondValue;
+		data.putParcelable("enum_property", new EnumWithUnderScoresParcelable(testenum_property));
 
     //setup mock expectations
         msg.setData(data);
@@ -150,8 +154,8 @@ public class NamEsClientTest
 		inOrderEventListener.verify(listenerMock,times(1)).onSwitchChanged(testSwitch);
 		inOrderEventListener.verify(listenerMock,times(1)).onSomePropertyChanged(testSOME_PROPERTY);
 		inOrderEventListener.verify(listenerMock,times(1)).onSomePoperty2Changed(testSome_Poperty2);
+		inOrderEventListener.verify(listenerMock,times(1)).onEnumPropertyChanged(testenum_property);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveSwitchPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -165,7 +169,7 @@ public class NamEsClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onSwitchChanged(testSwitch);	    
     }
-
+    
     @Test
      public void setPropertyRequestSwitch()
     {
@@ -173,7 +177,6 @@ public class NamEsClientTest
 
         testedClient.setSwitch(testSwitch);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -183,7 +186,7 @@ public class NamEsClientTest
 			boolean receivedSwitch = data.getBoolean("Switch", false);
         assertEquals(receivedSwitch, testSwitch);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceiveSOME_PROPERTYPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -197,7 +200,7 @@ public class NamEsClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onSomePropertyChanged(testSOME_PROPERTY);	    
     }
-
+    
     @Test
      public void setPropertyRequestSOME_PROPERTY()
     {
@@ -205,7 +208,6 @@ public class NamEsClientTest
 
         testedClient.setSomeProperty(testSOME_PROPERTY);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -215,7 +217,7 @@ public class NamEsClientTest
 			int receivedSOME_PROPERTY = data.getInt("SOME_PROPERTY", 0);
         assertEquals(receivedSOME_PROPERTY, testSOME_PROPERTY);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceiveSome_Poperty2PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -229,7 +231,7 @@ public class NamEsClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onSomePoperty2Changed(testSome_Poperty2);	    
     }
-
+    
     @Test
      public void setPropertyRequestSome_Poperty2()
     {
@@ -237,7 +239,6 @@ public class NamEsClientTest
 
         testedClient.setSomePoperty2(testSome_Poperty2);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -247,6 +248,39 @@ public class NamEsClientTest
 			int receivedSome_Poperty2 = data.getInt("Some_Poperty2", 0);
         assertEquals(receivedSome_Poperty2, testSome_Poperty2);
     }
+    
+    @Test
+    public void onReceiveenum_propertyPropertyChangeTest() throws RemoteException {
+        // Create and send message
+        Message msg = Message.obtain(null, NamEsMessageType.SET_EnumProperty.getValue());
+        Bundle data = new Bundle();
+		EnumWithUnderScores testenum_property = EnumWithUnderScores.SecondValue;
+		data.putParcelable("enum_property", new EnumWithUnderScoresParcelable(testenum_property));
+
+        msg.setData(data);
+        mClientMessenger.send(msg);
+        Robolectric.flushForegroundThreadScheduler();
+		inOrderEventListener.verify(listenerMock,times(1)).onEnumPropertyChanged(testenum_property);	    
+    }
+    
+    @Test
+     public void setPropertyRequestenum_property()
+    {
+		EnumWithUnderScores testenum_property = EnumWithUnderScores.SecondValue;
+
+        testedClient.setEnumProperty(testenum_property);
+        Robolectric.flushForegroundThreadScheduler();
+        inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
+        Message response = messageCaptor.getValue();
+
+        assertEquals(NamEsMessageType.PROP_EnumProperty.getValue(), response.what);
+        Bundle data = response.getData();
+		data.setClassLoader(EnumWithUnderScoresParcelable.class.getClassLoader());
+        
+			EnumWithUnderScores receivedenum_property = data.getParcelable("enum_property", EnumWithUnderScoresParcelable.class).getEnumWithUnderScores();
+        assertEquals(receivedenum_property, testenum_property);
+    }
+    
     @Test
     public void whenNotifiedSOME_SIGNAL() throws RemoteException
     {
@@ -302,6 +336,7 @@ public class NamEsClientTest
         assertEquals(NamEsMessageType.RPC_SomeFunctionReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
         
+        
 			boolean receivedSOME_PARAM = data.getBoolean("SOME_PARAM", false);
         assertEquals(receivedSOME_PARAM, testSOME_PARAM);
         int returnedCallId = data.getInt("callId", -1);
@@ -342,6 +377,7 @@ public class NamEsClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(NamEsMessageType.RPC_SomeFunction2Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
+        
         
 			boolean receivedSome_Param = data.getBoolean("Some_Param", false);
         assertEquals(receivedSome_Param, testSome_Param);

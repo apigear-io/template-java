@@ -5,7 +5,6 @@ plugins {
 group = "tbSame2"
 version = "1.0.0"
 
-
 android {
     namespace 'tbSame2.tbSame2_android_service'
     compileSdk 35

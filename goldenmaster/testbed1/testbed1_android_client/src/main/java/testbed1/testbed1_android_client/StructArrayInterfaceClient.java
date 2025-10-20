@@ -17,12 +17,14 @@ import android.content.ComponentName;
 import android.util.Log;
 
 //import message type and parcelabe types
+import testbed1.testbed1_api.Enum0;
+import testbed1.testbed1_android_messenger.Enum0Parcelable;
 import testbed1.testbed1_api.StructBool;
 import testbed1.testbed1_android_messenger.StructBoolParcelable;
-import testbed1.testbed1_api.StructInt;
-import testbed1.testbed1_android_messenger.StructIntParcelable;
 import testbed1.testbed1_api.StructFloat;
 import testbed1.testbed1_android_messenger.StructFloatParcelable;
+import testbed1.testbed1_api.StructInt;
+import testbed1.testbed1_android_messenger.StructIntParcelable;
 import testbed1.testbed1_api.StructString;
 import testbed1.testbed1_android_messenger.StructStringParcelable;
 
@@ -59,6 +61,7 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
     private StructInt[] m_propInt = new StructInt[]{};
     private StructFloat[] m_propFloat = new StructFloat[]{};
     private StructString[] m_propString = new StructString[]{};
+    private Enum0[] m_propEnum = new Enum0[]{};
 
 
 	public StructArrayInterfaceClient(Context applicationContext, String connectionId)
@@ -191,10 +194,7 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
                 {
                     Bundle data = msg.getData();
                     
-				    data.setClassLoader(StructBoolParcelable.class.getClassLoader());
-				    data.setClassLoader(StructIntParcelable.class.getClassLoader());
-				    data.setClassLoader(StructFloatParcelable.class.getClassLoader());
-				    data.setClassLoader(StructStringParcelable.class.getClassLoader());
+        data.setClassLoader(StructBoolParcelable.class.getClassLoader());
 			        
                     
                     StructBool[] propBool =  StructBoolParcelable.unwrapArray((StructBoolParcelable[])data.getParcelableArray("propBool", StructBoolParcelable.class));
@@ -208,6 +208,9 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
                     
                     StructString[] propString =  StructStringParcelable.unwrapArray((StructStringParcelable[])data.getParcelableArray("propString", StructStringParcelable.class));
 				    onPropString(propString);
+                    
+                    Enum0[] propEnum =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("propEnum", Enum0Parcelable.class));
+				    onPropEnum(propEnum);
 
                     break;
                 }
@@ -255,13 +258,25 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
 				    onPropString(propString);
 				    break;
 			    }
+			    case SET_PropEnum:
+			    {
+				    Bundle data = msg.getData();
+				    data.setClassLoader(Enum0Parcelable.class.getClassLoader());
+
+                    
+                    Enum0[] propEnum =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("propEnum", Enum0Parcelable.class));
+
+				    onPropEnum(propEnum);
+				    break;
+			    }
 			    // TODO params may be different structs from different modules, there should be a custom class loader 
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 			    case SIG_SigBool: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(StructBoolParcelable.class.getClassLoader());
+                    
+        data.setClassLoader(StructBoolParcelable.class.getClassLoader());
                 
                     StructBool[] paramBool =  StructBoolParcelable.unwrapArray((StructBoolParcelable[])data.getParcelableArray("paramBool", StructBoolParcelable.class));
 				    onSigBool(paramBool);
@@ -270,7 +285,8 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
 			    case SIG_SigInt: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(StructIntParcelable.class.getClassLoader());
+                    
+        data.setClassLoader(StructIntParcelable.class.getClassLoader());
                 
                     StructInt[] paramInt =  StructIntParcelable.unwrapArray((StructIntParcelable[])data.getParcelableArray("paramInt", StructIntParcelable.class));
 				    onSigInt(paramInt);
@@ -279,7 +295,8 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
 			    case SIG_SigFloat: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(StructFloatParcelable.class.getClassLoader());
+                    
+        data.setClassLoader(StructFloatParcelable.class.getClassLoader());
                 
                     StructFloat[] paramFloat =  StructFloatParcelable.unwrapArray((StructFloatParcelable[])data.getParcelableArray("paramFloat", StructFloatParcelable.class));
 				    onSigFloat(paramFloat);
@@ -288,16 +305,28 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
 			    case SIG_SigString: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(StructStringParcelable.class.getClassLoader());
+                    
+        data.setClassLoader(StructStringParcelable.class.getClassLoader());
                 
                     StructString[] paramString =  StructStringParcelable.unwrapArray((StructStringParcelable[])data.getParcelableArray("paramString", StructStringParcelable.class));
 				    onSigString(paramString);
 				    break;
 			    }
+			    case SIG_SigEnum: {
+
+				    Bundle data = msg.getData();
+                    
+        data.setClassLoader(Enum0Parcelable.class.getClassLoader());
+                
+                    Enum0[] paramEnum =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("paramEnum", Enum0Parcelable.class));
+				    onSigEnum(paramEnum);
+				    break;
+			    }
 			    case RPC_FuncBoolResp: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(StructBoolParcelable.class.getClassLoader());
+                    
+        data.setClassLoader(StructBoolParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -315,7 +344,8 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
 			    case RPC_FuncIntResp: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(StructIntParcelable.class.getClassLoader());
+                    
+        data.setClassLoader(StructIntParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -333,7 +363,8 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
 			    case RPC_FuncFloatResp: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(StructFloatParcelable.class.getClassLoader());
+                    
+        data.setClassLoader(StructFloatParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -351,7 +382,8 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
 			    case RPC_FuncStringResp: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(StructStringParcelable.class.getClassLoader());
+                    
+        data.setClassLoader(StructStringParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -362,6 +394,25 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
                     else
                     {
                         Log.v(TAG, "received StructArrayInterfaceMessageType.RPC_FuncStringResp , could not find pending call for " + msg.obj);
+                    }
+				    break;
+
+			    }
+			    case RPC_FuncEnumResp: {
+
+				    Bundle data = msg.getData();
+                    
+        data.setClassLoader(Enum0Parcelable.class.getClassLoader());
+				    int callId = data.getInt("callId");
+
+				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
+                    if (foundCall != null)
+                    {
+                        foundCall.accept(data);
+                    }
+                    else
+                    {
+                        Log.v(TAG, "received StructArrayInterfaceMessageType.RPC_FuncEnumResp , could not find pending call for " + msg.obj);
                     }
 				    break;
 
@@ -515,6 +566,42 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
     {
         Log.i(TAG, "request getPropString called, returning local");
         return m_propString;
+    }
+
+  
+    @Override
+    public void setPropEnum(Enum0[] propEnum)
+    {
+        Log.i(TAG, "request setPropEnum called "+ propEnum);
+        if (! Arrays.equals(m_propEnum, propEnum))
+        {
+			Message msg = new Message();
+			msg.what = StructArrayInterfaceMessageType.PROP_PropEnum.getValue();
+			Bundle data = new Bundle();
+            
+		        data.putParcelableArray("propEnum", Enum0Parcelable.wrapArray(propEnum));
+			msg.setData(data);
+			mClientHandler.sendToService(msg);
+        }
+
+    }
+
+	public void onPropEnum(Enum0[] propEnum)
+    {
+        Log.i(TAG, "value received from service for PropEnum ");
+        if (! Arrays.equals(m_propEnum, propEnum))
+        {
+            m_propEnum = propEnum;
+            firePropEnumChanged(propEnum);
+        }
+
+    }
+
+    @Override
+    public Enum0[] getPropEnum()
+    {
+        Log.i(TAG, "request getPropEnum called, returning local");
+        return m_propEnum;
     }
 
   
@@ -686,6 +773,48 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
         mpendingCalls.put(msgId, resolver);
 
         return future;
+    }
+
+   
+    @Override
+    public Enum0[] funcEnum(Enum0[] paramEnum) {
+        CompletableFuture<Enum0[]> resFuture = funcEnumAsync(paramEnum);
+        try {
+            return resFuture.get();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public  CompletableFuture<Enum0[]> funcEnumAsync(Enum0[] paramEnum) {
+
+    	Log.i(TAG, "Call on service funcEnum  "+ " " + paramEnum);
+		Message msg = new Message();
+		msg.what = StructArrayInterfaceMessageType.RPC_FuncEnumReq.getValue();
+		Bundle data = new Bundle();
+        int msgId =  callIdsGetter.getAndIncrement();
+        data.putInt("callId",msgId);
+        
+		        data.putParcelableArray("paramEnum", Enum0Parcelable.wrapArray(paramEnum));
+		msg.setData(data);
+        msg.replyTo = mClientMessenger;
+		mClientHandler.sendToService(msg);
+
+        CompletableFuture<Enum0[]>  future = new CompletableFuture<>();
+        Consumer<Bundle> resolver = bundle -> {
+            
+            Enum0[] result =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])bundle.getParcelableArray("result", Enum0Parcelable.class));
+            Log.v(TAG, "resolve funcEnum" + result);
+            future.complete(result);
+        };
+
+        // Store the lambda function in the map
+        mpendingCalls.put(msgId, resolver);
+
+        return future;
     }    
 
     @Override
@@ -713,5 +842,10 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
     {
         Log.i(TAG, "onSigString  received from service");
         fireSigString(paramString);
+    }
+    public void onSigEnum(Enum0[] paramEnum)
+    {
+        Log.i(TAG, "onSigEnum  received from service");
+        fireSigEnum(paramEnum);
     }
 }
