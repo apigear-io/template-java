@@ -6,11 +6,8 @@ import android.util.Log;
 import tbSame2.tbSame2_api.ISameEnum1Interface;
 import tbSame2.tbSame2_api.AbstractSameEnum1Interface;
 import tbSame2.tbSame2_api.ISameEnum1InterfaceEventListener;
-import tbSame2.tbSame2_api.Struct1;
-import tbSame2.tbSame2_api.Struct2;
 import tbSame2.tbSame2_api.Enum1;
-import tbSame2.tbSame2_api.Enum2;
-
+import tbSame2.tbSame2_android_messenger.Enum1Parcelable;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;

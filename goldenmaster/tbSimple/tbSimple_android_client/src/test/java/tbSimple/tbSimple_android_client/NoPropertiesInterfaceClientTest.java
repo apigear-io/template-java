@@ -193,6 +193,7 @@ public class NoPropertiesInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(NoPropertiesInterfaceMessageType.RPC_FuncVoidReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
+        
         int returnedCallId = data.getInt("callId", -1);
 
         //Prepare response
@@ -233,6 +234,7 @@ public class NoPropertiesInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(NoPropertiesInterfaceMessageType.RPC_FuncBoolReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
+        
         
 			boolean receivedparamBool = data.getBoolean("paramBool", false);
         assertEquals(receivedparamBool, testparamBool);

@@ -165,7 +165,6 @@ public class NestedStruct1InterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
         inOrderEventListener.verify(listenerMock,times(1)).onProp1Changed(any(NestedStruct1.class));
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop1PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -179,7 +178,7 @@ public class NestedStruct1InterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
         inOrderEventListener.verify(listenerMock,times(1)).onProp1Changed(any(NestedStruct1.class));	    
     }
-
+    
     @Test
      public void setPropertyRequestprop1()
     {
@@ -187,7 +186,6 @@ public class NestedStruct1InterfaceClientTest
 
         testedClient.setProp1(testprop1);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -198,6 +196,7 @@ public class NestedStruct1InterfaceClientTest
 			NestedStruct1 receivedprop1 = data.getParcelable("prop1", NestedStruct1Parcelable.class).getNestedStruct1();
         assertEquals(receivedprop1, testprop1);
     }
+    
     @Test
     public void whenNotifiedsig1() throws RemoteException
     {
@@ -238,7 +237,8 @@ public class NestedStruct1InterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(NestedStruct1InterfaceMessageType.RPC_Func1Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
-		data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
         
 			NestedStruct1 receivedparam1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
         assertEquals(receivedparam1, testparam1);

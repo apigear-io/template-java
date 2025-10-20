@@ -7,8 +7,8 @@ import testbed1.testbed1_api.IStructInterface;
 import testbed1.testbed1_api.AbstractStructInterface;
 import testbed1.testbed1_api.IStructInterfaceEventListener;
 import testbed1.testbed1_api.StructBool;
-import testbed1.testbed1_api.StructInt;
 import testbed1.testbed1_api.StructFloat;
+import testbed1.testbed1_api.StructInt;
 import testbed1.testbed1_api.StructString;
 
 

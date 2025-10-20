@@ -12,7 +12,25 @@ import testbed1.testbed1_api.StructFloat;
 import testbed1.testbed1_android_messenger.StructFloatParcelable;
 import testbed1.testbed1_api.StructString;
 import testbed1.testbed1_android_messenger.StructStringParcelable;
+import testbed1.testbed1_api.StructStruct;
+import testbed1.testbed1_android_messenger.StructStructParcelable;
+import testbed1.testbed1_api.StructEnum;
+import testbed1.testbed1_android_messenger.StructEnumParcelable;
+import testbed1.testbed1_api.StructBoolWithArray;
+import testbed1.testbed1_android_messenger.StructBoolWithArrayParcelable;
+import testbed1.testbed1_api.StructIntWithArray;
+import testbed1.testbed1_android_messenger.StructIntWithArrayParcelable;
+import testbed1.testbed1_api.StructFloatWithArray;
+import testbed1.testbed1_android_messenger.StructFloatWithArrayParcelable;
+import testbed1.testbed1_api.StructStringWithArray;
+import testbed1.testbed1_android_messenger.StructStringWithArrayParcelable;
+import testbed1.testbed1_api.StructStructWithArray;
+import testbed1.testbed1_android_messenger.StructStructWithArrayParcelable;
+import testbed1.testbed1_api.StructEnumWithArray;
+import testbed1.testbed1_android_messenger.StructEnumWithArrayParcelable;
 import testbed1.testbed1_api.Testbed1TestHelper;
+import testbed1.testbed1_api.Enum0;
+import testbed1.testbed1_android_messenger.Enum0Parcelable;
 
 import testbed1.testbed1_api.IStructInterfaceEventListener;
 import testbed1.testbed1_api.IStructInterface;
@@ -162,7 +180,6 @@ public class StructInterfaceClientTest
         inOrderEventListener.verify(listenerMock,times(1)).onPropFloatChanged(any(StructFloat.class));
         inOrderEventListener.verify(listenerMock,times(1)).onPropStringChanged(any(StructString.class));
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropBoolPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -176,7 +193,7 @@ public class StructInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
         inOrderEventListener.verify(listenerMock,times(1)).onPropBoolChanged(any(StructBool.class));	    
     }
-
+    
     @Test
      public void setPropertyRequestpropBool()
     {
@@ -184,7 +201,6 @@ public class StructInterfaceClientTest
 
         testedClient.setPropBool(testpropBool);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -195,7 +211,7 @@ public class StructInterfaceClientTest
 			StructBool receivedpropBool = data.getParcelable("propBool", StructBoolParcelable.class).getStructBool();
         assertEquals(receivedpropBool, testpropBool);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceivepropIntPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -209,7 +225,7 @@ public class StructInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
         inOrderEventListener.verify(listenerMock,times(1)).onPropIntChanged(any(StructInt.class));	    
     }
-
+    
     @Test
      public void setPropertyRequestpropInt()
     {
@@ -217,7 +233,6 @@ public class StructInterfaceClientTest
 
         testedClient.setPropInt(testpropInt);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -228,7 +243,7 @@ public class StructInterfaceClientTest
 			StructInt receivedpropInt = data.getParcelable("propInt", StructIntParcelable.class).getStructInt();
         assertEquals(receivedpropInt, testpropInt);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceivepropFloatPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -242,7 +257,7 @@ public class StructInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
         inOrderEventListener.verify(listenerMock,times(1)).onPropFloatChanged(any(StructFloat.class));	    
     }
-
+    
     @Test
      public void setPropertyRequestpropFloat()
     {
@@ -250,7 +265,6 @@ public class StructInterfaceClientTest
 
         testedClient.setPropFloat(testpropFloat);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -261,7 +275,7 @@ public class StructInterfaceClientTest
 			StructFloat receivedpropFloat = data.getParcelable("propFloat", StructFloatParcelable.class).getStructFloat();
         assertEquals(receivedpropFloat, testpropFloat);
     }
-//TODO do not add when a property is readonly
+    
     @Test
     public void onReceivepropStringPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -275,7 +289,7 @@ public class StructInterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
         inOrderEventListener.verify(listenerMock,times(1)).onPropStringChanged(any(StructString.class));	    
     }
-
+    
     @Test
      public void setPropertyRequestpropString()
     {
@@ -283,7 +297,6 @@ public class StructInterfaceClientTest
 
         testedClient.setPropString(testpropString);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -294,6 +307,7 @@ public class StructInterfaceClientTest
 			StructString receivedpropString = data.getParcelable("propString", StructStringParcelable.class).getStructString();
         assertEquals(receivedpropString, testpropString);
     }
+    
     @Test
     public void whenNotifiedsigBool() throws RemoteException
     {
@@ -382,7 +396,8 @@ public class StructInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(StructInterfaceMessageType.RPC_FuncBoolReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
-		data.setClassLoader(StructBoolParcelable.class.getClassLoader());
+        
+        data.setClassLoader(StructBoolParcelable.class.getClassLoader());
         
 			StructBool receivedparamBool = data.getParcelable("paramBool", StructBoolParcelable.class).getStructBool();
         assertEquals(receivedparamBool, testparamBool);
@@ -427,7 +442,8 @@ public class StructInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(StructInterfaceMessageType.RPC_FuncIntReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
-		data.setClassLoader(StructIntParcelable.class.getClassLoader());
+        
+        data.setClassLoader(StructIntParcelable.class.getClassLoader());
         
 			StructInt receivedparamInt = data.getParcelable("paramInt", StructIntParcelable.class).getStructInt();
         assertEquals(receivedparamInt, testparamInt);
@@ -472,7 +488,8 @@ public class StructInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(StructInterfaceMessageType.RPC_FuncFloatReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
-		data.setClassLoader(StructFloatParcelable.class.getClassLoader());
+        
+        data.setClassLoader(StructFloatParcelable.class.getClassLoader());
         
 			StructFloat receivedparamFloat = data.getParcelable("paramFloat", StructFloatParcelable.class).getStructFloat();
         assertEquals(receivedparamFloat, testparamFloat);
@@ -517,7 +534,8 @@ public class StructInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(StructInterfaceMessageType.RPC_FuncStringReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
-		data.setClassLoader(StructStringParcelable.class.getClassLoader());
+        
+        data.setClassLoader(StructStringParcelable.class.getClassLoader());
         
 			StructString receivedparamString = data.getParcelable("paramString", StructStringParcelable.class).getStructString();
         assertEquals(receivedparamString, testparamString);

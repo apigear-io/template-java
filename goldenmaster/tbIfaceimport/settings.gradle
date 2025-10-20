@@ -1,0 +1,29 @@
+pluginManagement {
+    repositories {
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "tbIfaceimport"
+include ':tbIfaceimport_android_service'
+include ':tbIfaceimport_android_client'
+include ':tbIfaceimport_android_messenger'
+include ':tbIfaceimport_impl'
+include ':tbIfaceimport_api'
+include ':tbIfaceimport_client_example'
+include ':tbIfaceimportserviceexample'

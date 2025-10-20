@@ -5,10 +5,16 @@ import testbed1.testbed1_api.AbstractStructArrayInterface;
 import testbed1.testbed1_api.IStructArrayInterfaceEventListener;
 
 import testbed1.testbed1_android_client.StructArrayInterfaceClient;
+import testbed1.testbed1_api.Enum0;
+import testbed1.testbed1_android_messenger.Enum0Parcelable;
 import testbed1.testbed1_api.StructBool;
-import testbed1.testbed1_api.StructInt;
+import testbed1.testbed1_android_messenger.StructBoolParcelable;
 import testbed1.testbed1_api.StructFloat;
+import testbed1.testbed1_android_messenger.StructFloatParcelable;
+import testbed1.testbed1_api.StructInt;
+import testbed1.testbed1_android_messenger.StructIntParcelable;
 import testbed1.testbed1_api.StructString;
+import testbed1.testbed1_android_messenger.StructStringParcelable;
 import android.content.Context;
 
 import android.os.Bundle;
@@ -85,6 +91,19 @@ public class StructArrayInterfaceJniClient extends AbstractStructArrayInterface 
         return mMessengerClient.getPropString();
     }
     
+    @Override
+    public void setPropEnum(Enum0[] propEnum)
+    {
+        Log.i(TAG, "got request from ue, setPropEnum" + (propEnum));
+        mMessengerClient.setPropEnum(propEnum);
+    }
+    @Override
+    public Enum0[] getPropEnum()
+    {
+        Log.i(TAG, "got request from ue, getPropEnum");
+        return mMessengerClient.getPropEnum();
+    }
+    
      public StructBool[] funcBool(StructBool[] paramBool)
      {
         Log.v(TAG, "Blocking callfuncBool - should not be used ");
@@ -157,6 +176,24 @@ public class StructArrayInterfaceJniClient extends AbstractStructArrayInterface 
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcStringAsync(paramString);
     }
+     public Enum0[] funcEnum(Enum0[] paramEnum)
+     {
+        Log.v(TAG, "Blocking callfuncEnum - should not be used ");
+        return mMessengerClient.funcEnum(paramEnum);
+    }
+
+    public void funcEnumAsync(String callId, Enum0[] paramEnum){
+        Log.v(TAG, "non blocking call funcEnum ");
+        mMessengerClient.funcEnumAsync(paramEnum).thenAccept(i -> {
+            nativeOnFuncEnumResult(i, callId);});
+    }
+
+    //Should not be called directly, use funcEnumAsync(String callId, Enum0[] paramEnum)
+    public CompletableFuture<Enum0[]> funcEnumAsync(Enum0[] paramEnum)
+    {
+        Log.v(TAG, "NON Blocking call method ");
+        return mMessengerClient.funcEnumAsync(paramEnum);
+    }
 
     public boolean bind(Context ctx, String packageName, String connectionID){
         Log.v(TAG, "natice client: bind " + packageName);
@@ -220,6 +257,12 @@ public class StructArrayInterfaceJniClient extends AbstractStructArrayInterface 
         nativeOnPropStringChanged(newValue);
     }
     @Override
+    public void onPropEnumChanged(Enum0[] newValue)
+    {
+        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        nativeOnPropEnumChanged(newValue);
+    }
+    @Override
     public void onSigBool(StructBool[] paramBool)
     {
         Log.w(TAG, "NOTIFICATION from messenger client Signal sigBool "+ " " + paramBool);
@@ -243,17 +286,26 @@ public class StructArrayInterfaceJniClient extends AbstractStructArrayInterface 
         Log.w(TAG, "NOTIFICATION from messenger client Signal sigString "+ " " + paramString);
         nativeOnSigString(paramString);
     }
+    @Override
+    public void onSigEnum(Enum0[] paramEnum)
+    {
+        Log.w(TAG, "NOTIFICATION from messenger client Signal sigEnum "+ " " + paramEnum);
+        nativeOnSigEnum(paramEnum);
+    }
      private native void nativeOnPropBoolChanged(StructBool[] propBool);
      private native void nativeOnPropIntChanged(StructInt[] propInt);
      private native void nativeOnPropFloatChanged(StructFloat[] propFloat);
      private native void nativeOnPropStringChanged(StructString[] propString);
+     private native void nativeOnPropEnumChanged(Enum0[] propEnum);
     private native void nativeOnSigBool(StructBool[] paramBool);
     private native void nativeOnSigInt(StructInt[] paramInt);
     private native void nativeOnSigFloat(StructFloat[] paramFloat);
     private native void nativeOnSigString(StructString[] paramString);
+    private native void nativeOnSigEnum(Enum0[] paramEnum);
     private native void nativeOnFuncBoolResult(StructBool[] result, String callId);
     private native void nativeOnFuncIntResult(StructInt[] result, String callId);
     private native void nativeOnFuncFloatResult(StructFloat[] result, String callId);
     private native void nativeOnFuncStringResult(StructString[] result, String callId);
+    private native void nativeOnFuncEnumResult(Enum0[] result, String callId);
     private native void nativeIsReady(boolean isReady);
 }

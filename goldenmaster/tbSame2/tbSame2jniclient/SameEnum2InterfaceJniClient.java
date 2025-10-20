@@ -5,10 +5,10 @@ import tbSame2.tbSame2_api.AbstractSameEnum2Interface;
 import tbSame2.tbSame2_api.ISameEnum2InterfaceEventListener;
 
 import tbSame2.tbSame2_android_client.SameEnum2InterfaceClient;
-import tbSame2.tbSame2_api.Struct1;
-import tbSame2.tbSame2_api.Struct2;
 import tbSame2.tbSame2_api.Enum1;
+import tbSame2.tbSame2_android_messenger.Enum1Parcelable;
 import tbSame2.tbSame2_api.Enum2;
+import tbSame2.tbSame2_android_messenger.Enum2Parcelable;
 import android.content.Context;
 
 import android.os.Bundle;

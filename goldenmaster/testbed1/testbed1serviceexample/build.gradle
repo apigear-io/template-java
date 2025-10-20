@@ -2,6 +2,10 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+group = "testbed1"
+version = "1.0.0"
+
+
 android {
     namespace 'testbed1.testbed1serviceexample'
     compileSdk 35

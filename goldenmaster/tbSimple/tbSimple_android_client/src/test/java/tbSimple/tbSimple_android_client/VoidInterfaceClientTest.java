@@ -177,6 +177,7 @@ public class VoidInterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(VoidInterfaceMessageType.RPC_FuncVoidReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
+        
         int returnedCallId = data.getInt("callId", -1);
 
         //Prepare response

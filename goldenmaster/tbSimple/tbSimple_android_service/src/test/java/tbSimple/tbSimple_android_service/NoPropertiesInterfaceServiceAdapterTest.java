@@ -152,6 +152,7 @@ public class NoPropertiesInterfaceServiceAdapterTest
 
         assertEquals(NoPropertiesInterfaceMessageType.INIT.getValue(), response.what);
         Bundle data = response.getData();
+        
 
     }
 
@@ -201,6 +202,7 @@ public class NoPropertiesInterfaceServiceAdapterTest
 
         assertEquals(NoPropertiesInterfaceMessageType.SIG_SigVoid.getValue(), response.what);
         Bundle data = response.getData();
+        
 }
     @Test
     public void whenNotifiedsigBool()
@@ -215,6 +217,7 @@ public class NoPropertiesInterfaceServiceAdapterTest
 
         assertEquals(NoPropertiesInterfaceMessageType.SIG_SigBool.getValue(), response.what);
         Bundle data = response.getData();
+        
         
 			boolean receivedparamBool = data.getBoolean("paramBool", false);
         assertEquals(receivedparamBool, testparamBool);

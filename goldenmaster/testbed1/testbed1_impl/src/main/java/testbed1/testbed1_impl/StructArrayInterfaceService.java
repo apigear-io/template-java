@@ -6,9 +6,10 @@ import android.util.Log;
 import testbed1.testbed1_api.IStructArrayInterface;
 import testbed1.testbed1_api.AbstractStructArrayInterface;
 import testbed1.testbed1_api.IStructArrayInterfaceEventListener;
+import testbed1.testbed1_api.Enum0;
 import testbed1.testbed1_api.StructBool;
-import testbed1.testbed1_api.StructInt;
 import testbed1.testbed1_api.StructFloat;
+import testbed1.testbed1_api.StructInt;
 import testbed1.testbed1_api.StructString;
 
 
@@ -32,6 +33,7 @@ public class StructArrayInterfaceService extends AbstractStructArrayInterface {
     private StructInt[] m_propInt = new StructInt[]{};
     private StructFloat[] m_propFloat = new StructFloat[]{};
     private StructString[] m_propString = new StructString[]{};
+    private Enum0[] m_propEnum = new Enum0[]{};
 
     public StructArrayInterfaceService()
     {
@@ -117,6 +119,26 @@ public class StructArrayInterfaceService extends AbstractStructArrayInterface {
     }
 
   
+    @Override
+    public void setPropEnum(Enum0[] propEnum)
+    {
+        Log.i(TAG, "request setPropEnum called ");
+        if (! Arrays.equals(m_propEnum, propEnum))
+        {
+            m_propEnum = propEnum;
+            onPropEnumChanged(m_propEnum);
+        }
+
+    }
+
+    @Override
+    public Enum0[] getPropEnum()
+    {
+        Log.i(TAG, "request getPropEnum called,");
+        return m_propEnum;
+    }
+
+  
     // methods
 
     @Override
@@ -169,6 +191,19 @@ public class StructArrayInterfaceService extends AbstractStructArrayInterface {
         return CompletableFuture.supplyAsync(
                 () -> {return funcString(paramString); },
                 executor);
+    }
+
+    @Override
+    public Enum0[] funcEnum(Enum0[] paramEnum) {
+        Log.w(TAG, "request method funcEnum called, returnig default");
+        return new Enum0[]{};
+    }
+
+    @Override
+    public  CompletableFuture<Enum0[]> funcEnumAsync(Enum0[] paramEnum) {
+        return CompletableFuture.supplyAsync(
+                () -> {return funcEnum(paramEnum); },
+                executor);
     }    
 
     @Override
@@ -197,6 +232,11 @@ public class StructArrayInterfaceService extends AbstractStructArrayInterface {
          Log.i(TAG, "onPropStringChanged, will pass notification to all listeners");
          firePropStringChanged(newValue);
     }
+    private void onPropEnumChanged(Enum0[] newValue)
+    {
+         Log.i(TAG, "onPropEnumChanged, will pass notification to all listeners");
+         firePropEnumChanged(newValue);
+    }
     public void onSigBool(StructBool[] paramBool)
     {
         Log.i(TAG, "onSigBool, will pass notification to all listeners");
@@ -216,6 +256,11 @@ public class StructArrayInterfaceService extends AbstractStructArrayInterface {
     {
         Log.i(TAG, "onSigString, will pass notification to all listeners");
         fireSigString(paramString);
+    }
+    public void onSigEnum(Enum0[] paramEnum)
+    {
+        Log.i(TAG, "onSigEnum, will pass notification to all listeners");
+        fireSigEnum(paramEnum);
     }
 
 }

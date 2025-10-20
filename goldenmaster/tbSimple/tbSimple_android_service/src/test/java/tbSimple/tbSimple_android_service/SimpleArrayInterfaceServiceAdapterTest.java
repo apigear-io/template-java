@@ -213,6 +213,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
 			String[] receivedpropString = data.getStringArray("propString");
         
 			String receivedpropReadOnlyString = data.getString("propReadOnlyString", new String());
+        
         assertEquals(receivedpropBool, initpropBool);
         assertEquals(receivedpropInt, initpropInt);
         assertEquals(receivedpropInt32, initpropInt32);
@@ -259,7 +260,6 @@ public class SimpleArrayInterfaceServiceAdapterTest
         // All emitted signals and property changes are forwarded to it.
         registerFakeActivityClient(clientReplyMessenger, mTestConnectionID1);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropBoolPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -296,7 +296,6 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(receivedpropBool, testpropBool);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropIntPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -333,7 +332,6 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(receivedpropInt, testpropInt);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropInt32PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -370,7 +368,6 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(receivedpropInt32, testpropInt32);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropInt64PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -407,7 +404,6 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(receivedpropInt64, testpropInt64);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropFloatPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -444,7 +440,6 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(receivedpropFloat, testpropFloat);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropFloat32PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -481,7 +476,6 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(receivedpropFloat32, testpropFloat32);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropFloat64PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -518,7 +512,6 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(receivedpropFloat64, testpropFloat64);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropStringPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -555,21 +548,6 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(receivedpropString, testpropString);
     }
-//TODO do not add when a property is readonly
-    @Test
-    public void onReceivepropReadOnlyStringPropertyChangeTest() throws RemoteException {
-        // Create and send message
-        Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.PROP_PropReadOnlyString.getValue());
-        Bundle data = new Bundle();
-		String testpropReadOnlyString = new String("xyz");
-		data.putString("propReadOnlyString", testpropReadOnlyString);
-
-        msg.setData(data);
-        mServiceMessenger.send(msg);
-        Robolectric.flushForegroundThreadScheduler();
-        inOrderBackendService.verify(backendServiceMock,times(1)).setPropReadOnlyString(testpropReadOnlyString);
-	    
-    }
 
     @Test
      public void whenNotifiedpropReadOnlyString()
@@ -605,6 +583,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         assertEquals(SimpleArrayInterfaceMessageType.SIG_SigBool.getValue(), response.what);
         Bundle data = response.getData();
         
+        
 			boolean[] receivedparamBool = data.getBooleanArray("paramBool");
         assertEquals(receivedparamBool, testparamBool);
 }
@@ -622,6 +601,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(SimpleArrayInterfaceMessageType.SIG_SigInt.getValue(), response.what);
         Bundle data = response.getData();
+        
         
 			int[] receivedparamInt = data.getIntArray("paramInt");
         assertEquals(receivedparamInt, testparamInt);
@@ -641,6 +621,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         assertEquals(SimpleArrayInterfaceMessageType.SIG_SigInt32.getValue(), response.what);
         Bundle data = response.getData();
         
+        
 			int[] receivedparamInt32 = data.getIntArray("paramInt32");
         assertEquals(receivedparamInt32, testparamInt32);
 }
@@ -658,6 +639,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(SimpleArrayInterfaceMessageType.SIG_SigInt64.getValue(), response.what);
         Bundle data = response.getData();
+        
         
 			long[] receivedparamInt64 = data.getLongArray("paramInt64");
         assertEquals(receivedparamInt64, testparamInt64);
@@ -677,6 +659,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         assertEquals(SimpleArrayInterfaceMessageType.SIG_SigFloat.getValue(), response.what);
         Bundle data = response.getData();
         
+        
 			float[] receivedparamFloat = data.getFloatArray("paramFloat");
         assertEquals(receivedparamFloat, testparamFloat);
 }
@@ -694,6 +677,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(SimpleArrayInterfaceMessageType.SIG_SigFloat32.getValue(), response.what);
         Bundle data = response.getData();
+        
         
 			float[] receivedparamFloa32 = data.getFloatArray("paramFloa32");
         assertEquals(receivedparamFloa32, testparamFloa32);
@@ -713,6 +697,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         assertEquals(SimpleArrayInterfaceMessageType.SIG_SigFloat64.getValue(), response.what);
         Bundle data = response.getData();
         
+        
 			double[] receivedparamFloat64 = data.getDoubleArray("paramFloat64");
         assertEquals(receivedparamFloat64, testparamFloat64);
 }
@@ -730,6 +715,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(SimpleArrayInterfaceMessageType.SIG_SigString.getValue(), response.what);
         Bundle data = response.getData();
+        
         
 			String[] receivedparamString = data.getStringArray("paramString");
         assertEquals(receivedparamString, testparamString);

@@ -162,6 +162,7 @@ public class NoOperationsInterfaceServiceAdapterTest
 			boolean receivedpropBool = data.getBoolean("propBool", false);
         
 			int receivedpropInt = data.getInt("propInt", 0);
+        
         assertEquals(receivedpropBool, initpropBool);
         assertEquals(receivedpropInt, initpropInt);
 
@@ -201,7 +202,6 @@ public class NoOperationsInterfaceServiceAdapterTest
         // All emitted signals and property changes are forwarded to it.
         registerFakeActivityClient(clientReplyMessenger, mTestConnectionID1);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropBoolPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -236,7 +236,6 @@ public class NoOperationsInterfaceServiceAdapterTest
 
         assertEquals(receivedpropBool, testpropBool);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceivepropIntPropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -283,6 +282,7 @@ public class NoOperationsInterfaceServiceAdapterTest
 
         assertEquals(NoOperationsInterfaceMessageType.SIG_SigVoid.getValue(), response.what);
         Bundle data = response.getData();
+        
 }
     @Test
     public void whenNotifiedsigBool()
@@ -297,6 +297,7 @@ public class NoOperationsInterfaceServiceAdapterTest
 
         assertEquals(NoOperationsInterfaceMessageType.SIG_SigBool.getValue(), response.what);
         Bundle data = response.getData();
+        
         
 			boolean receivedparamBool = data.getBoolean("paramBool", false);
         assertEquals(receivedparamBool, testparamBool);

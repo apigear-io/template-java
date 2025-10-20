@@ -2,6 +2,10 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+group = "tbNames"
+version = "1.0.0"
+
+
 android {
     namespace 'tbNames.tbNamesserviceexample'
     compileSdk 35

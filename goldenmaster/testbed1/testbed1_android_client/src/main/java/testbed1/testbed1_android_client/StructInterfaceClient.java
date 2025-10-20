@@ -19,10 +19,10 @@ import android.util.Log;
 //import message type and parcelabe types
 import testbed1.testbed1_api.StructBool;
 import testbed1.testbed1_android_messenger.StructBoolParcelable;
-import testbed1.testbed1_api.StructInt;
-import testbed1.testbed1_android_messenger.StructIntParcelable;
 import testbed1.testbed1_api.StructFloat;
 import testbed1.testbed1_android_messenger.StructFloatParcelable;
+import testbed1.testbed1_api.StructInt;
+import testbed1.testbed1_android_messenger.StructIntParcelable;
 import testbed1.testbed1_api.StructString;
 import testbed1.testbed1_android_messenger.StructStringParcelable;
 
@@ -191,10 +191,7 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
                 {
                     Bundle data = msg.getData();
                     
-				    data.setClassLoader(StructBoolParcelable.class.getClassLoader());
-				    data.setClassLoader(StructIntParcelable.class.getClassLoader());
-				    data.setClassLoader(StructFloatParcelable.class.getClassLoader());
-				    data.setClassLoader(StructStringParcelable.class.getClassLoader());
+        data.setClassLoader(StructBoolParcelable.class.getClassLoader());
 			        
                     
 			        StructBool propBool = data.getParcelable("propBool", StructBoolParcelable.class).getStructBool();
@@ -261,7 +258,8 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 			    case SIG_SigBool: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(StructBoolParcelable.class.getClassLoader());
+                    
+        data.setClassLoader(StructBoolParcelable.class.getClassLoader());
                 
 			        StructBool paramBool = data.getParcelable("paramBool", StructBoolParcelable.class).getStructBool();
 				    onSigBool(paramBool);
@@ -270,7 +268,8 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 			    case SIG_SigInt: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(StructIntParcelable.class.getClassLoader());
+                    
+        data.setClassLoader(StructIntParcelable.class.getClassLoader());
                 
 			        StructInt paramInt = data.getParcelable("paramInt", StructIntParcelable.class).getStructInt();
 				    onSigInt(paramInt);
@@ -279,7 +278,8 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 			    case SIG_SigFloat: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(StructFloatParcelable.class.getClassLoader());
+                    
+        data.setClassLoader(StructFloatParcelable.class.getClassLoader());
                 
 			        StructFloat paramFloat = data.getParcelable("paramFloat", StructFloatParcelable.class).getStructFloat();
 				    onSigFloat(paramFloat);
@@ -288,7 +288,8 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 			    case SIG_SigString: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(StructStringParcelable.class.getClassLoader());
+                    
+        data.setClassLoader(StructStringParcelable.class.getClassLoader());
                 
 			        StructString paramString = data.getParcelable("paramString", StructStringParcelable.class).getStructString();
 				    onSigString(paramString);
@@ -297,7 +298,8 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 			    case RPC_FuncBoolResp: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(StructBoolParcelable.class.getClassLoader());
+                    
+        data.setClassLoader(StructBoolParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -315,7 +317,8 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 			    case RPC_FuncIntResp: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(StructIntParcelable.class.getClassLoader());
+                    
+        data.setClassLoader(StructIntParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -333,7 +336,8 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 			    case RPC_FuncFloatResp: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(StructFloatParcelable.class.getClassLoader());
+                    
+        data.setClassLoader(StructFloatParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -351,7 +355,8 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 			    case RPC_FuncStringResp: {
 
 				    Bundle data = msg.getData();
-					data.setClassLoader(StructStringParcelable.class.getClassLoader());
+                    
+        data.setClassLoader(StructStringParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

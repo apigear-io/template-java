@@ -1,0 +1,38 @@
+plugins {
+    alias(libs.plugins.android.library)
+}
+
+group = "tbRefIfaces"
+version = "1.0.0"
+
+android {
+    namespace 'tbRefIfaces.tbRefIfaces_android_service'
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 33
+		targetSdk 34
+		versionCode 1
+		versionName "1.0"
+
+		testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+	}
+
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
+
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation project(':tbRefIfaces_api')
+    implementation project(':tbRefIfaces_impl')
+    implementation project(':tbRefIfaces_android_messenger')
+    api 'tbIfaceimport:tbIfaceimport_android_messenger:1.0.0'
+    implementation 'tbIfaceimport:tbIfaceimport_impl:1.0.0'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.10.3'
+    testImplementation 'org.mockito:mockito-core:5.12.0'
+    testImplementation 'org.mockito:mockito-inline:5.2.0'
+}

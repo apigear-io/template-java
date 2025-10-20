@@ -13,17 +13,8 @@ import android.widget.TextView;
 //TODO for each interface there coudl be a tab? now only first one is added
 
 import tbSame2.tbSame2_android_client.SameStruct1InterfaceClient;
-
-//import message type and parcelabe types
 import tbSame2.tbSame2_api.Struct1;
 import tbSame2.tbSame2_android_messenger.Struct1Parcelable;
-import tbSame2.tbSame2_api.Struct2;
-import tbSame2.tbSame2_android_messenger.Struct2Parcelable;
-import tbSame2.tbSame2_api.Enum1;
-import tbSame2.tbSame2_android_messenger.Enum1Parcelable;
-import tbSame2.tbSame2_api.Enum2;
-import tbSame2.tbSame2_android_messenger.Enum2Parcelable;
-
 import tbSame2.tbSame2_api.ISameStruct1InterfaceEventListener;
 import java.util.concurrent.CompletableFuture;
 

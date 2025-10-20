@@ -2,7 +2,6 @@ package tbSame2.tbSame2_api;
 
 import tbSame2.tbSame2_api.ISameEnum2InterfaceEventListener;
 import tbSame2.tbSame2_api.ISameEnum2Interface;
-//TODO imported/extern modules
 import tbSame2.tbSame2_api.Struct1;
 import tbSame2.tbSame2_api.Struct2;
 import tbSame2.tbSame2_api.Enum1;

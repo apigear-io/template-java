@@ -6,10 +6,7 @@ import android.util.Log;
 import tbSame1.tbSame1_api.ISameEnum1Interface;
 import tbSame1.tbSame1_api.AbstractSameEnum1Interface;
 import tbSame1.tbSame1_api.ISameEnum1InterfaceEventListener;
-import tbSame1.tbSame1_api.Struct1;
-import tbSame1.tbSame1_api.Struct2;
 import tbSame1.tbSame1_api.Enum1;
-import tbSame1.tbSame1_api.Enum2;
 
 
 import java.util.Map;

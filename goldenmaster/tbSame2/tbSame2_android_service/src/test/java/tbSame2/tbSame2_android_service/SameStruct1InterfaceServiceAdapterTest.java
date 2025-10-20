@@ -166,7 +166,8 @@ public class SameStruct1InterfaceServiceAdapterTest
         Bundle data = response.getData();
         
 			Struct1 receivedprop1 = data.getParcelable("prop1", Struct1Parcelable.class).getStruct1();
-		data.setClassLoader(Struct1Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(Struct1Parcelable.class.getClassLoader());
         // assertEquals(receivedprop1, initprop1);
 
     }
@@ -205,7 +206,6 @@ public class SameStruct1InterfaceServiceAdapterTest
         // All emitted signals and property changes are forwarded to it.
         registerFakeActivityClient(clientReplyMessenger, mTestConnectionID1);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop1PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -253,7 +253,8 @@ public class SameStruct1InterfaceServiceAdapterTest
 
         assertEquals(SameStruct1InterfaceMessageType.SIG_Sig1.getValue(), response.what);
         Bundle data = response.getData();
-		data.setClassLoader(Struct1Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(Struct1Parcelable.class.getClassLoader());
         
 			Struct1 receivedparam1 = data.getParcelable("param1", Struct1Parcelable.class).getStruct1();
         assertEquals(receivedparam1, testparam1);

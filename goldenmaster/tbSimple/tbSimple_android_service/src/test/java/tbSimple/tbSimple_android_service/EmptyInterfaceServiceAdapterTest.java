@@ -152,6 +152,7 @@ public class EmptyInterfaceServiceAdapterTest
 
         assertEquals(EmptyInterfaceMessageType.INIT.getValue(), response.what);
         Bundle data = response.getData();
+        
 
     }
 

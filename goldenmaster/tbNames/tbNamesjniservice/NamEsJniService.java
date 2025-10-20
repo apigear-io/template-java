@@ -6,7 +6,8 @@ import android.util.Log;
 import tbNames.tbNames_api.INamEs;
 import tbNames.tbNames_api.AbstractNamEs;
 import tbNames.tbNames_api.INamEsEventListener;
-
+import tbNames.tbNames_api.EnumWithUnderScores;
+import tbNames.tbNames_android_messenger.EnumWithUnderScoresParcelable;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -74,6 +75,21 @@ public class NamEsJniService extends AbstractNamEs {
     }
 
   
+    @Override
+    public void setEnumProperty(EnumWithUnderScores enum_property)
+    {
+        Log.i(TAG, "request setEnumProperty called, will call native ");
+        nativeSetEnumProperty(enum_property);
+    }
+
+    @Override
+    public EnumWithUnderScores getEnumProperty()
+    {
+        Log.i(TAG, "request getEnumProperty called, will call native ");
+        return nativeGetEnumProperty();
+    }
+
+  
     // methods
 
     @Override
@@ -117,6 +133,9 @@ public class NamEsJniService extends AbstractNamEs {
     private native void nativeSetSomePoperty2(int Some_Poperty2);
     private native int nativeGetSomePoperty2();
   
+    private native void nativeSetEnumProperty(EnumWithUnderScores enum_property);
+    private native EnumWithUnderScores nativeGetEnumProperty();
+  
     // methods
     private native void nativeSomeFunction(boolean SOME_PARAM);
     private native void nativeSomeFunction2(boolean Some_Param);
@@ -141,6 +160,11 @@ public class NamEsJniService extends AbstractNamEs {
     {
          Log.i(TAG, "onSomePoperty2Changed, will pass notification to all listeners");
          fireSomePoperty2Changed(newValue);
+    }
+    public void onEnumPropertyChanged(EnumWithUnderScores newValue)
+    {
+         Log.i(TAG, "onEnumPropertyChanged, will pass notification to all listeners");
+         fireEnumPropertyChanged(newValue);
     }
     public void onSomeSignal(boolean SOME_PARAM)
     {

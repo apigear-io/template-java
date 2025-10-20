@@ -23,6 +23,11 @@ includeBuild 'tbSame1'
 includeBuild 'tbSame2'
 includeBuild 'tbSimple'
 includeBuild 'testbed1'
+includeBuild 'customTypes'
+includeBuild 'externTypes'
+includeBuild 'counter'
+includeBuild 'tbIfaceimport'
+includeBuild 'tbRefIfaces'
 
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)

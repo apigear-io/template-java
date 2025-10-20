@@ -153,7 +153,6 @@ public class SameEnum1InterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onProp1Changed(testprop1);
     }
-//TODO do not add when a property is readonly
     @Test
     public void onReceiveprop1PropertyChangeTest() throws RemoteException {
         // Create and send message
@@ -167,7 +166,7 @@ public class SameEnum1InterfaceClientTest
         Robolectric.flushForegroundThreadScheduler();
 		inOrderEventListener.verify(listenerMock,times(1)).onProp1Changed(testprop1);	    
     }
-
+    
     @Test
      public void setPropertyRequestprop1()
     {
@@ -175,7 +174,6 @@ public class SameEnum1InterfaceClientTest
 
         testedClient.setProp1(testprop1);
         Robolectric.flushForegroundThreadScheduler();
-
         inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
         Message response = messageCaptor.getValue();
 
@@ -186,6 +184,7 @@ public class SameEnum1InterfaceClientTest
 			Enum1 receivedprop1 = data.getParcelable("prop1", Enum1Parcelable.class).getEnum1();
         assertEquals(receivedprop1, testprop1);
     }
+    
     @Test
     public void whenNotifiedsig1() throws RemoteException
     {
@@ -226,7 +225,8 @@ public class SameEnum1InterfaceClientTest
         Message method_request = messageCaptor.getValue();
         assertEquals(SameEnum1InterfaceMessageType.RPC_Func1Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
-		data.setClassLoader(Enum1Parcelable.class.getClassLoader());
+        
+        data.setClassLoader(Enum1Parcelable.class.getClassLoader());
         
 			Enum1 receivedparam1 = data.getParcelable("param1", Enum1Parcelable.class).getEnum1();
         assertEquals(receivedparam1, testparam1);

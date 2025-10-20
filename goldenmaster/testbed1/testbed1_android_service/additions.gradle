@@ -11,8 +11,8 @@ android {
 dependencies {
 	implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation project(':testbed1_api')
-    implementation project(':testbed1_impl')
-    implementation project(':testbed1_android_messenger')
+    api project(':testbed1_impl')
+    api project(':testbed1_android_messenger')
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.robolectric:robolectric:4.10.3'
     testImplementation 'org.mockito:mockito-core:5.12.0'

@@ -1,0 +1,8 @@
+android {
+    namespace 'tbRefIfaces.tbRefIfaces_api'
+}
+
+dependencies {
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.17.0'
+    api project(':tbIfaceimport_api')
+}
