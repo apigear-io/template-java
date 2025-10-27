@@ -373,7 +373,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 			    case RPC_FuncNoReturnValueResp: {
 
 				    Bundle data = msg.getData();
-                    
+				    data.setClassLoader(VoidParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -391,7 +391,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 			    case RPC_FuncBoolResp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -409,7 +408,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 			    case RPC_FuncIntResp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -427,7 +425,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 			    case RPC_FuncInt32Resp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -445,7 +442,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 			    case RPC_FuncInt64Resp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -463,7 +459,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 			    case RPC_FuncFloatResp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -481,7 +476,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 			    case RPC_FuncFloat32Resp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -499,7 +493,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 			    case RPC_FuncFloat64Resp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -517,7 +510,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 			    case RPC_FuncStringResp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

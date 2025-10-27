@@ -217,8 +217,7 @@ public class SameStruct1InterfaceClient extends AbstractSameStruct1Interface imp
 			    case RPC_Func1Resp: {
 
 				    Bundle data = msg.getData();
-                    
-        data.setClassLoader(Struct1Parcelable.class.getClassLoader());
+				    data.setClassLoader(Struct1Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

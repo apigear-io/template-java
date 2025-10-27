@@ -293,7 +293,6 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 			    case RPC_Func1Resp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -311,7 +310,6 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 			    case RPC_Func2Resp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -329,7 +327,6 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 			    case RPC_Func3Resp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -347,7 +344,6 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 			    case RPC_Func4Resp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
