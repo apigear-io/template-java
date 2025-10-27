@@ -205,7 +205,7 @@ public class NoPropertiesInterfaceClient extends AbstractNoPropertiesInterface i
 			    case RPC_FuncVoidResp: {
 
 				    Bundle data = msg.getData();
-                    
+				    data.setClassLoader(VoidParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -223,7 +223,6 @@ public class NoPropertiesInterfaceClient extends AbstractNoPropertiesInterface i
 			    case RPC_FuncBoolResp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

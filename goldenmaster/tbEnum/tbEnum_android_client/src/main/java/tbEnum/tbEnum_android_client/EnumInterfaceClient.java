@@ -298,8 +298,7 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 			    case RPC_Func0Resp: {
 
 				    Bundle data = msg.getData();
-                    
-        data.setClassLoader(Enum0Parcelable.class.getClassLoader());
+				    data.setClassLoader(Enum0Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -317,8 +316,7 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 			    case RPC_Func1Resp: {
 
 				    Bundle data = msg.getData();
-                    
-        data.setClassLoader(Enum1Parcelable.class.getClassLoader());
+				    data.setClassLoader(Enum1Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -336,8 +334,7 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 			    case RPC_Func2Resp: {
 
 				    Bundle data = msg.getData();
-                    
-        data.setClassLoader(Enum2Parcelable.class.getClassLoader());
+				    data.setClassLoader(Enum2Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -355,8 +352,7 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 			    case RPC_Func3Resp: {
 
 				    Bundle data = msg.getData();
-                    
-        data.setClassLoader(Enum3Parcelable.class.getClassLoader());
+				    data.setClassLoader(Enum3Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

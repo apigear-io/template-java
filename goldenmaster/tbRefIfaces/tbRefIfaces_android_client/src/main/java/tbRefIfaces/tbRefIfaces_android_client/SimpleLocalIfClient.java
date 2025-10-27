@@ -212,7 +212,6 @@ public class SimpleLocalIfClient extends AbstractSimpleLocalIf implements Servic
 			    case RPC_IntMethodResp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

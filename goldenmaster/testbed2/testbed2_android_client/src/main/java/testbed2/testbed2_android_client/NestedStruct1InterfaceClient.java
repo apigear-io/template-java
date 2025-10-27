@@ -217,8 +217,7 @@ public class NestedStruct1InterfaceClient extends AbstractNestedStruct1Interface
 			    case RPC_Func1Resp: {
 
 				    Bundle data = msg.getData();
-                    
-        data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
+				    data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

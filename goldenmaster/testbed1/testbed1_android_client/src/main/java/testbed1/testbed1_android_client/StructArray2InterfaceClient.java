@@ -325,8 +325,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 			    case RPC_FuncBoolResp: {
 
 				    Bundle data = msg.getData();
-                    
-        data.setClassLoader(StructBoolWithArrayParcelable.class.getClassLoader());
+				    data.setClassLoader(StructBoolParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -344,8 +343,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 			    case RPC_FuncIntResp: {
 
 				    Bundle data = msg.getData();
-                    
-        data.setClassLoader(StructIntWithArrayParcelable.class.getClassLoader());
+				    data.setClassLoader(StructIntParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -363,8 +361,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 			    case RPC_FuncFloatResp: {
 
 				    Bundle data = msg.getData();
-                    
-        data.setClassLoader(StructFloatWithArrayParcelable.class.getClassLoader());
+				    data.setClassLoader(StructFloatParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -382,8 +379,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 			    case RPC_FuncStringResp: {
 
 				    Bundle data = msg.getData();
-                    
-        data.setClassLoader(StructStringWithArrayParcelable.class.getClassLoader());
+				    data.setClassLoader(StructStringParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -401,8 +397,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 			    case RPC_FuncEnumResp: {
 
 				    Bundle data = msg.getData();
-                    
-        data.setClassLoader(StructEnumWithArrayParcelable.class.getClassLoader());
+				    data.setClassLoader(Enum0Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

@@ -359,7 +359,9 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 			    case RPC_{{Camel .Name}}Resp: {
 
 				    Bundle data = msg.getData();
-                    {{template "setClassLoaderIfNeeded" .Params}}
+					{{- if not (or .Return.IsPrimitive .Return.IsVoid)}}
+					data.setClassLoader({{template "getParcelable" .Return }}.class.getClassLoader());
+					{{- end}}
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

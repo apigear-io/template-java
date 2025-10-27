@@ -268,9 +268,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 			    case RPC_IncrementResp: {
 
 				    Bundle data = msg.getData();
-                    
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
-        data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
+				    data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -288,9 +286,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 			    case RPC_IncrementArrayResp: {
 
 				    Bundle data = msg.getData();
-                    
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
-        data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
+				    data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -308,9 +304,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 			    case RPC_DecrementResp: {
 
 				    Bundle data = msg.getData();
-                    
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
-        data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
+				    data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -328,9 +322,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 			    case RPC_DecrementArrayResp: {
 
 				    Bundle data = msg.getData();
-                    
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
-        data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
+				    data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

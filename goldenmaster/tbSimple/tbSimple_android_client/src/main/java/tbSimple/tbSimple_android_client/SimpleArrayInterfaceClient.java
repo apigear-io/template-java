@@ -387,7 +387,6 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case RPC_FuncBoolResp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -405,7 +404,6 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case RPC_FuncIntResp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -423,7 +421,6 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case RPC_FuncInt32Resp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -441,7 +438,6 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case RPC_FuncInt64Resp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -459,7 +455,6 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case RPC_FuncFloatResp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -477,7 +472,6 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case RPC_FuncFloat32Resp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -495,7 +489,6 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case RPC_FuncFloat64Resp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -513,7 +506,6 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 			    case RPC_FuncStringResp: {
 
 				    Bundle data = msg.getData();
-                    
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
