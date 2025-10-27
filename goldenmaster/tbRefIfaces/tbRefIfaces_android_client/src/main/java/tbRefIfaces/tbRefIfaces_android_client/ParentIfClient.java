@@ -295,8 +295,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 			    case RPC_LocalIfMethodResp: {
 
 				    Bundle data = msg.getData();
-                    
-        data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
+				    data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -314,8 +313,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 			    case RPC_LocalIfMethodListResp: {
 
 				    Bundle data = msg.getData();
-                    
-        data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
+				    data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -333,9 +331,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 			    case RPC_ImportedIfMethodResp: {
 
 				    Bundle data = msg.getData();
-                    
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
-        data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
+				    data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -353,9 +349,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 			    case RPC_ImportedIfMethodListResp: {
 
 				    Bundle data = msg.getData();
-                    
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
-        data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
+				    data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

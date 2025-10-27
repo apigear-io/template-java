@@ -217,8 +217,7 @@ public class SameEnum1InterfaceClient extends AbstractSameEnum1Interface impleme
 			    case RPC_Func1Resp: {
 
 				    Bundle data = msg.getData();
-                    
-        data.setClassLoader(Enum1Parcelable.class.getClassLoader());
+				    data.setClassLoader(Enum1Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
