@@ -393,10 +393,11 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
         Log.i(TAG, "request set{{Camel .Name}} called "+ {{javaVar . }});
         {{- if .IsArray }}
         if (! Arrays.equals(m_{{javaVar  .}}, {{javaVar  .}}))
-        {{- else if or .IsPrimitive  (eq .KindType "enum") }}
+        {{- else if or (or .IsPrimitive  (eq .KindType "enum")) (eq .KindType "interface") }}
         if (m_{{javaVar  .}} != {{javaVar  .}})
         {{- else }}
-        if (! m_{{javaVar  .}}.equals({{javaVar  .}}))
+        if ( (m_{{javaVar  .}} != null && ! m_{{javaVar  .}}.equals({{javaVar  .}}))
+        || (m_{{javaVar  .}} == null && {{javaVar  .}} != null ))
         {{- end }}
         {
 			Message msg = new Message();
@@ -414,10 +415,11 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
         Log.i(TAG, "value received from service for {{Camel .Name}} ");
         {{- if .IsArray }}
         if (! Arrays.equals(m_{{javaVar  .}}, {{javaVar  .}}))
-        {{- else if or .IsPrimitive  (eq .KindType "enum") }}
+        {{- else if or (or .IsPrimitive  (eq .KindType "enum")) (eq .KindType "interface") }}
         if (m_{{javaVar  .}} != {{javaVar  .}})
         {{- else }}
-        if (! m_{{javaVar  .}}.equals({{javaVar  .}}))
+        if ( (m_{{javaVar  .}} != null && ! m_{{javaVar  .}}.equals({{javaVar  .}}))
+        || (m_{{javaVar  .}} == null && {{javaVar  .}} != null ))
         {{- end }}
         {
             m_{{javaVar  .}} = {{javaVar  .}};
