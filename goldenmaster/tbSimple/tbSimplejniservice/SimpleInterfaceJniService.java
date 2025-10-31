@@ -164,6 +164,19 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
     }
 
     @Override
+    public boolean funcNoParams() {
+        Log.w(TAG, "request method funcNoParams called, will call native");
+        return nativeFuncNoParams();
+    }
+
+    @Override
+    public  CompletableFuture<Boolean> funcNoParamsAsync() {
+        return CompletableFuture.supplyAsync(
+                () -> {return funcNoParams(); },
+                executor);
+    }
+
+    @Override
     public boolean funcBool(boolean paramBool) {
         Log.w(TAG, "request method funcBool called, will call native");
         return nativeFuncBool(paramBool);
@@ -299,6 +312,7 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
   
     // methods
     private native void nativeFuncNoReturnValue(boolean paramBool);
+    private native boolean nativeFuncNoParams();
     private native boolean nativeFuncBool(boolean paramBool);
     private native int nativeFuncInt(int paramInt);
     private native int nativeFuncInt32(int paramInt32);

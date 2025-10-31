@@ -44,6 +44,42 @@ public class NestedStruct1InterfaceJniClient extends AbstractNestedStruct1Interf
         return mMessengerClient.getProp1();
     }
     
+     public void funcNoReturnValue(NestedStruct1 param1)
+     {
+        Log.v(TAG, "Blocking callfuncNoReturnValue - should not be used ");
+         mMessengerClient.funcNoReturnValue(param1);
+    }
+
+    public void funcNoReturnValueAsync(String callId, NestedStruct1 param1){
+        Log.v(TAG, "non blocking call funcNoReturnValue ");
+        mMessengerClient.funcNoReturnValueAsync(param1).thenAccept(i -> {
+            nativeOnFuncNoReturnValueResult(callId);});
+    }
+
+    //Should not be called directly, use funcNoReturnValueAsync(String callId, NestedStruct1 param1)
+    public CompletableFuture<Void> funcNoReturnValueAsync(NestedStruct1 param1)
+    {
+        Log.v(TAG, "NON Blocking call method ");
+        return mMessengerClient.funcNoReturnValueAsync(param1);
+    }
+     public NestedStruct1 funcNoParams()
+     {
+        Log.v(TAG, "Blocking callfuncNoParams - should not be used ");
+        return mMessengerClient.funcNoParams();
+    }
+
+    public void funcNoParamsAsync(String callId){
+        Log.v(TAG, "non blocking call funcNoParams ");
+        mMessengerClient.funcNoParamsAsync().thenAccept(i -> {
+            nativeOnFuncNoParamsResult(i, callId);});
+    }
+
+    //Should not be called directly, use funcNoParamsAsync(String callId, )
+    public CompletableFuture<NestedStruct1> funcNoParamsAsync()
+    {
+        Log.v(TAG, "NON Blocking call method ");
+        return mMessengerClient.funcNoParamsAsync();
+    }
      public NestedStruct1 func1(NestedStruct1 param1)
      {
         Log.v(TAG, "Blocking callfunc1 - should not be used ");
@@ -114,6 +150,8 @@ public class NestedStruct1InterfaceJniClient extends AbstractNestedStruct1Interf
     }
      private native void nativeOnProp1Changed(NestedStruct1 prop1);
     private native void nativeOnSig1(NestedStruct1 param1);
+    private native void nativeOnFuncNoReturnValueResult(String callId);
+    private native void nativeOnFuncNoParamsResult(NestedStruct1 result, String callId);
     private native void nativeOnFunc1Result(NestedStruct1 result, String callId);
     private native void nativeIsReady(boolean isReady);
 }

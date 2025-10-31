@@ -296,6 +296,33 @@ public class SimpleInterfaceServiceAdapter extends Service
 			// TODO params may be different structs from different modules, there should be a custom class loader 
 			// with a list of class loaders required for this message
 			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
+				case RPC_FuncNoParamsReq: {
+
+					Bundle data = msg.getData();
+					
+					int callId = data.getInt("callId");
+
+					boolean result =  mBackendService.funcNoParams();
+
+					Message respMsg = new Message();
+					respMsg.what = SimpleInterfaceMessageType.RPC_FuncNoParamsResp.getValue();
+					Bundle resp_data = new Bundle();
+					resp_data.putInt("callId", callId);
+					
+		        resp_data.putBoolean("result", result);
+					respMsg.setData(resp_data);
+
+					try {
+						msg.replyTo.send(respMsg);
+					} catch (RemoteException e) {
+						throw new RuntimeException(e);
+					}
+					break;
+
+				}
+			// TODO params may be different structs from different modules, there should be a custom class loader 
+			// with a list of class loaders required for this message
+			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 				case RPC_FuncBoolReq: {
 
 					Bundle data = msg.getData();

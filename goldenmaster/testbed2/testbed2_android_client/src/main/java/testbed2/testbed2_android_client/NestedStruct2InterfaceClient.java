@@ -246,7 +246,7 @@ public class NestedStruct2InterfaceClient extends AbstractNestedStruct2Interface
 			    case RPC_Func1Resp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
+					data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -264,7 +264,7 @@ public class NestedStruct2InterfaceClient extends AbstractNestedStruct2Interface
 			    case RPC_Func2Resp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
+					data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -291,7 +291,8 @@ public class NestedStruct2InterfaceClient extends AbstractNestedStruct2Interface
     public void setProp1(NestedStruct1 prop1)
     {
         Log.i(TAG, "request setProp1 called "+ prop1);
-        if (! m_prop1.equals(prop1))
+        if ( (m_prop1 != null && ! m_prop1.equals(prop1))
+        || (m_prop1 == null && prop1 != null ))
         {
 			Message msg = new Message();
 			msg.what = NestedStruct2InterfaceMessageType.PROP_Prop1.getValue();
@@ -307,7 +308,8 @@ public class NestedStruct2InterfaceClient extends AbstractNestedStruct2Interface
 	public void onProp1(NestedStruct1 prop1)
     {
         Log.i(TAG, "value received from service for Prop1 ");
-        if (! m_prop1.equals(prop1))
+        if ( (m_prop1 != null && ! m_prop1.equals(prop1))
+        || (m_prop1 == null && prop1 != null ))
         {
             m_prop1 = prop1;
             fireProp1Changed(prop1);
@@ -327,7 +329,8 @@ public class NestedStruct2InterfaceClient extends AbstractNestedStruct2Interface
     public void setProp2(NestedStruct2 prop2)
     {
         Log.i(TAG, "request setProp2 called "+ prop2);
-        if (! m_prop2.equals(prop2))
+        if ( (m_prop2 != null && ! m_prop2.equals(prop2))
+        || (m_prop2 == null && prop2 != null ))
         {
 			Message msg = new Message();
 			msg.what = NestedStruct2InterfaceMessageType.PROP_Prop2.getValue();
@@ -343,7 +346,8 @@ public class NestedStruct2InterfaceClient extends AbstractNestedStruct2Interface
 	public void onProp2(NestedStruct2 prop2)
     {
         Log.i(TAG, "value received from service for Prop2 ");
-        if (! m_prop2.equals(prop2))
+        if ( (m_prop2 != null && ! m_prop2.equals(prop2))
+        || (m_prop2 == null && prop2 != null ))
         {
             m_prop2 = prop2;
             fireProp2Changed(prop2);

@@ -7,8 +7,12 @@ public enum NestedStruct1InterfaceMessageType {
     PROP_Prop1(3),
     SET_Prop1(4),
     SIG_Sig1(5),
-    RPC_Func1Req(6),
-    RPC_Func1Resp(7),
+    RPC_FuncNoReturnValueReq(6),
+    RPC_FuncNoReturnValueResp(7),
+    RPC_FuncNoParamsReq(8),
+    RPC_FuncNoParamsResp(9),
+    RPC_Func1Req(10),
+    RPC_Func1Resp(11),
     NestedStruct1InterfaceMessageType_UNKNOWN(Integer.MAX_VALUE);
 
     private final int value;

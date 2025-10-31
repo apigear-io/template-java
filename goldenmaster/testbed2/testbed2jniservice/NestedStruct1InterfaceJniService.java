@@ -48,6 +48,32 @@ public class NestedStruct1InterfaceJniService extends AbstractNestedStruct1Inter
     // methods
 
     @Override
+    public void funcNoReturnValue(NestedStruct1 param1) {
+        Log.w(TAG, "request method funcNoReturnValue called, will call native");
+         nativeFuncNoReturnValue(param1);
+    }
+
+    @Override
+    public  CompletableFuture<Void> funcNoReturnValueAsync(NestedStruct1 param1) {
+        return CompletableFuture.runAsync(
+                () -> { funcNoReturnValue(param1); },
+                executor);
+    }
+
+    @Override
+    public NestedStruct1 funcNoParams() {
+        Log.w(TAG, "request method funcNoParams called, will call native");
+        return nativeFuncNoParams();
+    }
+
+    @Override
+    public  CompletableFuture<NestedStruct1> funcNoParamsAsync() {
+        return CompletableFuture.supplyAsync(
+                () -> {return funcNoParams(); },
+                executor);
+    }
+
+    @Override
     public NestedStruct1 func1(NestedStruct1 param1) {
         Log.w(TAG, "request method func1 called, will call native");
         return nativeFunc1(param1);
@@ -70,6 +96,8 @@ public class NestedStruct1InterfaceJniService extends AbstractNestedStruct1Inter
     private native NestedStruct1 nativeGetProp1();
   
     // methods
+    private native void nativeFuncNoReturnValue(NestedStruct1 param1);
+    private native NestedStruct1 nativeFuncNoParams();
     private native NestedStruct1 nativeFunc1(NestedStruct1 param1);
 
     // Called by Native Impl Service

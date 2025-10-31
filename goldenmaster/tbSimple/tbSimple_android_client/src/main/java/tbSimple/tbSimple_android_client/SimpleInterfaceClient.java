@@ -373,7 +373,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 			    case RPC_FuncNoReturnValueResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(VoidParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -384,6 +383,23 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
                     else
                     {
                         Log.v(TAG, "received SimpleInterfaceMessageType.RPC_FuncNoReturnValueResp , could not find pending call for " + msg.obj);
+                    }
+				    break;
+
+			    }
+			    case RPC_FuncNoParamsResp: {
+
+				    Bundle data = msg.getData();
+				    int callId = data.getInt("callId");
+
+				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
+                    if (foundCall != null)
+                    {
+                        foundCall.accept(data);
+                    }
+                    else
+                    {
+                        Log.v(TAG, "received SimpleInterfaceMessageType.RPC_FuncNoParamsResp , could not find pending call for " + msg.obj);
                     }
 				    break;
 
@@ -855,6 +871,46 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
         Consumer<Bundle> resolver = bundle -> {
             future.complete(null);
             Log.v(TAG, "resolve funcNoReturnValue");
+        };
+
+        // Store the lambda function in the map
+        mpendingCalls.put(msgId, resolver);
+
+        return future;
+    }
+
+   
+    @Override
+    public boolean funcNoParams() {
+        CompletableFuture<Boolean> resFuture = funcNoParamsAsync();
+        try {
+            return resFuture.get();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public  CompletableFuture<Boolean> funcNoParamsAsync() {
+
+    	Log.i(TAG, "Call on service funcNoParams  ");
+		Message msg = new Message();
+		msg.what = SimpleInterfaceMessageType.RPC_FuncNoParamsReq.getValue();
+		Bundle data = new Bundle();
+        int msgId =  callIdsGetter.getAndIncrement();
+        data.putInt("callId",msgId);
+		msg.setData(data);
+        msg.replyTo = mClientMessenger;
+		mClientHandler.sendToService(msg);
+
+        CompletableFuture<Boolean>  future = new CompletableFuture<>();
+        Consumer<Bundle> resolver = bundle -> {
+            
+		    boolean result = bundle.getBoolean("result", false);
+            Log.v(TAG, "resolve funcNoParams" + result);
+            future.complete(result);
         };
 
         // Store the lambda function in the map

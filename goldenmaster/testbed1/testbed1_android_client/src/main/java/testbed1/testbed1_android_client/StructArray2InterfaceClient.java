@@ -325,7 +325,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 			    case RPC_FuncBoolResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(StructBoolParcelable.class.getClassLoader());
+					data.setClassLoader(StructBoolParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -343,7 +343,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 			    case RPC_FuncIntResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(StructIntParcelable.class.getClassLoader());
+					data.setClassLoader(StructIntParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -361,7 +361,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 			    case RPC_FuncFloatResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(StructFloatParcelable.class.getClassLoader());
+					data.setClassLoader(StructFloatParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -379,7 +379,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 			    case RPC_FuncStringResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(StructStringParcelable.class.getClassLoader());
+					data.setClassLoader(StructStringParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -397,7 +397,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 			    case RPC_FuncEnumResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(Enum0Parcelable.class.getClassLoader());
+					data.setClassLoader(Enum0Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -424,7 +424,8 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
     public void setPropBool(StructBoolWithArray propBool)
     {
         Log.i(TAG, "request setPropBool called "+ propBool);
-        if (! m_propBool.equals(propBool))
+        if ( (m_propBool != null && ! m_propBool.equals(propBool))
+        || (m_propBool == null && propBool != null ))
         {
 			Message msg = new Message();
 			msg.what = StructArray2InterfaceMessageType.PROP_PropBool.getValue();
@@ -440,7 +441,8 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 	public void onPropBool(StructBoolWithArray propBool)
     {
         Log.i(TAG, "value received from service for PropBool ");
-        if (! m_propBool.equals(propBool))
+        if ( (m_propBool != null && ! m_propBool.equals(propBool))
+        || (m_propBool == null && propBool != null ))
         {
             m_propBool = propBool;
             firePropBoolChanged(propBool);
@@ -460,7 +462,8 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
     public void setPropInt(StructIntWithArray propInt)
     {
         Log.i(TAG, "request setPropInt called "+ propInt);
-        if (! m_propInt.equals(propInt))
+        if ( (m_propInt != null && ! m_propInt.equals(propInt))
+        || (m_propInt == null && propInt != null ))
         {
 			Message msg = new Message();
 			msg.what = StructArray2InterfaceMessageType.PROP_PropInt.getValue();
@@ -476,7 +479,8 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 	public void onPropInt(StructIntWithArray propInt)
     {
         Log.i(TAG, "value received from service for PropInt ");
-        if (! m_propInt.equals(propInt))
+        if ( (m_propInt != null && ! m_propInt.equals(propInt))
+        || (m_propInt == null && propInt != null ))
         {
             m_propInt = propInt;
             firePropIntChanged(propInt);
@@ -496,7 +500,8 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
     public void setPropFloat(StructFloatWithArray propFloat)
     {
         Log.i(TAG, "request setPropFloat called "+ propFloat);
-        if (! m_propFloat.equals(propFloat))
+        if ( (m_propFloat != null && ! m_propFloat.equals(propFloat))
+        || (m_propFloat == null && propFloat != null ))
         {
 			Message msg = new Message();
 			msg.what = StructArray2InterfaceMessageType.PROP_PropFloat.getValue();
@@ -512,7 +517,8 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 	public void onPropFloat(StructFloatWithArray propFloat)
     {
         Log.i(TAG, "value received from service for PropFloat ");
-        if (! m_propFloat.equals(propFloat))
+        if ( (m_propFloat != null && ! m_propFloat.equals(propFloat))
+        || (m_propFloat == null && propFloat != null ))
         {
             m_propFloat = propFloat;
             firePropFloatChanged(propFloat);
@@ -532,7 +538,8 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
     public void setPropString(StructStringWithArray propString)
     {
         Log.i(TAG, "request setPropString called "+ propString);
-        if (! m_propString.equals(propString))
+        if ( (m_propString != null && ! m_propString.equals(propString))
+        || (m_propString == null && propString != null ))
         {
 			Message msg = new Message();
 			msg.what = StructArray2InterfaceMessageType.PROP_PropString.getValue();
@@ -548,7 +555,8 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 	public void onPropString(StructStringWithArray propString)
     {
         Log.i(TAG, "value received from service for PropString ");
-        if (! m_propString.equals(propString))
+        if ( (m_propString != null && ! m_propString.equals(propString))
+        || (m_propString == null && propString != null ))
         {
             m_propString = propString;
             firePropStringChanged(propString);
@@ -568,7 +576,8 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
     public void setPropEnum(StructEnumWithArray propEnum)
     {
         Log.i(TAG, "request setPropEnum called "+ propEnum);
-        if (! m_propEnum.equals(propEnum))
+        if ( (m_propEnum != null && ! m_propEnum.equals(propEnum))
+        || (m_propEnum == null && propEnum != null ))
         {
 			Message msg = new Message();
 			msg.what = StructArray2InterfaceMessageType.PROP_PropEnum.getValue();
@@ -584,7 +593,8 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 	public void onPropEnum(StructEnumWithArray propEnum)
     {
         Log.i(TAG, "value received from service for PropEnum ");
-        if (! m_propEnum.equals(propEnum))
+        if ( (m_propEnum != null && ! m_propEnum.equals(propEnum))
+        || (m_propEnum == null && propEnum != null ))
         {
             m_propEnum = propEnum;
             firePropEnumChanged(propEnum);

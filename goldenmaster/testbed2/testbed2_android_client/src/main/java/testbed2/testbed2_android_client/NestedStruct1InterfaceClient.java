@@ -214,10 +214,45 @@ public class NestedStruct1InterfaceClient extends AbstractNestedStruct1Interface
 				    onSig1(param1);
 				    break;
 			    }
+			    case RPC_FuncNoReturnValueResp: {
+
+				    Bundle data = msg.getData();
+				    int callId = data.getInt("callId");
+
+				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
+                    if (foundCall != null)
+                    {
+                        foundCall.accept(data);
+                    }
+                    else
+                    {
+                        Log.v(TAG, "received NestedStruct1InterfaceMessageType.RPC_FuncNoReturnValueResp , could not find pending call for " + msg.obj);
+                    }
+				    break;
+
+			    }
+			    case RPC_FuncNoParamsResp: {
+
+				    Bundle data = msg.getData();
+					data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
+				    int callId = data.getInt("callId");
+
+				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
+                    if (foundCall != null)
+                    {
+                        foundCall.accept(data);
+                    }
+                    else
+                    {
+                        Log.v(TAG, "received NestedStruct1InterfaceMessageType.RPC_FuncNoParamsResp , could not find pending call for " + msg.obj);
+                    }
+				    break;
+
+			    }
 			    case RPC_Func1Resp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
+					data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -244,7 +279,8 @@ public class NestedStruct1InterfaceClient extends AbstractNestedStruct1Interface
     public void setProp1(NestedStruct1 prop1)
     {
         Log.i(TAG, "request setProp1 called "+ prop1);
-        if (! m_prop1.equals(prop1))
+        if ( (m_prop1 != null && ! m_prop1.equals(prop1))
+        || (m_prop1 == null && prop1 != null ))
         {
 			Message msg = new Message();
 			msg.what = NestedStruct1InterfaceMessageType.PROP_Prop1.getValue();
@@ -260,7 +296,8 @@ public class NestedStruct1InterfaceClient extends AbstractNestedStruct1Interface
 	public void onProp1(NestedStruct1 prop1)
     {
         Log.i(TAG, "value received from service for Prop1 ");
-        if (! m_prop1.equals(prop1))
+        if ( (m_prop1 != null && ! m_prop1.equals(prop1))
+        || (m_prop1 == null && prop1 != null ))
         {
             m_prop1 = prop1;
             fireProp1Changed(prop1);
@@ -277,6 +314,87 @@ public class NestedStruct1InterfaceClient extends AbstractNestedStruct1Interface
 
   
     // methods
+
+   
+    @Override
+    public void funcNoReturnValue(NestedStruct1 param1) {
+        CompletableFuture<Void> resFuture = funcNoReturnValueAsync(param1);
+        try {
+            resFuture.get();
+            return;
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public  CompletableFuture<Void> funcNoReturnValueAsync(NestedStruct1 param1) {
+
+    	Log.i(TAG, "Call on service funcNoReturnValue  "+ " " + param1);
+		Message msg = new Message();
+		msg.what = NestedStruct1InterfaceMessageType.RPC_FuncNoReturnValueReq.getValue();
+		Bundle data = new Bundle();
+        int msgId =  callIdsGetter.getAndIncrement();
+        data.putInt("callId",msgId);
+        
+		        data.putParcelable("param1", new NestedStruct1Parcelable(param1));
+		msg.setData(data);
+        msg.replyTo = mClientMessenger;
+		mClientHandler.sendToService(msg);
+
+        CompletableFuture<Void>  future = new CompletableFuture<>();
+        Consumer<Bundle> resolver = bundle -> {
+            future.complete(null);
+            Log.v(TAG, "resolve funcNoReturnValue");
+        };
+
+        // Store the lambda function in the map
+        mpendingCalls.put(msgId, resolver);
+
+        return future;
+    }
+
+   
+    @Override
+    public NestedStruct1 funcNoParams() {
+        CompletableFuture<NestedStruct1> resFuture = funcNoParamsAsync();
+        try {
+            return resFuture.get();
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public  CompletableFuture<NestedStruct1> funcNoParamsAsync() {
+
+    	Log.i(TAG, "Call on service funcNoParams  ");
+		Message msg = new Message();
+		msg.what = NestedStruct1InterfaceMessageType.RPC_FuncNoParamsReq.getValue();
+		Bundle data = new Bundle();
+        int msgId =  callIdsGetter.getAndIncrement();
+        data.putInt("callId",msgId);
+		msg.setData(data);
+        msg.replyTo = mClientMessenger;
+		mClientHandler.sendToService(msg);
+
+        CompletableFuture<NestedStruct1>  future = new CompletableFuture<>();
+        Consumer<Bundle> resolver = bundle -> {
+            
+		    NestedStruct1 result = bundle.getParcelable("result", NestedStruct1Parcelable.class).getNestedStruct1();
+            Log.v(TAG, "resolve funcNoParams" + result);
+            future.complete(result);
+        };
+
+        // Store the lambda function in the map
+        mpendingCalls.put(msgId, resolver);
+
+        return future;
+    }
 
    
     @Override

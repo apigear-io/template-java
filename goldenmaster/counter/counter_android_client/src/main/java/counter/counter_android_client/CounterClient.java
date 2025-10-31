@@ -268,7 +268,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 			    case RPC_IncrementResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
+					data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -286,7 +286,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 			    case RPC_IncrementArrayResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
+					data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -304,7 +304,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 			    case RPC_DecrementResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
+					data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -322,7 +322,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 			    case RPC_DecrementArrayResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
+					data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -349,7 +349,8 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
     public void setVector(customTypes.customTypes_api.Vector3D vector)
     {
         Log.i(TAG, "request setVector called "+ vector);
-        if (! m_vector.equals(vector))
+        if ( (m_vector != null && ! m_vector.equals(vector))
+        || (m_vector == null && vector != null ))
         {
 			Message msg = new Message();
 			msg.what = CounterMessageType.PROP_Vector.getValue();
@@ -365,7 +366,8 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 	public void onVector(customTypes.customTypes_api.Vector3D vector)
     {
         Log.i(TAG, "value received from service for Vector ");
-        if (! m_vector.equals(vector))
+        if ( (m_vector != null && ! m_vector.equals(vector))
+        || (m_vector == null && vector != null ))
         {
             m_vector = vector;
             fireVectorChanged(vector);
@@ -385,7 +387,8 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
     public void setExternVector(org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector)
     {
         Log.i(TAG, "request setExternVector called "+ extern_vector);
-        if (! m_extern_vector.equals(extern_vector))
+        if ( (m_extern_vector != null && ! m_extern_vector.equals(extern_vector))
+        || (m_extern_vector == null && extern_vector != null ))
         {
 			Message msg = new Message();
 			msg.what = CounterMessageType.PROP_ExternVector.getValue();
@@ -401,7 +404,8 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 	public void onExternVector(org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector)
     {
         Log.i(TAG, "value received from service for ExternVector ");
-        if (! m_extern_vector.equals(extern_vector))
+        if ( (m_extern_vector != null && ! m_extern_vector.equals(extern_vector))
+        || (m_extern_vector == null && extern_vector != null ))
         {
             m_extern_vector = extern_vector;
             fireExternVectorChanged(extern_vector);

@@ -5,6 +5,12 @@ import tbRefIfaces.tbRefIfaces_android_client.SimpleLocalIfClient;
 
 //import message type and parcelabe types
 import tbRefIfaces.tbRefIfaces_api.TbRefIfacesTestHelper;
+import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
+import tbRefIfaces.tbRefIfaces_android_messenger.SimpleLocalIfParcelable;
+import tbRefIfaces.tbRefIfaces_impl.SimpleLocalIfService;
+import tbRefIfaces.tbRefIfaces_api.IParentIf;
+import tbRefIfaces.tbRefIfaces_android_messenger.ParentIfParcelable;
+import tbRefIfaces.tbRefIfaces_impl.ParentIfService;
 
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;

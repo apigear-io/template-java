@@ -31,6 +31,15 @@ import testbed1.testbed1_android_messenger.StructEnumWithArrayParcelable;
 import testbed1.testbed1_api.Testbed1TestHelper;
 import testbed1.testbed1_api.Enum0;
 import testbed1.testbed1_android_messenger.Enum0Parcelable;
+import testbed1.testbed1_api.IStructInterface;
+import testbed1.testbed1_android_messenger.StructInterfaceParcelable;
+import testbed1.testbed1_impl.StructInterfaceService;
+import testbed1.testbed1_api.IStructArrayInterface;
+import testbed1.testbed1_android_messenger.StructArrayInterfaceParcelable;
+import testbed1.testbed1_impl.StructArrayInterfaceService;
+import testbed1.testbed1_api.IStructArray2Interface;
+import testbed1.testbed1_android_messenger.StructArray2InterfaceParcelable;
+import testbed1.testbed1_impl.StructArray2InterfaceService;
 
 import testbed1.testbed1_api.IStructArrayInterfaceEventListener;
 import testbed1.testbed1_api.IStructArrayInterface;

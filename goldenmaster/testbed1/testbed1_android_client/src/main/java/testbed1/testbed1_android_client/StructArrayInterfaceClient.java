@@ -325,7 +325,7 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
 			    case RPC_FuncBoolResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(StructBoolParcelable.class.getClassLoader());
+					data.setClassLoader(StructBoolParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -343,7 +343,7 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
 			    case RPC_FuncIntResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(StructIntParcelable.class.getClassLoader());
+					data.setClassLoader(StructIntParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -361,7 +361,7 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
 			    case RPC_FuncFloatResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(StructFloatParcelable.class.getClassLoader());
+					data.setClassLoader(StructFloatParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -379,7 +379,7 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
 			    case RPC_FuncStringResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(StructStringParcelable.class.getClassLoader());
+					data.setClassLoader(StructStringParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -397,7 +397,7 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
 			    case RPC_FuncEnumResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(Enum0Parcelable.class.getClassLoader());
+					data.setClassLoader(Enum0Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
