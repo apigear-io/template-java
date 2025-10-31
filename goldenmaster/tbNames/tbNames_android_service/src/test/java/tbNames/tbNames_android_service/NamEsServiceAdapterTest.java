@@ -20,6 +20,9 @@ import tbNames.tbNames_android_service.NamEsServiceAdapter;
 import tbNames.tbNames_api.TbNamesTestHelper;
 import tbNames.tbNames_api.EnumWithUnderScores;
 import tbNames.tbNames_android_messenger.EnumWithUnderScoresParcelable;
+import tbNames.tbNames_api.INamEs;
+import tbNames.tbNames_android_messenger.NamEsParcelable;
+import tbNames.tbNames_impl.NamEsService;
 
 
 import tbNames.tbNames_api.INamEsEventListener;

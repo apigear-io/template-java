@@ -26,6 +26,18 @@ import tbSame1.tbSame1_api.Enum1;
 import tbSame1.tbSame1_android_messenger.Enum1Parcelable;
 import tbSame1.tbSame1_api.Enum2;
 import tbSame1.tbSame1_android_messenger.Enum2Parcelable;
+import tbSame1.tbSame1_api.ISameStruct1Interface;
+import tbSame1.tbSame1_android_messenger.SameStruct1InterfaceParcelable;
+import tbSame1.tbSame1_impl.SameStruct1InterfaceService;
+import tbSame1.tbSame1_api.ISameStruct2Interface;
+import tbSame1.tbSame1_android_messenger.SameStruct2InterfaceParcelable;
+import tbSame1.tbSame1_impl.SameStruct2InterfaceService;
+import tbSame1.tbSame1_api.ISameEnum1Interface;
+import tbSame1.tbSame1_android_messenger.SameEnum1InterfaceParcelable;
+import tbSame1.tbSame1_impl.SameEnum1InterfaceService;
+import tbSame1.tbSame1_api.ISameEnum2Interface;
+import tbSame1.tbSame1_android_messenger.SameEnum2InterfaceParcelable;
+import tbSame1.tbSame1_impl.SameEnum2InterfaceService;
 
 
 import tbSame1.tbSame1_api.ISameStruct1InterfaceEventListener;

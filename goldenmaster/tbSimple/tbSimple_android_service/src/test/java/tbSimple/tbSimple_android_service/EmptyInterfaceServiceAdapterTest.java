@@ -18,6 +18,27 @@ import tbSimple.tbSimple_android_service.EmptyInterfaceServiceAdapter;
 
 //import message type and parcelabe types
 import tbSimple.tbSimple_api.TbSimpleTestHelper;
+import tbSimple.tbSimple_api.IVoidInterface;
+import tbSimple.tbSimple_android_messenger.VoidInterfaceParcelable;
+import tbSimple.tbSimple_impl.VoidInterfaceService;
+import tbSimple.tbSimple_api.ISimpleInterface;
+import tbSimple.tbSimple_android_messenger.SimpleInterfaceParcelable;
+import tbSimple.tbSimple_impl.SimpleInterfaceService;
+import tbSimple.tbSimple_api.ISimpleArrayInterface;
+import tbSimple.tbSimple_android_messenger.SimpleArrayInterfaceParcelable;
+import tbSimple.tbSimple_impl.SimpleArrayInterfaceService;
+import tbSimple.tbSimple_api.INoPropertiesInterface;
+import tbSimple.tbSimple_android_messenger.NoPropertiesInterfaceParcelable;
+import tbSimple.tbSimple_impl.NoPropertiesInterfaceService;
+import tbSimple.tbSimple_api.INoOperationsInterface;
+import tbSimple.tbSimple_android_messenger.NoOperationsInterfaceParcelable;
+import tbSimple.tbSimple_impl.NoOperationsInterfaceService;
+import tbSimple.tbSimple_api.INoSignalsInterface;
+import tbSimple.tbSimple_android_messenger.NoSignalsInterfaceParcelable;
+import tbSimple.tbSimple_impl.NoSignalsInterfaceService;
+import tbSimple.tbSimple_api.IEmptyInterface;
+import tbSimple.tbSimple_android_messenger.EmptyInterfaceParcelable;
+import tbSimple.tbSimple_impl.EmptyInterfaceService;
 
 
 import tbSimple.tbSimple_api.IEmptyInterfaceEventListener;

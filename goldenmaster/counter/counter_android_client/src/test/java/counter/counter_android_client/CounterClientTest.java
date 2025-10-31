@@ -5,6 +5,9 @@ import counter.counter_android_client.CounterClient;
 
 //import message type and parcelabe types
 import counter.counter_api.CounterTestHelper;
+import counter.counter_api.ICounter;
+import counter.counter_android_messenger.CounterParcelable;
+import counter.counter_impl.CounterService;
 
 import counter.counter_api.ICounterEventListener;
 import counter.counter_api.ICounter;

@@ -1,7 +1,9 @@
 
 .DS_Store
 .vscode/
+.vs/
 .idea/
-./test/
-/demo/app/bin
-/demo/gradle
+**/bin/
+**/.gradle/
+**/build/
+test/

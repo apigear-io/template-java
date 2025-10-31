@@ -298,7 +298,7 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 			    case RPC_FuncBoolResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(StructBoolParcelable.class.getClassLoader());
+					data.setClassLoader(StructBoolParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -316,7 +316,7 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 			    case RPC_FuncIntResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(StructIntParcelable.class.getClassLoader());
+					data.setClassLoader(StructIntParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -334,7 +334,7 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 			    case RPC_FuncFloatResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(StructFloatParcelable.class.getClassLoader());
+					data.setClassLoader(StructFloatParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -352,7 +352,7 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 			    case RPC_FuncStringResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(StructStringParcelable.class.getClassLoader());
+					data.setClassLoader(StructStringParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -379,7 +379,8 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
     public void setPropBool(StructBool propBool)
     {
         Log.i(TAG, "request setPropBool called "+ propBool);
-        if (! m_propBool.equals(propBool))
+        if ( (m_propBool != null && ! m_propBool.equals(propBool))
+        || (m_propBool == null && propBool != null ))
         {
 			Message msg = new Message();
 			msg.what = StructInterfaceMessageType.PROP_PropBool.getValue();
@@ -395,7 +396,8 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 	public void onPropBool(StructBool propBool)
     {
         Log.i(TAG, "value received from service for PropBool ");
-        if (! m_propBool.equals(propBool))
+        if ( (m_propBool != null && ! m_propBool.equals(propBool))
+        || (m_propBool == null && propBool != null ))
         {
             m_propBool = propBool;
             firePropBoolChanged(propBool);
@@ -415,7 +417,8 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
     public void setPropInt(StructInt propInt)
     {
         Log.i(TAG, "request setPropInt called "+ propInt);
-        if (! m_propInt.equals(propInt))
+        if ( (m_propInt != null && ! m_propInt.equals(propInt))
+        || (m_propInt == null && propInt != null ))
         {
 			Message msg = new Message();
 			msg.what = StructInterfaceMessageType.PROP_PropInt.getValue();
@@ -431,7 +434,8 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 	public void onPropInt(StructInt propInt)
     {
         Log.i(TAG, "value received from service for PropInt ");
-        if (! m_propInt.equals(propInt))
+        if ( (m_propInt != null && ! m_propInt.equals(propInt))
+        || (m_propInt == null && propInt != null ))
         {
             m_propInt = propInt;
             firePropIntChanged(propInt);
@@ -451,7 +455,8 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
     public void setPropFloat(StructFloat propFloat)
     {
         Log.i(TAG, "request setPropFloat called "+ propFloat);
-        if (! m_propFloat.equals(propFloat))
+        if ( (m_propFloat != null && ! m_propFloat.equals(propFloat))
+        || (m_propFloat == null && propFloat != null ))
         {
 			Message msg = new Message();
 			msg.what = StructInterfaceMessageType.PROP_PropFloat.getValue();
@@ -467,7 +472,8 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 	public void onPropFloat(StructFloat propFloat)
     {
         Log.i(TAG, "value received from service for PropFloat ");
-        if (! m_propFloat.equals(propFloat))
+        if ( (m_propFloat != null && ! m_propFloat.equals(propFloat))
+        || (m_propFloat == null && propFloat != null ))
         {
             m_propFloat = propFloat;
             firePropFloatChanged(propFloat);
@@ -487,7 +493,8 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
     public void setPropString(StructString propString)
     {
         Log.i(TAG, "request setPropString called "+ propString);
-        if (! m_propString.equals(propString))
+        if ( (m_propString != null && ! m_propString.equals(propString))
+        || (m_propString == null && propString != null ))
         {
 			Message msg = new Message();
 			msg.what = StructInterfaceMessageType.PROP_PropString.getValue();
@@ -503,7 +510,8 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 	public void onPropString(StructString propString)
     {
         Log.i(TAG, "value received from service for PropString ");
-        if (! m_propString.equals(propString))
+        if ( (m_propString != null && ! m_propString.equals(propString))
+        || (m_propString == null && propString != null ))
         {
             m_propString = propString;
             firePropStringChanged(propString);

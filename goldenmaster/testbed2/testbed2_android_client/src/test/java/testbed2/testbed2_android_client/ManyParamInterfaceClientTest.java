@@ -25,6 +25,18 @@ import testbed2.testbed2_api.Enum2;
 import testbed2.testbed2_android_messenger.Enum2Parcelable;
 import testbed2.testbed2_api.Enum3;
 import testbed2.testbed2_android_messenger.Enum3Parcelable;
+import testbed2.testbed2_api.IManyParamInterface;
+import testbed2.testbed2_android_messenger.ManyParamInterfaceParcelable;
+import testbed2.testbed2_impl.ManyParamInterfaceService;
+import testbed2.testbed2_api.INestedStruct1Interface;
+import testbed2.testbed2_android_messenger.NestedStruct1InterfaceParcelable;
+import testbed2.testbed2_impl.NestedStruct1InterfaceService;
+import testbed2.testbed2_api.INestedStruct2Interface;
+import testbed2.testbed2_android_messenger.NestedStruct2InterfaceParcelable;
+import testbed2.testbed2_impl.NestedStruct2InterfaceService;
+import testbed2.testbed2_api.INestedStruct3Interface;
+import testbed2.testbed2_android_messenger.NestedStruct3InterfaceParcelable;
+import testbed2.testbed2_impl.NestedStruct3InterfaceService;
 
 import testbed2.testbed2_api.IManyParamInterfaceEventListener;
 import testbed2.testbed2_api.IManyParamInterface;

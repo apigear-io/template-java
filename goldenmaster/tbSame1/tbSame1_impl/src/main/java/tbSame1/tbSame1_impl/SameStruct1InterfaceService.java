@@ -35,7 +35,8 @@ public class SameStruct1InterfaceService extends AbstractSameStruct1Interface {
     public void setProp1(Struct1 prop1)
     {
         Log.i(TAG, "request setProp1 called ");
-        if (! m_prop1.equals(prop1))
+        if ( (m_prop1 != null && ! m_prop1.equals(prop1))
+        || (m_prop1 == null && prop1 != null ))
         {
             m_prop1 = prop1;
             onProp1Changed(m_prop1);

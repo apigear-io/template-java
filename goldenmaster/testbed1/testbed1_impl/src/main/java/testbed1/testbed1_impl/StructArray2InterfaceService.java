@@ -48,7 +48,8 @@ public class StructArray2InterfaceService extends AbstractStructArray2Interface 
     public void setPropBool(StructBoolWithArray propBool)
     {
         Log.i(TAG, "request setPropBool called ");
-        if (! m_propBool.equals(propBool))
+        if ( (m_propBool != null && ! m_propBool.equals(propBool))
+        || (m_propBool == null && propBool != null ))
         {
             m_propBool = propBool;
             onPropBoolChanged(m_propBool);
@@ -68,7 +69,8 @@ public class StructArray2InterfaceService extends AbstractStructArray2Interface 
     public void setPropInt(StructIntWithArray propInt)
     {
         Log.i(TAG, "request setPropInt called ");
-        if (! m_propInt.equals(propInt))
+        if ( (m_propInt != null && ! m_propInt.equals(propInt))
+        || (m_propInt == null && propInt != null ))
         {
             m_propInt = propInt;
             onPropIntChanged(m_propInt);
@@ -88,7 +90,8 @@ public class StructArray2InterfaceService extends AbstractStructArray2Interface 
     public void setPropFloat(StructFloatWithArray propFloat)
     {
         Log.i(TAG, "request setPropFloat called ");
-        if (! m_propFloat.equals(propFloat))
+        if ( (m_propFloat != null && ! m_propFloat.equals(propFloat))
+        || (m_propFloat == null && propFloat != null ))
         {
             m_propFloat = propFloat;
             onPropFloatChanged(m_propFloat);
@@ -108,7 +111,8 @@ public class StructArray2InterfaceService extends AbstractStructArray2Interface 
     public void setPropString(StructStringWithArray propString)
     {
         Log.i(TAG, "request setPropString called ");
-        if (! m_propString.equals(propString))
+        if ( (m_propString != null && ! m_propString.equals(propString))
+        || (m_propString == null && propString != null ))
         {
             m_propString = propString;
             onPropStringChanged(m_propString);
@@ -128,7 +132,8 @@ public class StructArray2InterfaceService extends AbstractStructArray2Interface 
     public void setPropEnum(StructEnumWithArray propEnum)
     {
         Log.i(TAG, "request setPropEnum called ");
-        if (! m_propEnum.equals(propEnum))
+        if ( (m_propEnum != null && ! m_propEnum.equals(propEnum))
+        || (m_propEnum == null && propEnum != null ))
         {
             m_propEnum = propEnum;
             onPropEnumChanged(m_propEnum);
