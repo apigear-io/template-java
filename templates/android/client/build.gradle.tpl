@@ -35,4 +35,13 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:4.10.3'
     testImplementation 'org.mockito:mockito-core:5.12.0'
     testImplementation 'org.mockito:mockito-inline:5.2.0'
+    {{- if len (.Module.Interfaces)}}
+    testImplementation project(':{{camel .Module.Name}}_impl')
+    {{- end }}
+    {{- range .Module.Imports}}
+    {{- $importModule := ($.System.LookupModule .Name) }}
+    {{- if len $importModule.Interfaces}}
+    testImplementation '{{camel .Name}}:{{camel .Name}}_impl:{{ $importModule.Version }}'
+    {{- end }}
+    {{- end }}
 }

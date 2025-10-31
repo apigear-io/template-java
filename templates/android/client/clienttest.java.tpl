@@ -13,6 +13,11 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Module.Name}}T
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
 {{- end }}
+{{- range .Module.Interfaces }}
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Name}};
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_impl.{{Camel .Name}}Service;
+{{- end }}
 
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }};
@@ -89,7 +94,7 @@ interface I{{Camel .Interface.Name }}ClientMessageGetter
                 {{- if (eq .KindType "extern") }}
 		test{{ javaVar .}}[0] = {{javaTestValue "" .}};
                 {{- else }}
-        test{{ javaVar .}}[0] = {{template "getMakeTestHelper" . }}({{-  if (eq .KindType "interface")}}{{javaDefault "" .}}{{end}});
+        test{{ javaVar .}}[0] = {{template "getMakeTestHelper" . }}({{-  if (eq .KindType "interface")}}{{javaTestValue "" .}}{{end}});
                 {{- end }}
             {{- end}}
 		{{- else if or  (.IsPrimitive) (eq .KindType "enum") }}
@@ -97,7 +102,7 @@ interface I{{Camel .Interface.Name }}ClientMessageGetter
 		{{- else if (eq .KindType "extern") }}
 		{{javaReturn "" . }} test{{ javaVar .}} = {{javaTestValue "" .}};
         {{- else }}
-        {{javaReturn "" . }} test{{ javaVar .}} = {{template "getMakeTestHelper" . }}({{-  if (eq .KindType "interface")}}{{javaDefault "" .}}{{end}});
+        {{javaReturn "" . }} test{{ javaVar .}} = {{template "getMakeTestHelper" . }}({{-  if (eq .KindType "interface")}}{{javaTestValue "" .}}{{end}});
 		{{- end }}
 {{- end }}
 
@@ -306,7 +311,7 @@ public class {{Camel .Interface.Name }}ClientTest
                 {{- if (eq .Return.KindType "extern") }}
 		expectedResult[0] = {{javaTestValue "" .Return}};
                 {{- else }}
-        expectedResult[0] = {{template "getMakeTestHelper" .Return }}({{-  if (eq .Return.KindType "interface")}}{{javaDefault "" .Return}}{{end}});
+        expectedResult[0] = {{template "getMakeTestHelper" .Return }}({{-  if (eq .Return.KindType "interface")}}{{javaTestValue "" .Return}}{{end}});
                 {{- end }}
             {{- end}}
 		{{- else if or  ( .Return.IsPrimitive) (eq .Return.KindType "enum") }}

@@ -213,6 +213,19 @@ public class SimpleInterfaceService extends AbstractSimpleInterface {
     }
 
     @Override
+    public boolean funcNoParams() {
+        Log.w(TAG, "request method funcNoParams called, returnig default");
+        return false;
+    }
+
+    @Override
+    public  CompletableFuture<Boolean> funcNoParamsAsync() {
+        return CompletableFuture.supplyAsync(
+                () -> {return funcNoParams(); },
+                executor);
+    }
+
+    @Override
     public boolean funcBool(boolean paramBool) {
         Log.w(TAG, "request method funcBool called, returnig default");
         return false;

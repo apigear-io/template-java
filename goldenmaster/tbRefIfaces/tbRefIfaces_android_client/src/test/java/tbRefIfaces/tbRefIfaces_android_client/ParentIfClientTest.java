@@ -5,6 +5,12 @@ import tbRefIfaces.tbRefIfaces_android_client.ParentIfClient;
 
 //import message type and parcelabe types
 import tbRefIfaces.tbRefIfaces_api.TbRefIfacesTestHelper;
+import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
+import tbRefIfaces.tbRefIfaces_android_messenger.SimpleLocalIfParcelable;
+import tbRefIfaces.tbRefIfaces_impl.SimpleLocalIfService;
+import tbRefIfaces.tbRefIfaces_api.IParentIf;
+import tbRefIfaces.tbRefIfaces_android_messenger.ParentIfParcelable;
+import tbRefIfaces.tbRefIfaces_impl.ParentIfService;
 
 import tbRefIfaces.tbRefIfaces_api.IParentIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.IParentIf;
@@ -136,15 +142,15 @@ public class ParentIfClientTest
 
         Message msg = Message.obtain(null, ParentIfMessageType.INIT.getValue());
         Bundle data = new Bundle();
-        ISimpleLocalIf testlocalIf = TbRefIfacesTestHelper.makeTestSimpleLocalIf(null);
+        ISimpleLocalIf testlocalIf = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService());
 		data.putParcelable("localIf", new SimpleLocalIfParcelable(testlocalIf));
         ISimpleLocalIf[] testlocalIfList = new ISimpleLocalIf[1];
-        testlocalIfList[0] = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new ISimpleLocalIf[]{});
+        testlocalIfList[0] = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService());
 		data.putParcelableArray("localIfList", SimpleLocalIfParcelable.wrapArray(testlocalIfList));
-        tbIfaceimport.tbIfaceimport_api.IEmptyIf testimportedIf = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(null);
+        tbIfaceimport.tbIfaceimport_api.IEmptyIf testimportedIf = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService());
 		data.putParcelable("importedIf", new tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable(testimportedIf));
         tbIfaceimport.tbIfaceimport_api.IEmptyIf[] testimportedIfList = new tbIfaceimport.tbIfaceimport_api.IEmptyIf[1];
-        testimportedIfList[0] = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_api.IEmptyIf[]{});
+        testimportedIfList[0] = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService());
 		data.putParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(testimportedIfList));
 
     //setup mock expectations
@@ -169,7 +175,7 @@ public class ParentIfClientTest
         // Create and send message
         Message msg = Message.obtain(null, ParentIfMessageType.SET_LocalIf.getValue());
         Bundle data = new Bundle();
-        ISimpleLocalIf testlocalIf = TbRefIfacesTestHelper.makeTestSimpleLocalIf(null);
+        ISimpleLocalIf testlocalIf = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService());
 		data.putParcelable("localIf", new SimpleLocalIfParcelable(testlocalIf));
 
         msg.setData(data);
@@ -184,7 +190,7 @@ public class ParentIfClientTest
     @Test
      public void setPropertyRequestlocalIf()
     {
-        ISimpleLocalIf testlocalIf = TbRefIfacesTestHelper.makeTestSimpleLocalIf(null);
+        ISimpleLocalIf testlocalIf = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService());
 
         testedClient.setLocalIf(testlocalIf);
         Robolectric.flushForegroundThreadScheduler();
@@ -206,7 +212,7 @@ public class ParentIfClientTest
         Message msg = Message.obtain(null, ParentIfMessageType.SET_LocalIfList.getValue());
         Bundle data = new Bundle();
         ISimpleLocalIf[] testlocalIfList = new ISimpleLocalIf[1];
-        testlocalIfList[0] = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new ISimpleLocalIf[]{});
+        testlocalIfList[0] = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService());
 		data.putParcelableArray("localIfList", SimpleLocalIfParcelable.wrapArray(testlocalIfList));
 
         msg.setData(data);
@@ -222,7 +228,7 @@ public class ParentIfClientTest
      public void setPropertyRequestlocalIfList()
     {
         ISimpleLocalIf[] testlocalIfList = new ISimpleLocalIf[1];
-        testlocalIfList[0] = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new ISimpleLocalIf[]{});
+        testlocalIfList[0] = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService());
 
         testedClient.setLocalIfList(testlocalIfList);
         Robolectric.flushForegroundThreadScheduler();
@@ -243,7 +249,7 @@ public class ParentIfClientTest
         // Create and send message
         Message msg = Message.obtain(null, ParentIfMessageType.SET_ImportedIf.getValue());
         Bundle data = new Bundle();
-        tbIfaceimport.tbIfaceimport_api.IEmptyIf testimportedIf = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(null);
+        tbIfaceimport.tbIfaceimport_api.IEmptyIf testimportedIf = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService());
 		data.putParcelable("importedIf", new tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable(testimportedIf));
 
         msg.setData(data);
@@ -258,7 +264,7 @@ public class ParentIfClientTest
     @Test
      public void setPropertyRequestimportedIf()
     {
-        tbIfaceimport.tbIfaceimport_api.IEmptyIf testimportedIf = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(null);
+        tbIfaceimport.tbIfaceimport_api.IEmptyIf testimportedIf = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService());
 
         testedClient.setImportedIf(testimportedIf);
         Robolectric.flushForegroundThreadScheduler();
@@ -280,7 +286,7 @@ public class ParentIfClientTest
         Message msg = Message.obtain(null, ParentIfMessageType.SET_ImportedIfList.getValue());
         Bundle data = new Bundle();
         tbIfaceimport.tbIfaceimport_api.IEmptyIf[] testimportedIfList = new tbIfaceimport.tbIfaceimport_api.IEmptyIf[1];
-        testimportedIfList[0] = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_api.IEmptyIf[]{});
+        testimportedIfList[0] = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService());
 		data.putParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(testimportedIfList));
 
         msg.setData(data);
@@ -296,7 +302,7 @@ public class ParentIfClientTest
      public void setPropertyRequestimportedIfList()
     {
         tbIfaceimport.tbIfaceimport_api.IEmptyIf[] testimportedIfList = new tbIfaceimport.tbIfaceimport_api.IEmptyIf[1];
-        testimportedIfList[0] = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_api.IEmptyIf[]{});
+        testimportedIfList[0] = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService());
 
         testedClient.setImportedIfList(testimportedIfList);
         Robolectric.flushForegroundThreadScheduler();
@@ -318,7 +324,7 @@ public class ParentIfClientTest
 
         Message msg = Message.obtain(null, ParentIfMessageType.SIG_LocalIfSignal.getValue());
         Bundle data = new Bundle();
-        ISimpleLocalIf testparam = TbRefIfacesTestHelper.makeTestSimpleLocalIf(null);
+        ISimpleLocalIf testparam = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService());
 		data.putParcelable("param", new SimpleLocalIfParcelable(testparam));
 
         msg.setData(data);
@@ -335,7 +341,7 @@ public class ParentIfClientTest
         Message msg = Message.obtain(null, ParentIfMessageType.SIG_LocalIfSignalList.getValue());
         Bundle data = new Bundle();
         ISimpleLocalIf[] testparam = new ISimpleLocalIf[1];
-        testparam[0] = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new ISimpleLocalIf[]{});
+        testparam[0] = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService());
 		data.putParcelableArray("param", SimpleLocalIfParcelable.wrapArray(testparam));
 
         msg.setData(data);
@@ -351,7 +357,7 @@ public class ParentIfClientTest
 
         Message msg = Message.obtain(null, ParentIfMessageType.SIG_ImportedIfSignal.getValue());
         Bundle data = new Bundle();
-        tbIfaceimport.tbIfaceimport_api.IEmptyIf testparam = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(null);
+        tbIfaceimport.tbIfaceimport_api.IEmptyIf testparam = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService());
 		data.putParcelable("param", new tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable(testparam));
 
         msg.setData(data);
@@ -368,7 +374,7 @@ public class ParentIfClientTest
         Message msg = Message.obtain(null, ParentIfMessageType.SIG_ImportedIfSignalList.getValue());
         Bundle data = new Bundle();
         tbIfaceimport.tbIfaceimport_api.IEmptyIf[] testparam = new tbIfaceimport.tbIfaceimport_api.IEmptyIf[1];
-        testparam[0] = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_api.IEmptyIf[]{});
+        testparam[0] = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService());
 		data.putParcelableArray("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(testparam));
 
         msg.setData(data);
@@ -383,7 +389,7 @@ public class ParentIfClientTest
     public void onlocalIfMethodRequest() throws RemoteException {
 
         // Execute method
-        ISimpleLocalIf testparam = TbRefIfacesTestHelper.makeTestSimpleLocalIf(null);
+        ISimpleLocalIf testparam = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService());
         ISimpleLocalIf expectedResult = TbRefIfacesTestHelper.makeTestSimpleLocalIf(null);
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
@@ -430,9 +436,9 @@ public class ParentIfClientTest
 
         // Execute method
         ISimpleLocalIf[] testparam = new ISimpleLocalIf[1];
-        testparam[0] = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new ISimpleLocalIf[]{});
+        testparam[0] = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService());
         ISimpleLocalIf[] expectedResult = new ISimpleLocalIf[1];
-        expectedResult[0] = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new ISimpleLocalIf[]{});
+        expectedResult[0] = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService());
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
         CompletableFuture<ISimpleLocalIf[]> resFuture = testedClient.localIfMethodListAsync(testparam);
@@ -477,7 +483,7 @@ public class ParentIfClientTest
     public void onimportedIfMethodRequest() throws RemoteException {
 
         // Execute method
-        tbIfaceimport.tbIfaceimport_api.IEmptyIf testparam = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(null);
+        tbIfaceimport.tbIfaceimport_api.IEmptyIf testparam = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService());
         tbIfaceimport.tbIfaceimport_api.IEmptyIf expectedResult = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(null);
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
@@ -525,9 +531,9 @@ public class ParentIfClientTest
 
         // Execute method
         tbIfaceimport.tbIfaceimport_api.IEmptyIf[] testparam = new tbIfaceimport.tbIfaceimport_api.IEmptyIf[1];
-        testparam[0] = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_api.IEmptyIf[]{});
+        testparam[0] = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService());
         tbIfaceimport.tbIfaceimport_api.IEmptyIf[] expectedResult = new tbIfaceimport.tbIfaceimport_api.IEmptyIf[1];
-        expectedResult[0] = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_api.IEmptyIf[]{});
+        expectedResult[0] = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService());
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
         CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf[]> resFuture = testedClient.importedIfMethodListAsync(testparam);

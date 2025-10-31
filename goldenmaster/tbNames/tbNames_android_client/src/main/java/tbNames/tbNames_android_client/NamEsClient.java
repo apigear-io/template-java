@@ -267,7 +267,6 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
 			    case RPC_SomeFunctionResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(VoidParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -285,7 +284,6 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
 			    case RPC_SomeFunction2Resp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(VoidParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);

@@ -22,6 +22,10 @@ import java.util.concurrent.CompletableFuture;
     void fireProp1Changed(NestedStruct1 newValue);
   
     // methods
+    void funcNoReturnValue(NestedStruct1 param1);
+    CompletableFuture<Void> funcNoReturnValueAsync(NestedStruct1 param1);
+    NestedStruct1 funcNoParams();
+    CompletableFuture<NestedStruct1> funcNoParamsAsync();
     NestedStruct1 func1(NestedStruct1 param1);
     CompletableFuture<NestedStruct1> func1Async(NestedStruct1 param1);
     public void fireSig1(NestedStruct1 param1);

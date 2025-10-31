@@ -37,7 +37,8 @@ public class CounterService extends AbstractCounter {
     public void setVector(customTypes.customTypes_api.Vector3D vector)
     {
         Log.i(TAG, "request setVector called ");
-        if (! m_vector.equals(vector))
+        if ( (m_vector != null && ! m_vector.equals(vector))
+        || (m_vector == null && vector != null ))
         {
             m_vector = vector;
             onVectorChanged(m_vector);
@@ -57,7 +58,8 @@ public class CounterService extends AbstractCounter {
     public void setExternVector(org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector)
     {
         Log.i(TAG, "request setExternVector called ");
-        if (! m_extern_vector.equals(extern_vector))
+        if ( (m_extern_vector != null && ! m_extern_vector.equals(extern_vector))
+        || (m_extern_vector == null && extern_vector != null ))
         {
             m_extern_vector = extern_vector;
             onExternVectorChanged(m_extern_vector);

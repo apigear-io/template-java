@@ -295,7 +295,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 			    case RPC_LocalIfMethodResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
+					data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -313,7 +313,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 			    case RPC_LocalIfMethodListResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
+					data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -331,7 +331,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 			    case RPC_ImportedIfMethodResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
+					data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -349,7 +349,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 			    case RPC_ImportedIfMethodListResp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
+					data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -376,7 +376,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
     public void setLocalIf(ISimpleLocalIf localIf)
     {
         Log.i(TAG, "request setLocalIf called "+ localIf);
-        if (! m_localIf.equals(localIf))
+        if (m_localIf != localIf)
         {
 			Message msg = new Message();
 			msg.what = ParentIfMessageType.PROP_LocalIf.getValue();
@@ -392,7 +392,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 	public void onLocalIf(ISimpleLocalIf localIf)
     {
         Log.i(TAG, "value received from service for LocalIf ");
-        if (! m_localIf.equals(localIf))
+        if (m_localIf != localIf)
         {
             m_localIf = localIf;
             fireLocalIfChanged(localIf);
@@ -448,7 +448,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
     public void setImportedIf(tbIfaceimport.tbIfaceimport_api.IEmptyIf importedIf)
     {
         Log.i(TAG, "request setImportedIf called "+ importedIf);
-        if (! m_importedIf.equals(importedIf))
+        if (m_importedIf != importedIf)
         {
 			Message msg = new Message();
 			msg.what = ParentIfMessageType.PROP_ImportedIf.getValue();
@@ -464,7 +464,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 	public void onImportedIf(tbIfaceimport.tbIfaceimport_api.IEmptyIf importedIf)
     {
         Log.i(TAG, "value received from service for ImportedIf ");
-        if (! m_importedIf.equals(importedIf))
+        if (m_importedIf != importedIf)
         {
             m_importedIf = importedIf;
             fireImportedIfChanged(importedIf);

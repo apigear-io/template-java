@@ -39,7 +39,7 @@ public class ParentIfService extends AbstractParentIf {
     public void setLocalIf(ISimpleLocalIf localIf)
     {
         Log.i(TAG, "request setLocalIf called ");
-        if (! m_localIf.equals(localIf))
+        if (m_localIf != localIf)
         {
             m_localIf = localIf;
             onLocalIfChanged(m_localIf);
@@ -79,7 +79,7 @@ public class ParentIfService extends AbstractParentIf {
     public void setImportedIf(tbIfaceimport.tbIfaceimport_api.IEmptyIf importedIf)
     {
         Log.i(TAG, "request setImportedIf called ");
-        if (! m_importedIf.equals(importedIf))
+        if (m_importedIf != importedIf)
         {
             m_importedIf = importedIf;
             onImportedIfChanged(m_importedIf);

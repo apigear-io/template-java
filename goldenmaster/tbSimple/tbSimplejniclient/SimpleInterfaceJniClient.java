@@ -151,6 +151,24 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcNoReturnValueAsync(paramBool);
     }
+     public boolean funcNoParams()
+     {
+        Log.v(TAG, "Blocking callfuncNoParams - should not be used ");
+        return mMessengerClient.funcNoParams();
+    }
+
+    public void funcNoParamsAsync(String callId){
+        Log.v(TAG, "non blocking call funcNoParams ");
+        mMessengerClient.funcNoParamsAsync().thenAccept(i -> {
+            nativeOnFuncNoParamsResult(i, callId);});
+    }
+
+    //Should not be called directly, use funcNoParamsAsync(String callId, )
+    public CompletableFuture<Boolean> funcNoParamsAsync()
+    {
+        Log.v(TAG, "NON Blocking call method ");
+        return mMessengerClient.funcNoParamsAsync();
+    }
      public boolean funcBool(boolean paramBool)
      {
         Log.v(TAG, "Blocking callfuncBool - should not be used ");
@@ -446,6 +464,7 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
     private native void nativeOnSigFloat64(double paramFloat64);
     private native void nativeOnSigString(String paramString);
     private native void nativeOnFuncNoReturnValueResult(String callId);
+    private native void nativeOnFuncNoParamsResult(boolean result, String callId);
     private native void nativeOnFuncBoolResult(boolean result, String callId);
     private native void nativeOnFuncIntResult(int result, String callId);
     private native void nativeOnFuncInt32Result(int result, String callId);

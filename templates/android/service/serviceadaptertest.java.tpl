@@ -27,6 +27,11 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Module.Name}}T
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
 {{- end }}
+{{- range .Module.Interfaces }}
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Name}};
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Name}}Parcelable;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_impl.{{Camel .Name}}Service;
+{{- end }}
 
 
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
@@ -338,7 +343,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
                 {{- if (eq .Return.KindType "extern") }}
 		returnedValue[0] = {{javaTestValue "" .Return}};
                 {{- else }}
-        returnedValue[0] = {{template "getMakeTestHelper" .Return }}({{-  if (eq .Return.KindType "interface")}}{{javaDefault "" .Return}}{{end}});
+        returnedValue[0] = {{template "getMakeTestHelper" .Return }}({{-  if (eq .Return.KindType "interface")}}{{javaTestValue "" .Return}}{{end}});
                 {{- end }}
             {{- end}}
 		{{- else if or  ( .Return.IsPrimitive) (eq .Return.KindType "enum") }}

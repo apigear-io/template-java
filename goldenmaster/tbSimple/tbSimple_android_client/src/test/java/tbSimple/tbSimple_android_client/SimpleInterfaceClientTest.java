@@ -5,6 +5,27 @@ import tbSimple.tbSimple_android_client.SimpleInterfaceClient;
 
 //import message type and parcelabe types
 import tbSimple.tbSimple_api.TbSimpleTestHelper;
+import tbSimple.tbSimple_api.IVoidInterface;
+import tbSimple.tbSimple_android_messenger.VoidInterfaceParcelable;
+import tbSimple.tbSimple_impl.VoidInterfaceService;
+import tbSimple.tbSimple_api.ISimpleInterface;
+import tbSimple.tbSimple_android_messenger.SimpleInterfaceParcelable;
+import tbSimple.tbSimple_impl.SimpleInterfaceService;
+import tbSimple.tbSimple_api.ISimpleArrayInterface;
+import tbSimple.tbSimple_android_messenger.SimpleArrayInterfaceParcelable;
+import tbSimple.tbSimple_impl.SimpleArrayInterfaceService;
+import tbSimple.tbSimple_api.INoPropertiesInterface;
+import tbSimple.tbSimple_android_messenger.NoPropertiesInterfaceParcelable;
+import tbSimple.tbSimple_impl.NoPropertiesInterfaceService;
+import tbSimple.tbSimple_api.INoOperationsInterface;
+import tbSimple.tbSimple_android_messenger.NoOperationsInterfaceParcelable;
+import tbSimple.tbSimple_impl.NoOperationsInterfaceService;
+import tbSimple.tbSimple_api.INoSignalsInterface;
+import tbSimple.tbSimple_android_messenger.NoSignalsInterfaceParcelable;
+import tbSimple.tbSimple_impl.NoSignalsInterfaceService;
+import tbSimple.tbSimple_api.IEmptyInterface;
+import tbSimple.tbSimple_android_messenger.EmptyInterfaceParcelable;
+import tbSimple.tbSimple_impl.EmptyInterfaceService;
 
 import tbSimple.tbSimple_api.ISimpleInterfaceEventListener;
 import tbSimple.tbSimple_api.ISimpleInterface;
@@ -576,6 +597,47 @@ public class SimpleInterfaceClientTest
 
         Bundle result_data = new Bundle();
 		result_data.putInt("callId", returnedCallId);
+
+        msg.setData(result_data);
+        method_request.replyTo.send(msg);
+        Robolectric.flushForegroundThreadScheduler();
+
+        assertTrue(receivedResp.get());
+
+    }
+
+
+    public void onfuncNoParamsRequest() throws RemoteException {
+
+        // Execute method
+        boolean expectedResult = true;
+
+        AtomicBoolean receivedResp = new AtomicBoolean(false);
+        CompletableFuture<Boolean> resFuture = testedClient.funcNoParamsAsync();
+
+        resFuture.thenAccept(result -> {
+            assertEquals(expectedResult, result.booleanValue());
+            receivedResp.set(true);
+        });
+        Robolectric.flushForegroundThreadScheduler();
+
+        // Expect msg to be sent.
+        inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
+
+
+        Message method_request = messageCaptor.getValue();
+        assertEquals(SimpleInterfaceMessageType.RPC_FuncNoParamsReq.getValue(), method_request.what);
+        Bundle data = method_request.getData();
+        
+        int returnedCallId = data.getInt("callId", -1);
+
+        //Prepare response
+
+        Message msg = Message.obtain(null, SimpleInterfaceMessageType.RPC_FuncNoParamsResp.getValue());
+
+        Bundle result_data = new Bundle();
+		result_data.putInt("callId", returnedCallId);
+		result_data.putBoolean("result", expectedResult);
 
         msg.setData(result_data);
         method_request.replyTo.send(msg);

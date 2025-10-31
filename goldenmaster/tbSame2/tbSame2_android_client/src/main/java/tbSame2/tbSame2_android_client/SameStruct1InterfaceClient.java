@@ -217,7 +217,7 @@ public class SameStruct1InterfaceClient extends AbstractSameStruct1Interface imp
 			    case RPC_Func1Resp: {
 
 				    Bundle data = msg.getData();
-				    data.setClassLoader(Struct1Parcelable.class.getClassLoader());
+					data.setClassLoader(Struct1Parcelable.class.getClassLoader());
 				    int callId = data.getInt("callId");
 
 				    Consumer<Bundle> foundCall = mpendingCalls.remove(callId);
@@ -244,7 +244,8 @@ public class SameStruct1InterfaceClient extends AbstractSameStruct1Interface imp
     public void setProp1(Struct1 prop1)
     {
         Log.i(TAG, "request setProp1 called "+ prop1);
-        if (! m_prop1.equals(prop1))
+        if ( (m_prop1 != null && ! m_prop1.equals(prop1))
+        || (m_prop1 == null && prop1 != null ))
         {
 			Message msg = new Message();
 			msg.what = SameStruct1InterfaceMessageType.PROP_Prop1.getValue();
@@ -260,7 +261,8 @@ public class SameStruct1InterfaceClient extends AbstractSameStruct1Interface imp
 	public void onProp1(Struct1 prop1)
     {
         Log.i(TAG, "value received from service for Prop1 ");
-        if (! m_prop1.equals(prop1))
+        if ( (m_prop1 != null && ! m_prop1.equals(prop1))
+        || (m_prop1 == null && prop1 != null ))
         {
             m_prop1 = prop1;
             fireProp1Changed(prop1);

@@ -18,6 +18,27 @@ import tbSimple.tbSimple_android_service.SimpleInterfaceServiceAdapter;
 
 //import message type and parcelabe types
 import tbSimple.tbSimple_api.TbSimpleTestHelper;
+import tbSimple.tbSimple_api.IVoidInterface;
+import tbSimple.tbSimple_android_messenger.VoidInterfaceParcelable;
+import tbSimple.tbSimple_impl.VoidInterfaceService;
+import tbSimple.tbSimple_api.ISimpleInterface;
+import tbSimple.tbSimple_android_messenger.SimpleInterfaceParcelable;
+import tbSimple.tbSimple_impl.SimpleInterfaceService;
+import tbSimple.tbSimple_api.ISimpleArrayInterface;
+import tbSimple.tbSimple_android_messenger.SimpleArrayInterfaceParcelable;
+import tbSimple.tbSimple_impl.SimpleArrayInterfaceService;
+import tbSimple.tbSimple_api.INoPropertiesInterface;
+import tbSimple.tbSimple_android_messenger.NoPropertiesInterfaceParcelable;
+import tbSimple.tbSimple_impl.NoPropertiesInterfaceService;
+import tbSimple.tbSimple_api.INoOperationsInterface;
+import tbSimple.tbSimple_android_messenger.NoOperationsInterfaceParcelable;
+import tbSimple.tbSimple_impl.NoOperationsInterfaceService;
+import tbSimple.tbSimple_api.INoSignalsInterface;
+import tbSimple.tbSimple_android_messenger.NoSignalsInterfaceParcelable;
+import tbSimple.tbSimple_impl.NoSignalsInterfaceService;
+import tbSimple.tbSimple_api.IEmptyInterface;
+import tbSimple.tbSimple_android_messenger.EmptyInterfaceParcelable;
+import tbSimple.tbSimple_impl.EmptyInterfaceService;
 
 
 import tbSimple.tbSimple_api.ISimpleInterfaceEventListener;
@@ -687,6 +708,37 @@ public class SimpleInterfaceServiceAdapterTest
 
         assertEquals(SimpleInterfaceMessageType.RPC_FuncNoReturnValueResp.getValue(), response.what);
         Bundle resp_data = response.getData();
+        assertEquals(callId, resp_data.getInt("callId", -1));
+    }
+
+
+    public void onfuncNoParamsRequest() throws RemoteException {
+        // Create and send message
+        Message msg = Message.obtain(null, SimpleInterfaceMessageType.RPC_FuncNoParamsReq.getValue());
+        Bundle data = new Bundle();
+
+        int callId = 99;
+        data.putInt("callId", callId);
+        boolean returnedValue = true;
+
+
+        when(backendServiceMock.funcNoParams()).thenReturn(returnedValue);
+
+        msg.setData(data);
+        mServiceMessenger.send(msg);
+        Robolectric.flushForegroundThreadScheduler();
+        inOrderBackendService.verify(backendServiceMock,times(1)).funcNoParams();
+
+        //Now verify it was sent back to caller
+        Robolectric.flushForegroundThreadScheduler();
+        inOrderClientMessagesHandler.verify(clientMessagesStorage, times(1)).getMessage(messageCaptor.capture());
+        Message response = messageCaptor.getValue();
+
+        assertEquals(SimpleInterfaceMessageType.RPC_FuncNoParamsResp.getValue(), response.what);
+        Bundle resp_data = response.getData();
+		boolean receivedByClient = resp_data.getBoolean("result", false);
+
+        assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 

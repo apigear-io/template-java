@@ -37,7 +37,8 @@ public class NestedStruct2InterfaceService extends AbstractNestedStruct2Interfac
     public void setProp1(NestedStruct1 prop1)
     {
         Log.i(TAG, "request setProp1 called ");
-        if (! m_prop1.equals(prop1))
+        if ( (m_prop1 != null && ! m_prop1.equals(prop1))
+        || (m_prop1 == null && prop1 != null ))
         {
             m_prop1 = prop1;
             onProp1Changed(m_prop1);
@@ -57,7 +58,8 @@ public class NestedStruct2InterfaceService extends AbstractNestedStruct2Interfac
     public void setProp2(NestedStruct2 prop2)
     {
         Log.i(TAG, "request setProp2 called ");
-        if (! m_prop2.equals(prop2))
+        if ( (m_prop2 != null && ! m_prop2.equals(prop2))
+        || (m_prop2 == null && prop2 != null ))
         {
             m_prop2 = prop2;
             onProp2Changed(m_prop2);

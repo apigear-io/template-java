@@ -35,7 +35,8 @@ public class NestedStruct1InterfaceService extends AbstractNestedStruct1Interfac
     public void setProp1(NestedStruct1 prop1)
     {
         Log.i(TAG, "request setProp1 called ");
-        if (! m_prop1.equals(prop1))
+        if ( (m_prop1 != null && ! m_prop1.equals(prop1))
+        || (m_prop1 == null && prop1 != null ))
         {
             m_prop1 = prop1;
             onProp1Changed(m_prop1);
@@ -52,6 +53,32 @@ public class NestedStruct1InterfaceService extends AbstractNestedStruct1Interfac
 
   
     // methods
+
+    @Override
+    public void funcNoReturnValue(NestedStruct1 param1) {
+        Log.w(TAG, "request method funcNoReturnValue called, returnig default");
+        return ;
+    }
+
+    @Override
+    public  CompletableFuture<Void> funcNoReturnValueAsync(NestedStruct1 param1) {
+        return CompletableFuture.runAsync(
+                () -> { funcNoReturnValue(param1); },
+                executor);
+    }
+
+    @Override
+    public NestedStruct1 funcNoParams() {
+        Log.w(TAG, "request method funcNoParams called, returnig default");
+        return new NestedStruct1();
+    }
+
+    @Override
+    public  CompletableFuture<NestedStruct1> funcNoParamsAsync() {
+        return CompletableFuture.supplyAsync(
+                () -> {return funcNoParams(); },
+                executor);
+    }
 
     @Override
     public NestedStruct1 func1(NestedStruct1 param1) {

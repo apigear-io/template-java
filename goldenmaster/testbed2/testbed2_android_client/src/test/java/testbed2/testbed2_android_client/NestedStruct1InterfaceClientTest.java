@@ -25,6 +25,18 @@ import testbed2.testbed2_api.Enum2;
 import testbed2.testbed2_android_messenger.Enum2Parcelable;
 import testbed2.testbed2_api.Enum3;
 import testbed2.testbed2_android_messenger.Enum3Parcelable;
+import testbed2.testbed2_api.IManyParamInterface;
+import testbed2.testbed2_android_messenger.ManyParamInterfaceParcelable;
+import testbed2.testbed2_impl.ManyParamInterfaceService;
+import testbed2.testbed2_api.INestedStruct1Interface;
+import testbed2.testbed2_android_messenger.NestedStruct1InterfaceParcelable;
+import testbed2.testbed2_impl.NestedStruct1InterfaceService;
+import testbed2.testbed2_api.INestedStruct2Interface;
+import testbed2.testbed2_android_messenger.NestedStruct2InterfaceParcelable;
+import testbed2.testbed2_impl.NestedStruct2InterfaceService;
+import testbed2.testbed2_api.INestedStruct3Interface;
+import testbed2.testbed2_android_messenger.NestedStruct3InterfaceParcelable;
+import testbed2.testbed2_impl.NestedStruct3InterfaceService;
 
 import testbed2.testbed2_api.INestedStruct1InterfaceEventListener;
 import testbed2.testbed2_api.INestedStruct1Interface;
@@ -213,6 +225,90 @@ public class NestedStruct1InterfaceClientTest
         inOrderEventListener.verify(listenerMock,times(1)).onSig1( any(NestedStruct1.class));
 
 }
+
+
+    public void onfuncNoReturnValueRequest() throws RemoteException {
+
+        // Execute method
+        NestedStruct1 testparam1 = Testbed2TestHelper.makeTestNestedStruct1();
+
+        AtomicBoolean receivedResp = new AtomicBoolean(false);
+        CompletableFuture<Void> resFuture = testedClient.funcNoReturnValueAsync(testparam1);
+
+        resFuture.thenAccept(result -> {
+            receivedResp.set(true);
+        });
+        Robolectric.flushForegroundThreadScheduler();
+
+        // Expect msg to be sent.
+        inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
+
+
+        Message method_request = messageCaptor.getValue();
+        assertEquals(NestedStruct1InterfaceMessageType.RPC_FuncNoReturnValueReq.getValue(), method_request.what);
+        Bundle data = method_request.getData();
+        
+        data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
+        
+			NestedStruct1 receivedparam1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
+        assertEquals(receivedparam1, testparam1);
+        int returnedCallId = data.getInt("callId", -1);
+
+        //Prepare response
+
+        Message msg = Message.obtain(null, NestedStruct1InterfaceMessageType.RPC_FuncNoReturnValueResp.getValue());
+
+        Bundle result_data = new Bundle();
+		result_data.putInt("callId", returnedCallId);
+
+        msg.setData(result_data);
+        method_request.replyTo.send(msg);
+        Robolectric.flushForegroundThreadScheduler();
+
+        assertTrue(receivedResp.get());
+
+    }
+
+
+    public void onfuncNoParamsRequest() throws RemoteException {
+
+        // Execute method
+        NestedStruct1 expectedResult = Testbed2TestHelper.makeTestNestedStruct1();
+
+        AtomicBoolean receivedResp = new AtomicBoolean(false);
+        CompletableFuture<NestedStruct1> resFuture = testedClient.funcNoParamsAsync();
+
+        resFuture.thenAccept(result -> {
+            assertEquals(expectedResult, result);
+            receivedResp.set(true);
+        });
+        Robolectric.flushForegroundThreadScheduler();
+
+        // Expect msg to be sent.
+        inOrderServiceMessenger.verify(serviceMessagesStorage, times(1)).getMessage(messageCaptor.capture());
+
+
+        Message method_request = messageCaptor.getValue();
+        assertEquals(NestedStruct1InterfaceMessageType.RPC_FuncNoParamsReq.getValue(), method_request.what);
+        Bundle data = method_request.getData();
+        
+        int returnedCallId = data.getInt("callId", -1);
+
+        //Prepare response
+
+        Message msg = Message.obtain(null, NestedStruct1InterfaceMessageType.RPC_FuncNoParamsResp.getValue());
+
+        Bundle result_data = new Bundle();
+		result_data.putInt("callId", returnedCallId);
+		result_data.putParcelable("result", new NestedStruct1Parcelable(expectedResult));
+
+        msg.setData(result_data);
+        method_request.replyTo.send(msg);
+        Robolectric.flushForegroundThreadScheduler();
+
+        assertTrue(receivedResp.get());
+
+    }
 
 
     public void onfunc1Request() throws RemoteException {

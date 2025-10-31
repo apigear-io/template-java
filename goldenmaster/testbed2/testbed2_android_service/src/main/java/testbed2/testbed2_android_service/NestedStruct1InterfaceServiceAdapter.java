@@ -216,6 +216,61 @@ public class NestedStruct1InterfaceServiceAdapter extends Service
 			// TODO params may be different structs from different modules, there should be a custom class loader 
 			// with a list of class loaders required for this message
 			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
+				case RPC_FuncNoReturnValueReq: {
+
+					Bundle data = msg.getData();
+					
+        data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
+					int callId = data.getInt("callId");
+					
+			        NestedStruct1 param1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
+
+					 mBackendService.funcNoReturnValue(param1);
+
+					Message respMsg = new Message();
+					respMsg.what = NestedStruct1InterfaceMessageType.RPC_FuncNoReturnValueResp.getValue();
+					Bundle resp_data = new Bundle();
+					resp_data.putInt("callId", callId);
+					respMsg.setData(resp_data);
+
+					try {
+						msg.replyTo.send(respMsg);
+					} catch (RemoteException e) {
+						throw new RuntimeException(e);
+					}
+					break;
+
+				}
+			// TODO params may be different structs from different modules, there should be a custom class loader 
+			// with a list of class loaders required for this message
+			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
+				case RPC_FuncNoParamsReq: {
+
+					Bundle data = msg.getData();
+					
+					int callId = data.getInt("callId");
+
+					NestedStruct1 result =  mBackendService.funcNoParams();
+
+					Message respMsg = new Message();
+					respMsg.what = NestedStruct1InterfaceMessageType.RPC_FuncNoParamsResp.getValue();
+					Bundle resp_data = new Bundle();
+					resp_data.putInt("callId", callId);
+					
+		        resp_data.putParcelable("result", new NestedStruct1Parcelable(result));
+					respMsg.setData(resp_data);
+
+					try {
+						msg.replyTo.send(respMsg);
+					} catch (RemoteException e) {
+						throw new RuntimeException(e);
+					}
+					break;
+
+				}
+			// TODO params may be different structs from different modules, there should be a custom class loader 
+			// with a list of class loaders required for this message
+			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 				case RPC_Func1Req: {
 
 					Bundle data = msg.getData();

@@ -42,6 +42,8 @@ import java.util.concurrent.CompletableFuture;
     // methods
     void funcNoReturnValue(boolean paramBool);
     CompletableFuture<Void> funcNoReturnValueAsync(boolean paramBool);
+    boolean funcNoParams();
+    CompletableFuture<Boolean> funcNoParamsAsync();
     boolean funcBool(boolean paramBool);
     CompletableFuture<Boolean> funcBoolAsync(boolean paramBool);
     int funcInt(int paramInt);
