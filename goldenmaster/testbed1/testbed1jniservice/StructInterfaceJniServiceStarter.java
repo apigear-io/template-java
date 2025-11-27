@@ -21,11 +21,11 @@ public class StructInterfaceJniServiceStarter {
     public static IStructInterface start(Context context) {
         stop(context);
         androidService = new Intent(context, StructInterfaceServiceAdapter.class);
-        Log.w(TAG, "starter: created intent");
+        Log.i(TAG, "starter: created intent");
         context.startService(androidService);
-        Log.w(TAG, "starter: started intent (service) ");
+        Log.i(TAG, "starter: started intent (service) ");
         StructInterfaceJniServiceFactory factory = StructInterfaceJniServiceFactory.get();
-        Log.w(TAG, "starter: factory set for StructInterfaceJniServiceFactory");
+        Log.i(TAG, "starter: factory set for StructInterfaceJniServiceFactory");
         return StructInterfaceServiceAdapter.setService(factory);
     }
 
@@ -33,7 +33,7 @@ public class StructInterfaceJniServiceStarter {
     {
         if (androidService != null)
         {
-            Log.w(TAG, "starter: stop the service");
+            Log.i(TAG, "starter: stop the service");
             context.stopService(androidService);
         }
         androidService = null;

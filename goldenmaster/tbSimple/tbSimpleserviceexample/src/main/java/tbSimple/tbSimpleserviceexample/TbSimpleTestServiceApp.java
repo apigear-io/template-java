@@ -74,7 +74,7 @@ public class TbSimpleTestServiceApp extends Activity implements IVoidInterfaceEv
         bSigVoid.setText("sigVoid");
 
         bSigVoid.setOnClickListener(v -> {
-            Log.w(TAG, "broadcasting singal  sigVoid ");
+            Log.i(TAG, "broadcasting singal  sigVoid ");
             mBackend.fireSigVoid();
         });
         bSigVoid.setBackgroundColor(Color.GREEN);
@@ -138,7 +138,7 @@ public class TbSimpleTestServiceApp extends Activity implements IVoidInterfaceEv
     private void startMyService(){
         stub_service = new Intent(this, VoidInterfaceServiceAdapter.class);
         this.startService(stub_service);
-        Log.w(TAG, "Service started with stub backend");
+        Log.i(TAG, "Service started with stub backend");
         mBackend = VoidInterfaceServiceAdapter.setService(VoidInterfaceServiceFactory.get());
         mBackend.addEventListener(this);
     }
@@ -165,20 +165,19 @@ public class TbSimpleTestServiceApp extends Activity implements IVoidInterfaceEv
     {
         String text = "Signal sigVoid ";
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void on_readyStatusChanged(boolean isReady)
     { 
          if (isReady)
          {
-             Log.w(TAG, "Connected to service ");
+             Log.i(TAG, "Connected to service ");
          }
          else
          {
-             Log.w(TAG, "Disconnected from service ");
+             Log.i(TAG, "Disconnected from service ");
          }
     }
-
 
 }

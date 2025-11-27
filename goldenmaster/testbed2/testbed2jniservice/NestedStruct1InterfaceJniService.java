@@ -49,7 +49,7 @@ public class NestedStruct1InterfaceJniService extends AbstractNestedStruct1Inter
 
     @Override
     public void funcNoReturnValue(NestedStruct1 param1) {
-        Log.w(TAG, "request method funcNoReturnValue called, will call native");
+        Log.i(TAG, "request method funcNoReturnValue called, will call native");
          nativeFuncNoReturnValue(param1);
     }
 
@@ -62,7 +62,7 @@ public class NestedStruct1InterfaceJniService extends AbstractNestedStruct1Inter
 
     @Override
     public NestedStruct1 funcNoParams() {
-        Log.w(TAG, "request method funcNoParams called, will call native");
+        Log.i(TAG, "request method funcNoParams called, will call native");
         return nativeFuncNoParams();
     }
 
@@ -75,7 +75,7 @@ public class NestedStruct1InterfaceJniService extends AbstractNestedStruct1Inter
 
     @Override
     public NestedStruct1 func1(NestedStruct1 param1) {
-        Log.w(TAG, "request method func1 called, will call native");
+        Log.i(TAG, "request method func1 called, will call native");
         return nativeFunc1(param1);
     }
 

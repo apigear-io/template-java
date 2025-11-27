@@ -148,7 +148,7 @@ public class {{Camel .Module.Name}}TestServiceApp extends Activity implements I{
         b{{Camel .Name}}.setText("{{.Name}}");
 
         b{{Camel .Name}}.setOnClickListener(v -> {
-            Log.w(TAG, "broadcasting singal  {{.Name}} ");
+            Log.i(TAG, "broadcasting singal  {{.Name}} ");
             {{- range .Params}}
             {{javaType "" . }} {{javaVar .}} =  {{javaTestValue "" .}};
             {{- end}}
@@ -216,7 +216,7 @@ public class {{Camel .Module.Name}}TestServiceApp extends Activity implements I{
     private void startMyService(){
         stub_service = new Intent(this, {{Camel $Interface.Name }}ServiceAdapter.class);
         this.startService(stub_service);
-        Log.w(TAG, "Service started with stub backend");
+        Log.i(TAG, "Service started with stub backend");
         mBackend = {{Camel $Interface.Name }}ServiceAdapter.setService({{Camel $Interface.Name }}ServiceFactory.get());
         mBackend.addEventListener(this);
     }
@@ -244,7 +244,7 @@ public class {{Camel .Module.Name}}TestServiceApp extends Activity implements I{
     public void on{{Camel .Name}}Changed({{javaType "" .}} newValue)
     {
         outputTextViewProp.setText("Property from service: {{.Name}} " + newValue);
-        Log.w(TAG, "Property from service: {{.Name}} " + newValue);
+        Log.i(TAG, "Property from service: {{.Name}} " + newValue);
      }
     {{- end }}
     {{- range $Interface.Signals }}
@@ -253,7 +253,7 @@ public class {{Camel .Module.Name}}TestServiceApp extends Activity implements I{
     {
         String text = "Signal {{.Name}} "{{- range .Params -}} + " " + {{javaVar .}}{{ end}};
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     {{- end }}
     @Override
@@ -261,14 +261,13 @@ public class {{Camel .Module.Name}}TestServiceApp extends Activity implements I{
     { 
          if (isReady)
          {
-             Log.w(TAG, "Connected to service ");
+             Log.i(TAG, "Connected to service ");
          }
          else
          {
-             Log.w(TAG, "Disconnected from service ");
+             Log.i(TAG, "Disconnected from service ");
          }
     }
-
 
 }
 {{- end}}

@@ -174,7 +174,7 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
         if (mMessengerClient == null)
         {
             mMessengerClient = new ParentIfClient(ctx, connectionID);
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
         if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
@@ -188,7 +188,7 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
 
     @Override
     public void on_readyStatusChanged(boolean isReady) {
-        Log.w(TAG, "Connection state changed "+isReady);
+        Log.i(TAG, "Connection state changed "+isReady);
         nativeIsReady(isReady);
     }
 
@@ -196,49 +196,49 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
     @Override
     public void onLocalIfChanged(ISimpleLocalIf newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnLocalIfChanged(newValue);
     }
     @Override
     public void onLocalIfListChanged(ISimpleLocalIf[] newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnLocalIfListChanged(newValue);
     }
     @Override
     public void onImportedIfChanged(tbIfaceimport.tbIfaceimport_api.IEmptyIf newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnImportedIfChanged(newValue);
     }
     @Override
     public void onImportedIfListChanged(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnImportedIfListChanged(newValue);
     }
     @Override
     public void onLocalIfSignal(ISimpleLocalIf param)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal localIfSignal "+ " " + param);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal localIfSignal "+ " " + param);
         nativeOnLocalIfSignal(param);
     }
     @Override
     public void onLocalIfSignalList(ISimpleLocalIf[] param)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal localIfSignalList "+ " " + param);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal localIfSignalList "+ " " + param);
         nativeOnLocalIfSignalList(param);
     }
     @Override
     public void onImportedIfSignal(tbIfaceimport.tbIfaceimport_api.IEmptyIf param)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal importedIfSignal "+ " " + param);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal importedIfSignal "+ " " + param);
         nativeOnImportedIfSignal(param);
     }
     @Override
     public void onImportedIfSignalList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal importedIfSignalList "+ " " + param);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal importedIfSignalList "+ " " + param);
         nativeOnImportedIfSignalList(param);
     }
      private native void nativeOnLocalIfChanged(ISimpleLocalIf localIf);

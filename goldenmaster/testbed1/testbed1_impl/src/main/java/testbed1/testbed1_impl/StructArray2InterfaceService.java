@@ -153,7 +153,7 @@ public class StructArray2InterfaceService extends AbstractStructArray2Interface 
 
     @Override
     public StructBool[] funcBool(StructBoolWithArray paramBool) {
-        Log.w(TAG, "request method funcBool called, returnig default");
+        Log.i(TAG, "request method funcBool called, returnig default");
         return new StructBool[]{};
     }
 
@@ -166,7 +166,7 @@ public class StructArray2InterfaceService extends AbstractStructArray2Interface 
 
     @Override
     public StructInt[] funcInt(StructIntWithArray paramInt) {
-        Log.w(TAG, "request method funcInt called, returnig default");
+        Log.i(TAG, "request method funcInt called, returnig default");
         return new StructInt[]{};
     }
 
@@ -179,7 +179,7 @@ public class StructArray2InterfaceService extends AbstractStructArray2Interface 
 
     @Override
     public StructFloat[] funcFloat(StructFloatWithArray paramFloat) {
-        Log.w(TAG, "request method funcFloat called, returnig default");
+        Log.i(TAG, "request method funcFloat called, returnig default");
         return new StructFloat[]{};
     }
 
@@ -192,7 +192,7 @@ public class StructArray2InterfaceService extends AbstractStructArray2Interface 
 
     @Override
     public StructString[] funcString(StructStringWithArray paramString) {
-        Log.w(TAG, "request method funcString called, returnig default");
+        Log.i(TAG, "request method funcString called, returnig default");
         return new StructString[]{};
     }
 
@@ -205,7 +205,7 @@ public class StructArray2InterfaceService extends AbstractStructArray2Interface 
 
     @Override
     public Enum0[] funcEnum(StructEnumWithArray paramEnum) {
-        Log.w(TAG, "request method funcEnum called, returnig default");
+        Log.i(TAG, "request method funcEnum called, returnig default");
         return new Enum0[]{};
     }
 

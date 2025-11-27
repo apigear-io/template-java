@@ -43,7 +43,7 @@ public class SimpleLocalIfServiceFactory extends HandlerThread implements ISimpl
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: SimpleLocalIfServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
+			Log.i("UE", "LIFECYCLE: SimpleLocalIfServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class SimpleLocalIfServiceFactory extends HandlerThread implements ISimpl
 	@NonNull
 	private static SimpleLocalIfServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		SimpleLocalIfServiceFactory t = new SimpleLocalIfServiceFactory();
 		t.start();

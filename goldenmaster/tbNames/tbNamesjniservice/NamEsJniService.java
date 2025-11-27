@@ -94,7 +94,7 @@ public class NamEsJniService extends AbstractNamEs {
 
     @Override
     public void someFunction(boolean SOME_PARAM) {
-        Log.w(TAG, "request method someFunction called, will call native");
+        Log.i(TAG, "request method someFunction called, will call native");
          nativeSomeFunction(SOME_PARAM);
     }
 
@@ -107,7 +107,7 @@ public class NamEsJniService extends AbstractNamEs {
 
     @Override
     public void someFunction2(boolean Some_Param) {
-        Log.w(TAG, "request method someFunction2 called, will call native");
+        Log.i(TAG, "request method someFunction2 called, will call native");
          nativeSomeFunction2(Some_Param);
     }
 

@@ -43,7 +43,7 @@ public class NamEsJniServiceFactory extends HandlerThread implements INamEsServi
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: NamEsJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
+			Log.i("UE", "LIFECYCLE: NamEsJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class NamEsJniServiceFactory extends HandlerThread implements INamEsServi
 	@NonNull
 	private static NamEsJniServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		NamEsJniServiceFactory t = new NamEsJniServiceFactory();
 		t.start();

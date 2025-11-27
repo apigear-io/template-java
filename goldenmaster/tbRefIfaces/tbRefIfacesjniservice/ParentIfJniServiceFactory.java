@@ -43,7 +43,7 @@ public class ParentIfJniServiceFactory extends HandlerThread implements IParentI
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: ParentIfJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
+			Log.i("UE", "LIFECYCLE: ParentIfJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class ParentIfJniServiceFactory extends HandlerThread implements IParentI
 	@NonNull
 	private static ParentIfJniServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		ParentIfJniServiceFactory t = new ParentIfJniServiceFactory();
 		t.start();

@@ -223,7 +223,7 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
         if (mMessengerClient == null)
         {
             mMessengerClient = new StructArray2InterfaceClient(ctx, connectionID);
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
         if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
@@ -237,7 +237,7 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
 
     @Override
     public void on_readyStatusChanged(boolean isReady) {
-        Log.w(TAG, "Connection state changed "+isReady);
+        Log.i(TAG, "Connection state changed "+isReady);
         nativeIsReady(isReady);
     }
 
@@ -245,55 +245,55 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
     @Override
     public void onPropBoolChanged(StructBoolWithArray newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnPropBoolChanged(newValue);
     }
     @Override
     public void onPropIntChanged(StructIntWithArray newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnPropIntChanged(newValue);
     }
     @Override
     public void onPropFloatChanged(StructFloatWithArray newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnPropFloatChanged(newValue);
     }
     @Override
     public void onPropStringChanged(StructStringWithArray newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnPropStringChanged(newValue);
     }
     @Override
     public void onPropEnumChanged(StructEnumWithArray newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnPropEnumChanged(newValue);
     }
     @Override
     public void onSigBool(StructBoolWithArray paramBool)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sigBool "+ " " + paramBool);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sigBool "+ " " + paramBool);
         nativeOnSigBool(paramBool);
     }
     @Override
     public void onSigInt(StructIntWithArray paramInt)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sigInt "+ " " + paramInt);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sigInt "+ " " + paramInt);
         nativeOnSigInt(paramInt);
     }
     @Override
     public void onSigFloat(StructFloatWithArray paramFloat)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sigFloat "+ " " + paramFloat);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sigFloat "+ " " + paramFloat);
         nativeOnSigFloat(paramFloat);
     }
     @Override
     public void onSigString(StructStringWithArray paramString)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sigString "+ " " + paramString);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sigString "+ " " + paramString);
         nativeOnSigString(paramString);
     }
      private native void nativeOnPropBoolChanged(StructBoolWithArray propBool);

@@ -43,7 +43,7 @@ public class EmptyInterfaceJniServiceFactory extends HandlerThread implements IE
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: EmptyInterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
+			Log.i("UE", "LIFECYCLE: EmptyInterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class EmptyInterfaceJniServiceFactory extends HandlerThread implements IE
 	@NonNull
 	private static EmptyInterfaceJniServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		EmptyInterfaceJniServiceFactory t = new EmptyInterfaceJniServiceFactory();
 		t.start();

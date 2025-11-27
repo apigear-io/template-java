@@ -43,7 +43,7 @@ public class VoidInterfaceServiceFactory extends HandlerThread implements IVoidI
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: VoidInterfaceServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
+			Log.i("UE", "LIFECYCLE: VoidInterfaceServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class VoidInterfaceServiceFactory extends HandlerThread implements IVoidI
 	@NonNull
 	private static VoidInterfaceServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		VoidInterfaceServiceFactory t = new VoidInterfaceServiceFactory();
 		t.start();

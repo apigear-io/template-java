@@ -33,7 +33,7 @@ public class VoidInterfaceService extends AbstractVoidInterface {
 
     @Override
     public void funcVoid() {
-        Log.w(TAG, "request method funcVoid called, returnig default");
+        Log.i(TAG, "request method funcVoid called, returnig default");
         return ;
     }
 

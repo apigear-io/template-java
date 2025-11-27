@@ -138,7 +138,7 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
         if (mMessengerClient == null)
         {
             mMessengerClient = new NamEsClient(ctx, connectionID);
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
         if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
@@ -152,7 +152,7 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
 
     @Override
     public void on_readyStatusChanged(boolean isReady) {
-        Log.w(TAG, "Connection state changed "+isReady);
+        Log.i(TAG, "Connection state changed "+isReady);
         nativeIsReady(isReady);
     }
 
@@ -160,37 +160,37 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
     @Override
     public void onSwitchChanged(boolean newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnSwitchChanged(newValue);
     }
     @Override
     public void onSomePropertyChanged(int newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnSomePropertyChanged(newValue);
     }
     @Override
     public void onSomePoperty2Changed(int newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnSomePoperty2Changed(newValue);
     }
     @Override
     public void onEnumPropertyChanged(EnumWithUnderScores newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnEnumPropertyChanged(newValue);
     }
     @Override
     public void onSomeSignal(boolean SOME_PARAM)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal SOME_SIGNAL "+ " " + SOME_PARAM);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal SOME_SIGNAL "+ " " + SOME_PARAM);
         nativeOnSomeSignal(SOME_PARAM);
     }
     @Override
     public void onSomeSignal2(boolean Some_Param)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal Some_Signal2 "+ " " + Some_Param);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal Some_Signal2 "+ " " + Some_Param);
         nativeOnSomeSignal2(Some_Param);
     }
      private native void nativeOnSwitchChanged(boolean Switch);

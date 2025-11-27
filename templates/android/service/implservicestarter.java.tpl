@@ -21,11 +21,11 @@ public class {{Camel .Interface.Name }}ServiceStarter {
     public static I{{Camel .Interface.Name }} start(Context context) {
         stop(context);
         androidService = new Intent(context, {{Camel .Interface.Name }}ServiceAdapter.class);
-        Log.w(TAG, "starter: created intent");
+        Log.i(TAG, "starter: created intent");
         context.startService(androidService);
-        Log.w(TAG, "starter: started intent (service) ");
+        Log.i(TAG, "starter: started intent (service) ");
         {{Camel .Interface.Name}}ServiceFactory factory = {{Camel .Interface.Name}}ServiceFactory.get();
-        Log.w(TAG, "starter: factory set for {{Camel .Interface.Name}}ServiceFactory");
+        Log.i(TAG, "starter: factory set for {{Camel .Interface.Name}}ServiceFactory");
         return {{Camel .Interface.Name }}ServiceAdapter.setService(factory);
     }
 
@@ -33,7 +33,7 @@ public class {{Camel .Interface.Name }}ServiceStarter {
     {
         if (androidService != null)
         {
-            Log.w(TAG, "starter: stop the service");
+            Log.i(TAG, "starter: stop the service");
             context.stopService(androidService);
         }
         androidService = null;

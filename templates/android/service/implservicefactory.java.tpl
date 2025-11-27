@@ -43,7 +43,7 @@ public class {{Camel .Interface.Name}}ServiceFactory extends HandlerThread imple
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: {{Camel .Interface.Name}}ServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
+			Log.i("UE", "LIFECYCLE: {{Camel .Interface.Name}}ServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class {{Camel .Interface.Name}}ServiceFactory extends HandlerThread imple
 	@NonNull
 	private static {{Camel .Interface.Name}}ServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		{{Camel .Interface.Name}}ServiceFactory t = new {{Camel .Interface.Name}}ServiceFactory();
 		t.start();

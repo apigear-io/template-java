@@ -43,7 +43,7 @@ public class SameEnum1InterfaceServiceFactory extends HandlerThread implements I
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: SameEnum1InterfaceServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
+			Log.i("UE", "LIFECYCLE: SameEnum1InterfaceServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class SameEnum1InterfaceServiceFactory extends HandlerThread implements I
 	@NonNull
 	private static SameEnum1InterfaceServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		SameEnum1InterfaceServiceFactory t = new SameEnum1InterfaceServiceFactory();
 		t.start();

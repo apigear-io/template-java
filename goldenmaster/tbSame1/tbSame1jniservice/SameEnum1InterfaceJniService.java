@@ -49,7 +49,7 @@ public class SameEnum1InterfaceJniService extends AbstractSameEnum1Interface {
 
     @Override
     public Enum1 func1(Enum1 param1) {
-        Log.w(TAG, "request method func1 called, will call native");
+        Log.i(TAG, "request method func1 called, will call native");
         return nativeFunc1(param1);
     }
 

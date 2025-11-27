@@ -92,7 +92,7 @@ public class ManyParamInterfaceJniService extends AbstractManyParamInterface {
 
     @Override
     public int func1(int param1) {
-        Log.w(TAG, "request method func1 called, will call native");
+        Log.i(TAG, "request method func1 called, will call native");
         return nativeFunc1(param1);
     }
 
@@ -105,7 +105,7 @@ public class ManyParamInterfaceJniService extends AbstractManyParamInterface {
 
     @Override
     public int func2(int param1, int param2) {
-        Log.w(TAG, "request method func2 called, will call native");
+        Log.i(TAG, "request method func2 called, will call native");
         return nativeFunc2(param1, param2);
     }
 
@@ -118,7 +118,7 @@ public class ManyParamInterfaceJniService extends AbstractManyParamInterface {
 
     @Override
     public int func3(int param1, int param2, int param3) {
-        Log.w(TAG, "request method func3 called, will call native");
+        Log.i(TAG, "request method func3 called, will call native");
         return nativeFunc3(param1, param2, param3);
     }
 
@@ -131,7 +131,7 @@ public class ManyParamInterfaceJniService extends AbstractManyParamInterface {
 
     @Override
     public int func4(int param1, int param2, int param3, int param4) {
-        Log.w(TAG, "request method func4 called, will call native");
+        Log.i(TAG, "request method func4 called, will call native");
         return nativeFunc4(param1, param2, param3, param4);
     }
 

@@ -117,7 +117,7 @@ public class NestedStruct1InterfaceJniClient extends AbstractNestedStruct1Interf
         if (mMessengerClient == null)
         {
             mMessengerClient = new NestedStruct1InterfaceClient(ctx, connectionID);
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
         if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
@@ -131,7 +131,7 @@ public class NestedStruct1InterfaceJniClient extends AbstractNestedStruct1Interf
 
     @Override
     public void on_readyStatusChanged(boolean isReady) {
-        Log.w(TAG, "Connection state changed "+isReady);
+        Log.i(TAG, "Connection state changed "+isReady);
         nativeIsReady(isReady);
     }
 
@@ -139,13 +139,13 @@ public class NestedStruct1InterfaceJniClient extends AbstractNestedStruct1Interf
     @Override
     public void onProp1Changed(NestedStruct1 newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnProp1Changed(newValue);
     }
     @Override
     public void onSig1(NestedStruct1 param1)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sig1 "+ " " + param1);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sig1 "+ " " + param1);
         nativeOnSig1(param1);
     }
      private native void nativeOnProp1Changed(NestedStruct1 prop1);

@@ -118,7 +118,7 @@ public class NamEsService extends AbstractNamEs {
 
     @Override
     public void someFunction(boolean SOME_PARAM) {
-        Log.w(TAG, "request method someFunction called, returnig default");
+        Log.i(TAG, "request method someFunction called, returnig default");
         return ;
     }
 
@@ -131,7 +131,7 @@ public class NamEsService extends AbstractNamEs {
 
     @Override
     public void someFunction2(boolean Some_Param) {
-        Log.w(TAG, "request method someFunction2 called, returnig default");
+        Log.i(TAG, "request method someFunction2 called, returnig default");
         return ;
     }
 

@@ -75,7 +75,7 @@ public class NoSignalsInterfaceService extends AbstractNoSignalsInterface {
 
     @Override
     public void funcVoid() {
-        Log.w(TAG, "request method funcVoid called, returnig default");
+        Log.i(TAG, "request method funcVoid called, returnig default");
         return ;
     }
 
@@ -88,7 +88,7 @@ public class NoSignalsInterfaceService extends AbstractNoSignalsInterface {
 
     @Override
     public boolean funcBool(boolean paramBool) {
-        Log.w(TAG, "request method funcBool called, returnig default");
+        Log.i(TAG, "request method funcBool called, returnig default");
         return false;
     }
 

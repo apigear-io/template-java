@@ -21,11 +21,11 @@ public class NoOperationsInterfaceJniServiceStarter {
     public static INoOperationsInterface start(Context context) {
         stop(context);
         androidService = new Intent(context, NoOperationsInterfaceServiceAdapter.class);
-        Log.w(TAG, "starter: created intent");
+        Log.i(TAG, "starter: created intent");
         context.startService(androidService);
-        Log.w(TAG, "starter: started intent (service) ");
+        Log.i(TAG, "starter: started intent (service) ");
         NoOperationsInterfaceJniServiceFactory factory = NoOperationsInterfaceJniServiceFactory.get();
-        Log.w(TAG, "starter: factory set for NoOperationsInterfaceJniServiceFactory");
+        Log.i(TAG, "starter: factory set for NoOperationsInterfaceJniServiceFactory");
         return NoOperationsInterfaceServiceAdapter.setService(factory);
     }
 
@@ -33,7 +33,7 @@ public class NoOperationsInterfaceJniServiceStarter {
     {
         if (androidService != null)
         {
-            Log.w(TAG, "starter: stop the service");
+            Log.i(TAG, "starter: stop the service");
             context.stopService(androidService);
         }
         androidService = null;

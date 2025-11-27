@@ -94,7 +94,7 @@ public class ParentIfJniService extends AbstractParentIf {
 
     @Override
     public ISimpleLocalIf localIfMethod(ISimpleLocalIf param) {
-        Log.w(TAG, "request method localIfMethod called, will call native");
+        Log.i(TAG, "request method localIfMethod called, will call native");
         return nativeLocalIfMethod(param);
     }
 
@@ -107,7 +107,7 @@ public class ParentIfJniService extends AbstractParentIf {
 
     @Override
     public ISimpleLocalIf[] localIfMethodList(ISimpleLocalIf[] param) {
-        Log.w(TAG, "request method localIfMethodList called, will call native");
+        Log.i(TAG, "request method localIfMethodList called, will call native");
         return nativeLocalIfMethodList(param);
     }
 
@@ -120,7 +120,7 @@ public class ParentIfJniService extends AbstractParentIf {
 
     @Override
     public tbIfaceimport.tbIfaceimport_api.IEmptyIf importedIfMethod(tbIfaceimport.tbIfaceimport_api.IEmptyIf param) {
-        Log.w(TAG, "request method importedIfMethod called, will call native");
+        Log.i(TAG, "request method importedIfMethod called, will call native");
         return nativeImportedIfMethod(param);
     }
 
@@ -133,7 +133,7 @@ public class ParentIfJniService extends AbstractParentIf {
 
     @Override
     public tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfMethodList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param) {
-        Log.w(TAG, "request method importedIfMethodList called, will call native");
+        Log.i(TAG, "request method importedIfMethodList called, will call native");
         return nativeImportedIfMethodList(param);
     }
 

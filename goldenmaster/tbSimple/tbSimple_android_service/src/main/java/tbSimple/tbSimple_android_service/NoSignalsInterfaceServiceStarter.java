@@ -21,11 +21,11 @@ public class NoSignalsInterfaceServiceStarter {
     public static INoSignalsInterface start(Context context) {
         stop(context);
         androidService = new Intent(context, NoSignalsInterfaceServiceAdapter.class);
-        Log.w(TAG, "starter: created intent");
+        Log.i(TAG, "starter: created intent");
         context.startService(androidService);
-        Log.w(TAG, "starter: started intent (service) ");
+        Log.i(TAG, "starter: started intent (service) ");
         NoSignalsInterfaceServiceFactory factory = NoSignalsInterfaceServiceFactory.get();
-        Log.w(TAG, "starter: factory set for NoSignalsInterfaceServiceFactory");
+        Log.i(TAG, "starter: factory set for NoSignalsInterfaceServiceFactory");
         return NoSignalsInterfaceServiceAdapter.setService(factory);
     }
 
@@ -33,7 +33,7 @@ public class NoSignalsInterfaceServiceStarter {
     {
         if (androidService != null)
         {
-            Log.w(TAG, "starter: stop the service");
+            Log.i(TAG, "starter: stop the service");
             context.stopService(androidService);
         }
         androidService = null;

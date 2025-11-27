@@ -100,7 +100,7 @@ public class EnumInterfaceJniService extends AbstractEnumInterface {
 
     @Override
     public Enum0 func0(Enum0 param0) {
-        Log.w(TAG, "request method func0 called, will call native");
+        Log.i(TAG, "request method func0 called, will call native");
         return nativeFunc0(param0);
     }
 
@@ -113,7 +113,7 @@ public class EnumInterfaceJniService extends AbstractEnumInterface {
 
     @Override
     public Enum1 func1(Enum1 param1) {
-        Log.w(TAG, "request method func1 called, will call native");
+        Log.i(TAG, "request method func1 called, will call native");
         return nativeFunc1(param1);
     }
 
@@ -126,7 +126,7 @@ public class EnumInterfaceJniService extends AbstractEnumInterface {
 
     @Override
     public Enum2 func2(Enum2 param2) {
-        Log.w(TAG, "request method func2 called, will call native");
+        Log.i(TAG, "request method func2 called, will call native");
         return nativeFunc2(param2);
     }
 
@@ -139,7 +139,7 @@ public class EnumInterfaceJniService extends AbstractEnumInterface {
 
     @Override
     public Enum3 func3(Enum3 param3) {
-        Log.w(TAG, "request method func3 called, will call native");
+        Log.i(TAG, "request method func3 called, will call native");
         return nativeFunc3(param3);
     }
 

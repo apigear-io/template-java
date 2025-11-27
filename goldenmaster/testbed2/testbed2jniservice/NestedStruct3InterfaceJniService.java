@@ -83,7 +83,7 @@ public class NestedStruct3InterfaceJniService extends AbstractNestedStruct3Inter
 
     @Override
     public NestedStruct1 func1(NestedStruct1 param1) {
-        Log.w(TAG, "request method func1 called, will call native");
+        Log.i(TAG, "request method func1 called, will call native");
         return nativeFunc1(param1);
     }
 
@@ -96,7 +96,7 @@ public class NestedStruct3InterfaceJniService extends AbstractNestedStruct3Inter
 
     @Override
     public NestedStruct1 func2(NestedStruct1 param1, NestedStruct2 param2) {
-        Log.w(TAG, "request method func2 called, will call native");
+        Log.i(TAG, "request method func2 called, will call native");
         return nativeFunc2(param1, param2);
     }
 
@@ -109,7 +109,7 @@ public class NestedStruct3InterfaceJniService extends AbstractNestedStruct3Inter
 
     @Override
     public NestedStruct1 func3(NestedStruct1 param1, NestedStruct2 param2, NestedStruct3 param3) {
-        Log.w(TAG, "request method func3 called, will call native");
+        Log.i(TAG, "request method func3 called, will call native");
         return nativeFunc3(param1, param2, param3);
     }
 

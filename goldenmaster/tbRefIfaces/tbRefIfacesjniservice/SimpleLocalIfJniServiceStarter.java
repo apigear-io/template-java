@@ -21,11 +21,11 @@ public class SimpleLocalIfJniServiceStarter {
     public static ISimpleLocalIf start(Context context) {
         stop(context);
         androidService = new Intent(context, SimpleLocalIfServiceAdapter.class);
-        Log.w(TAG, "starter: created intent");
+        Log.i(TAG, "starter: created intent");
         context.startService(androidService);
-        Log.w(TAG, "starter: started intent (service) ");
+        Log.i(TAG, "starter: started intent (service) ");
         SimpleLocalIfJniServiceFactory factory = SimpleLocalIfJniServiceFactory.get();
-        Log.w(TAG, "starter: factory set for SimpleLocalIfJniServiceFactory");
+        Log.i(TAG, "starter: factory set for SimpleLocalIfJniServiceFactory");
         return SimpleLocalIfServiceAdapter.setService(factory);
     }
 
@@ -33,7 +33,7 @@ public class SimpleLocalIfJniServiceStarter {
     {
         if (androidService != null)
         {
-            Log.w(TAG, "starter: stop the service");
+            Log.i(TAG, "starter: stop the service");
             context.stopService(androidService);
         }
         androidService = null;

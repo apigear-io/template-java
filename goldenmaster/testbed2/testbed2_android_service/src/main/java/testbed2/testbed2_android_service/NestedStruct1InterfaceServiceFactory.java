@@ -43,7 +43,7 @@ public class NestedStruct1InterfaceServiceFactory extends HandlerThread implemen
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: NestedStruct1InterfaceServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
+			Log.i("UE", "LIFECYCLE: NestedStruct1InterfaceServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class NestedStruct1InterfaceServiceFactory extends HandlerThread implemen
 	@NonNull
 	private static NestedStruct1InterfaceServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		NestedStruct1InterfaceServiceFactory t = new NestedStruct1InterfaceServiceFactory();
 		t.start();

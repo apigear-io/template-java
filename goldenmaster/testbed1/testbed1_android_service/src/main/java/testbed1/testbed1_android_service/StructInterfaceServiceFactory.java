@@ -43,7 +43,7 @@ public class StructInterfaceServiceFactory extends HandlerThread implements IStr
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: StructInterfaceServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
+			Log.i("UE", "LIFECYCLE: StructInterfaceServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class StructInterfaceServiceFactory extends HandlerThread implements IStr
 	@NonNull
 	private static StructInterfaceServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		StructInterfaceServiceFactory t = new StructInterfaceServiceFactory();
 		t.start();
