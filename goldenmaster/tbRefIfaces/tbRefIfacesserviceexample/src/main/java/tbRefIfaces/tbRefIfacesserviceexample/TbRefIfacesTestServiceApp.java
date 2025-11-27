@@ -85,7 +85,7 @@ public class TbRefIfacesTestServiceApp extends Activity implements ISimpleLocalI
         bIntSignal.setText("intSignal");
 
         bIntSignal.setOnClickListener(v -> {
-            Log.w(TAG, "broadcasting singal  intSignal ");
+            Log.i(TAG, "broadcasting singal  intSignal ");
             int param =  1;
             mBackend.fireIntSignal(param);
         });
@@ -150,7 +150,7 @@ public class TbRefIfacesTestServiceApp extends Activity implements ISimpleLocalI
     private void startMyService(){
         stub_service = new Intent(this, SimpleLocalIfServiceAdapter.class);
         this.startService(stub_service);
-        Log.w(TAG, "Service started with stub backend");
+        Log.i(TAG, "Service started with stub backend");
         mBackend = SimpleLocalIfServiceAdapter.setService(SimpleLocalIfServiceFactory.get());
         mBackend.addEventListener(this);
     }
@@ -176,27 +176,26 @@ public class TbRefIfacesTestServiceApp extends Activity implements ISimpleLocalI
     public void onIntPropertyChanged(int newValue)
     {
         outputTextViewProp.setText("Property from service: intProperty " + newValue);
-        Log.w(TAG, "Property from service: intProperty " + newValue);
+        Log.i(TAG, "Property from service: intProperty " + newValue);
      }
     @Override
     public void onIntSignal(int param)
     {
         String text = "Signal intSignal "+ " " + param;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void on_readyStatusChanged(boolean isReady)
     { 
          if (isReady)
          {
-             Log.w(TAG, "Connected to service ");
+             Log.i(TAG, "Connected to service ");
          }
          else
          {
-             Log.w(TAG, "Disconnected from service ");
+             Log.i(TAG, "Disconnected from service ");
          }
     }
-
 
 }

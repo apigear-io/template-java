@@ -66,7 +66,7 @@ public class VoidInterfaceJniClient extends AbstractVoidInterface implements IVo
         if (mMessengerClient == null)
         {
             mMessengerClient = new VoidInterfaceClient(ctx, connectionID);
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
         if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
@@ -80,7 +80,7 @@ public class VoidInterfaceJniClient extends AbstractVoidInterface implements IVo
 
     @Override
     public void on_readyStatusChanged(boolean isReady) {
-        Log.w(TAG, "Connection state changed "+isReady);
+        Log.i(TAG, "Connection state changed "+isReady);
         nativeIsReady(isReady);
     }
 
@@ -88,7 +88,7 @@ public class VoidInterfaceJniClient extends AbstractVoidInterface implements IVo
     @Override
     public void onSigVoid()
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sigVoid ");
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sigVoid ");
         nativeOnSigVoid();
     }
     private native void nativeOnSigVoid();

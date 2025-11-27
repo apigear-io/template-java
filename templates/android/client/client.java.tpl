@@ -254,7 +254,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
     @Override
     public void onServiceDisconnected(ComponentName name)
     {
-        Log.w(TAG, "onServiceDisconnected name=" + name);
+        Log.i(TAG, "onServiceDisconnected name=" + name);
         doCleanupForUnbinding("onServiceDisconnected name=" + name);
     }
 

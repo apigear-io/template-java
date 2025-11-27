@@ -43,7 +43,7 @@ public class SameStruct2InterfaceServiceFactory extends HandlerThread implements
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: SameStruct2InterfaceServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
+			Log.i("UE", "LIFECYCLE: SameStruct2InterfaceServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class SameStruct2InterfaceServiceFactory extends HandlerThread implements
 	@NonNull
 	private static SameStruct2InterfaceServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		SameStruct2InterfaceServiceFactory t = new SameStruct2InterfaceServiceFactory();
 		t.start();

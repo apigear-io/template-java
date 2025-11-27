@@ -21,11 +21,11 @@ public class VoidInterfaceJniServiceStarter {
     public static IVoidInterface start(Context context) {
         stop(context);
         androidService = new Intent(context, VoidInterfaceServiceAdapter.class);
-        Log.w(TAG, "starter: created intent");
+        Log.i(TAG, "starter: created intent");
         context.startService(androidService);
-        Log.w(TAG, "starter: started intent (service) ");
+        Log.i(TAG, "starter: started intent (service) ");
         VoidInterfaceJniServiceFactory factory = VoidInterfaceJniServiceFactory.get();
-        Log.w(TAG, "starter: factory set for VoidInterfaceJniServiceFactory");
+        Log.i(TAG, "starter: factory set for VoidInterfaceJniServiceFactory");
         return VoidInterfaceServiceAdapter.setService(factory);
     }
 
@@ -33,7 +33,7 @@ public class VoidInterfaceJniServiceStarter {
     {
         if (androidService != null)
         {
-            Log.w(TAG, "starter: stop the service");
+            Log.i(TAG, "starter: stop the service");
             context.stopService(androidService);
         }
         androidService = null;

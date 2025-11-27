@@ -79,7 +79,7 @@ public class SimpleLocalIfJniClient extends AbstractSimpleLocalIf implements ISi
         if (mMessengerClient == null)
         {
             mMessengerClient = new SimpleLocalIfClient(ctx, connectionID);
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
         if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
@@ -93,7 +93,7 @@ public class SimpleLocalIfJniClient extends AbstractSimpleLocalIf implements ISi
 
     @Override
     public void on_readyStatusChanged(boolean isReady) {
-        Log.w(TAG, "Connection state changed "+isReady);
+        Log.i(TAG, "Connection state changed "+isReady);
         nativeIsReady(isReady);
     }
 
@@ -101,13 +101,13 @@ public class SimpleLocalIfJniClient extends AbstractSimpleLocalIf implements ISi
     @Override
     public void onIntPropertyChanged(int newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnIntPropertyChanged(newValue);
     }
     @Override
     public void onIntSignal(int param)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal intSignal "+ " " + param);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal intSignal "+ " " + param);
         nativeOnIntSignal(param);
     }
      private native void nativeOnIntPropertyChanged(int intProperty);

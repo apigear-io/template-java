@@ -66,7 +66,7 @@ public class SameStruct2InterfaceJniService extends AbstractSameStruct2Interface
 
     @Override
     public Struct1 func1(Struct1 param1) {
-        Log.w(TAG, "request method func1 called, will call native");
+        Log.i(TAG, "request method func1 called, will call native");
         return nativeFunc1(param1);
     }
 
@@ -79,7 +79,7 @@ public class SameStruct2InterfaceJniService extends AbstractSameStruct2Interface
 
     @Override
     public Struct1 func2(Struct1 param1, Struct2 param2) {
-        Log.w(TAG, "request method func2 called, will call native");
+        Log.i(TAG, "request method func2 called, will call native");
         return nativeFunc2(param1, param2);
     }
 

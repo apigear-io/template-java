@@ -43,7 +43,7 @@ public class StructArrayInterfaceServiceFactory extends HandlerThread implements
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: StructArrayInterfaceServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
+			Log.i("UE", "LIFECYCLE: StructArrayInterfaceServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class StructArrayInterfaceServiceFactory extends HandlerThread implements
 	@NonNull
 	private static StructArrayInterfaceServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		StructArrayInterfaceServiceFactory t = new StructArrayInterfaceServiceFactory();
 		t.start();

@@ -80,7 +80,7 @@ public class TbSame2TestClientApp extends Activity implements ISameStruct1Interf
         bFunc1.setText("func1");
 
         bFunc1.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  func1 ");
+            Log.i(TAG, "CALLING METHOD  func1 ");
             Struct1 param1 =  new Struct1();
             CompletableFuture<Struct1> method_res
                     = mClient.func1Async(param1).thenApply(
@@ -186,12 +186,12 @@ public class TbSame2TestClientApp extends Activity implements ISameStruct1Interf
     private void initServiceConnection( String servicePackage)
     {
         lastServicePackage = servicePackage;
-        Log.w(TAG, "init service connection the client ");
+        Log.i(TAG, "init service connection the client ");
 
         if (mClient == null)
         {
             mClient = new SameStruct1InterfaceClient(this.getApplicationContext(), "");
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mClient.addEventListener(this);
         }
 
@@ -203,25 +203,25 @@ public class TbSame2TestClientApp extends Activity implements ISameStruct1Interf
     public void onProp1Changed(Struct1 newValue)
     {
         outputTextViewProp.setText("Property from service: prop1 " + newValue);
-        Log.w(TAG, "Property from service: prop1 " + newValue);
+        Log.i(TAG, "Property from service: prop1 " + newValue);
      }
     @Override
     public void onSig1(Struct1 param1)
     {
         String text = "Signal sig1 "+ " " + param1;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void on_readyStatusChanged(boolean isReady)
     { 
          if (isReady)
          {
-             Log.w(TAG, "Connected to service ");
+             Log.i(TAG, "Connected to service ");
          }
          else
          {
-             Log.w(TAG, "Disconnected from service ");
+             Log.i(TAG, "Disconnected from service ");
          }
     }
 

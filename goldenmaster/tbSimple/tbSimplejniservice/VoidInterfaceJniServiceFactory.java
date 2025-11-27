@@ -43,7 +43,7 @@ public class VoidInterfaceJniServiceFactory extends HandlerThread implements IVo
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: VoidInterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
+			Log.i("UE", "LIFECYCLE: VoidInterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class VoidInterfaceJniServiceFactory extends HandlerThread implements IVo
 	@NonNull
 	private static VoidInterfaceJniServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		VoidInterfaceJniServiceFactory t = new VoidInterfaceJniServiceFactory();
 		t.start();

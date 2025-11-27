@@ -140,7 +140,7 @@ public class {{Camel .Interface.Name}}JniClient extends Abstract{{Camel .Interfa
         if (mMessengerClient == null)
         {
             mMessengerClient = new {{Camel .Interface.Name }}Client(ctx, connectionID);
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
         if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
@@ -154,7 +154,7 @@ public class {{Camel .Interface.Name}}JniClient extends Abstract{{Camel .Interfa
 
     @Override
     public void on_readyStatusChanged(boolean isReady) {
-        Log.w(TAG, "Connection state changed "+isReady);
+        Log.i(TAG, "Connection state changed "+isReady);
         nativeIsReady(isReady);
     }
 
@@ -163,7 +163,7 @@ public class {{Camel .Interface.Name}}JniClient extends Abstract{{Camel .Interfa
     @Override
     public void on{{Camel .Name}}Changed({{javaType "" .}} newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOn{{Camel .Name}}Changed(newValue);
     }
     {{- end }}
@@ -172,7 +172,7 @@ public class {{Camel .Interface.Name}}JniClient extends Abstract{{Camel .Interfa
     @Override
     public void on{{Camel .Name}}({{javaParams "" .Params}})
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal {{.Name}} "{{- range .Params -}} + " " + {{javaVar .}}{{ end}});
+        Log.i(TAG, "NOTIFICATION from messenger client Signal {{.Name}} "{{- range .Params -}} + " " + {{javaVar .}}{{ end}});
         nativeOn{{Camel .Name}}({{javaVars .Params }});
     }
     {{- end }}

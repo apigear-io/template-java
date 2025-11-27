@@ -121,7 +121,7 @@ public class EnumInterfaceService extends AbstractEnumInterface {
 
     @Override
     public Enum0 func0(Enum0 param0) {
-        Log.w(TAG, "request method func0 called, returnig default");
+        Log.i(TAG, "request method func0 called, returnig default");
         return Enum0.Value0;
     }
 
@@ -134,7 +134,7 @@ public class EnumInterfaceService extends AbstractEnumInterface {
 
     @Override
     public Enum1 func1(Enum1 param1) {
-        Log.w(TAG, "request method func1 called, returnig default");
+        Log.i(TAG, "request method func1 called, returnig default");
         return Enum1.Value1;
     }
 
@@ -147,7 +147,7 @@ public class EnumInterfaceService extends AbstractEnumInterface {
 
     @Override
     public Enum2 func2(Enum2 param2) {
-        Log.w(TAG, "request method func2 called, returnig default");
+        Log.i(TAG, "request method func2 called, returnig default");
         return Enum2.Value2;
     }
 
@@ -160,7 +160,7 @@ public class EnumInterfaceService extends AbstractEnumInterface {
 
     @Override
     public Enum3 func3(Enum3 param3) {
-        Log.w(TAG, "request method func3 called, returnig default");
+        Log.i(TAG, "request method func3 called, returnig default");
         return Enum3.Value3;
     }
 

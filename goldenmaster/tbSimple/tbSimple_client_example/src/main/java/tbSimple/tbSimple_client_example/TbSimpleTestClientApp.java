@@ -67,7 +67,7 @@ public class TbSimpleTestClientApp extends Activity implements IVoidInterfaceEve
         bFuncVoid.setText("funcVoid");
 
         bFuncVoid.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  funcVoid ");
+            Log.i(TAG, "CALLING METHOD  funcVoid ");
             CompletableFuture<Void> method_res
                     = mClient.funcVoidAsync().thenApply(
                     i -> {
@@ -172,12 +172,12 @@ public class TbSimpleTestClientApp extends Activity implements IVoidInterfaceEve
     private void initServiceConnection( String servicePackage)
     {
         lastServicePackage = servicePackage;
-        Log.w(TAG, "init service connection the client ");
+        Log.i(TAG, "init service connection the client ");
 
         if (mClient == null)
         {
             mClient = new VoidInterfaceClient(this.getApplicationContext(), "");
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mClient.addEventListener(this);
         }
 
@@ -190,18 +190,18 @@ public class TbSimpleTestClientApp extends Activity implements IVoidInterfaceEve
     {
         String text = "Signal sigVoid ";
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void on_readyStatusChanged(boolean isReady)
     { 
          if (isReady)
          {
-             Log.w(TAG, "Connected to service ");
+             Log.i(TAG, "Connected to service ");
          }
          else
          {
-             Log.w(TAG, "Disconnected from service ");
+             Log.i(TAG, "Disconnected from service ");
          }
     }
 

@@ -21,11 +21,11 @@ public class NestedStruct1InterfaceServiceStarter {
     public static INestedStruct1Interface start(Context context) {
         stop(context);
         androidService = new Intent(context, NestedStruct1InterfaceServiceAdapter.class);
-        Log.w(TAG, "starter: created intent");
+        Log.i(TAG, "starter: created intent");
         context.startService(androidService);
-        Log.w(TAG, "starter: started intent (service) ");
+        Log.i(TAG, "starter: started intent (service) ");
         NestedStruct1InterfaceServiceFactory factory = NestedStruct1InterfaceServiceFactory.get();
-        Log.w(TAG, "starter: factory set for NestedStruct1InterfaceServiceFactory");
+        Log.i(TAG, "starter: factory set for NestedStruct1InterfaceServiceFactory");
         return NestedStruct1InterfaceServiceAdapter.setService(factory);
     }
 
@@ -33,7 +33,7 @@ public class NestedStruct1InterfaceServiceStarter {
     {
         if (androidService != null)
         {
-            Log.w(TAG, "starter: stop the service");
+            Log.i(TAG, "starter: stop the service");
             context.stopService(androidService);
         }
         androidService = null;

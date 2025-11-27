@@ -117,7 +117,7 @@ public class ManyParamInterfaceService extends AbstractManyParamInterface {
 
     @Override
     public int func1(int param1) {
-        Log.w(TAG, "request method func1 called, returnig default");
+        Log.i(TAG, "request method func1 called, returnig default");
         return 0;
     }
 
@@ -130,7 +130,7 @@ public class ManyParamInterfaceService extends AbstractManyParamInterface {
 
     @Override
     public int func2(int param1, int param2) {
-        Log.w(TAG, "request method func2 called, returnig default");
+        Log.i(TAG, "request method func2 called, returnig default");
         return 0;
     }
 
@@ -143,7 +143,7 @@ public class ManyParamInterfaceService extends AbstractManyParamInterface {
 
     @Override
     public int func3(int param1, int param2, int param3) {
-        Log.w(TAG, "request method func3 called, returnig default");
+        Log.i(TAG, "request method func3 called, returnig default");
         return 0;
     }
 
@@ -156,7 +156,7 @@ public class ManyParamInterfaceService extends AbstractManyParamInterface {
 
     @Override
     public int func4(int param1, int param2, int param3, int param4) {
-        Log.w(TAG, "request method func4 called, returnig default");
+        Log.i(TAG, "request method func4 called, returnig default");
         return 0;
     }
 

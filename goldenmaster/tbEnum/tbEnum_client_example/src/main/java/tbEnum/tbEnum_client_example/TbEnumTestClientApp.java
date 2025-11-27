@@ -123,7 +123,7 @@ public class TbEnumTestClientApp extends Activity implements IEnumInterfaceEvent
         bFunc0.setText("func0");
 
         bFunc0.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  func0 ");
+            Log.i(TAG, "CALLING METHOD  func0 ");
             Enum0 param0 =  Enum0.Value1;
             CompletableFuture<Enum0> method_res
                     = mClient.func0Async(param0).thenApply(
@@ -138,7 +138,7 @@ public class TbEnumTestClientApp extends Activity implements IEnumInterfaceEvent
         bFunc1.setText("func1");
 
         bFunc1.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  func1 ");
+            Log.i(TAG, "CALLING METHOD  func1 ");
             Enum1 param1 =  Enum1.Value2;
             CompletableFuture<Enum1> method_res
                     = mClient.func1Async(param1).thenApply(
@@ -153,7 +153,7 @@ public class TbEnumTestClientApp extends Activity implements IEnumInterfaceEvent
         bFunc2.setText("func2");
 
         bFunc2.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  func2 ");
+            Log.i(TAG, "CALLING METHOD  func2 ");
             Enum2 param2 =  Enum2.Value1;
             CompletableFuture<Enum2> method_res
                     = mClient.func2Async(param2).thenApply(
@@ -168,7 +168,7 @@ public class TbEnumTestClientApp extends Activity implements IEnumInterfaceEvent
         bFunc3.setText("func3");
 
         bFunc3.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  func3 ");
+            Log.i(TAG, "CALLING METHOD  func3 ");
             Enum3 param3 =  Enum3.Value2;
             CompletableFuture<Enum3> method_res
                     = mClient.func3Async(param3).thenApply(
@@ -274,12 +274,12 @@ public class TbEnumTestClientApp extends Activity implements IEnumInterfaceEvent
     private void initServiceConnection( String servicePackage)
     {
         lastServicePackage = servicePackage;
-        Log.w(TAG, "init service connection the client ");
+        Log.i(TAG, "init service connection the client ");
 
         if (mClient == null)
         {
             mClient = new EnumInterfaceClient(this.getApplicationContext(), "");
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mClient.addEventListener(this);
         }
 
@@ -291,64 +291,64 @@ public class TbEnumTestClientApp extends Activity implements IEnumInterfaceEvent
     public void onProp0Changed(Enum0 newValue)
     {
         outputTextViewProp.setText("Property from service: prop0 " + newValue);
-        Log.w(TAG, "Property from service: prop0 " + newValue);
+        Log.i(TAG, "Property from service: prop0 " + newValue);
      }
     @Override
     public void onProp1Changed(Enum1 newValue)
     {
         outputTextViewProp.setText("Property from service: prop1 " + newValue);
-        Log.w(TAG, "Property from service: prop1 " + newValue);
+        Log.i(TAG, "Property from service: prop1 " + newValue);
      }
     @Override
     public void onProp2Changed(Enum2 newValue)
     {
         outputTextViewProp.setText("Property from service: prop2 " + newValue);
-        Log.w(TAG, "Property from service: prop2 " + newValue);
+        Log.i(TAG, "Property from service: prop2 " + newValue);
      }
     @Override
     public void onProp3Changed(Enum3 newValue)
     {
         outputTextViewProp.setText("Property from service: prop3 " + newValue);
-        Log.w(TAG, "Property from service: prop3 " + newValue);
+        Log.i(TAG, "Property from service: prop3 " + newValue);
      }
     @Override
     public void onSig0(Enum0 param0)
     {
         String text = "Signal sig0 "+ " " + param0;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void onSig1(Enum1 param1)
     {
         String text = "Signal sig1 "+ " " + param1;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void onSig2(Enum2 param2)
     {
         String text = "Signal sig2 "+ " " + param2;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void onSig3(Enum3 param3)
     {
         String text = "Signal sig3 "+ " " + param3;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void on_readyStatusChanged(boolean isReady)
     { 
          if (isReady)
          {
-             Log.w(TAG, "Connected to service ");
+             Log.i(TAG, "Connected to service ");
          }
          else
          {
-             Log.w(TAG, "Disconnected from service ");
+             Log.i(TAG, "Disconnected from service ");
          }
     }
 

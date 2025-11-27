@@ -43,7 +43,7 @@ public class SameStruct2InterfaceJniServiceFactory extends HandlerThread impleme
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: SameStruct2InterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
+			Log.i("UE", "LIFECYCLE: SameStruct2InterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class SameStruct2InterfaceJniServiceFactory extends HandlerThread impleme
 	@NonNull
 	private static SameStruct2InterfaceJniServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		SameStruct2InterfaceJniServiceFactory t = new SameStruct2InterfaceJniServiceFactory();
 		t.start();

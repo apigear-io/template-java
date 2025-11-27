@@ -43,7 +43,7 @@ public class SimpleLocalIfJniServiceFactory extends HandlerThread implements ISi
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: SimpleLocalIfJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
+			Log.i("UE", "LIFECYCLE: SimpleLocalIfJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class SimpleLocalIfJniServiceFactory extends HandlerThread implements ISi
 	@NonNull
 	private static SimpleLocalIfJniServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		SimpleLocalIfJniServiceFactory t = new SimpleLocalIfJniServiceFactory();
 		t.start();

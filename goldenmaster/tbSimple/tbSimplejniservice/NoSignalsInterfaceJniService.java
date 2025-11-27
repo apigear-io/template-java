@@ -62,7 +62,7 @@ public class NoSignalsInterfaceJniService extends AbstractNoSignalsInterface {
 
     @Override
     public void funcVoid() {
-        Log.w(TAG, "request method funcVoid called, will call native");
+        Log.i(TAG, "request method funcVoid called, will call native");
          nativeFuncVoid();
     }
 
@@ -75,7 +75,7 @@ public class NoSignalsInterfaceJniService extends AbstractNoSignalsInterface {
 
     @Override
     public boolean funcBool(boolean paramBool) {
-        Log.w(TAG, "request method funcBool called, will call native");
+        Log.i(TAG, "request method funcBool called, will call native");
         return nativeFuncBool(paramBool);
     }
 

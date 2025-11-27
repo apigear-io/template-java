@@ -111,7 +111,7 @@ public class CounterTestClientApp extends Activity implements ICounterEventListe
         bIncrement.setText("increment");
 
         bIncrement.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  increment ");
+            Log.i(TAG, "CALLING METHOD  increment ");
             org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec =  new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0);
             CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> method_res
                     = mClient.incrementAsync(vec).thenApply(
@@ -126,7 +126,7 @@ public class CounterTestClientApp extends Activity implements ICounterEventListe
         bIncrementArray.setText("incrementArray");
 
         bIncrementArray.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  incrementArray ");
+            Log.i(TAG, "CALLING METHOD  incrementArray ");
             org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec =  new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0);
             CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]> method_res
                     = mClient.incrementArrayAsync(vec).thenApply(
@@ -141,7 +141,7 @@ public class CounterTestClientApp extends Activity implements ICounterEventListe
         bDecrement.setText("decrement");
 
         bDecrement.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  decrement ");
+            Log.i(TAG, "CALLING METHOD  decrement ");
             customTypes.customTypes_api.Vector3D vec =  new customTypes.customTypes_api.Vector3D();
             CompletableFuture<customTypes.customTypes_api.Vector3D> method_res
                     = mClient.decrementAsync(vec).thenApply(
@@ -156,7 +156,7 @@ public class CounterTestClientApp extends Activity implements ICounterEventListe
         bDecrementArray.setText("decrementArray");
 
         bDecrementArray.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  decrementArray ");
+            Log.i(TAG, "CALLING METHOD  decrementArray ");
             customTypes.customTypes_api.Vector3D[] vec =  new customTypes.customTypes_api.Vector3D();
             CompletableFuture<customTypes.customTypes_api.Vector3D[]> method_res
                     = mClient.decrementArrayAsync(vec).thenApply(
@@ -262,12 +262,12 @@ public class CounterTestClientApp extends Activity implements ICounterEventListe
     private void initServiceConnection( String servicePackage)
     {
         lastServicePackage = servicePackage;
-        Log.w(TAG, "init service connection the client ");
+        Log.i(TAG, "init service connection the client ");
 
         if (mClient == null)
         {
             mClient = new CounterClient(this.getApplicationContext(), "");
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mClient.addEventListener(this);
         }
 
@@ -279,43 +279,43 @@ public class CounterTestClientApp extends Activity implements ICounterEventListe
     public void onVectorChanged(customTypes.customTypes_api.Vector3D newValue)
     {
         outputTextViewProp.setText("Property from service: vector " + newValue);
-        Log.w(TAG, "Property from service: vector " + newValue);
+        Log.i(TAG, "Property from service: vector " + newValue);
      }
     @Override
     public void onExternVectorChanged(org.apache.commons.math3.geometry.euclidean.threed.Vector3D newValue)
     {
         outputTextViewProp.setText("Property from service: extern_vector " + newValue);
-        Log.w(TAG, "Property from service: extern_vector " + newValue);
+        Log.i(TAG, "Property from service: extern_vector " + newValue);
      }
     @Override
     public void onVectorArrayChanged(customTypes.customTypes_api.Vector3D[] newValue)
     {
         outputTextViewProp.setText("Property from service: vectorArray " + newValue);
-        Log.w(TAG, "Property from service: vectorArray " + newValue);
+        Log.i(TAG, "Property from service: vectorArray " + newValue);
      }
     @Override
     public void onExternVectorArrayChanged(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] newValue)
     {
         outputTextViewProp.setText("Property from service: extern_vectorArray " + newValue);
-        Log.w(TAG, "Property from service: extern_vectorArray " + newValue);
+        Log.i(TAG, "Property from service: extern_vectorArray " + newValue);
      }
     @Override
     public void onValueChanged(customTypes.customTypes_api.Vector3D vector, org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector, customTypes.customTypes_api.Vector3D[] vectorArray, org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] extern_vectorArray)
     {
         String text = "Signal valueChanged "+ " " + vector+ " " + extern_vector+ " " + vectorArray+ " " + extern_vectorArray;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void on_readyStatusChanged(boolean isReady)
     { 
          if (isReady)
          {
-             Log.w(TAG, "Connected to service ");
+             Log.i(TAG, "Connected to service ");
          }
          else
          {
-             Log.w(TAG, "Disconnected from service ");
+             Log.i(TAG, "Disconnected from service ");
          }
     }
 

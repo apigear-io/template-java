@@ -119,7 +119,7 @@ public class CounterService extends AbstractCounter {
 
     @Override
     public org.apache.commons.math3.geometry.euclidean.threed.Vector3D increment(org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec) {
-        Log.w(TAG, "request method increment called, returnig default");
+        Log.i(TAG, "request method increment called, returnig default");
         return new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0);
     }
 
@@ -132,7 +132,7 @@ public class CounterService extends AbstractCounter {
 
     @Override
     public org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] incrementArray(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec) {
-        Log.w(TAG, "request method incrementArray called, returnig default");
+        Log.i(TAG, "request method incrementArray called, returnig default");
         return new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]{};
     }
 
@@ -145,7 +145,7 @@ public class CounterService extends AbstractCounter {
 
     @Override
     public customTypes.customTypes_api.Vector3D decrement(customTypes.customTypes_api.Vector3D vec) {
-        Log.w(TAG, "request method decrement called, returnig default");
+        Log.i(TAG, "request method decrement called, returnig default");
         return new customTypes.customTypes_api.Vector3D();
     }
 
@@ -158,7 +158,7 @@ public class CounterService extends AbstractCounter {
 
     @Override
     public customTypes.customTypes_api.Vector3D[] decrementArray(customTypes.customTypes_api.Vector3D[] vec) {
-        Log.w(TAG, "request method decrementArray called, returnig default");
+        Log.i(TAG, "request method decrementArray called, returnig default");
         return new customTypes.customTypes_api.Vector3D[]{};
     }
 

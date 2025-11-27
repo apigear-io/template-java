@@ -79,7 +79,7 @@ public class SameStruct2InterfaceService extends AbstractSameStruct2Interface {
 
     @Override
     public Struct1 func1(Struct1 param1) {
-        Log.w(TAG, "request method func1 called, returnig default");
+        Log.i(TAG, "request method func1 called, returnig default");
         return new Struct1();
     }
 
@@ -92,7 +92,7 @@ public class SameStruct2InterfaceService extends AbstractSameStruct2Interface {
 
     @Override
     public Struct1 func2(Struct1 param1, Struct2 param2) {
-        Log.w(TAG, "request method func2 called, returnig default");
+        Log.i(TAG, "request method func2 called, returnig default");
         return new Struct1();
     }
 

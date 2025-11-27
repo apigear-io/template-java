@@ -114,7 +114,7 @@ public class SameStruct2InterfaceJniClient extends AbstractSameStruct2Interface 
         if (mMessengerClient == null)
         {
             mMessengerClient = new SameStruct2InterfaceClient(ctx, connectionID);
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
         if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
@@ -128,7 +128,7 @@ public class SameStruct2InterfaceJniClient extends AbstractSameStruct2Interface 
 
     @Override
     public void on_readyStatusChanged(boolean isReady) {
-        Log.w(TAG, "Connection state changed "+isReady);
+        Log.i(TAG, "Connection state changed "+isReady);
         nativeIsReady(isReady);
     }
 
@@ -136,25 +136,25 @@ public class SameStruct2InterfaceJniClient extends AbstractSameStruct2Interface 
     @Override
     public void onProp1Changed(Struct2 newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnProp1Changed(newValue);
     }
     @Override
     public void onProp2Changed(Struct2 newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnProp2Changed(newValue);
     }
     @Override
     public void onSig1(Struct1 param1)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sig1 "+ " " + param1);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sig1 "+ " " + param1);
         nativeOnSig1(param1);
     }
     @Override
     public void onSig2(Struct1 param1, Struct2 param2)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sig2 "+ " " + param1+ " " + param2);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sig2 "+ " " + param1+ " " + param2);
         nativeOnSig2(param1, param2);
     }
      private native void nativeOnProp1Changed(Struct2 prop1);

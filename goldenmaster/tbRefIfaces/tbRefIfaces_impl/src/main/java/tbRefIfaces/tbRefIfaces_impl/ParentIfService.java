@@ -119,7 +119,7 @@ public class ParentIfService extends AbstractParentIf {
 
     @Override
     public ISimpleLocalIf localIfMethod(ISimpleLocalIf param) {
-        Log.w(TAG, "request method localIfMethod called, returnig default");
+        Log.i(TAG, "request method localIfMethod called, returnig default");
         return null;
     }
 
@@ -132,7 +132,7 @@ public class ParentIfService extends AbstractParentIf {
 
     @Override
     public ISimpleLocalIf[] localIfMethodList(ISimpleLocalIf[] param) {
-        Log.w(TAG, "request method localIfMethodList called, returnig default");
+        Log.i(TAG, "request method localIfMethodList called, returnig default");
         return new ISimpleLocalIf[]{};
     }
 
@@ -145,7 +145,7 @@ public class ParentIfService extends AbstractParentIf {
 
     @Override
     public tbIfaceimport.tbIfaceimport_api.IEmptyIf importedIfMethod(tbIfaceimport.tbIfaceimport_api.IEmptyIf param) {
-        Log.w(TAG, "request method importedIfMethod called, returnig default");
+        Log.i(TAG, "request method importedIfMethod called, returnig default");
         return null;
     }
 
@@ -158,7 +158,7 @@ public class ParentIfService extends AbstractParentIf {
 
     @Override
     public tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfMethodList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param) {
-        Log.w(TAG, "request method importedIfMethodList called, returnig default");
+        Log.i(TAG, "request method importedIfMethodList called, returnig default");
         return new tbIfaceimport.tbIfaceimport_api.IEmptyIf[]{};
     }
 

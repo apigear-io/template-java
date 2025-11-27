@@ -32,7 +32,7 @@ public class VoidInterfaceJniService extends AbstractVoidInterface {
 
     @Override
     public void funcVoid() {
-        Log.w(TAG, "request method funcVoid called, will call native");
+        Log.i(TAG, "request method funcVoid called, will call native");
          nativeFuncVoid();
     }
 

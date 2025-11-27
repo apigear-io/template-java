@@ -43,7 +43,7 @@ public class NestedStruct1InterfaceJniServiceFactory extends HandlerThread imple
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: NestedStruct1InterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
+			Log.i("UE", "LIFECYCLE: NestedStruct1InterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class NestedStruct1InterfaceJniServiceFactory extends HandlerThread imple
 	@NonNull
 	private static NestedStruct1InterfaceJniServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		NestedStruct1InterfaceJniServiceFactory t = new NestedStruct1InterfaceJniServiceFactory();
 		t.start();

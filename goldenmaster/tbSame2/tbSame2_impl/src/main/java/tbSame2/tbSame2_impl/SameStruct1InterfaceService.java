@@ -56,7 +56,7 @@ public class SameStruct1InterfaceService extends AbstractSameStruct1Interface {
 
     @Override
     public Struct1 func1(Struct1 param1) {
-        Log.w(TAG, "request method func1 called, returnig default");
+        Log.i(TAG, "request method func1 called, returnig default");
         return new Struct1();
     }
 

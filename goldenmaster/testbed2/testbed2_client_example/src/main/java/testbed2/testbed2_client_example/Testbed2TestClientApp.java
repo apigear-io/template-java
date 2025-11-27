@@ -115,7 +115,7 @@ public class Testbed2TestClientApp extends Activity implements IManyParamInterfa
         bFunc1.setText("func1");
 
         bFunc1.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  func1 ");
+            Log.i(TAG, "CALLING METHOD  func1 ");
             int param1 =  1;
             CompletableFuture<Integer> method_res
                     = mClient.func1Async(param1).thenApply(
@@ -130,7 +130,7 @@ public class Testbed2TestClientApp extends Activity implements IManyParamInterfa
         bFunc2.setText("func2");
 
         bFunc2.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  func2 ");
+            Log.i(TAG, "CALLING METHOD  func2 ");
             int param1 =  1;
             int param2 =  1;
             CompletableFuture<Integer> method_res
@@ -146,7 +146,7 @@ public class Testbed2TestClientApp extends Activity implements IManyParamInterfa
         bFunc3.setText("func3");
 
         bFunc3.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  func3 ");
+            Log.i(TAG, "CALLING METHOD  func3 ");
             int param1 =  1;
             int param2 =  1;
             int param3 =  1;
@@ -163,7 +163,7 @@ public class Testbed2TestClientApp extends Activity implements IManyParamInterfa
         bFunc4.setText("func4");
 
         bFunc4.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  func4 ");
+            Log.i(TAG, "CALLING METHOD  func4 ");
             int param1 =  1;
             int param2 =  1;
             int param3 =  1;
@@ -272,12 +272,12 @@ public class Testbed2TestClientApp extends Activity implements IManyParamInterfa
     private void initServiceConnection( String servicePackage)
     {
         lastServicePackage = servicePackage;
-        Log.w(TAG, "init service connection the client ");
+        Log.i(TAG, "init service connection the client ");
 
         if (mClient == null)
         {
             mClient = new ManyParamInterfaceClient(this.getApplicationContext(), "");
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mClient.addEventListener(this);
         }
 
@@ -289,64 +289,64 @@ public class Testbed2TestClientApp extends Activity implements IManyParamInterfa
     public void onProp1Changed(int newValue)
     {
         outputTextViewProp.setText("Property from service: prop1 " + newValue);
-        Log.w(TAG, "Property from service: prop1 " + newValue);
+        Log.i(TAG, "Property from service: prop1 " + newValue);
      }
     @Override
     public void onProp2Changed(int newValue)
     {
         outputTextViewProp.setText("Property from service: prop2 " + newValue);
-        Log.w(TAG, "Property from service: prop2 " + newValue);
+        Log.i(TAG, "Property from service: prop2 " + newValue);
      }
     @Override
     public void onProp3Changed(int newValue)
     {
         outputTextViewProp.setText("Property from service: prop3 " + newValue);
-        Log.w(TAG, "Property from service: prop3 " + newValue);
+        Log.i(TAG, "Property from service: prop3 " + newValue);
      }
     @Override
     public void onProp4Changed(int newValue)
     {
         outputTextViewProp.setText("Property from service: prop4 " + newValue);
-        Log.w(TAG, "Property from service: prop4 " + newValue);
+        Log.i(TAG, "Property from service: prop4 " + newValue);
      }
     @Override
     public void onSig1(int param1)
     {
         String text = "Signal sig1 "+ " " + param1;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void onSig2(int param1, int param2)
     {
         String text = "Signal sig2 "+ " " + param1+ " " + param2;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void onSig3(int param1, int param2, int param3)
     {
         String text = "Signal sig3 "+ " " + param1+ " " + param2+ " " + param3;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void onSig4(int param1, int param2, int param3, int param4)
     {
         String text = "Signal sig4 "+ " " + param1+ " " + param2+ " " + param3+ " " + param4;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void on_readyStatusChanged(boolean isReady)
     { 
          if (isReady)
          {
-             Log.w(TAG, "Connected to service ");
+             Log.i(TAG, "Connected to service ");
          }
          else
          {
-             Log.w(TAG, "Disconnected from service ");
+             Log.i(TAG, "Disconnected from service ");
          }
     }
 

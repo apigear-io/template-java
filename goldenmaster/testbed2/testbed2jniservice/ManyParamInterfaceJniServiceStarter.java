@@ -21,11 +21,11 @@ public class ManyParamInterfaceJniServiceStarter {
     public static IManyParamInterface start(Context context) {
         stop(context);
         androidService = new Intent(context, ManyParamInterfaceServiceAdapter.class);
-        Log.w(TAG, "starter: created intent");
+        Log.i(TAG, "starter: created intent");
         context.startService(androidService);
-        Log.w(TAG, "starter: started intent (service) ");
+        Log.i(TAG, "starter: started intent (service) ");
         ManyParamInterfaceJniServiceFactory factory = ManyParamInterfaceJniServiceFactory.get();
-        Log.w(TAG, "starter: factory set for ManyParamInterfaceJniServiceFactory");
+        Log.i(TAG, "starter: factory set for ManyParamInterfaceJniServiceFactory");
         return ManyParamInterfaceServiceAdapter.setService(factory);
     }
 
@@ -33,7 +33,7 @@ public class ManyParamInterfaceJniServiceStarter {
     {
         if (androidService != null)
         {
-            Log.w(TAG, "starter: stop the service");
+            Log.i(TAG, "starter: stop the service");
             context.stopService(androidService);
         }
         androidService = null;

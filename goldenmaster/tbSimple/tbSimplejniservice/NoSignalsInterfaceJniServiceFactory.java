@@ -43,7 +43,7 @@ public class NoSignalsInterfaceJniServiceFactory extends HandlerThread implement
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: NoSignalsInterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
+			Log.i("UE", "LIFECYCLE: NoSignalsInterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class NoSignalsInterfaceJniServiceFactory extends HandlerThread implement
 	@NonNull
 	private static NoSignalsInterfaceJniServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		NoSignalsInterfaceJniServiceFactory t = new NoSignalsInterfaceJniServiceFactory();
 		t.start();

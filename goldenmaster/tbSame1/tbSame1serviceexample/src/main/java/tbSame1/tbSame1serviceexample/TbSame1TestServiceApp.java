@@ -87,7 +87,7 @@ public class TbSame1TestServiceApp extends Activity implements ISameStruct1Inter
         bSig1.setText("sig1");
 
         bSig1.setOnClickListener(v -> {
-            Log.w(TAG, "broadcasting singal  sig1 ");
+            Log.i(TAG, "broadcasting singal  sig1 ");
             Struct1 param1 =  new Struct1();
             mBackend.fireSig1(param1);
         });
@@ -152,7 +152,7 @@ public class TbSame1TestServiceApp extends Activity implements ISameStruct1Inter
     private void startMyService(){
         stub_service = new Intent(this, SameStruct1InterfaceServiceAdapter.class);
         this.startService(stub_service);
-        Log.w(TAG, "Service started with stub backend");
+        Log.i(TAG, "Service started with stub backend");
         mBackend = SameStruct1InterfaceServiceAdapter.setService(SameStruct1InterfaceServiceFactory.get());
         mBackend.addEventListener(this);
     }
@@ -178,27 +178,26 @@ public class TbSame1TestServiceApp extends Activity implements ISameStruct1Inter
     public void onProp1Changed(Struct1 newValue)
     {
         outputTextViewProp.setText("Property from service: prop1 " + newValue);
-        Log.w(TAG, "Property from service: prop1 " + newValue);
+        Log.i(TAG, "Property from service: prop1 " + newValue);
      }
     @Override
     public void onSig1(Struct1 param1)
     {
         String text = "Signal sig1 "+ " " + param1;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void on_readyStatusChanged(boolean isReady)
     { 
          if (isReady)
          {
-             Log.w(TAG, "Connected to service ");
+             Log.i(TAG, "Connected to service ");
          }
          else
          {
-             Log.w(TAG, "Disconnected from service ");
+             Log.i(TAG, "Disconnected from service ");
          }
     }
-
 
 }

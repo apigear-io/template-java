@@ -47,7 +47,7 @@ public class SimpleLocalIfJniService extends AbstractSimpleLocalIf {
 
     @Override
     public int intMethod(int param) {
-        Log.w(TAG, "request method intMethod called, will call native");
+        Log.i(TAG, "request method intMethod called, will call native");
         return nativeIntMethod(param);
     }
 

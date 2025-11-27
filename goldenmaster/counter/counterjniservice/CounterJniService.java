@@ -92,7 +92,7 @@ public class CounterJniService extends AbstractCounter {
 
     @Override
     public org.apache.commons.math3.geometry.euclidean.threed.Vector3D increment(org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec) {
-        Log.w(TAG, "request method increment called, will call native");
+        Log.i(TAG, "request method increment called, will call native");
         return nativeIncrement(vec);
     }
 
@@ -105,7 +105,7 @@ public class CounterJniService extends AbstractCounter {
 
     @Override
     public org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] incrementArray(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec) {
-        Log.w(TAG, "request method incrementArray called, will call native");
+        Log.i(TAG, "request method incrementArray called, will call native");
         return nativeIncrementArray(vec);
     }
 
@@ -118,7 +118,7 @@ public class CounterJniService extends AbstractCounter {
 
     @Override
     public customTypes.customTypes_api.Vector3D decrement(customTypes.customTypes_api.Vector3D vec) {
-        Log.w(TAG, "request method decrement called, will call native");
+        Log.i(TAG, "request method decrement called, will call native");
         return nativeDecrement(vec);
     }
 
@@ -131,7 +131,7 @@ public class CounterJniService extends AbstractCounter {
 
     @Override
     public customTypes.customTypes_api.Vector3D[] decrementArray(customTypes.customTypes_api.Vector3D[] vec) {
-        Log.w(TAG, "request method decrementArray called, will call native");
+        Log.i(TAG, "request method decrementArray called, will call native");
         return nativeDecrementArray(vec);
     }
 

@@ -43,7 +43,7 @@ public class ParentIfServiceFactory extends HandlerThread implements IParentIfSe
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: ParentIfServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
+			Log.i("UE", "LIFECYCLE: ParentIfServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class ParentIfServiceFactory extends HandlerThread implements IParentIfSe
 	@NonNull
 	private static ParentIfServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		ParentIfServiceFactory t = new ParentIfServiceFactory();
 		t.start();

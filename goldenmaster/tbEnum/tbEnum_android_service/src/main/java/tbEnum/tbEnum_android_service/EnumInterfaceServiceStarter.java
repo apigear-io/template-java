@@ -21,11 +21,11 @@ public class EnumInterfaceServiceStarter {
     public static IEnumInterface start(Context context) {
         stop(context);
         androidService = new Intent(context, EnumInterfaceServiceAdapter.class);
-        Log.w(TAG, "starter: created intent");
+        Log.i(TAG, "starter: created intent");
         context.startService(androidService);
-        Log.w(TAG, "starter: started intent (service) ");
+        Log.i(TAG, "starter: started intent (service) ");
         EnumInterfaceServiceFactory factory = EnumInterfaceServiceFactory.get();
-        Log.w(TAG, "starter: factory set for EnumInterfaceServiceFactory");
+        Log.i(TAG, "starter: factory set for EnumInterfaceServiceFactory");
         return EnumInterfaceServiceAdapter.setService(factory);
     }
 
@@ -33,7 +33,7 @@ public class EnumInterfaceServiceStarter {
     {
         if (androidService != null)
         {
-            Log.w(TAG, "starter: stop the service");
+            Log.i(TAG, "starter: stop the service");
             context.stopService(androidService);
         }
         androidService = null;

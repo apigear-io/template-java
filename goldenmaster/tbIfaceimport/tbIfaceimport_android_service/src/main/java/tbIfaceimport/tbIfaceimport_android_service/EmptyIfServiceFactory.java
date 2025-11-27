@@ -43,7 +43,7 @@ public class EmptyIfServiceFactory extends HandlerThread implements IEmptyIfServ
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: EmptyIfServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
+			Log.i("UE", "LIFECYCLE: EmptyIfServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class EmptyIfServiceFactory extends HandlerThread implements IEmptyIfServ
 	@NonNull
 	private static EmptyIfServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		EmptyIfServiceFactory t = new EmptyIfServiceFactory();
 		t.start();

@@ -43,7 +43,7 @@ public class NoPropertiesInterfaceServiceFactory extends HandlerThread implement
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: NoPropertiesInterfaceServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
+			Log.i("UE", "LIFECYCLE: NoPropertiesInterfaceServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class NoPropertiesInterfaceServiceFactory extends HandlerThread implement
 	@NonNull
 	private static NoPropertiesInterfaceServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		NoPropertiesInterfaceServiceFactory t = new NoPropertiesInterfaceServiceFactory();
 		t.start();

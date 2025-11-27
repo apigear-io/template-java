@@ -105,7 +105,7 @@ public class {{Camel .Interface.Name}}JniService extends Abstract{{Camel .Interf
 
     @Override
     public {{javaReturn "" .Return}} {{camel .Name}}({{javaParams "" .Params}}) {
-        Log.w(TAG, "request method {{camel .Name}} called, will call native");
+        Log.i(TAG, "request method {{camel .Name}} called, will call native");
         {{if not .Return.IsVoid}}return{{ end }} native{{Camel .Name}}({{javaVars .Params }});
     }
 

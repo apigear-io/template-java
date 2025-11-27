@@ -48,7 +48,7 @@ public class EmptyInterfaceJniClient extends AbstractEmptyInterface implements I
         if (mMessengerClient == null)
         {
             mMessengerClient = new EmptyInterfaceClient(ctx, connectionID);
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
         if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
@@ -62,7 +62,7 @@ public class EmptyInterfaceJniClient extends AbstractEmptyInterface implements I
 
     @Override
     public void on_readyStatusChanged(boolean isReady) {
-        Log.w(TAG, "Connection state changed "+isReady);
+        Log.i(TAG, "Connection state changed "+isReady);
         nativeIsReady(isReady);
     }
 

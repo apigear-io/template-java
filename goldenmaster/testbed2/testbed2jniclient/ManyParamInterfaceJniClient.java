@@ -172,7 +172,7 @@ public class ManyParamInterfaceJniClient extends AbstractManyParamInterface impl
         if (mMessengerClient == null)
         {
             mMessengerClient = new ManyParamInterfaceClient(ctx, connectionID);
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
         if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
@@ -186,7 +186,7 @@ public class ManyParamInterfaceJniClient extends AbstractManyParamInterface impl
 
     @Override
     public void on_readyStatusChanged(boolean isReady) {
-        Log.w(TAG, "Connection state changed "+isReady);
+        Log.i(TAG, "Connection state changed "+isReady);
         nativeIsReady(isReady);
     }
 
@@ -194,49 +194,49 @@ public class ManyParamInterfaceJniClient extends AbstractManyParamInterface impl
     @Override
     public void onProp1Changed(int newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnProp1Changed(newValue);
     }
     @Override
     public void onProp2Changed(int newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnProp2Changed(newValue);
     }
     @Override
     public void onProp3Changed(int newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnProp3Changed(newValue);
     }
     @Override
     public void onProp4Changed(int newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnProp4Changed(newValue);
     }
     @Override
     public void onSig1(int param1)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sig1 "+ " " + param1);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sig1 "+ " " + param1);
         nativeOnSig1(param1);
     }
     @Override
     public void onSig2(int param1, int param2)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sig2 "+ " " + param1+ " " + param2);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sig2 "+ " " + param1+ " " + param2);
         nativeOnSig2(param1, param2);
     }
     @Override
     public void onSig3(int param1, int param2, int param3)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sig3 "+ " " + param1+ " " + param2+ " " + param3);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sig3 "+ " " + param1+ " " + param2+ " " + param3);
         nativeOnSig3(param1, param2, param3);
     }
     @Override
     public void onSig4(int param1, int param2, int param3, int param4)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sig4 "+ " " + param1+ " " + param2+ " " + param3+ " " + param4);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sig4 "+ " " + param1+ " " + param2+ " " + param3+ " " + param4);
         nativeOnSig4(param1, param2, param3, param4);
     }
      private native void nativeOnProp1Changed(int prop1);

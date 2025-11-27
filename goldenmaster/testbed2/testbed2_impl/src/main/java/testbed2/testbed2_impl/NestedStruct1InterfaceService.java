@@ -56,7 +56,7 @@ public class NestedStruct1InterfaceService extends AbstractNestedStruct1Interfac
 
     @Override
     public void funcNoReturnValue(NestedStruct1 param1) {
-        Log.w(TAG, "request method funcNoReturnValue called, returnig default");
+        Log.i(TAG, "request method funcNoReturnValue called, returnig default");
         return ;
     }
 
@@ -69,7 +69,7 @@ public class NestedStruct1InterfaceService extends AbstractNestedStruct1Interfac
 
     @Override
     public NestedStruct1 funcNoParams() {
-        Log.w(TAG, "request method funcNoParams called, returnig default");
+        Log.i(TAG, "request method funcNoParams called, returnig default");
         return new NestedStruct1();
     }
 
@@ -82,7 +82,7 @@ public class NestedStruct1InterfaceService extends AbstractNestedStruct1Interfac
 
     @Override
     public NestedStruct1 func1(NestedStruct1 param1) {
-        Log.w(TAG, "request method func1 called, returnig default");
+        Log.i(TAG, "request method func1 called, returnig default");
         return new NestedStruct1();
     }
 

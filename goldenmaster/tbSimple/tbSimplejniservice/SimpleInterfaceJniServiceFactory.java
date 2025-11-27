@@ -43,7 +43,7 @@ public class SimpleInterfaceJniServiceFactory extends HandlerThread implements I
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: SimpleInterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
+			Log.i("UE", "LIFECYCLE: SimpleInterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class SimpleInterfaceJniServiceFactory extends HandlerThread implements I
 	@NonNull
 	private static SimpleInterfaceJniServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		SimpleInterfaceJniServiceFactory t = new SimpleInterfaceJniServiceFactory();
 		t.start();

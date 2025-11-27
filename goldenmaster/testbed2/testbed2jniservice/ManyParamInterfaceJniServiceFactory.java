@@ -43,7 +43,7 @@ public class ManyParamInterfaceJniServiceFactory extends HandlerThread implement
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: ManyParamInterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
+			Log.i("UE", "LIFECYCLE: ManyParamInterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class ManyParamInterfaceJniServiceFactory extends HandlerThread implement
 	@NonNull
 	private static ManyParamInterfaceJniServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		ManyParamInterfaceJniServiceFactory t = new ManyParamInterfaceJniServiceFactory();
 		t.start();

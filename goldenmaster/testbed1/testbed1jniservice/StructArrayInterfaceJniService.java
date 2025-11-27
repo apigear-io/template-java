@@ -117,7 +117,7 @@ public class StructArrayInterfaceJniService extends AbstractStructArrayInterface
 
     @Override
     public StructBool[] funcBool(StructBool[] paramBool) {
-        Log.w(TAG, "request method funcBool called, will call native");
+        Log.i(TAG, "request method funcBool called, will call native");
         return nativeFuncBool(paramBool);
     }
 
@@ -130,7 +130,7 @@ public class StructArrayInterfaceJniService extends AbstractStructArrayInterface
 
     @Override
     public StructInt[] funcInt(StructInt[] paramInt) {
-        Log.w(TAG, "request method funcInt called, will call native");
+        Log.i(TAG, "request method funcInt called, will call native");
         return nativeFuncInt(paramInt);
     }
 
@@ -143,7 +143,7 @@ public class StructArrayInterfaceJniService extends AbstractStructArrayInterface
 
     @Override
     public StructFloat[] funcFloat(StructFloat[] paramFloat) {
-        Log.w(TAG, "request method funcFloat called, will call native");
+        Log.i(TAG, "request method funcFloat called, will call native");
         return nativeFuncFloat(paramFloat);
     }
 
@@ -156,7 +156,7 @@ public class StructArrayInterfaceJniService extends AbstractStructArrayInterface
 
     @Override
     public StructString[] funcString(StructString[] paramString) {
-        Log.w(TAG, "request method funcString called, will call native");
+        Log.i(TAG, "request method funcString called, will call native");
         return nativeFuncString(paramString);
     }
 
@@ -169,7 +169,7 @@ public class StructArrayInterfaceJniService extends AbstractStructArrayInterface
 
     @Override
     public Enum0[] funcEnum(Enum0[] paramEnum) {
-        Log.w(TAG, "request method funcEnum called, will call native");
+        Log.i(TAG, "request method funcEnum called, will call native");
         return nativeFuncEnum(paramEnum);
     }
 
