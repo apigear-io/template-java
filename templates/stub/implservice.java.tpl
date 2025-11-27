@@ -121,7 +121,7 @@ public class {{Camel .Interface.Name}}Service extends Abstract{{Camel .Interface
 
     @Override
     public {{javaReturn "" .Return}} {{camel .Name}}({{javaParams "" .Params}}) {
-        Log.w(TAG, "request method {{camel .Name}} called, returnig default");
+        Log.i(TAG, "request method {{camel .Name}} called, returnig default");
         return {{ if not .Return.IsVoid }}{{ javaDefault "" .Return }}{{end }};
     }
 

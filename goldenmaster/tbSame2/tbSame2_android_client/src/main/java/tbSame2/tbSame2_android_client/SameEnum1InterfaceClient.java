@@ -120,7 +120,7 @@ public class SameEnum1InterfaceClient extends AbstractSameEnum1Interface impleme
     @Override
     public void onServiceDisconnected(ComponentName name)
     {
-        Log.w(TAG, "onServiceDisconnected name=" + name);
+        Log.i(TAG, "onServiceDisconnected name=" + name);
         doCleanupForUnbinding("onServiceDisconnected name=" + name);
     }
 

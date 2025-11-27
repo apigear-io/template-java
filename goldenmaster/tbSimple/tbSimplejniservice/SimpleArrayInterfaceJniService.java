@@ -167,7 +167,7 @@ public class SimpleArrayInterfaceJniService extends AbstractSimpleArrayInterface
 
     @Override
     public boolean[] funcBool(boolean[] paramBool) {
-        Log.w(TAG, "request method funcBool called, will call native");
+        Log.i(TAG, "request method funcBool called, will call native");
         return nativeFuncBool(paramBool);
     }
 
@@ -180,7 +180,7 @@ public class SimpleArrayInterfaceJniService extends AbstractSimpleArrayInterface
 
     @Override
     public int[] funcInt(int[] paramInt) {
-        Log.w(TAG, "request method funcInt called, will call native");
+        Log.i(TAG, "request method funcInt called, will call native");
         return nativeFuncInt(paramInt);
     }
 
@@ -193,7 +193,7 @@ public class SimpleArrayInterfaceJniService extends AbstractSimpleArrayInterface
 
     @Override
     public int[] funcInt32(int[] paramInt32) {
-        Log.w(TAG, "request method funcInt32 called, will call native");
+        Log.i(TAG, "request method funcInt32 called, will call native");
         return nativeFuncInt32(paramInt32);
     }
 
@@ -206,7 +206,7 @@ public class SimpleArrayInterfaceJniService extends AbstractSimpleArrayInterface
 
     @Override
     public long[] funcInt64(long[] paramInt64) {
-        Log.w(TAG, "request method funcInt64 called, will call native");
+        Log.i(TAG, "request method funcInt64 called, will call native");
         return nativeFuncInt64(paramInt64);
     }
 
@@ -219,7 +219,7 @@ public class SimpleArrayInterfaceJniService extends AbstractSimpleArrayInterface
 
     @Override
     public float[] funcFloat(float[] paramFloat) {
-        Log.w(TAG, "request method funcFloat called, will call native");
+        Log.i(TAG, "request method funcFloat called, will call native");
         return nativeFuncFloat(paramFloat);
     }
 
@@ -232,7 +232,7 @@ public class SimpleArrayInterfaceJniService extends AbstractSimpleArrayInterface
 
     @Override
     public float[] funcFloat32(float[] paramFloat32) {
-        Log.w(TAG, "request method funcFloat32 called, will call native");
+        Log.i(TAG, "request method funcFloat32 called, will call native");
         return nativeFuncFloat32(paramFloat32);
     }
 
@@ -245,7 +245,7 @@ public class SimpleArrayInterfaceJniService extends AbstractSimpleArrayInterface
 
     @Override
     public double[] funcFloat64(double[] paramFloat) {
-        Log.w(TAG, "request method funcFloat64 called, will call native");
+        Log.i(TAG, "request method funcFloat64 called, will call native");
         return nativeFuncFloat64(paramFloat);
     }
 
@@ -258,7 +258,7 @@ public class SimpleArrayInterfaceJniService extends AbstractSimpleArrayInterface
 
     @Override
     public String[] funcString(String[] paramString) {
-        Log.w(TAG, "request method funcString called, will call native");
+        Log.i(TAG, "request method funcString called, will call native");
         return nativeFuncString(paramString);
     }
 

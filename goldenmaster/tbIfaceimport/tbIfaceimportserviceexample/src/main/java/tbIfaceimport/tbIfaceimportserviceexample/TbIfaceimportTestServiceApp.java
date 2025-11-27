@@ -129,7 +129,7 @@ public class TbIfaceimportTestServiceApp extends Activity implements IEmptyIfEve
     private void startMyService(){
         stub_service = new Intent(this, EmptyIfServiceAdapter.class);
         this.startService(stub_service);
-        Log.w(TAG, "Service started with stub backend");
+        Log.i(TAG, "Service started with stub backend");
         mBackend = EmptyIfServiceAdapter.setService(EmptyIfServiceFactory.get());
         mBackend.addEventListener(this);
     }
@@ -156,13 +156,12 @@ public class TbIfaceimportTestServiceApp extends Activity implements IEmptyIfEve
     { 
          if (isReady)
          {
-             Log.w(TAG, "Connected to service ");
+             Log.i(TAG, "Connected to service ");
          }
          else
          {
-             Log.w(TAG, "Disconnected from service ");
+             Log.i(TAG, "Disconnected from service ");
          }
     }
-
 
 }

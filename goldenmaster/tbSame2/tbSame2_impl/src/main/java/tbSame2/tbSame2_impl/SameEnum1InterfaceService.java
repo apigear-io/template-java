@@ -55,7 +55,7 @@ public class SameEnum1InterfaceService extends AbstractSameEnum1Interface {
 
     @Override
     public Enum1 func1(Enum1 param1) {
-        Log.w(TAG, "request method func1 called, returnig default");
+        Log.i(TAG, "request method func1 called, returnig default");
         return Enum1.Value1;
     }
 

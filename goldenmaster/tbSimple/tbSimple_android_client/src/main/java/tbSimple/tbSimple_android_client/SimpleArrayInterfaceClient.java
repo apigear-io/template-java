@@ -126,7 +126,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
     @Override
     public void onServiceDisconnected(ComponentName name)
     {
-        Log.w(TAG, "onServiceDisconnected name=" + name);
+        Log.i(TAG, "onServiceDisconnected name=" + name);
         doCleanupForUnbinding("onServiceDisconnected name=" + name);
     }
 

@@ -102,7 +102,7 @@ public class NestedStruct3InterfaceService extends AbstractNestedStruct3Interfac
 
     @Override
     public NestedStruct1 func1(NestedStruct1 param1) {
-        Log.w(TAG, "request method func1 called, returnig default");
+        Log.i(TAG, "request method func1 called, returnig default");
         return new NestedStruct1();
     }
 
@@ -115,7 +115,7 @@ public class NestedStruct3InterfaceService extends AbstractNestedStruct3Interfac
 
     @Override
     public NestedStruct1 func2(NestedStruct1 param1, NestedStruct2 param2) {
-        Log.w(TAG, "request method func2 called, returnig default");
+        Log.i(TAG, "request method func2 called, returnig default");
         return new NestedStruct1();
     }
 
@@ -128,7 +128,7 @@ public class NestedStruct3InterfaceService extends AbstractNestedStruct3Interfac
 
     @Override
     public NestedStruct1 func3(NestedStruct1 param1, NestedStruct2 param2, NestedStruct3 param3) {
-        Log.w(TAG, "request method func3 called, returnig default");
+        Log.i(TAG, "request method func3 called, returnig default");
         return new NestedStruct1();
     }
 

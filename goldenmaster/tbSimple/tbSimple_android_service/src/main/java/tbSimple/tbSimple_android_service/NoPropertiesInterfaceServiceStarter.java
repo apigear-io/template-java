@@ -21,11 +21,11 @@ public class NoPropertiesInterfaceServiceStarter {
     public static INoPropertiesInterface start(Context context) {
         stop(context);
         androidService = new Intent(context, NoPropertiesInterfaceServiceAdapter.class);
-        Log.w(TAG, "starter: created intent");
+        Log.i(TAG, "starter: created intent");
         context.startService(androidService);
-        Log.w(TAG, "starter: started intent (service) ");
+        Log.i(TAG, "starter: started intent (service) ");
         NoPropertiesInterfaceServiceFactory factory = NoPropertiesInterfaceServiceFactory.get();
-        Log.w(TAG, "starter: factory set for NoPropertiesInterfaceServiceFactory");
+        Log.i(TAG, "starter: factory set for NoPropertiesInterfaceServiceFactory");
         return NoPropertiesInterfaceServiceAdapter.setService(factory);
     }
 
@@ -33,7 +33,7 @@ public class NoPropertiesInterfaceServiceStarter {
     {
         if (androidService != null)
         {
-            Log.w(TAG, "starter: stop the service");
+            Log.i(TAG, "starter: stop the service");
             context.stopService(androidService);
         }
         androidService = null;

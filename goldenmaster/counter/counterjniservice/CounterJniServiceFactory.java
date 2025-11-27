@@ -43,7 +43,7 @@ public class CounterJniServiceFactory extends HandlerThread implements ICounterS
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: CounterJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
+			Log.i("UE", "LIFECYCLE: CounterJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class CounterJniServiceFactory extends HandlerThread implements ICounterS
 	@NonNull
 	private static CounterJniServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		CounterJniServiceFactory t = new CounterJniServiceFactory();
 		t.start();

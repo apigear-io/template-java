@@ -117,7 +117,7 @@ public class TbNamesTestClientApp extends Activity implements INamEsEventListene
         bSomeFunction.setText("SOME_FUNCTION");
 
         bSomeFunction.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  SOME_FUNCTION ");
+            Log.i(TAG, "CALLING METHOD  SOME_FUNCTION ");
             boolean SOME_PARAM =  true;
             CompletableFuture<Void> method_res
                     = mClient.someFunctionAsync(SOME_PARAM).thenApply(
@@ -132,7 +132,7 @@ public class TbNamesTestClientApp extends Activity implements INamEsEventListene
         bSomeFunction2.setText("Some_Function2");
 
         bSomeFunction2.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  Some_Function2 ");
+            Log.i(TAG, "CALLING METHOD  Some_Function2 ");
             boolean Some_Param =  true;
             CompletableFuture<Void> method_res
                     = mClient.someFunction2Async(Some_Param).thenApply(
@@ -238,12 +238,12 @@ public class TbNamesTestClientApp extends Activity implements INamEsEventListene
     private void initServiceConnection( String servicePackage)
     {
         lastServicePackage = servicePackage;
-        Log.w(TAG, "init service connection the client ");
+        Log.i(TAG, "init service connection the client ");
 
         if (mClient == null)
         {
             mClient = new NamEsClient(this.getApplicationContext(), "");
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mClient.addEventListener(this);
         }
 
@@ -255,50 +255,50 @@ public class TbNamesTestClientApp extends Activity implements INamEsEventListene
     public void onSwitchChanged(boolean newValue)
     {
         outputTextViewProp.setText("Property from service: Switch " + newValue);
-        Log.w(TAG, "Property from service: Switch " + newValue);
+        Log.i(TAG, "Property from service: Switch " + newValue);
      }
     @Override
     public void onSomePropertyChanged(int newValue)
     {
         outputTextViewProp.setText("Property from service: SOME_PROPERTY " + newValue);
-        Log.w(TAG, "Property from service: SOME_PROPERTY " + newValue);
+        Log.i(TAG, "Property from service: SOME_PROPERTY " + newValue);
      }
     @Override
     public void onSomePoperty2Changed(int newValue)
     {
         outputTextViewProp.setText("Property from service: Some_Poperty2 " + newValue);
-        Log.w(TAG, "Property from service: Some_Poperty2 " + newValue);
+        Log.i(TAG, "Property from service: Some_Poperty2 " + newValue);
      }
     @Override
     public void onEnumPropertyChanged(EnumWithUnderScores newValue)
     {
         outputTextViewProp.setText("Property from service: enum_property " + newValue);
-        Log.w(TAG, "Property from service: enum_property " + newValue);
+        Log.i(TAG, "Property from service: enum_property " + newValue);
      }
     @Override
     public void onSomeSignal(boolean SOME_PARAM)
     {
         String text = "Signal SOME_SIGNAL "+ " " + SOME_PARAM;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void onSomeSignal2(boolean Some_Param)
     {
         String text = "Signal Some_Signal2 "+ " " + Some_Param;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void on_readyStatusChanged(boolean isReady)
     { 
          if (isReady)
          {
-             Log.w(TAG, "Connected to service ");
+             Log.i(TAG, "Connected to service ");
          }
          else
          {
-             Log.w(TAG, "Disconnected from service ");
+             Log.i(TAG, "Disconnected from service ");
          }
     }
 

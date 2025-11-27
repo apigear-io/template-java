@@ -54,7 +54,7 @@ public class SimpleLocalIfService extends AbstractSimpleLocalIf {
 
     @Override
     public int intMethod(int param) {
-        Log.w(TAG, "request method intMethod called, returnig default");
+        Log.i(TAG, "request method intMethod called, returnig default");
         return 0;
     }
 

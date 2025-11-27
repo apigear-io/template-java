@@ -125,7 +125,7 @@ public class StructInterfaceService extends AbstractStructInterface {
 
     @Override
     public StructBool funcBool(StructBool paramBool) {
-        Log.w(TAG, "request method funcBool called, returnig default");
+        Log.i(TAG, "request method funcBool called, returnig default");
         return new StructBool();
     }
 
@@ -138,7 +138,7 @@ public class StructInterfaceService extends AbstractStructInterface {
 
     @Override
     public StructInt funcInt(StructInt paramInt) {
-        Log.w(TAG, "request method funcInt called, returnig default");
+        Log.i(TAG, "request method funcInt called, returnig default");
         return new StructInt();
     }
 
@@ -151,7 +151,7 @@ public class StructInterfaceService extends AbstractStructInterface {
 
     @Override
     public StructFloat funcFloat(StructFloat paramFloat) {
-        Log.w(TAG, "request method funcFloat called, returnig default");
+        Log.i(TAG, "request method funcFloat called, returnig default");
         return new StructFloat();
     }
 
@@ -164,7 +164,7 @@ public class StructInterfaceService extends AbstractStructInterface {
 
     @Override
     public StructString funcString(StructString paramString) {
-        Log.w(TAG, "request method funcString called, returnig default");
+        Log.i(TAG, "request method funcString called, returnig default");
         return new StructString();
     }
 

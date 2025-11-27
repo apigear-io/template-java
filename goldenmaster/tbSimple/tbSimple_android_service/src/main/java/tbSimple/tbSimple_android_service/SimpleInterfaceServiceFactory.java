@@ -43,7 +43,7 @@ public class SimpleInterfaceServiceFactory extends HandlerThread implements ISim
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: SimpleInterfaceServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
+			Log.i("UE", "LIFECYCLE: SimpleInterfaceServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class SimpleInterfaceServiceFactory extends HandlerThread implements ISim
 	@NonNull
 	private static SimpleInterfaceServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		SimpleInterfaceServiceFactory t = new SimpleInterfaceServiceFactory();
 		t.start();

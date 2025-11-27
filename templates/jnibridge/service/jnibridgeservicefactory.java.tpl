@@ -43,7 +43,7 @@ public class {{Camel .Interface.Name}}JniServiceFactory extends HandlerThread im
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: {{Camel .Interface.Name}}JniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
+			Log.i("UE", "LIFECYCLE: {{Camel .Interface.Name}}JniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class {{Camel .Interface.Name}}JniServiceFactory extends HandlerThread im
 	@NonNull
 	private static {{Camel .Interface.Name}}JniServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		{{Camel .Interface.Name}}JniServiceFactory t = new {{Camel .Interface.Name}}JniServiceFactory();
 		t.start();

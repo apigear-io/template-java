@@ -84,7 +84,7 @@ public class NoPropertiesInterfaceJniClient extends AbstractNoPropertiesInterfac
         if (mMessengerClient == null)
         {
             mMessengerClient = new NoPropertiesInterfaceClient(ctx, connectionID);
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
         if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
@@ -98,7 +98,7 @@ public class NoPropertiesInterfaceJniClient extends AbstractNoPropertiesInterfac
 
     @Override
     public void on_readyStatusChanged(boolean isReady) {
-        Log.w(TAG, "Connection state changed "+isReady);
+        Log.i(TAG, "Connection state changed "+isReady);
         nativeIsReady(isReady);
     }
 
@@ -106,13 +106,13 @@ public class NoPropertiesInterfaceJniClient extends AbstractNoPropertiesInterfac
     @Override
     public void onSigVoid()
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sigVoid ");
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sigVoid ");
         nativeOnSigVoid();
     }
     @Override
     public void onSigBool(boolean paramBool)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sigBool "+ " " + paramBool);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sigBool "+ " " + paramBool);
         nativeOnSigBool(paramBool);
     }
     private native void nativeOnSigVoid();

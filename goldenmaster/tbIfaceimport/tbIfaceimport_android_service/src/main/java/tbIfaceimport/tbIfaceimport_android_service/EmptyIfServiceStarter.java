@@ -21,11 +21,11 @@ public class EmptyIfServiceStarter {
     public static IEmptyIf start(Context context) {
         stop(context);
         androidService = new Intent(context, EmptyIfServiceAdapter.class);
-        Log.w(TAG, "starter: created intent");
+        Log.i(TAG, "starter: created intent");
         context.startService(androidService);
-        Log.w(TAG, "starter: started intent (service) ");
+        Log.i(TAG, "starter: started intent (service) ");
         EmptyIfServiceFactory factory = EmptyIfServiceFactory.get();
-        Log.w(TAG, "starter: factory set for EmptyIfServiceFactory");
+        Log.i(TAG, "starter: factory set for EmptyIfServiceFactory");
         return EmptyIfServiceAdapter.setService(factory);
     }
 
@@ -33,7 +33,7 @@ public class EmptyIfServiceStarter {
     {
         if (androidService != null)
         {
-            Log.w(TAG, "starter: stop the service");
+            Log.i(TAG, "starter: stop the service");
             context.stopService(androidService);
         }
         androidService = null;

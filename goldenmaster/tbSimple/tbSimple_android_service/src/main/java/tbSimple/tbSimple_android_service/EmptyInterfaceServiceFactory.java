@@ -43,7 +43,7 @@ public class EmptyInterfaceServiceFactory extends HandlerThread implements IEmpt
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: EmptyInterfaceServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
+			Log.i("UE", "LIFECYCLE: EmptyInterfaceServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class EmptyInterfaceServiceFactory extends HandlerThread implements IEmpt
 	@NonNull
 	private static EmptyInterfaceServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		EmptyInterfaceServiceFactory t = new EmptyInterfaceServiceFactory();
 		t.start();

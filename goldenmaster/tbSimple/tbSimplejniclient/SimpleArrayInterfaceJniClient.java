@@ -309,7 +309,7 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
         if (mMessengerClient == null)
         {
             mMessengerClient = new SimpleArrayInterfaceClient(ctx, connectionID);
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
         if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
@@ -323,7 +323,7 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
 
     @Override
     public void on_readyStatusChanged(boolean isReady) {
-        Log.w(TAG, "Connection state changed "+isReady);
+        Log.i(TAG, "Connection state changed "+isReady);
         nativeIsReady(isReady);
     }
 
@@ -331,103 +331,103 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     @Override
     public void onPropBoolChanged(boolean[] newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnPropBoolChanged(newValue);
     }
     @Override
     public void onPropIntChanged(int[] newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnPropIntChanged(newValue);
     }
     @Override
     public void onPropInt32Changed(int[] newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnPropInt32Changed(newValue);
     }
     @Override
     public void onPropInt64Changed(long[] newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnPropInt64Changed(newValue);
     }
     @Override
     public void onPropFloatChanged(float[] newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnPropFloatChanged(newValue);
     }
     @Override
     public void onPropFloat32Changed(float[] newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnPropFloat32Changed(newValue);
     }
     @Override
     public void onPropFloat64Changed(double[] newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnPropFloat64Changed(newValue);
     }
     @Override
     public void onPropStringChanged(String[] newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnPropStringChanged(newValue);
     }
     @Override
     public void onPropReadOnlyStringChanged(String newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnPropReadOnlyStringChanged(newValue);
     }
     @Override
     public void onSigBool(boolean[] paramBool)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sigBool "+ " " + paramBool);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sigBool "+ " " + paramBool);
         nativeOnSigBool(paramBool);
     }
     @Override
     public void onSigInt(int[] paramInt)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sigInt "+ " " + paramInt);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sigInt "+ " " + paramInt);
         nativeOnSigInt(paramInt);
     }
     @Override
     public void onSigInt32(int[] paramInt32)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sigInt32 "+ " " + paramInt32);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sigInt32 "+ " " + paramInt32);
         nativeOnSigInt32(paramInt32);
     }
     @Override
     public void onSigInt64(long[] paramInt64)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sigInt64 "+ " " + paramInt64);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sigInt64 "+ " " + paramInt64);
         nativeOnSigInt64(paramInt64);
     }
     @Override
     public void onSigFloat(float[] paramFloat)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sigFloat "+ " " + paramFloat);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sigFloat "+ " " + paramFloat);
         nativeOnSigFloat(paramFloat);
     }
     @Override
     public void onSigFloat32(float[] paramFloa32)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sigFloat32 "+ " " + paramFloa32);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sigFloat32 "+ " " + paramFloa32);
         nativeOnSigFloat32(paramFloa32);
     }
     @Override
     public void onSigFloat64(double[] paramFloat64)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sigFloat64 "+ " " + paramFloat64);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sigFloat64 "+ " " + paramFloat64);
         nativeOnSigFloat64(paramFloat64);
     }
     @Override
     public void onSigString(String[] paramString)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sigString "+ " " + paramString);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sigString "+ " " + paramString);
         nativeOnSigString(paramString);
     }
      private native void nativeOnPropBoolChanged(boolean[] propBool);

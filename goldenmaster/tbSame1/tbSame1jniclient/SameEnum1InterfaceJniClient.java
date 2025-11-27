@@ -81,7 +81,7 @@ public class SameEnum1InterfaceJniClient extends AbstractSameEnum1Interface impl
         if (mMessengerClient == null)
         {
             mMessengerClient = new SameEnum1InterfaceClient(ctx, connectionID);
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
         if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
@@ -95,7 +95,7 @@ public class SameEnum1InterfaceJniClient extends AbstractSameEnum1Interface impl
 
     @Override
     public void on_readyStatusChanged(boolean isReady) {
-        Log.w(TAG, "Connection state changed "+isReady);
+        Log.i(TAG, "Connection state changed "+isReady);
         nativeIsReady(isReady);
     }
 
@@ -103,13 +103,13 @@ public class SameEnum1InterfaceJniClient extends AbstractSameEnum1Interface impl
     @Override
     public void onProp1Changed(Enum1 newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnProp1Changed(newValue);
     }
     @Override
     public void onSig1(Enum1 param1)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal sig1 "+ " " + param1);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal sig1 "+ " " + param1);
         nativeOnSig1(param1);
     }
      private native void nativeOnProp1Changed(Enum1 prop1);

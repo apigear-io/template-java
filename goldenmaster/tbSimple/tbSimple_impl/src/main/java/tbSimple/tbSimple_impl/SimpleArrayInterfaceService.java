@@ -222,7 +222,7 @@ public class SimpleArrayInterfaceService extends AbstractSimpleArrayInterface {
 
     @Override
     public boolean[] funcBool(boolean[] paramBool) {
-        Log.w(TAG, "request method funcBool called, returnig default");
+        Log.i(TAG, "request method funcBool called, returnig default");
         return new boolean[]{};
     }
 
@@ -235,7 +235,7 @@ public class SimpleArrayInterfaceService extends AbstractSimpleArrayInterface {
 
     @Override
     public int[] funcInt(int[] paramInt) {
-        Log.w(TAG, "request method funcInt called, returnig default");
+        Log.i(TAG, "request method funcInt called, returnig default");
         return new int[]{};
     }
 
@@ -248,7 +248,7 @@ public class SimpleArrayInterfaceService extends AbstractSimpleArrayInterface {
 
     @Override
     public int[] funcInt32(int[] paramInt32) {
-        Log.w(TAG, "request method funcInt32 called, returnig default");
+        Log.i(TAG, "request method funcInt32 called, returnig default");
         return new int[]{};
     }
 
@@ -261,7 +261,7 @@ public class SimpleArrayInterfaceService extends AbstractSimpleArrayInterface {
 
     @Override
     public long[] funcInt64(long[] paramInt64) {
-        Log.w(TAG, "request method funcInt64 called, returnig default");
+        Log.i(TAG, "request method funcInt64 called, returnig default");
         return new long[]{};
     }
 
@@ -274,7 +274,7 @@ public class SimpleArrayInterfaceService extends AbstractSimpleArrayInterface {
 
     @Override
     public float[] funcFloat(float[] paramFloat) {
-        Log.w(TAG, "request method funcFloat called, returnig default");
+        Log.i(TAG, "request method funcFloat called, returnig default");
         return new float[]{};
     }
 
@@ -287,7 +287,7 @@ public class SimpleArrayInterfaceService extends AbstractSimpleArrayInterface {
 
     @Override
     public float[] funcFloat32(float[] paramFloat32) {
-        Log.w(TAG, "request method funcFloat32 called, returnig default");
+        Log.i(TAG, "request method funcFloat32 called, returnig default");
         return new float[]{};
     }
 
@@ -300,7 +300,7 @@ public class SimpleArrayInterfaceService extends AbstractSimpleArrayInterface {
 
     @Override
     public double[] funcFloat64(double[] paramFloat) {
-        Log.w(TAG, "request method funcFloat64 called, returnig default");
+        Log.i(TAG, "request method funcFloat64 called, returnig default");
         return new double[]{};
     }
 
@@ -313,7 +313,7 @@ public class SimpleArrayInterfaceService extends AbstractSimpleArrayInterface {
 
     @Override
     public String[] funcString(String[] paramString) {
-        Log.w(TAG, "request method funcString called, returnig default");
+        Log.i(TAG, "request method funcString called, returnig default");
         return new String[]{};
     }
 

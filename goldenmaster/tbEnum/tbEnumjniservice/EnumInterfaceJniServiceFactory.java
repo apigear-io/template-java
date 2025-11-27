@@ -43,7 +43,7 @@ public class EnumInterfaceJniServiceFactory extends HandlerThread implements IEn
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: EnumInterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
+			Log.i("UE", "LIFECYCLE: EnumInterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class EnumInterfaceJniServiceFactory extends HandlerThread implements IEn
 	@NonNull
 	private static EnumInterfaceJniServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		EnumInterfaceJniServiceFactory t = new EnumInterfaceJniServiceFactory();
 		t.start();

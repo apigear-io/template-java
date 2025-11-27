@@ -119,7 +119,7 @@ public class Testbed1TestClientApp extends Activity implements IStructInterfaceE
         bFuncBool.setText("funcBool");
 
         bFuncBool.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  funcBool ");
+            Log.i(TAG, "CALLING METHOD  funcBool ");
             StructBool paramBool =  new StructBool();
             CompletableFuture<StructBool> method_res
                     = mClient.funcBoolAsync(paramBool).thenApply(
@@ -134,7 +134,7 @@ public class Testbed1TestClientApp extends Activity implements IStructInterfaceE
         bFuncInt.setText("funcInt");
 
         bFuncInt.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  funcInt ");
+            Log.i(TAG, "CALLING METHOD  funcInt ");
             StructInt paramInt =  new StructInt();
             CompletableFuture<StructInt> method_res
                     = mClient.funcIntAsync(paramInt).thenApply(
@@ -149,7 +149,7 @@ public class Testbed1TestClientApp extends Activity implements IStructInterfaceE
         bFuncFloat.setText("funcFloat");
 
         bFuncFloat.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  funcFloat ");
+            Log.i(TAG, "CALLING METHOD  funcFloat ");
             StructFloat paramFloat =  new StructFloat();
             CompletableFuture<StructFloat> method_res
                     = mClient.funcFloatAsync(paramFloat).thenApply(
@@ -164,7 +164,7 @@ public class Testbed1TestClientApp extends Activity implements IStructInterfaceE
         bFuncString.setText("funcString");
 
         bFuncString.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  funcString ");
+            Log.i(TAG, "CALLING METHOD  funcString ");
             StructString paramString =  new StructString();
             CompletableFuture<StructString> method_res
                     = mClient.funcStringAsync(paramString).thenApply(
@@ -270,12 +270,12 @@ public class Testbed1TestClientApp extends Activity implements IStructInterfaceE
     private void initServiceConnection( String servicePackage)
     {
         lastServicePackage = servicePackage;
-        Log.w(TAG, "init service connection the client ");
+        Log.i(TAG, "init service connection the client ");
 
         if (mClient == null)
         {
             mClient = new StructInterfaceClient(this.getApplicationContext(), "");
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mClient.addEventListener(this);
         }
 
@@ -287,64 +287,64 @@ public class Testbed1TestClientApp extends Activity implements IStructInterfaceE
     public void onPropBoolChanged(StructBool newValue)
     {
         outputTextViewProp.setText("Property from service: propBool " + newValue);
-        Log.w(TAG, "Property from service: propBool " + newValue);
+        Log.i(TAG, "Property from service: propBool " + newValue);
      }
     @Override
     public void onPropIntChanged(StructInt newValue)
     {
         outputTextViewProp.setText("Property from service: propInt " + newValue);
-        Log.w(TAG, "Property from service: propInt " + newValue);
+        Log.i(TAG, "Property from service: propInt " + newValue);
      }
     @Override
     public void onPropFloatChanged(StructFloat newValue)
     {
         outputTextViewProp.setText("Property from service: propFloat " + newValue);
-        Log.w(TAG, "Property from service: propFloat " + newValue);
+        Log.i(TAG, "Property from service: propFloat " + newValue);
      }
     @Override
     public void onPropStringChanged(StructString newValue)
     {
         outputTextViewProp.setText("Property from service: propString " + newValue);
-        Log.w(TAG, "Property from service: propString " + newValue);
+        Log.i(TAG, "Property from service: propString " + newValue);
      }
     @Override
     public void onSigBool(StructBool paramBool)
     {
         String text = "Signal sigBool "+ " " + paramBool;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void onSigInt(StructInt paramInt)
     {
         String text = "Signal sigInt "+ " " + paramInt;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void onSigFloat(StructFloat paramFloat)
     {
         String text = "Signal sigFloat "+ " " + paramFloat;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void onSigString(StructString paramString)
     {
         String text = "Signal sigString "+ " " + paramString;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void on_readyStatusChanged(boolean isReady)
     { 
          if (isReady)
          {
-             Log.w(TAG, "Connected to service ");
+             Log.i(TAG, "Connected to service ");
          }
          else
          {
-             Log.w(TAG, "Disconnected from service ");
+             Log.i(TAG, "Disconnected from service ");
          }
     }
 

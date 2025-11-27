@@ -118,7 +118,7 @@ public class Testbed2TestServiceApp extends Activity implements IManyParamInterf
         bSig1.setText("sig1");
 
         bSig1.setOnClickListener(v -> {
-            Log.w(TAG, "broadcasting singal  sig1 ");
+            Log.i(TAG, "broadcasting singal  sig1 ");
             int param1 =  1;
             mBackend.fireSig1(param1);
         });
@@ -128,7 +128,7 @@ public class Testbed2TestServiceApp extends Activity implements IManyParamInterf
         bSig2.setText("sig2");
 
         bSig2.setOnClickListener(v -> {
-            Log.w(TAG, "broadcasting singal  sig2 ");
+            Log.i(TAG, "broadcasting singal  sig2 ");
             int param1 =  1;
             int param2 =  1;
             mBackend.fireSig2(param1, param2);
@@ -139,7 +139,7 @@ public class Testbed2TestServiceApp extends Activity implements IManyParamInterf
         bSig3.setText("sig3");
 
         bSig3.setOnClickListener(v -> {
-            Log.w(TAG, "broadcasting singal  sig3 ");
+            Log.i(TAG, "broadcasting singal  sig3 ");
             int param1 =  1;
             int param2 =  1;
             int param3 =  1;
@@ -151,7 +151,7 @@ public class Testbed2TestServiceApp extends Activity implements IManyParamInterf
         bSig4.setText("sig4");
 
         bSig4.setOnClickListener(v -> {
-            Log.w(TAG, "broadcasting singal  sig4 ");
+            Log.i(TAG, "broadcasting singal  sig4 ");
             int param1 =  1;
             int param2 =  1;
             int param3 =  1;
@@ -219,7 +219,7 @@ public class Testbed2TestServiceApp extends Activity implements IManyParamInterf
     private void startMyService(){
         stub_service = new Intent(this, ManyParamInterfaceServiceAdapter.class);
         this.startService(stub_service);
-        Log.w(TAG, "Service started with stub backend");
+        Log.i(TAG, "Service started with stub backend");
         mBackend = ManyParamInterfaceServiceAdapter.setService(ManyParamInterfaceServiceFactory.get());
         mBackend.addEventListener(this);
     }
@@ -245,66 +245,65 @@ public class Testbed2TestServiceApp extends Activity implements IManyParamInterf
     public void onProp1Changed(int newValue)
     {
         outputTextViewProp.setText("Property from service: prop1 " + newValue);
-        Log.w(TAG, "Property from service: prop1 " + newValue);
+        Log.i(TAG, "Property from service: prop1 " + newValue);
      }
     @Override
     public void onProp2Changed(int newValue)
     {
         outputTextViewProp.setText("Property from service: prop2 " + newValue);
-        Log.w(TAG, "Property from service: prop2 " + newValue);
+        Log.i(TAG, "Property from service: prop2 " + newValue);
      }
     @Override
     public void onProp3Changed(int newValue)
     {
         outputTextViewProp.setText("Property from service: prop3 " + newValue);
-        Log.w(TAG, "Property from service: prop3 " + newValue);
+        Log.i(TAG, "Property from service: prop3 " + newValue);
      }
     @Override
     public void onProp4Changed(int newValue)
     {
         outputTextViewProp.setText("Property from service: prop4 " + newValue);
-        Log.w(TAG, "Property from service: prop4 " + newValue);
+        Log.i(TAG, "Property from service: prop4 " + newValue);
      }
     @Override
     public void onSig1(int param1)
     {
         String text = "Signal sig1 "+ " " + param1;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void onSig2(int param1, int param2)
     {
         String text = "Signal sig2 "+ " " + param1+ " " + param2;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void onSig3(int param1, int param2, int param3)
     {
         String text = "Signal sig3 "+ " " + param1+ " " + param2+ " " + param3;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void onSig4(int param1, int param2, int param3, int param4)
     {
         String text = "Signal sig4 "+ " " + param1+ " " + param2+ " " + param3+ " " + param4;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void on_readyStatusChanged(boolean isReady)
     { 
          if (isReady)
          {
-             Log.w(TAG, "Connected to service ");
+             Log.i(TAG, "Connected to service ");
          }
          else
          {
-             Log.w(TAG, "Disconnected from service ");
+             Log.i(TAG, "Disconnected from service ");
          }
     }
-
 
 }

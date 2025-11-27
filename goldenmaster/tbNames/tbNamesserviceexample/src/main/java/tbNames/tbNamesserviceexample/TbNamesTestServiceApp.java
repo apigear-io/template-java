@@ -120,7 +120,7 @@ public class TbNamesTestServiceApp extends Activity implements INamEsEventListen
         bSomeSignal.setText("SOME_SIGNAL");
 
         bSomeSignal.setOnClickListener(v -> {
-            Log.w(TAG, "broadcasting singal  SOME_SIGNAL ");
+            Log.i(TAG, "broadcasting singal  SOME_SIGNAL ");
             boolean SOME_PARAM =  true;
             mBackend.fireSomeSignal(SOME_PARAM);
         });
@@ -130,7 +130,7 @@ public class TbNamesTestServiceApp extends Activity implements INamEsEventListen
         bSomeSignal2.setText("Some_Signal2");
 
         bSomeSignal2.setOnClickListener(v -> {
-            Log.w(TAG, "broadcasting singal  Some_Signal2 ");
+            Log.i(TAG, "broadcasting singal  Some_Signal2 ");
             boolean Some_Param =  true;
             mBackend.fireSomeSignal2(Some_Param);
         });
@@ -195,7 +195,7 @@ public class TbNamesTestServiceApp extends Activity implements INamEsEventListen
     private void startMyService(){
         stub_service = new Intent(this, NamEsServiceAdapter.class);
         this.startService(stub_service);
-        Log.w(TAG, "Service started with stub backend");
+        Log.i(TAG, "Service started with stub backend");
         mBackend = NamEsServiceAdapter.setService(NamEsServiceFactory.get());
         mBackend.addEventListener(this);
     }
@@ -221,52 +221,51 @@ public class TbNamesTestServiceApp extends Activity implements INamEsEventListen
     public void onSwitchChanged(boolean newValue)
     {
         outputTextViewProp.setText("Property from service: Switch " + newValue);
-        Log.w(TAG, "Property from service: Switch " + newValue);
+        Log.i(TAG, "Property from service: Switch " + newValue);
      }
     @Override
     public void onSomePropertyChanged(int newValue)
     {
         outputTextViewProp.setText("Property from service: SOME_PROPERTY " + newValue);
-        Log.w(TAG, "Property from service: SOME_PROPERTY " + newValue);
+        Log.i(TAG, "Property from service: SOME_PROPERTY " + newValue);
      }
     @Override
     public void onSomePoperty2Changed(int newValue)
     {
         outputTextViewProp.setText("Property from service: Some_Poperty2 " + newValue);
-        Log.w(TAG, "Property from service: Some_Poperty2 " + newValue);
+        Log.i(TAG, "Property from service: Some_Poperty2 " + newValue);
      }
     @Override
     public void onEnumPropertyChanged(EnumWithUnderScores newValue)
     {
         outputTextViewProp.setText("Property from service: enum_property " + newValue);
-        Log.w(TAG, "Property from service: enum_property " + newValue);
+        Log.i(TAG, "Property from service: enum_property " + newValue);
      }
     @Override
     public void onSomeSignal(boolean SOME_PARAM)
     {
         String text = "Signal SOME_SIGNAL "+ " " + SOME_PARAM;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void onSomeSignal2(boolean Some_Param)
     {
         String text = "Signal Some_Signal2 "+ " " + Some_Param;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void on_readyStatusChanged(boolean isReady)
     { 
          if (isReady)
          {
-             Log.w(TAG, "Connected to service ");
+             Log.i(TAG, "Connected to service ");
          }
          else
          {
-             Log.w(TAG, "Disconnected from service ");
+             Log.i(TAG, "Disconnected from service ");
          }
     }
-
 
 }

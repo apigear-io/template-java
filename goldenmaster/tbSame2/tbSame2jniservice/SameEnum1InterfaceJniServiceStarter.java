@@ -21,11 +21,11 @@ public class SameEnum1InterfaceJniServiceStarter {
     public static ISameEnum1Interface start(Context context) {
         stop(context);
         androidService = new Intent(context, SameEnum1InterfaceServiceAdapter.class);
-        Log.w(TAG, "starter: created intent");
+        Log.i(TAG, "starter: created intent");
         context.startService(androidService);
-        Log.w(TAG, "starter: started intent (service) ");
+        Log.i(TAG, "starter: started intent (service) ");
         SameEnum1InterfaceJniServiceFactory factory = SameEnum1InterfaceJniServiceFactory.get();
-        Log.w(TAG, "starter: factory set for SameEnum1InterfaceJniServiceFactory");
+        Log.i(TAG, "starter: factory set for SameEnum1InterfaceJniServiceFactory");
         return SameEnum1InterfaceServiceAdapter.setService(factory);
     }
 
@@ -33,7 +33,7 @@ public class SameEnum1InterfaceJniServiceStarter {
     {
         if (androidService != null)
         {
-            Log.w(TAG, "starter: stop the service");
+            Log.i(TAG, "starter: stop the service");
             context.stopService(androidService);
         }
         androidService = null;

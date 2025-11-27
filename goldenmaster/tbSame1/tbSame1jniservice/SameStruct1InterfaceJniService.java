@@ -49,7 +49,7 @@ public class SameStruct1InterfaceJniService extends AbstractSameStruct1Interface
 
     @Override
     public Struct1 func1(Struct1 param1) {
-        Log.w(TAG, "request method func1 called, will call native");
+        Log.i(TAG, "request method func1 called, will call native");
         return nativeFunc1(param1);
     }
 

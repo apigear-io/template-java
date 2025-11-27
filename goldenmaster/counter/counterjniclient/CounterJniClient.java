@@ -172,7 +172,7 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
         if (mMessengerClient == null)
         {
             mMessengerClient = new CounterClient(ctx, connectionID);
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
         if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
@@ -186,7 +186,7 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
 
     @Override
     public void on_readyStatusChanged(boolean isReady) {
-        Log.w(TAG, "Connection state changed "+isReady);
+        Log.i(TAG, "Connection state changed "+isReady);
         nativeIsReady(isReady);
     }
 
@@ -194,31 +194,31 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
     @Override
     public void onVectorChanged(customTypes.customTypes_api.Vector3D newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnVectorChanged(newValue);
     }
     @Override
     public void onExternVectorChanged(org.apache.commons.math3.geometry.euclidean.threed.Vector3D newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnExternVectorChanged(newValue);
     }
     @Override
     public void onVectorArrayChanged(customTypes.customTypes_api.Vector3D[] newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnVectorArrayChanged(newValue);
     }
     @Override
     public void onExternVectorArrayChanged(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] newValue)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client " + newValue);
+        Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnExternVectorArrayChanged(newValue);
     }
     @Override
     public void onValueChanged(customTypes.customTypes_api.Vector3D vector, org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector, customTypes.customTypes_api.Vector3D[] vectorArray, org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] extern_vectorArray)
     {
-        Log.w(TAG, "NOTIFICATION from messenger client Signal valueChanged "+ " " + vector+ " " + extern_vector+ " " + vectorArray+ " " + extern_vectorArray);
+        Log.i(TAG, "NOTIFICATION from messenger client Signal valueChanged "+ " " + vector+ " " + extern_vector+ " " + vectorArray+ " " + extern_vectorArray);
         nativeOnValueChanged(vector, extern_vector, vectorArray, extern_vectorArray);
     }
      private native void nativeOnVectorChanged(customTypes.customTypes_api.Vector3D vector);

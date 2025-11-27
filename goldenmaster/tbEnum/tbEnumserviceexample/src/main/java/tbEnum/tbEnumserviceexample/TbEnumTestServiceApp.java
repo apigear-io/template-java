@@ -126,7 +126,7 @@ public class TbEnumTestServiceApp extends Activity implements IEnumInterfaceEven
         bSig0.setText("sig0");
 
         bSig0.setOnClickListener(v -> {
-            Log.w(TAG, "broadcasting singal  sig0 ");
+            Log.i(TAG, "broadcasting singal  sig0 ");
             Enum0 param0 =  Enum0.Value1;
             mBackend.fireSig0(param0);
         });
@@ -136,7 +136,7 @@ public class TbEnumTestServiceApp extends Activity implements IEnumInterfaceEven
         bSig1.setText("sig1");
 
         bSig1.setOnClickListener(v -> {
-            Log.w(TAG, "broadcasting singal  sig1 ");
+            Log.i(TAG, "broadcasting singal  sig1 ");
             Enum1 param1 =  Enum1.Value2;
             mBackend.fireSig1(param1);
         });
@@ -146,7 +146,7 @@ public class TbEnumTestServiceApp extends Activity implements IEnumInterfaceEven
         bSig2.setText("sig2");
 
         bSig2.setOnClickListener(v -> {
-            Log.w(TAG, "broadcasting singal  sig2 ");
+            Log.i(TAG, "broadcasting singal  sig2 ");
             Enum2 param2 =  Enum2.Value1;
             mBackend.fireSig2(param2);
         });
@@ -156,7 +156,7 @@ public class TbEnumTestServiceApp extends Activity implements IEnumInterfaceEven
         bSig3.setText("sig3");
 
         bSig3.setOnClickListener(v -> {
-            Log.w(TAG, "broadcasting singal  sig3 ");
+            Log.i(TAG, "broadcasting singal  sig3 ");
             Enum3 param3 =  Enum3.Value2;
             mBackend.fireSig3(param3);
         });
@@ -221,7 +221,7 @@ public class TbEnumTestServiceApp extends Activity implements IEnumInterfaceEven
     private void startMyService(){
         stub_service = new Intent(this, EnumInterfaceServiceAdapter.class);
         this.startService(stub_service);
-        Log.w(TAG, "Service started with stub backend");
+        Log.i(TAG, "Service started with stub backend");
         mBackend = EnumInterfaceServiceAdapter.setService(EnumInterfaceServiceFactory.get());
         mBackend.addEventListener(this);
     }
@@ -247,66 +247,65 @@ public class TbEnumTestServiceApp extends Activity implements IEnumInterfaceEven
     public void onProp0Changed(Enum0 newValue)
     {
         outputTextViewProp.setText("Property from service: prop0 " + newValue);
-        Log.w(TAG, "Property from service: prop0 " + newValue);
+        Log.i(TAG, "Property from service: prop0 " + newValue);
      }
     @Override
     public void onProp1Changed(Enum1 newValue)
     {
         outputTextViewProp.setText("Property from service: prop1 " + newValue);
-        Log.w(TAG, "Property from service: prop1 " + newValue);
+        Log.i(TAG, "Property from service: prop1 " + newValue);
      }
     @Override
     public void onProp2Changed(Enum2 newValue)
     {
         outputTextViewProp.setText("Property from service: prop2 " + newValue);
-        Log.w(TAG, "Property from service: prop2 " + newValue);
+        Log.i(TAG, "Property from service: prop2 " + newValue);
      }
     @Override
     public void onProp3Changed(Enum3 newValue)
     {
         outputTextViewProp.setText("Property from service: prop3 " + newValue);
-        Log.w(TAG, "Property from service: prop3 " + newValue);
+        Log.i(TAG, "Property from service: prop3 " + newValue);
      }
     @Override
     public void onSig0(Enum0 param0)
     {
         String text = "Signal sig0 "+ " " + param0;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void onSig1(Enum1 param1)
     {
         String text = "Signal sig1 "+ " " + param1;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void onSig2(Enum2 param2)
     {
         String text = "Signal sig2 "+ " " + param2;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void onSig3(Enum3 param3)
     {
         String text = "Signal sig3 "+ " " + param3;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void on_readyStatusChanged(boolean isReady)
     { 
          if (isReady)
          {
-             Log.w(TAG, "Connected to service ");
+             Log.i(TAG, "Connected to service ");
          }
          else
          {
-             Log.w(TAG, "Disconnected from service ");
+             Log.i(TAG, "Disconnected from service ");
          }
     }
-
 
 }

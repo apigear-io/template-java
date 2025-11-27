@@ -43,7 +43,7 @@ public class NoPropertiesInterfaceJniServiceFactory extends HandlerThread implem
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: NoPropertiesInterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
+			Log.i("UE", "LIFECYCLE: NoPropertiesInterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class NoPropertiesInterfaceJniServiceFactory extends HandlerThread implem
 	@NonNull
 	private static NoPropertiesInterfaceJniServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		NoPropertiesInterfaceJniServiceFactory t = new NoPropertiesInterfaceJniServiceFactory();
 		t.start();

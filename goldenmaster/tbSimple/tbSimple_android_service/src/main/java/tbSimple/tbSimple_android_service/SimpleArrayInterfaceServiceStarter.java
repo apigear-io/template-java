@@ -21,11 +21,11 @@ public class SimpleArrayInterfaceServiceStarter {
     public static ISimpleArrayInterface start(Context context) {
         stop(context);
         androidService = new Intent(context, SimpleArrayInterfaceServiceAdapter.class);
-        Log.w(TAG, "starter: created intent");
+        Log.i(TAG, "starter: created intent");
         context.startService(androidService);
-        Log.w(TAG, "starter: started intent (service) ");
+        Log.i(TAG, "starter: started intent (service) ");
         SimpleArrayInterfaceServiceFactory factory = SimpleArrayInterfaceServiceFactory.get();
-        Log.w(TAG, "starter: factory set for SimpleArrayInterfaceServiceFactory");
+        Log.i(TAG, "starter: factory set for SimpleArrayInterfaceServiceFactory");
         return SimpleArrayInterfaceServiceAdapter.setService(factory);
     }
 
@@ -33,7 +33,7 @@ public class SimpleArrayInterfaceServiceStarter {
     {
         if (androidService != null)
         {
-            Log.w(TAG, "starter: stop the service");
+            Log.i(TAG, "starter: stop the service");
             context.stopService(androidService);
         }
         androidService = null;

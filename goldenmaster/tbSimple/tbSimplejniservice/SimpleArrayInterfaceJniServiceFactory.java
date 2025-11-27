@@ -43,7 +43,7 @@ public class SimpleArrayInterfaceJniServiceFactory extends HandlerThread impleme
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: SimpleArrayInterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
+			Log.i("UE", "LIFECYCLE: SimpleArrayInterfaceJniServiceFactory::onDestroy() - stop instance thread, service = " + jniService);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class SimpleArrayInterfaceJniServiceFactory extends HandlerThread impleme
 	@NonNull
 	private static SimpleArrayInterfaceJniServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		SimpleArrayInterfaceJniServiceFactory t = new SimpleArrayInterfaceJniServiceFactory();
 		t.start();

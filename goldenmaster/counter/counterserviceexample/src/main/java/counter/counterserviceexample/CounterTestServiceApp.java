@@ -118,7 +118,7 @@ public class CounterTestServiceApp extends Activity implements ICounterEventList
         bValueChanged.setText("valueChanged");
 
         bValueChanged.setOnClickListener(v -> {
-            Log.w(TAG, "broadcasting singal  valueChanged ");
+            Log.i(TAG, "broadcasting singal  valueChanged ");
             customTypes.customTypes_api.Vector3D vector =  new customTypes.customTypes_api.Vector3D();
             org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector =  new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0);
             customTypes.customTypes_api.Vector3D[] vectorArray =  new customTypes.customTypes_api.Vector3D();
@@ -186,7 +186,7 @@ public class CounterTestServiceApp extends Activity implements ICounterEventList
     private void startMyService(){
         stub_service = new Intent(this, CounterServiceAdapter.class);
         this.startService(stub_service);
-        Log.w(TAG, "Service started with stub backend");
+        Log.i(TAG, "Service started with stub backend");
         mBackend = CounterServiceAdapter.setService(CounterServiceFactory.get());
         mBackend.addEventListener(this);
     }
@@ -212,45 +212,44 @@ public class CounterTestServiceApp extends Activity implements ICounterEventList
     public void onVectorChanged(customTypes.customTypes_api.Vector3D newValue)
     {
         outputTextViewProp.setText("Property from service: vector " + newValue);
-        Log.w(TAG, "Property from service: vector " + newValue);
+        Log.i(TAG, "Property from service: vector " + newValue);
      }
     @Override
     public void onExternVectorChanged(org.apache.commons.math3.geometry.euclidean.threed.Vector3D newValue)
     {
         outputTextViewProp.setText("Property from service: extern_vector " + newValue);
-        Log.w(TAG, "Property from service: extern_vector " + newValue);
+        Log.i(TAG, "Property from service: extern_vector " + newValue);
      }
     @Override
     public void onVectorArrayChanged(customTypes.customTypes_api.Vector3D[] newValue)
     {
         outputTextViewProp.setText("Property from service: vectorArray " + newValue);
-        Log.w(TAG, "Property from service: vectorArray " + newValue);
+        Log.i(TAG, "Property from service: vectorArray " + newValue);
      }
     @Override
     public void onExternVectorArrayChanged(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] newValue)
     {
         outputTextViewProp.setText("Property from service: extern_vectorArray " + newValue);
-        Log.w(TAG, "Property from service: extern_vectorArray " + newValue);
+        Log.i(TAG, "Property from service: extern_vectorArray " + newValue);
      }
     @Override
     public void onValueChanged(customTypes.customTypes_api.Vector3D vector, org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector, customTypes.customTypes_api.Vector3D[] vectorArray, org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] extern_vectorArray)
     {
         String text = "Signal valueChanged "+ " " + vector+ " " + extern_vector+ " " + vectorArray+ " " + extern_vectorArray;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void on_readyStatusChanged(boolean isReady)
     { 
          if (isReady)
          {
-             Log.w(TAG, "Connected to service ");
+             Log.i(TAG, "Connected to service ");
          }
          else
          {
-             Log.w(TAG, "Disconnected from service ");
+             Log.i(TAG, "Disconnected from service ");
          }
     }
-
 
 }

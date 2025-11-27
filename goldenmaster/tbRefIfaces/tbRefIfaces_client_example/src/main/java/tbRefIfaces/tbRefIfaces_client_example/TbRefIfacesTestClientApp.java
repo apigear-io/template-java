@@ -79,7 +79,7 @@ public class TbRefIfacesTestClientApp extends Activity implements ISimpleLocalIf
         bIntMethod.setText("intMethod");
 
         bIntMethod.setOnClickListener(v -> {
-            Log.w(TAG, "CALLING METHOD  intMethod ");
+            Log.i(TAG, "CALLING METHOD  intMethod ");
             int param =  1;
             CompletableFuture<Integer> method_res
                     = mClient.intMethodAsync(param).thenApply(
@@ -185,12 +185,12 @@ public class TbRefIfacesTestClientApp extends Activity implements ISimpleLocalIf
     private void initServiceConnection( String servicePackage)
     {
         lastServicePackage = servicePackage;
-        Log.w(TAG, "init service connection the client ");
+        Log.i(TAG, "init service connection the client ");
 
         if (mClient == null)
         {
             mClient = new SimpleLocalIfClient(this.getApplicationContext(), "");
-            Log.w(TAG, "client created ");
+            Log.i(TAG, "client created ");
             mClient.addEventListener(this);
         }
 
@@ -202,25 +202,25 @@ public class TbRefIfacesTestClientApp extends Activity implements ISimpleLocalIf
     public void onIntPropertyChanged(int newValue)
     {
         outputTextViewProp.setText("Property from service: intProperty " + newValue);
-        Log.w(TAG, "Property from service: intProperty " + newValue);
+        Log.i(TAG, "Property from service: intProperty " + newValue);
      }
     @Override
     public void onIntSignal(int param)
     {
         String text = "Signal intSignal "+ " " + param;
         outputTextViewSig.setText(text);
-        Log.w(TAG, text);
+        Log.i(TAG, text);
     }
     @Override
     public void on_readyStatusChanged(boolean isReady)
     { 
          if (isReady)
          {
-             Log.w(TAG, "Connected to service ");
+             Log.i(TAG, "Connected to service ");
          }
          else
          {
-             Log.w(TAG, "Disconnected from service ");
+             Log.i(TAG, "Disconnected from service ");
          }
     }
 

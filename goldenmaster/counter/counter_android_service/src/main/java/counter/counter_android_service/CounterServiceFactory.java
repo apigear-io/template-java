@@ -43,7 +43,7 @@ public class CounterServiceFactory extends HandlerThread implements ICounterServ
 	{
 		synchronized (this)
 		{
-			Log.w("UE", "LIFECYCLE: CounterServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
+			Log.i("UE", "LIFECYCLE: CounterServiceFactory::onDestroy() - stop instance thread, service = " + m_Service);
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -72,7 +72,7 @@ public class CounterServiceFactory extends HandlerThread implements ICounterServ
 	@NonNull
 	private static CounterServiceFactory createInstance()
 	{
-		Log.w("UE", "LIFECYCLE: EngineFactory::createInstance()");
+		Log.i("UE", "LIFECYCLE: EngineFactory::createInstance()");
 
 		CounterServiceFactory t = new CounterServiceFactory();
 		t.start();
