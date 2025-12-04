@@ -117,7 +117,7 @@ public class NestedStruct2InterfaceJniClient extends AbstractNestedStruct2Interf
             Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
-        if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
+        if (!lastServicePackage.equals(servicePackage) &&  mMessengerClient.isBoundToService()) {
             unbind();
         }
         lastServicePackage = servicePackage;
