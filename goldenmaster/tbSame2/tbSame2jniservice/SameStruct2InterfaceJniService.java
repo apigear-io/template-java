@@ -26,7 +26,7 @@ public class SameStruct2InterfaceJniService extends AbstractSameStruct2Interface
 
     private final static String TAG = "SameStruct2InterfaceJniService";
     private static boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public SameStruct2InterfaceJniService()
     {

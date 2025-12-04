@@ -22,7 +22,7 @@ public class VoidInterfaceJniService extends AbstractVoidInterface {
 
     private final static String TAG = "VoidInterfaceJniService";
     private static boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public VoidInterfaceJniService()
     {

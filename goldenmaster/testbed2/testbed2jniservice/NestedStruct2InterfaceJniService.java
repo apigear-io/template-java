@@ -26,7 +26,7 @@ public class NestedStruct2InterfaceJniService extends AbstractNestedStruct2Inter
 
     private final static String TAG = "NestedStruct2InterfaceJniService";
     private static boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public NestedStruct2InterfaceJniService()
     {

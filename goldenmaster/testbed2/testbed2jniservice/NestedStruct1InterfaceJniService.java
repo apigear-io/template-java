@@ -24,7 +24,7 @@ public class NestedStruct1InterfaceJniService extends AbstractNestedStruct1Inter
 
     private final static String TAG = "NestedStruct1InterfaceJniService";
     private static boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public NestedStruct1InterfaceJniService()
     {

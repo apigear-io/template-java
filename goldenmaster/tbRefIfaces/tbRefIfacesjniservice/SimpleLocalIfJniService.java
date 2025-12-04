@@ -22,7 +22,7 @@ public class SimpleLocalIfJniService extends AbstractSimpleLocalIf {
 
     private final static String TAG = "SimpleLocalIfJniService";
     private static boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public SimpleLocalIfJniService()
     {

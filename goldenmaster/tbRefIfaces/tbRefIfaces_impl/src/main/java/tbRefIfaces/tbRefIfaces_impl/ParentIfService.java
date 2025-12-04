@@ -25,7 +25,7 @@ public class ParentIfService extends AbstractParentIf {
 
     private final static String TAG = "ParentIfService";
     private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
     private ISimpleLocalIf m_localIf = null;
     private ISimpleLocalIf[] m_localIfList = new ISimpleLocalIf[]{};
     private tbIfaceimport.tbIfaceimport_api.IEmptyIf m_importedIf = null;
