@@ -89,7 +89,7 @@ public class StructInterfaceServiceAdapter extends Service
 			{
 				mHandler.removeCallbacksAndMessages(null);
 			}
-			mHandler = new IncomingHandler(this);
+			mHandler = new IncomingHandler();
 			mMessenger = new Messenger(mHandler);
 			if (mBackendService != null)
 			{
@@ -161,13 +161,11 @@ public class StructInterfaceServiceAdapter extends Service
 	 */
 	class IncomingHandler extends Handler implements IStructInterfaceEventListener
 	{
-		private final Service mApplicationContext;
 		private final ConcurrentHashMap<String, Messenger> mClients = new ConcurrentHashMap<>();
 
-		IncomingHandler(Service context)
+		IncomingHandler()
 		{
 			super(Looper.getMainLooper());
-			mApplicationContext = context;
 		}
 
 		private void sendMessageToClients(Message msg)
