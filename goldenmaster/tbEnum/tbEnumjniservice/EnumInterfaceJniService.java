@@ -30,7 +30,7 @@ public class EnumInterfaceJniService extends AbstractEnumInterface {
 
     private final static String TAG = "EnumInterfaceJniService";
     private static boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public EnumInterfaceJniService()
     {

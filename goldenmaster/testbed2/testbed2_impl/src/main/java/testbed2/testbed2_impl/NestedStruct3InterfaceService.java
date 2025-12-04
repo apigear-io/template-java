@@ -26,7 +26,7 @@ public class NestedStruct3InterfaceService extends AbstractNestedStruct3Interfac
 
     private final static String TAG = "NestedStruct3InterfaceService";
     private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
     private NestedStruct1 m_prop1 = new NestedStruct1();
     private NestedStruct2 m_prop2 = new NestedStruct2();
     private NestedStruct3 m_prop3 = new NestedStruct3();

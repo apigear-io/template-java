@@ -22,7 +22,7 @@ public class EmptyIfJniService extends AbstractEmptyIf {
 
     private final static String TAG = "EmptyIfJniService";
     private static boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public EmptyIfJniService()
     {

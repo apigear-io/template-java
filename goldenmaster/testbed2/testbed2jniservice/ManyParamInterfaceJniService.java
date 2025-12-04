@@ -22,7 +22,7 @@ public class ManyParamInterfaceJniService extends AbstractManyParamInterface {
 
     private final static String TAG = "ManyParamInterfaceJniService";
     private static boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public ManyParamInterfaceJniService()
     {

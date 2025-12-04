@@ -42,7 +42,7 @@ public class StructArray2InterfaceJniService extends AbstractStructArray2Interfa
 
     private final static String TAG = "StructArray2InterfaceJniService";
     private static boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public StructArray2InterfaceJniService()
     {
