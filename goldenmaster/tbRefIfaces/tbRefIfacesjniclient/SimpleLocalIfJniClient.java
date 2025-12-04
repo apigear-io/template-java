@@ -82,7 +82,7 @@ public class SimpleLocalIfJniClient extends AbstractSimpleLocalIf implements ISi
             Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
-        if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
+        if (!lastServicePackage.equals(servicePackage) &&  mMessengerClient.isBoundToService()) {
             unbind();
         }
         lastServicePackage = servicePackage;

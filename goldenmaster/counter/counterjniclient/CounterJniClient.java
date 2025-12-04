@@ -175,7 +175,7 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
             Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
-        if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
+        if (!lastServicePackage.equals(servicePackage) &&  mMessengerClient.isBoundToService()) {
             unbind();
         }
         lastServicePackage = servicePackage;
