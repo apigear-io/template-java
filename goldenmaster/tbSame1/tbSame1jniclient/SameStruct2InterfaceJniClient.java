@@ -117,7 +117,7 @@ public class SameStruct2InterfaceJniClient extends AbstractSameStruct2Interface 
             Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
-        if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
+        if (!lastServicePackage.equals(servicePackage) &&  mMessengerClient.isBoundToService()) {
             unbind();
         }
         lastServicePackage = servicePackage;

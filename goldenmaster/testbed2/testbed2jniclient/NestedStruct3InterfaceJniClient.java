@@ -150,7 +150,7 @@ public class NestedStruct3InterfaceJniClient extends AbstractNestedStruct3Interf
             Log.i(TAG, "client created ");
             mMessengerClient.addEventListener(this);
         }
-        if (lastServicePackage != servicePackage &&  mMessengerClient.isBoundToService()) {
+        if (!lastServicePackage.equals(servicePackage) &&  mMessengerClient.isBoundToService()) {
             unbind();
         }
         lastServicePackage = servicePackage;
