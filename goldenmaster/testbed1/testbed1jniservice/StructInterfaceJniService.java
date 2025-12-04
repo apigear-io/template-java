@@ -30,7 +30,7 @@ public class StructInterfaceJniService extends AbstractStructInterface {
 
     private final static String TAG = "StructInterfaceJniService";
     private static boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public StructInterfaceJniService()
     {

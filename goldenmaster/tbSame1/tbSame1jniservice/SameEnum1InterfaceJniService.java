@@ -24,7 +24,7 @@ public class SameEnum1InterfaceJniService extends AbstractSameEnum1Interface {
 
     private final static String TAG = "SameEnum1InterfaceJniService";
     private static boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public SameEnum1InterfaceJniService()
     {

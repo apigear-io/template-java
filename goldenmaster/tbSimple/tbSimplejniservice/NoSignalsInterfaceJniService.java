@@ -22,7 +22,7 @@ public class NoSignalsInterfaceJniService extends AbstractNoSignalsInterface {
 
     private final static String TAG = "NoSignalsInterfaceJniService";
     private static boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public NoSignalsInterfaceJniService()
     {

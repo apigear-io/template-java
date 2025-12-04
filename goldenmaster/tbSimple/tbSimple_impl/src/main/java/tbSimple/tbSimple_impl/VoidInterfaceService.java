@@ -23,7 +23,7 @@ public class VoidInterfaceService extends AbstractVoidInterface {
 
     private final static String TAG = "VoidInterfaceService";
     private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public VoidInterfaceService()
     {

@@ -25,7 +25,7 @@ public class SameEnum2InterfaceService extends AbstractSameEnum2Interface {
 
     private final static String TAG = "SameEnum2InterfaceService";
     private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
     private Enum1 m_prop1 = Enum1.Value1;
     private Enum2 m_prop2 = Enum2.Value1;
 

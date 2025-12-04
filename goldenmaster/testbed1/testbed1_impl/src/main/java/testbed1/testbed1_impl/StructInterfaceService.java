@@ -27,7 +27,7 @@ public class StructInterfaceService extends AbstractStructInterface {
 
     private final static String TAG = "StructInterfaceService";
     private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
     private StructBool m_propBool = new StructBool();
     private StructInt m_propInt = new StructInt();
     private StructFloat m_propFloat = new StructFloat();
