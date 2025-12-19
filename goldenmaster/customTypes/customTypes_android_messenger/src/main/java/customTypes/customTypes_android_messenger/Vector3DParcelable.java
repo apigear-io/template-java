@@ -4,6 +4,8 @@ import customTypes.customTypes_api.Vector3D;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
+
   public  class Vector3DParcelable implements Parcelable {
 
     public Vector3D data;
@@ -46,20 +48,16 @@ import android.os.Parcelable;
     }
         public static Vector3DParcelable[] wrapArray(Vector3D[] structs) {
         if (structs == null) return null;
-        Vector3DParcelable[] out = new Vector3DParcelable[structs.length];
-        for (int i = 0; i < structs.length; i++) {
-            out[i] = new Vector3DParcelable(structs[i]);
-        }
-        return out;
+        return Arrays.stream(structs)
+           .map(Vector3DParcelable::new)
+           .toArray(Vector3DParcelable[]::new);
     }
 
     public static Vector3D[] unwrapArray(Vector3DParcelable[] parcelables) {
         if (parcelables == null) return null;
-        Vector3D[] out = new Vector3D[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getVector3D();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(Vector3DParcelable::getVector3D)
+           .toArray(Vector3D[]::new);
     }
 
     @Override

@@ -4,6 +4,8 @@ import testbed1.testbed1_api.StructInt;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
+
   public  class StructIntParcelable implements Parcelable {
 
     public StructInt data;
@@ -42,20 +44,16 @@ import android.os.Parcelable;
     }
         public static StructIntParcelable[] wrapArray(StructInt[] structs) {
         if (structs == null) return null;
-        StructIntParcelable[] out = new StructIntParcelable[structs.length];
-        for (int i = 0; i < structs.length; i++) {
-            out[i] = new StructIntParcelable(structs[i]);
-        }
-        return out;
+        return Arrays.stream(structs)
+           .map(StructIntParcelable::new)
+           .toArray(StructIntParcelable[]::new);
     }
 
     public static StructInt[] unwrapArray(StructIntParcelable[] parcelables) {
         if (parcelables == null) return null;
-        StructInt[] out = new StructInt[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getStructInt();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(StructIntParcelable::getStructInt)
+           .toArray(StructInt[]::new);
     }
 
     @Override

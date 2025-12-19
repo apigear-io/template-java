@@ -4,6 +4,8 @@ import testbed2.testbed2_api.Struct4;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
+
   public  class Struct4Parcelable implements Parcelable {
 
     public Struct4 data;
@@ -48,20 +50,16 @@ import android.os.Parcelable;
     }
         public static Struct4Parcelable[] wrapArray(Struct4[] structs) {
         if (structs == null) return null;
-        Struct4Parcelable[] out = new Struct4Parcelable[structs.length];
-        for (int i = 0; i < structs.length; i++) {
-            out[i] = new Struct4Parcelable(structs[i]);
-        }
-        return out;
+        return Arrays.stream(structs)
+           .map(Struct4Parcelable::new)
+           .toArray(Struct4Parcelable[]::new);
     }
 
     public static Struct4[] unwrapArray(Struct4Parcelable[] parcelables) {
         if (parcelables == null) return null;
-        Struct4[] out = new Struct4[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getStruct4();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(Struct4Parcelable::getStruct4)
+           .toArray(Struct4[]::new);
     }
 
     @Override

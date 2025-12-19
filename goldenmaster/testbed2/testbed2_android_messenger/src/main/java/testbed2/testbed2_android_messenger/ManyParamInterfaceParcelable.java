@@ -4,6 +4,8 @@ import testbed2.testbed2_api.IManyParamInterface;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
+
   public  class ManyParamInterfaceParcelable implements Parcelable {
 
     public IManyParamInterface data;
@@ -47,20 +49,16 @@ import android.os.Parcelable;
     }
         public static ManyParamInterfaceParcelable[] wrapArray(IManyParamInterface[] elements) {
         if (elements == null) return null;
-        ManyParamInterfaceParcelable[] out = new ManyParamInterfaceParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new ManyParamInterfaceParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(ManyParamInterfaceParcelable::new)
+           .toArray(ManyParamInterfaceParcelable[]::new);
     }
 
     public static IManyParamInterface[] unwrapArray(ManyParamInterfaceParcelable[] parcelables) {
         if (parcelables == null) return null;
-        IManyParamInterface[] out = new IManyParamInterface[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getManyParamInterface();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(ManyParamInterfaceParcelable::getManyParamInterface)
+           .toArray(IManyParamInterface[]::new);
     }
 
     @Override

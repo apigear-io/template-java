@@ -4,6 +4,8 @@ import tbSimple.tbSimple_api.IVoidInterface;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
+
   public  class VoidInterfaceParcelable implements Parcelable {
 
     public IVoidInterface data;
@@ -39,20 +41,16 @@ import android.os.Parcelable;
     }
         public static VoidInterfaceParcelable[] wrapArray(IVoidInterface[] elements) {
         if (elements == null) return null;
-        VoidInterfaceParcelable[] out = new VoidInterfaceParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new VoidInterfaceParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(VoidInterfaceParcelable::new)
+           .toArray(VoidInterfaceParcelable[]::new);
     }
 
     public static IVoidInterface[] unwrapArray(VoidInterfaceParcelable[] parcelables) {
         if (parcelables == null) return null;
-        IVoidInterface[] out = new IVoidInterface[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getVoidInterface();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(VoidInterfaceParcelable::getVoidInterface)
+           .toArray(IVoidInterface[]::new);
     }
 
     @Override

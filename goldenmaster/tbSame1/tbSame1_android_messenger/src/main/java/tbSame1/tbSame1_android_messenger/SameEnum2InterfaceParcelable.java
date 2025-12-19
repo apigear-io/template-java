@@ -3,6 +3,8 @@ package tbSame1.tbSame1_android_messenger;
 import tbSame1.tbSame1_api.ISameEnum2Interface;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.Arrays;
 import tbSame1.tbSame1_api.Enum1;
 import tbSame1.tbSame1_api.Enum2;
 
@@ -47,20 +49,16 @@ import tbSame1.tbSame1_api.Enum2;
     }
         public static SameEnum2InterfaceParcelable[] wrapArray(ISameEnum2Interface[] elements) {
         if (elements == null) return null;
-        SameEnum2InterfaceParcelable[] out = new SameEnum2InterfaceParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new SameEnum2InterfaceParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(SameEnum2InterfaceParcelable::new)
+           .toArray(SameEnum2InterfaceParcelable[]::new);
     }
 
     public static ISameEnum2Interface[] unwrapArray(SameEnum2InterfaceParcelable[] parcelables) {
         if (parcelables == null) return null;
-        ISameEnum2Interface[] out = new ISameEnum2Interface[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getSameEnum2Interface();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(SameEnum2InterfaceParcelable::getSameEnum2Interface)
+           .toArray(ISameEnum2Interface[]::new);
     }
 
     @Override

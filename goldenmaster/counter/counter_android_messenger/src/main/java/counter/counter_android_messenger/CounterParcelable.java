@@ -4,6 +4,8 @@ import counter.counter_api.ICounter;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
+
   public  class CounterParcelable implements Parcelable {
 
     public ICounter data;
@@ -51,20 +53,16 @@ import android.os.Parcelable;
     }
         public static CounterParcelable[] wrapArray(ICounter[] elements) {
         if (elements == null) return null;
-        CounterParcelable[] out = new CounterParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new CounterParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(CounterParcelable::new)
+           .toArray(CounterParcelable[]::new);
     }
 
     public static ICounter[] unwrapArray(CounterParcelable[] parcelables) {
         if (parcelables == null) return null;
-        ICounter[] out = new ICounter[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getCounter();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(CounterParcelable::getCounter)
+           .toArray(ICounter[]::new);
     }
 
     @Override

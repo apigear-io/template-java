@@ -3,6 +3,8 @@ package tbEnum.tbEnum_android_messenger;
 import tbEnum.tbEnum_api.IEnumInterface;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.Arrays;
 import tbEnum.tbEnum_api.Enum0;
 import tbEnum.tbEnum_api.Enum1;
 import tbEnum.tbEnum_api.Enum2;
@@ -55,20 +57,16 @@ import tbEnum.tbEnum_api.Enum3;
     }
         public static EnumInterfaceParcelable[] wrapArray(IEnumInterface[] elements) {
         if (elements == null) return null;
-        EnumInterfaceParcelable[] out = new EnumInterfaceParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new EnumInterfaceParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(EnumInterfaceParcelable::new)
+           .toArray(EnumInterfaceParcelable[]::new);
     }
 
     public static IEnumInterface[] unwrapArray(EnumInterfaceParcelable[] parcelables) {
         if (parcelables == null) return null;
-        IEnumInterface[] out = new IEnumInterface[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getEnumInterface();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(EnumInterfaceParcelable::getEnumInterface)
+           .toArray(IEnumInterface[]::new);
     }
 
     @Override

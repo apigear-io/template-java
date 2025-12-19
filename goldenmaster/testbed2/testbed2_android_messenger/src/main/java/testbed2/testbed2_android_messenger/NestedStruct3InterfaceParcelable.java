@@ -3,6 +3,8 @@ package testbed2.testbed2_android_messenger;
 import testbed2.testbed2_api.INestedStruct3Interface;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.Arrays;
 import testbed2.testbed2_api.NestedStruct1;
 import testbed2.testbed2_api.NestedStruct2;
 import testbed2.testbed2_api.NestedStruct3;
@@ -51,20 +53,16 @@ import testbed2.testbed2_api.NestedStruct3;
     }
         public static NestedStruct3InterfaceParcelable[] wrapArray(INestedStruct3Interface[] elements) {
         if (elements == null) return null;
-        NestedStruct3InterfaceParcelable[] out = new NestedStruct3InterfaceParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new NestedStruct3InterfaceParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(NestedStruct3InterfaceParcelable::new)
+           .toArray(NestedStruct3InterfaceParcelable[]::new);
     }
 
     public static INestedStruct3Interface[] unwrapArray(NestedStruct3InterfaceParcelable[] parcelables) {
         if (parcelables == null) return null;
-        INestedStruct3Interface[] out = new INestedStruct3Interface[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getNestedStruct3Interface();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(NestedStruct3InterfaceParcelable::getNestedStruct3Interface)
+           .toArray(INestedStruct3Interface[]::new);
     }
 
     @Override

@@ -5,6 +5,7 @@ import {{$externInfo.Package}}.{{$externInfo.Name}};
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
 
   public  class {{Camel .Extern.Name}}Parcelable implements Parcelable {
     public {{$externInfo.Name}} data;
@@ -45,20 +46,16 @@ import android.os.Parcelable;
     public static {{Camel .Extern.Name}}Parcelable[] wrapArray({{$externInfo.Name}}[] elements)
     {
         if (elements == null) return null;
-        {{Camel .Extern.Name}}Parcelable[] out = new {{Camel .Extern.Name}}Parcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new {{Camel .Extern.Name}}Parcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map({{Camel .Extern.Name}}Parcelable::new)
+           .toArray({{Camel .Extern.Name}}Parcelable[]::new);
     }
 
     public static {{$externInfo.Name}}[] unwrapArray({{Camel .Extern.Name}}Parcelable[] parcelables) {
         if (parcelables == null) return null;
-        {{$externInfo.Name}}[] out = new {{$externInfo.Name}}[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].get{{Camel .Extern.Name}}();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map({{Camel .Extern.Name}}Parcelable::get{{Camel .Extern.Name}})
+           .toArray({{$externInfo.Name}}[]::new);
     }
 
     @Override
