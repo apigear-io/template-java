@@ -3,6 +3,8 @@ package testbed1.testbed1_android_messenger;
 import testbed1.testbed1_api.IStructArray2Interface;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.Arrays;
 import testbed1.testbed1_api.Enum0;
 import testbed1.testbed1_api.StructBool;
 import testbed1.testbed1_api.StructBoolWithArray;
@@ -64,20 +66,16 @@ import testbed1.testbed1_api.StructStringWithArray;
     }
         public static StructArray2InterfaceParcelable[] wrapArray(IStructArray2Interface[] elements) {
         if (elements == null) return null;
-        StructArray2InterfaceParcelable[] out = new StructArray2InterfaceParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new StructArray2InterfaceParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(StructArray2InterfaceParcelable::new)
+           .toArray(StructArray2InterfaceParcelable[]::new);
     }
 
     public static IStructArray2Interface[] unwrapArray(StructArray2InterfaceParcelable[] parcelables) {
         if (parcelables == null) return null;
-        IStructArray2Interface[] out = new IStructArray2Interface[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getStructArray2Interface();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(StructArray2InterfaceParcelable::getStructArray2Interface)
+           .toArray(IStructArray2Interface[]::new);
     }
 
     @Override

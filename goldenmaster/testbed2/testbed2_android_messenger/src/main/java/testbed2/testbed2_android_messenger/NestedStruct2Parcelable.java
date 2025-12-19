@@ -3,6 +3,8 @@ package testbed2.testbed2_android_messenger;
 import testbed2.testbed2_api.NestedStruct2;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.Arrays;
 import testbed2.testbed2_api.Struct1;
 import testbed2.testbed2_api.Struct2;
 
@@ -48,20 +50,16 @@ import testbed2.testbed2_api.Struct2;
     }
         public static NestedStruct2Parcelable[] wrapArray(NestedStruct2[] structs) {
         if (structs == null) return null;
-        NestedStruct2Parcelable[] out = new NestedStruct2Parcelable[structs.length];
-        for (int i = 0; i < structs.length; i++) {
-            out[i] = new NestedStruct2Parcelable(structs[i]);
-        }
-        return out;
+        return Arrays.stream(structs)
+           .map(NestedStruct2Parcelable::new)
+           .toArray(NestedStruct2Parcelable[]::new);
     }
 
     public static NestedStruct2[] unwrapArray(NestedStruct2Parcelable[] parcelables) {
         if (parcelables == null) return null;
-        NestedStruct2[] out = new NestedStruct2[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getNestedStruct2();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(NestedStruct2Parcelable::getNestedStruct2)
+           .toArray(NestedStruct2[]::new);
     }
 
     @Override

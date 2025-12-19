@@ -3,6 +3,8 @@ package tbNames.tbNames_android_messenger;
 import tbNames.tbNames_api.INamEs;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.Arrays;
 import tbNames.tbNames_api.EnumWithUnderScores;
 
   public  class NamEsParcelable implements Parcelable {
@@ -49,20 +51,16 @@ import tbNames.tbNames_api.EnumWithUnderScores;
     }
         public static NamEsParcelable[] wrapArray(INamEs[] elements) {
         if (elements == null) return null;
-        NamEsParcelable[] out = new NamEsParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new NamEsParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(NamEsParcelable::new)
+           .toArray(NamEsParcelable[]::new);
     }
 
     public static INamEs[] unwrapArray(NamEsParcelable[] parcelables) {
         if (parcelables == null) return null;
-        INamEs[] out = new INamEs[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getNamEs();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(NamEsParcelable::getNamEs)
+           .toArray(INamEs[]::new);
     }
 
     @Override

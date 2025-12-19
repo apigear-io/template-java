@@ -4,6 +4,8 @@ import tbSimple.tbSimple_api.INoSignalsInterface;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
+
   public  class NoSignalsInterfaceParcelable implements Parcelable {
 
     public INoSignalsInterface data;
@@ -43,20 +45,16 @@ import android.os.Parcelable;
     }
         public static NoSignalsInterfaceParcelable[] wrapArray(INoSignalsInterface[] elements) {
         if (elements == null) return null;
-        NoSignalsInterfaceParcelable[] out = new NoSignalsInterfaceParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new NoSignalsInterfaceParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(NoSignalsInterfaceParcelable::new)
+           .toArray(NoSignalsInterfaceParcelable[]::new);
     }
 
     public static INoSignalsInterface[] unwrapArray(NoSignalsInterfaceParcelable[] parcelables) {
         if (parcelables == null) return null;
-        INoSignalsInterface[] out = new INoSignalsInterface[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getNoSignalsInterface();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(NoSignalsInterfaceParcelable::getNoSignalsInterface)
+           .toArray(INoSignalsInterface[]::new);
     }
 
     @Override

@@ -3,6 +3,8 @@ package testbed1.testbed1_android_messenger;
 import testbed1.testbed1_api.StructStructWithArray;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.Arrays;
 import testbed1.testbed1_api.StructStringWithArray;
 
   public  class StructStructWithArrayParcelable implements Parcelable {
@@ -44,20 +46,16 @@ import testbed1.testbed1_api.StructStringWithArray;
     }
         public static StructStructWithArrayParcelable[] wrapArray(StructStructWithArray[] structs) {
         if (structs == null) return null;
-        StructStructWithArrayParcelable[] out = new StructStructWithArrayParcelable[structs.length];
-        for (int i = 0; i < structs.length; i++) {
-            out[i] = new StructStructWithArrayParcelable(structs[i]);
-        }
-        return out;
+        return Arrays.stream(structs)
+           .map(StructStructWithArrayParcelable::new)
+           .toArray(StructStructWithArrayParcelable[]::new);
     }
 
     public static StructStructWithArray[] unwrapArray(StructStructWithArrayParcelable[] parcelables) {
         if (parcelables == null) return null;
-        StructStructWithArray[] out = new StructStructWithArray[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getStructStructWithArray();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(StructStructWithArrayParcelable::getStructStructWithArray)
+           .toArray(StructStructWithArray[]::new);
     }
 
     @Override

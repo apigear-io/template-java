@@ -3,6 +3,8 @@ package tbSame1.tbSame1_android_messenger;
 import tbSame1.tbSame1_api.ISameEnum1Interface;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.Arrays;
 import tbSame1.tbSame1_api.Enum1;
 
   public  class SameEnum1InterfaceParcelable implements Parcelable {
@@ -43,20 +45,16 @@ import tbSame1.tbSame1_api.Enum1;
     }
         public static SameEnum1InterfaceParcelable[] wrapArray(ISameEnum1Interface[] elements) {
         if (elements == null) return null;
-        SameEnum1InterfaceParcelable[] out = new SameEnum1InterfaceParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new SameEnum1InterfaceParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(SameEnum1InterfaceParcelable::new)
+           .toArray(SameEnum1InterfaceParcelable[]::new);
     }
 
     public static ISameEnum1Interface[] unwrapArray(SameEnum1InterfaceParcelable[] parcelables) {
         if (parcelables == null) return null;
-        ISameEnum1Interface[] out = new ISameEnum1Interface[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getSameEnum1Interface();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(SameEnum1InterfaceParcelable::getSameEnum1Interface)
+           .toArray(ISameEnum1Interface[]::new);
     }
 
     @Override

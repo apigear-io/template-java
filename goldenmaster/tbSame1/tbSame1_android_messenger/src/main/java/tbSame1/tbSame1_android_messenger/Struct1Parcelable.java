@@ -4,6 +4,8 @@ import tbSame1.tbSame1_api.Struct1;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
+
   public  class Struct1Parcelable implements Parcelable {
 
     public Struct1 data;
@@ -46,20 +48,16 @@ import android.os.Parcelable;
     }
         public static Struct1Parcelable[] wrapArray(Struct1[] structs) {
         if (structs == null) return null;
-        Struct1Parcelable[] out = new Struct1Parcelable[structs.length];
-        for (int i = 0; i < structs.length; i++) {
-            out[i] = new Struct1Parcelable(structs[i]);
-        }
-        return out;
+        return Arrays.stream(structs)
+           .map(Struct1Parcelable::new)
+           .toArray(Struct1Parcelable[]::new);
     }
 
     public static Struct1[] unwrapArray(Struct1Parcelable[] parcelables) {
         if (parcelables == null) return null;
-        Struct1[] out = new Struct1[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getStruct1();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(Struct1Parcelable::getStruct1)
+           .toArray(Struct1[]::new);
     }
 
     @Override

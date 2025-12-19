@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 
+import java.util.Arrays;
 
 //TODO imports - may need some struct from this or imported module
 
@@ -46,20 +47,16 @@ import android.os.Parcelable;
 
     public static Enum3Parcelable[] wrapArray(Enum3[] enums) {
         if (enums == null) return null;
-        Enum3Parcelable[] result = new Enum3Parcelable[enums.length];
-        for (int i = 0; i < enums.length; i++) {
-            result[i] = new Enum3Parcelable(enums[i]);
-        }
-        return result;
+        return Arrays.stream(enums)
+           .map(Enum3Parcelable::new)
+           .toArray(Enum3Parcelable[]::new);
     }
 
     public static Enum3[] unwrapArray(Enum3Parcelable[] parcelables) {
         if (parcelables == null) return null;
-        Enum3[] out = new Enum3[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getEnum3();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(Enum3Parcelable::getEnum3)
+           .toArray(Enum3[]::new);
     }
 
     @Override

@@ -4,6 +4,8 @@ import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
+
   public  class SimpleLocalIfParcelable implements Parcelable {
 
     public ISimpleLocalIf data;
@@ -41,20 +43,16 @@ import android.os.Parcelable;
     }
         public static SimpleLocalIfParcelable[] wrapArray(ISimpleLocalIf[] elements) {
         if (elements == null) return null;
-        SimpleLocalIfParcelable[] out = new SimpleLocalIfParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new SimpleLocalIfParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(SimpleLocalIfParcelable::new)
+           .toArray(SimpleLocalIfParcelable[]::new);
     }
 
     public static ISimpleLocalIf[] unwrapArray(SimpleLocalIfParcelable[] parcelables) {
         if (parcelables == null) return null;
-        ISimpleLocalIf[] out = new ISimpleLocalIf[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getSimpleLocalIf();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(SimpleLocalIfParcelable::getSimpleLocalIf)
+           .toArray(ISimpleLocalIf[]::new);
     }
 
     @Override

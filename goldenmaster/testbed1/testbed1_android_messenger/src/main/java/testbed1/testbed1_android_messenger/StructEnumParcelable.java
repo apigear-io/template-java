@@ -3,6 +3,8 @@ package testbed1.testbed1_android_messenger;
 import testbed1.testbed1_api.StructEnum;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.Arrays;
 import testbed1.testbed1_api.Enum0;
 
   public  class StructEnumParcelable implements Parcelable {
@@ -44,20 +46,16 @@ import testbed1.testbed1_api.Enum0;
     }
         public static StructEnumParcelable[] wrapArray(StructEnum[] structs) {
         if (structs == null) return null;
-        StructEnumParcelable[] out = new StructEnumParcelable[structs.length];
-        for (int i = 0; i < structs.length; i++) {
-            out[i] = new StructEnumParcelable(structs[i]);
-        }
-        return out;
+        return Arrays.stream(structs)
+           .map(StructEnumParcelable::new)
+           .toArray(StructEnumParcelable[]::new);
     }
 
     public static StructEnum[] unwrapArray(StructEnumParcelable[] parcelables) {
         if (parcelables == null) return null;
-        StructEnum[] out = new StructEnum[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getStructEnum();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(StructEnumParcelable::getStructEnum)
+           .toArray(StructEnum[]::new);
     }
 
     @Override

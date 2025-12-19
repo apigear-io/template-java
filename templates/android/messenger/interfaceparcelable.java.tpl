@@ -4,6 +4,7 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Nam
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
 
 {{- define "getParcelable"}}
     {{- $ImportSchema:= printf "%s" ( camel .Schema.Import ) }}
@@ -147,20 +148,16 @@ import {{$module}}.{{$module}}_api.I{{.}};
     }
         public static {{Camel .Interface.Name}}Parcelable[] wrapArray(I{{Camel .Interface.Name}}[] elements) {
         if (elements == null) return null;
-        {{Camel .Interface.Name}}Parcelable[] out = new {{Camel .Interface.Name}}Parcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new {{Camel .Interface.Name}}Parcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map({{Camel .Interface.Name}}Parcelable::new)
+           .toArray({{Camel .Interface.Name}}Parcelable[]::new);
     }
 
     public static I{{Camel .Interface.Name}}[] unwrapArray({{Camel .Interface.Name}}Parcelable[] parcelables) {
         if (parcelables == null) return null;
-        I{{Camel .Interface.Name}}[] out = new I{{Camel .Interface.Name}}[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].get{{Camel .Interface.Name}}();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map({{Camel .Interface.Name}}Parcelable::get{{Camel .Interface.Name}})
+           .toArray(I{{Camel .Interface.Name}}[]::new);
     }
 
     @Override
