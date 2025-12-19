@@ -4,6 +4,8 @@ import tbIfaceimport.tbIfaceimport_api.IEmptyIf;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
+
   public  class EmptyIfParcelable implements Parcelable {
 
     public IEmptyIf data;
@@ -39,20 +41,16 @@ import android.os.Parcelable;
     }
         public static EmptyIfParcelable[] wrapArray(IEmptyIf[] elements) {
         if (elements == null) return null;
-        EmptyIfParcelable[] out = new EmptyIfParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new EmptyIfParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(EmptyIfParcelable::new)
+           .toArray(EmptyIfParcelable[]::new);
     }
 
     public static IEmptyIf[] unwrapArray(EmptyIfParcelable[] parcelables) {
         if (parcelables == null) return null;
-        IEmptyIf[] out = new IEmptyIf[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getEmptyIf();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(EmptyIfParcelable::getEmptyIf)
+           .toArray(IEmptyIf[]::new);
     }
 
     @Override

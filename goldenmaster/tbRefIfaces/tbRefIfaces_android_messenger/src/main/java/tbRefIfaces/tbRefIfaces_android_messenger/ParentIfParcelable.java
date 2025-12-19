@@ -3,6 +3,8 @@ package tbRefIfaces.tbRefIfaces_android_messenger;
 import tbRefIfaces.tbRefIfaces_api.IParentIf;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.Arrays;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 
   public  class ParentIfParcelable implements Parcelable {
@@ -52,20 +54,16 @@ import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
     }
         public static ParentIfParcelable[] wrapArray(IParentIf[] elements) {
         if (elements == null) return null;
-        ParentIfParcelable[] out = new ParentIfParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new ParentIfParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(ParentIfParcelable::new)
+           .toArray(ParentIfParcelable[]::new);
     }
 
     public static IParentIf[] unwrapArray(ParentIfParcelable[] parcelables) {
         if (parcelables == null) return null;
-        IParentIf[] out = new IParentIf[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getParentIf();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(ParentIfParcelable::getParentIf)
+           .toArray(IParentIf[]::new);
     }
 
     @Override

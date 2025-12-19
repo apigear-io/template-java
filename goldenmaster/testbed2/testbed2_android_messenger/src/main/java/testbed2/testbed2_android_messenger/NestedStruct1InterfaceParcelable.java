@@ -3,6 +3,8 @@ package testbed2.testbed2_android_messenger;
 import testbed2.testbed2_api.INestedStruct1Interface;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.Arrays;
 import testbed2.testbed2_api.NestedStruct1;
 
   public  class NestedStruct1InterfaceParcelable implements Parcelable {
@@ -43,20 +45,16 @@ import testbed2.testbed2_api.NestedStruct1;
     }
         public static NestedStruct1InterfaceParcelable[] wrapArray(INestedStruct1Interface[] elements) {
         if (elements == null) return null;
-        NestedStruct1InterfaceParcelable[] out = new NestedStruct1InterfaceParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new NestedStruct1InterfaceParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(NestedStruct1InterfaceParcelable::new)
+           .toArray(NestedStruct1InterfaceParcelable[]::new);
     }
 
     public static INestedStruct1Interface[] unwrapArray(NestedStruct1InterfaceParcelable[] parcelables) {
         if (parcelables == null) return null;
-        INestedStruct1Interface[] out = new INestedStruct1Interface[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getNestedStruct1Interface();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(NestedStruct1InterfaceParcelable::getNestedStruct1Interface)
+           .toArray(INestedStruct1Interface[]::new);
     }
 
     @Override

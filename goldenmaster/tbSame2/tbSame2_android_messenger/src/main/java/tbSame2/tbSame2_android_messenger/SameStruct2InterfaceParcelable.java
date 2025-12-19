@@ -3,6 +3,8 @@ package tbSame2.tbSame2_android_messenger;
 import tbSame2.tbSame2_api.ISameStruct2Interface;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.Arrays;
 import tbSame2.tbSame2_api.Struct1;
 import tbSame2.tbSame2_api.Struct2;
 
@@ -47,20 +49,16 @@ import tbSame2.tbSame2_api.Struct2;
     }
         public static SameStruct2InterfaceParcelable[] wrapArray(ISameStruct2Interface[] elements) {
         if (elements == null) return null;
-        SameStruct2InterfaceParcelable[] out = new SameStruct2InterfaceParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new SameStruct2InterfaceParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(SameStruct2InterfaceParcelable::new)
+           .toArray(SameStruct2InterfaceParcelable[]::new);
     }
 
     public static ISameStruct2Interface[] unwrapArray(SameStruct2InterfaceParcelable[] parcelables) {
         if (parcelables == null) return null;
-        ISameStruct2Interface[] out = new ISameStruct2Interface[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getSameStruct2Interface();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(SameStruct2InterfaceParcelable::getSameStruct2Interface)
+           .toArray(ISameStruct2Interface[]::new);
     }
 
     @Override

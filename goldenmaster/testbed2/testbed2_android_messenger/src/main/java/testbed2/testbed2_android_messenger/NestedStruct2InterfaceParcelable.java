@@ -3,6 +3,8 @@ package testbed2.testbed2_android_messenger;
 import testbed2.testbed2_api.INestedStruct2Interface;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.Arrays;
 import testbed2.testbed2_api.NestedStruct1;
 import testbed2.testbed2_api.NestedStruct2;
 
@@ -47,20 +49,16 @@ import testbed2.testbed2_api.NestedStruct2;
     }
         public static NestedStruct2InterfaceParcelable[] wrapArray(INestedStruct2Interface[] elements) {
         if (elements == null) return null;
-        NestedStruct2InterfaceParcelable[] out = new NestedStruct2InterfaceParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new NestedStruct2InterfaceParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(NestedStruct2InterfaceParcelable::new)
+           .toArray(NestedStruct2InterfaceParcelable[]::new);
     }
 
     public static INestedStruct2Interface[] unwrapArray(NestedStruct2InterfaceParcelable[] parcelables) {
         if (parcelables == null) return null;
-        INestedStruct2Interface[] out = new INestedStruct2Interface[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getNestedStruct2Interface();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(NestedStruct2InterfaceParcelable::getNestedStruct2Interface)
+           .toArray(INestedStruct2Interface[]::new);
     }
 
     @Override

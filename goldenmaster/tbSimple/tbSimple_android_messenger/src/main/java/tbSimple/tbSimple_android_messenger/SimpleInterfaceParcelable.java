@@ -4,6 +4,8 @@ import tbSimple.tbSimple_api.ISimpleInterface;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
+
   public  class SimpleInterfaceParcelable implements Parcelable {
 
     public ISimpleInterface data;
@@ -55,20 +57,16 @@ import android.os.Parcelable;
     }
         public static SimpleInterfaceParcelable[] wrapArray(ISimpleInterface[] elements) {
         if (elements == null) return null;
-        SimpleInterfaceParcelable[] out = new SimpleInterfaceParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new SimpleInterfaceParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(SimpleInterfaceParcelable::new)
+           .toArray(SimpleInterfaceParcelable[]::new);
     }
 
     public static ISimpleInterface[] unwrapArray(SimpleInterfaceParcelable[] parcelables) {
         if (parcelables == null) return null;
-        ISimpleInterface[] out = new ISimpleInterface[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getSimpleInterface();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(SimpleInterfaceParcelable::getSimpleInterface)
+           .toArray(ISimpleInterface[]::new);
     }
 
     @Override

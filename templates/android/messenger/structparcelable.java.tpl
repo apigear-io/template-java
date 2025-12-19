@@ -4,6 +4,8 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Struct.Name}};
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
+
 {{- $typesToImport := getEmptyStringList}}
 {{- $interfacesToImport := getEmptyStringList}}
 {{- $module := camel .Module.Name}}
@@ -106,20 +108,16 @@ import {{$module}}.{{$module}}_api.I{{.}};
     }
         public static {{Camel .Struct.Name}}Parcelable[] wrapArray({{Camel .Struct.Name}}[] structs) {
         if (structs == null) return null;
-        {{Camel .Struct.Name}}Parcelable[] out = new {{Camel .Struct.Name}}Parcelable[structs.length];
-        for (int i = 0; i < structs.length; i++) {
-            out[i] = new {{Camel .Struct.Name}}Parcelable(structs[i]);
-        }
-        return out;
+        return Arrays.stream(structs)
+           .map({{Camel .Struct.Name}}Parcelable::new)
+           .toArray({{Camel .Struct.Name}}Parcelable[]::new);
     }
 
     public static {{Camel .Struct.Name}}[] unwrapArray({{Camel .Struct.Name}}Parcelable[] parcelables) {
         if (parcelables == null) return null;
-        {{Camel .Struct.Name}}[] out = new {{Camel .Struct.Name}}[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].get{{Camel .Struct.Name}}();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map({{Camel .Struct.Name}}Parcelable::get{{Camel .Struct.Name}})
+           .toArray({{Camel .Struct.Name}}[]::new);
     }
 
     @Override

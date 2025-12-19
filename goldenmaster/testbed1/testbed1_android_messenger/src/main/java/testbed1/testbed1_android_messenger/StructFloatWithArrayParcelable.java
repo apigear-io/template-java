@@ -4,6 +4,8 @@ import testbed1.testbed1_api.StructFloatWithArray;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
+
   public  class StructFloatWithArrayParcelable implements Parcelable {
 
     public StructFloatWithArray data;
@@ -42,20 +44,16 @@ import android.os.Parcelable;
     }
         public static StructFloatWithArrayParcelable[] wrapArray(StructFloatWithArray[] structs) {
         if (structs == null) return null;
-        StructFloatWithArrayParcelable[] out = new StructFloatWithArrayParcelable[structs.length];
-        for (int i = 0; i < structs.length; i++) {
-            out[i] = new StructFloatWithArrayParcelable(structs[i]);
-        }
-        return out;
+        return Arrays.stream(structs)
+           .map(StructFloatWithArrayParcelable::new)
+           .toArray(StructFloatWithArrayParcelable[]::new);
     }
 
     public static StructFloatWithArray[] unwrapArray(StructFloatWithArrayParcelable[] parcelables) {
         if (parcelables == null) return null;
-        StructFloatWithArray[] out = new StructFloatWithArray[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getStructFloatWithArray();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(StructFloatWithArrayParcelable::getStructFloatWithArray)
+           .toArray(StructFloatWithArray[]::new);
     }
 
     @Override

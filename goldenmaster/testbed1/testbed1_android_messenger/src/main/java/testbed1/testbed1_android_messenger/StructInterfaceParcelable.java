@@ -3,6 +3,8 @@ package testbed1.testbed1_android_messenger;
 import testbed1.testbed1_api.IStructInterface;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import java.util.Arrays;
 import testbed1.testbed1_api.StructBool;
 import testbed1.testbed1_api.StructFloat;
 import testbed1.testbed1_api.StructInt;
@@ -55,20 +57,16 @@ import testbed1.testbed1_api.StructString;
     }
         public static StructInterfaceParcelable[] wrapArray(IStructInterface[] elements) {
         if (elements == null) return null;
-        StructInterfaceParcelable[] out = new StructInterfaceParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new StructInterfaceParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(StructInterfaceParcelable::new)
+           .toArray(StructInterfaceParcelable[]::new);
     }
 
     public static IStructInterface[] unwrapArray(StructInterfaceParcelable[] parcelables) {
         if (parcelables == null) return null;
-        IStructInterface[] out = new IStructInterface[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getStructInterface();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(StructInterfaceParcelable::getStructInterface)
+           .toArray(IStructInterface[]::new);
     }
 
     @Override

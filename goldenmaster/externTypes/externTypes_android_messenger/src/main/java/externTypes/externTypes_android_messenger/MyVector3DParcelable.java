@@ -3,6 +3,7 @@ import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Arrays;
 
   public  class MyVector3DParcelable implements Parcelable {
     public Vector3D data;
@@ -43,20 +44,16 @@ import android.os.Parcelable;
     public static MyVector3DParcelable[] wrapArray(Vector3D[] elements)
     {
         if (elements == null) return null;
-        MyVector3DParcelable[] out = new MyVector3DParcelable[elements.length];
-        for (int i = 0; i < elements.length; i++) {
-            out[i] = new MyVector3DParcelable(elements[i]);
-        }
-        return out;
+        return Arrays.stream(elements)
+           .map(MyVector3DParcelable::new)
+           .toArray(MyVector3DParcelable[]::new);
     }
 
     public static Vector3D[] unwrapArray(MyVector3DParcelable[] parcelables) {
         if (parcelables == null) return null;
-        Vector3D[] out = new Vector3D[parcelables.length];
-        for (int i = 0; i < parcelables.length; i++) {
-            out[i] = parcelables[i].getMyVector3D();
-        }
-        return out;
+        return Arrays.stream(parcelables)
+           .map(MyVector3DParcelable::getMyVector3D)
+           .toArray(Vector3D[]::new);
     }
 
     @Override
