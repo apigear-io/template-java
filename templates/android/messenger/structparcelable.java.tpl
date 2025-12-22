@@ -45,20 +45,14 @@ import {{$module}}.{{$module}}_api.I{{.}};
     this.data = new {{Camel .Struct.Name}}();
 {{- range .Struct.Fields }}
 {{- if .IsArray}}
-{{- if (eq .KindType "enum") }}
-        {{javaElementType "" . }}Parcelable[] l_parcelable{{camel .Name}} = in.createTypedArray({{javaElementType "" . }}Parcelable.CREATOR);
-        data.{{camel .Name}} = {{javaElementType "" . }}Parcelable.unwrapArray(l_parcelable{{camel .Name}});
-{{- else if .IsPrimitive }}
+{{- if .IsPrimitive }}
         data.{{camel .Name}} = in.create{{ ( Camel  (javaElementType "" .) ) }}Array();
 {{- else }}
         {{javaElementType "" . }}Parcelable[] l_parcelable{{camel .Name}} = in.createTypedArray({{javaElementType "" . }}Parcelable.CREATOR);
         data.{{camel .Name}} = {{javaElementType "" . }}Parcelable.unwrapArray(l_parcelable{{camel .Name}});
 {{- end }}
 {{- else }}
-{{- if (eq .KindType "enum") }}
-        {{javaType "" .}}Parcelable l_parcelable{{camel .Name}} = in.readParcelable({{javaType "" .}}Parcelable.class.getClassLoader(), {{javaType "" .}}Parcelable.class);
-        data.{{camel .Name}} = l_parcelable{{camel .Name}} != null ? l_parcelable{{camel .Name}}.data : null;
-{{- else if .IsPrimitive }}
+{{- if .IsPrimitive }}
         data.{{camel .Name}} = in.read{{ ( Camel  (javaType "" .) ) }}();
 {{- else }}
         {{javaType "" .}}Parcelable l_parcelable{{camel .Name}} = in.readParcelable({{javaType "" .}}Parcelable.class.getClassLoader(), {{javaType "" .}}Parcelable.class);
@@ -85,17 +79,13 @@ import {{$module}}.{{$module}}_api.I{{.}};
     public void writeToParcel(Parcel dest, int flags) {
     {{- range .Struct.Fields }}
 {{- if .IsArray}}
-{{- if (eq .KindType "enum") }}
-        dest.writeTypedArray({{javaElementType "" . }}Parcelable.wrapArray(data.{{camel .Name}}), flags);
-{{- else if .IsPrimitive }}
+{{- if .IsPrimitive }}
         dest.write{{ ( Camel  (javaElementType "" .) ) }}Array(data.{{camel .Name}});
 {{- else }}
         dest.writeTypedArray({{javaElementType "" . }}Parcelable.wrapArray(data.{{camel .Name}}), flags);
 {{- end }}
 {{- else }}
-{{- if (eq .KindType "enum") }}
-        dest.writeParcelable(new {{javaType "" .}}Parcelable(data.{{camel .Name}}), flags);
-{{- else if .IsPrimitive }}
+{{- if .IsPrimitive }}
         dest.write{{ ( Camel  (javaType "" .) ) }}(data.{{camel .Name}});
 {{- else }}
         dest.writeParcelable(new {{javaType "" .}}Parcelable(data.{{camel .Name}}), flags);
