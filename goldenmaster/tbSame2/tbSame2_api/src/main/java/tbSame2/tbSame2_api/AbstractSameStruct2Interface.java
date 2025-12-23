@@ -46,7 +46,7 @@ import java.util.HashSet;
       }
     }
   
-    
+    @Override
     public void fire_readyStatusChanged(boolean isReady)
     {
         for (ISameStruct2InterfaceEventListener listener : listeners) {

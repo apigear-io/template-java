@@ -88,7 +88,7 @@ public class NoOperationsInterfaceJniClient extends AbstractNoOperationsInterfac
 
     @Override
     public void on_readyStatusChanged(boolean isReady) {
-        Log.i(TAG, "Connection state changed "+isReady);
+        Log.i(TAG, "Will call native Connection state changed "+isReady);
         nativeIsReady(isReady);
     }
 
