@@ -39,7 +39,7 @@ import java.util.HashSet;
       }
     }
   {{ end }}
-    
+    @Override
     public void fire_readyStatusChanged(boolean isReady)
     {
         for ({{$interfaceName}}EventListener listener : listeners) {

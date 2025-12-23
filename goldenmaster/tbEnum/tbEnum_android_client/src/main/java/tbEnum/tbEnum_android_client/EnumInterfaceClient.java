@@ -111,6 +111,7 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
             msg.getData().putString("connectionID", mConnectionId);
             mClientHandler.sendToService(msg);
             mApplicationContext.unbindService(this);
+            doCleanupForUnbinding("unbindFromService");
         }
     }
 
@@ -154,10 +155,13 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 
     private void doCleanupForUnbinding(String caller)
     {
+        Log.i(TAG, "doCleanupForUnbinding " + caller);
         mServiceMessenger = null;
-        mClientMessenger = null;
-        mIsBoundToService = false;
-        fire_readyStatusChanged(false);
+        if (mIsBoundToService)
+        {
+            mIsBoundToService = false;
+            fire_readyStatusChanged(false);
+        }
     }
 
 

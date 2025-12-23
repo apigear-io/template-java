@@ -102,6 +102,7 @@ public class NestedStruct1InterfaceClient extends AbstractNestedStruct1Interface
             msg.getData().putString("connectionID", mConnectionId);
             mClientHandler.sendToService(msg);
             mApplicationContext.unbindService(this);
+            doCleanupForUnbinding("unbindFromService");
         }
     }
 
@@ -145,10 +146,13 @@ public class NestedStruct1InterfaceClient extends AbstractNestedStruct1Interface
 
     private void doCleanupForUnbinding(String caller)
     {
+        Log.i(TAG, "doCleanupForUnbinding " + caller);
         mServiceMessenger = null;
-        mClientMessenger = null;
-        mIsBoundToService = false;
-        fire_readyStatusChanged(false);
+        if (mIsBoundToService)
+        {
+            mIsBoundToService = false;
+            fire_readyStatusChanged(false);
+        }
     }
 
 
