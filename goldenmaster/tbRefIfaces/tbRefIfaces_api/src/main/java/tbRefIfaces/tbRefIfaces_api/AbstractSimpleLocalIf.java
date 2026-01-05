@@ -8,9 +8,11 @@ import java.util.HashSet;
   public abstract class AbstractSimpleLocalIf implements ISimpleLocalIf {
     public Collection<ISimpleLocalIfEventListener> listeners = new HashSet<>();
 
+    @Override
     public void addEventListener(ISimpleLocalIfEventListener listener) {
       listeners.add(listener); 
     }
+    @Override
     public void removeEventListener(ISimpleLocalIfEventListener listener) {
       listeners.remove(listener);
     }

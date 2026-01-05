@@ -8,9 +8,11 @@ import java.util.HashSet;
   public abstract class AbstractEmptyInterface implements IEmptyInterface {
     public Collection<IEmptyInterfaceEventListener> listeners = new HashSet<>();
 
+    @Override
     public void addEventListener(IEmptyInterfaceEventListener listener) {
       listeners.add(listener); 
     }
+    @Override
     public void removeEventListener(IEmptyInterfaceEventListener listener) {
       listeners.remove(listener);
     }

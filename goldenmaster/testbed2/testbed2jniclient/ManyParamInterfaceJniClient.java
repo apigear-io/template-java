@@ -81,6 +81,7 @@ public class ManyParamInterfaceJniClient extends AbstractManyParamInterface impl
         return mMessengerClient.getProp4();
     }
     
+     @Override
      public int func1(int param1)
      {
         Log.v(TAG, "Blocking callfunc1 - should not be used ");
@@ -94,11 +95,13 @@ public class ManyParamInterfaceJniClient extends AbstractManyParamInterface impl
     }
 
     //Should not be called directly, use func1Async(String callId, int param1)
+    @Override
     public CompletableFuture<Integer> func1Async(int param1)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.func1Async(param1);
     }
+     @Override
      public int func2(int param1, int param2)
      {
         Log.v(TAG, "Blocking callfunc2 - should not be used ");
@@ -112,11 +115,13 @@ public class ManyParamInterfaceJniClient extends AbstractManyParamInterface impl
     }
 
     //Should not be called directly, use func2Async(String callId, int param1, int param2)
+    @Override
     public CompletableFuture<Integer> func2Async(int param1, int param2)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.func2Async(param1, param2);
     }
+     @Override
      public int func3(int param1, int param2, int param3)
      {
         Log.v(TAG, "Blocking callfunc3 - should not be used ");
@@ -130,11 +135,13 @@ public class ManyParamInterfaceJniClient extends AbstractManyParamInterface impl
     }
 
     //Should not be called directly, use func3Async(String callId, int param1, int param2, int param3)
+    @Override
     public CompletableFuture<Integer> func3Async(int param1, int param2, int param3)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.func3Async(param1, param2, param3);
     }
+     @Override
      public int func4(int param1, int param2, int param3, int param4)
      {
         Log.v(TAG, "Blocking callfunc4 - should not be used ");
@@ -148,6 +155,7 @@ public class ManyParamInterfaceJniClient extends AbstractManyParamInterface impl
     }
 
     //Should not be called directly, use func4Async(String callId, int param1, int param2, int param3, int param4)
+    @Override
     public CompletableFuture<Integer> func4Async(int param1, int param2, int param3, int param4)
     {
         Log.v(TAG, "NON Blocking call method ");

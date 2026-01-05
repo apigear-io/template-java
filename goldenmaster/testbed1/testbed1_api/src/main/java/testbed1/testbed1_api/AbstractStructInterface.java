@@ -21,9 +21,11 @@ import java.util.HashSet;
   public abstract class AbstractStructInterface implements IStructInterface {
     public Collection<IStructInterfaceEventListener> listeners = new HashSet<>();
 
+    @Override
     public void addEventListener(IStructInterfaceEventListener listener) {
       listeners.add(listener); 
     }
+    @Override
     public void removeEventListener(IStructInterfaceEventListener listener) {
       listeners.remove(listener);
     }

@@ -8,9 +8,11 @@ import java.util.HashSet;
   public abstract class AbstractVoidInterface implements IVoidInterface {
     public Collection<IVoidInterfaceEventListener> listeners = new HashSet<>();
 
+    @Override
     public void addEventListener(IVoidInterfaceEventListener listener) {
       listeners.add(listener); 
     }
+    @Override
     public void removeEventListener(IVoidInterfaceEventListener listener) {
       listeners.remove(listener);
     }

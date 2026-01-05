@@ -133,6 +133,7 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
         return mMessengerClient.getPropString();
     }
     
+     @Override
      public void funcNoReturnValue(boolean paramBool)
      {
         Log.v(TAG, "Blocking callfuncNoReturnValue - should not be used ");
@@ -146,11 +147,13 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
     }
 
     //Should not be called directly, use funcNoReturnValueAsync(String callId, boolean paramBool)
+    @Override
     public CompletableFuture<Void> funcNoReturnValueAsync(boolean paramBool)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcNoReturnValueAsync(paramBool);
     }
+     @Override
      public boolean funcNoParams()
      {
         Log.v(TAG, "Blocking callfuncNoParams - should not be used ");
@@ -164,11 +167,13 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
     }
 
     //Should not be called directly, use funcNoParamsAsync(String callId, )
+    @Override
     public CompletableFuture<Boolean> funcNoParamsAsync()
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcNoParamsAsync();
     }
+     @Override
      public boolean funcBool(boolean paramBool)
      {
         Log.v(TAG, "Blocking callfuncBool - should not be used ");
@@ -182,11 +187,13 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
     }
 
     //Should not be called directly, use funcBoolAsync(String callId, boolean paramBool)
+    @Override
     public CompletableFuture<Boolean> funcBoolAsync(boolean paramBool)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcBoolAsync(paramBool);
     }
+     @Override
      public int funcInt(int paramInt)
      {
         Log.v(TAG, "Blocking callfuncInt - should not be used ");
@@ -200,11 +207,13 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
     }
 
     //Should not be called directly, use funcIntAsync(String callId, int paramInt)
+    @Override
     public CompletableFuture<Integer> funcIntAsync(int paramInt)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcIntAsync(paramInt);
     }
+     @Override
      public int funcInt32(int paramInt32)
      {
         Log.v(TAG, "Blocking callfuncInt32 - should not be used ");
@@ -218,11 +227,13 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
     }
 
     //Should not be called directly, use funcInt32Async(String callId, int paramInt32)
+    @Override
     public CompletableFuture<Integer> funcInt32Async(int paramInt32)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcInt32Async(paramInt32);
     }
+     @Override
      public long funcInt64(long paramInt64)
      {
         Log.v(TAG, "Blocking callfuncInt64 - should not be used ");
@@ -236,11 +247,13 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
     }
 
     //Should not be called directly, use funcInt64Async(String callId, long paramInt64)
+    @Override
     public CompletableFuture<Long> funcInt64Async(long paramInt64)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcInt64Async(paramInt64);
     }
+     @Override
      public float funcFloat(float paramFloat)
      {
         Log.v(TAG, "Blocking callfuncFloat - should not be used ");
@@ -254,11 +267,13 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
     }
 
     //Should not be called directly, use funcFloatAsync(String callId, float paramFloat)
+    @Override
     public CompletableFuture<Float> funcFloatAsync(float paramFloat)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcFloatAsync(paramFloat);
     }
+     @Override
      public float funcFloat32(float paramFloat32)
      {
         Log.v(TAG, "Blocking callfuncFloat32 - should not be used ");
@@ -272,11 +287,13 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
     }
 
     //Should not be called directly, use funcFloat32Async(String callId, float paramFloat32)
+    @Override
     public CompletableFuture<Float> funcFloat32Async(float paramFloat32)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcFloat32Async(paramFloat32);
     }
+     @Override
      public double funcFloat64(double paramFloat)
      {
         Log.v(TAG, "Blocking callfuncFloat64 - should not be used ");
@@ -290,11 +307,13 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
     }
 
     //Should not be called directly, use funcFloat64Async(String callId, double paramFloat)
+    @Override
     public CompletableFuture<Double> funcFloat64Async(double paramFloat)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcFloat64Async(paramFloat);
     }
+     @Override
      public String funcString(String paramString)
      {
         Log.v(TAG, "Blocking callfuncString - should not be used ");
@@ -308,6 +327,7 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
     }
 
     //Should not be called directly, use funcStringAsync(String callId, String paramString)
+    @Override
     public CompletableFuture<String> funcStringAsync(String paramString)
     {
         Log.v(TAG, "NON Blocking call method ");

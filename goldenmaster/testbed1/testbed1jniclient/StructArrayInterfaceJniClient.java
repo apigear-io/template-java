@@ -104,6 +104,7 @@ public class StructArrayInterfaceJniClient extends AbstractStructArrayInterface 
         return mMessengerClient.getPropEnum();
     }
     
+     @Override
      public StructBool[] funcBool(StructBool[] paramBool)
      {
         Log.v(TAG, "Blocking callfuncBool - should not be used ");
@@ -117,11 +118,13 @@ public class StructArrayInterfaceJniClient extends AbstractStructArrayInterface 
     }
 
     //Should not be called directly, use funcBoolAsync(String callId, StructBool[] paramBool)
+    @Override
     public CompletableFuture<StructBool[]> funcBoolAsync(StructBool[] paramBool)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcBoolAsync(paramBool);
     }
+     @Override
      public StructInt[] funcInt(StructInt[] paramInt)
      {
         Log.v(TAG, "Blocking callfuncInt - should not be used ");
@@ -135,11 +138,13 @@ public class StructArrayInterfaceJniClient extends AbstractStructArrayInterface 
     }
 
     //Should not be called directly, use funcIntAsync(String callId, StructInt[] paramInt)
+    @Override
     public CompletableFuture<StructInt[]> funcIntAsync(StructInt[] paramInt)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcIntAsync(paramInt);
     }
+     @Override
      public StructFloat[] funcFloat(StructFloat[] paramFloat)
      {
         Log.v(TAG, "Blocking callfuncFloat - should not be used ");
@@ -153,11 +158,13 @@ public class StructArrayInterfaceJniClient extends AbstractStructArrayInterface 
     }
 
     //Should not be called directly, use funcFloatAsync(String callId, StructFloat[] paramFloat)
+    @Override
     public CompletableFuture<StructFloat[]> funcFloatAsync(StructFloat[] paramFloat)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcFloatAsync(paramFloat);
     }
+     @Override
      public StructString[] funcString(StructString[] paramString)
      {
         Log.v(TAG, "Blocking callfuncString - should not be used ");
@@ -171,11 +178,13 @@ public class StructArrayInterfaceJniClient extends AbstractStructArrayInterface 
     }
 
     //Should not be called directly, use funcStringAsync(String callId, StructString[] paramString)
+    @Override
     public CompletableFuture<StructString[]> funcStringAsync(StructString[] paramString)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcStringAsync(paramString);
     }
+     @Override
      public Enum0[] funcEnum(Enum0[] paramEnum)
      {
         Log.v(TAG, "Blocking callfuncEnum - should not be used ");
@@ -189,6 +198,7 @@ public class StructArrayInterfaceJniClient extends AbstractStructArrayInterface 
     }
 
     //Should not be called directly, use funcEnumAsync(String callId, Enum0[] paramEnum)
+    @Override
     public CompletableFuture<Enum0[]> funcEnumAsync(Enum0[] paramEnum)
     {
         Log.v(TAG, "NON Blocking call method ");

@@ -8,9 +8,11 @@ import java.util.HashSet;
   public abstract class AbstractSimpleInterface implements ISimpleInterface {
     public Collection<ISimpleInterfaceEventListener> listeners = new HashSet<>();
 
+    @Override
     public void addEventListener(ISimpleInterfaceEventListener listener) {
       listeners.add(listener); 
     }
+    @Override
     public void removeEventListener(ISimpleInterfaceEventListener listener) {
       listeners.remove(listener);
     }

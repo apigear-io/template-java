@@ -44,6 +44,7 @@ public class SameStruct1InterfaceJniClient extends AbstractSameStruct1Interface 
         return mMessengerClient.getProp1();
     }
     
+     @Override
      public Struct1 func1(Struct1 param1)
      {
         Log.v(TAG, "Blocking callfunc1 - should not be used ");
@@ -57,6 +58,7 @@ public class SameStruct1InterfaceJniClient extends AbstractSameStruct1Interface 
     }
 
     //Should not be called directly, use func1Async(String callId, Struct1 param1)
+    @Override
     public CompletableFuture<Struct1> func1Async(Struct1 param1)
     {
         Log.v(TAG, "NON Blocking call method ");

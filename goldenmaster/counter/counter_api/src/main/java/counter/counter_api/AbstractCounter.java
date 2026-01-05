@@ -8,9 +8,11 @@ import java.util.HashSet;
   public abstract class AbstractCounter implements ICounter {
     public Collection<ICounterEventListener> listeners = new HashSet<>();
 
+    @Override
     public void addEventListener(ICounterEventListener listener) {
       listeners.add(listener); 
     }
+    @Override
     public void removeEventListener(ICounterEventListener listener) {
       listeners.remove(listener);
     }

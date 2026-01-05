@@ -12,9 +12,11 @@ import java.util.HashSet;
   public abstract class AbstractSameStruct2Interface implements ISameStruct2Interface {
     public Collection<ISameStruct2InterfaceEventListener> listeners = new HashSet<>();
 
+    @Override
     public void addEventListener(ISameStruct2InterfaceEventListener listener) {
       listeners.add(listener); 
     }
+    @Override
     public void removeEventListener(ISameStruct2InterfaceEventListener listener) {
       listeners.remove(listener);
     }

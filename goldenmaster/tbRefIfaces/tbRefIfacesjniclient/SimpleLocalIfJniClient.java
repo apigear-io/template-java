@@ -42,6 +42,7 @@ public class SimpleLocalIfJniClient extends AbstractSimpleLocalIf implements ISi
         return mMessengerClient.getIntProperty();
     }
     
+     @Override
      public int intMethod(int param)
      {
         Log.v(TAG, "Blocking callintMethod - should not be used ");
@@ -55,6 +56,7 @@ public class SimpleLocalIfJniClient extends AbstractSimpleLocalIf implements ISi
     }
 
     //Should not be called directly, use intMethodAsync(String callId, int param)
+    @Override
     public CompletableFuture<Integer> intMethodAsync(int param)
     {
         Log.v(TAG, "NON Blocking call method ");
