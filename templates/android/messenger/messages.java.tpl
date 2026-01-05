@@ -1,7 +1,5 @@
 package {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger;
 
-{{ define "inc" }}{{ len (printf "%*s " . "") }}{{ end -}}
-
 public enum {{Camel .Interface.Name}}MessageType {
     REGISTER_CLIENT(0),
     UNREGISTER_CLIENT(1),
