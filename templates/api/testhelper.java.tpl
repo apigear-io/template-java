@@ -4,18 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 import java.util.Arrays;
 
-{{- define "getMakeTestHelper"}}
-    {{- $ImportSchema:= printf "%s" ( camel .Schema.Import ) }}
-    {{- $TypeName :=  Camel .Type -}}
-    {{- if not (eq $ImportSchema  "" ) -}}
-        {{- $ClassName := printf "%sTestHelper" ( Camel .Schema.Import ) -}}
-        {{$ImportSchema}}.{{$ImportSchema}}_api.{{$ClassName}}.makeTest{{$TypeName}}
-    {{- else -}}
-            {{- $ClassName := printf "%sTestHelper" ( Camel .Schema.Module.Name ) -}}
-            {{$ClassName}}.makeTest{{$TypeName}}
-    {{- end -}}
-{{- end }}
-
 public class {{Camel .Module.Name}}TestHelper
 {
 {{- range .Module.Structs}}
