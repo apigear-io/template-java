@@ -29,6 +29,7 @@ public class NoPropertiesInterfaceJniClient extends AbstractNoPropertiesInterfac
     {
         return mMessengerClient._isReady();
     }
+     @Override
      public void funcVoid()
      {
         Log.v(TAG, "Blocking callfuncVoid - should not be used ");
@@ -42,11 +43,13 @@ public class NoPropertiesInterfaceJniClient extends AbstractNoPropertiesInterfac
     }
 
     //Should not be called directly, use funcVoidAsync(String callId, )
+    @Override
     public CompletableFuture<Void> funcVoidAsync()
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcVoidAsync();
     }
+     @Override
      public boolean funcBool(boolean paramBool)
      {
         Log.v(TAG, "Blocking callfuncBool - should not be used ");
@@ -60,6 +63,7 @@ public class NoPropertiesInterfaceJniClient extends AbstractNoPropertiesInterfac
     }
 
     //Should not be called directly, use funcBoolAsync(String callId, boolean paramBool)
+    @Override
     public CompletableFuture<Boolean> funcBoolAsync(boolean paramBool)
     {
         Log.v(TAG, "NON Blocking call method ");

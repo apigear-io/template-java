@@ -17,9 +17,11 @@ import java.util.HashSet;
   public abstract class Abstract{{Camel .Interface.Name}} implements {{$interfaceName}} {
     public Collection<{{$interfaceName}}EventListener> listeners = new HashSet<>();
 
+    @Override
     public void addEventListener({{$interfaceName}}EventListener listener) {
       listeners.add(listener); 
     }
+    @Override
     public void removeEventListener({{$interfaceName}}EventListener listener) {
       listeners.remove(listener);
     }

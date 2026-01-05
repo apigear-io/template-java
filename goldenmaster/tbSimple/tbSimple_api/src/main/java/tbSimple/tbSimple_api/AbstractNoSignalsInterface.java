@@ -8,9 +8,11 @@ import java.util.HashSet;
   public abstract class AbstractNoSignalsInterface implements INoSignalsInterface {
     public Collection<INoSignalsInterfaceEventListener> listeners = new HashSet<>();
 
+    @Override
     public void addEventListener(INoSignalsInterfaceEventListener listener) {
       listeners.add(listener); 
     }
+    @Override
     public void removeEventListener(INoSignalsInterfaceEventListener listener) {
       listeners.remove(listener);
     }

@@ -48,6 +48,7 @@ public class {{Camel .Interface.Name}}JniClient extends Abstract{{Camel .Interfa
     {{ end }}
 
     {{- range .Interface.Operations }}
+     @Override
      public {{javaReturn "" .Return}} {{camel .Name}}({{javaParams "" .Params}})
      {
         Log.v(TAG, "Blocking call{{camel .Name}} - should not be used ");
@@ -61,6 +62,7 @@ public class {{Camel .Interface.Name}}JniClient extends Abstract{{Camel .Interfa
     }
 
     //Should not be called directly, use {{camel .Name}}Async(String callId, {{javaParams "" .Params}})
+    @Override
     public {{javaAsyncReturn "" .Return}} {{camel .Name}}Async({{javaParams "" .Params}})
     {
         Log.v(TAG, "NON Blocking call method ");

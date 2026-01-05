@@ -18,9 +18,11 @@ import java.util.HashSet;
   public abstract class AbstractManyParamInterface implements IManyParamInterface {
     public Collection<IManyParamInterfaceEventListener> listeners = new HashSet<>();
 
+    @Override
     public void addEventListener(IManyParamInterfaceEventListener listener) {
       listeners.add(listener); 
     }
+    @Override
     public void removeEventListener(IManyParamInterfaceEventListener listener) {
       listeners.remove(listener);
     }

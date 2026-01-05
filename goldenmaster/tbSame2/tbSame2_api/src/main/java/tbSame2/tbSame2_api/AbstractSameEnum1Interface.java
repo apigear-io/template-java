@@ -12,9 +12,11 @@ import java.util.HashSet;
   public abstract class AbstractSameEnum1Interface implements ISameEnum1Interface {
     public Collection<ISameEnum1InterfaceEventListener> listeners = new HashSet<>();
 
+    @Override
     public void addEventListener(ISameEnum1InterfaceEventListener listener) {
       listeners.add(listener); 
     }
+    @Override
     public void removeEventListener(ISameEnum1InterfaceEventListener listener) {
       listeners.remove(listener);
     }

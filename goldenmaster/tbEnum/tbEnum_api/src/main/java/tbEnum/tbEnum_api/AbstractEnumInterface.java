@@ -12,9 +12,11 @@ import java.util.HashSet;
   public abstract class AbstractEnumInterface implements IEnumInterface {
     public Collection<IEnumInterfaceEventListener> listeners = new HashSet<>();
 
+    @Override
     public void addEventListener(IEnumInterfaceEventListener listener) {
       listeners.add(listener); 
     }
+    @Override
     public void removeEventListener(IEnumInterfaceEventListener listener) {
       listeners.remove(listener);
     }

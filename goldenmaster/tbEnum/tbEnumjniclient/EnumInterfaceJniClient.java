@@ -89,6 +89,7 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
         return mMessengerClient.getProp3();
     }
     
+     @Override
      public Enum0 func0(Enum0 param0)
      {
         Log.v(TAG, "Blocking callfunc0 - should not be used ");
@@ -102,11 +103,13 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
     }
 
     //Should not be called directly, use func0Async(String callId, Enum0 param0)
+    @Override
     public CompletableFuture<Enum0> func0Async(Enum0 param0)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.func0Async(param0);
     }
+     @Override
      public Enum1 func1(Enum1 param1)
      {
         Log.v(TAG, "Blocking callfunc1 - should not be used ");
@@ -120,11 +123,13 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
     }
 
     //Should not be called directly, use func1Async(String callId, Enum1 param1)
+    @Override
     public CompletableFuture<Enum1> func1Async(Enum1 param1)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.func1Async(param1);
     }
+     @Override
      public Enum2 func2(Enum2 param2)
      {
         Log.v(TAG, "Blocking callfunc2 - should not be used ");
@@ -138,11 +143,13 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
     }
 
     //Should not be called directly, use func2Async(String callId, Enum2 param2)
+    @Override
     public CompletableFuture<Enum2> func2Async(Enum2 param2)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.func2Async(param2);
     }
+     @Override
      public Enum3 func3(Enum3 param3)
      {
         Log.v(TAG, "Blocking callfunc3 - should not be used ");
@@ -156,6 +163,7 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
     }
 
     //Should not be called directly, use func3Async(String callId, Enum3 param3)
+    @Override
     public CompletableFuture<Enum3> func3Async(Enum3 param3)
     {
         Log.v(TAG, "NON Blocking call method ");

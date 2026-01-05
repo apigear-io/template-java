@@ -146,6 +146,7 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
         return mMessengerClient.getPropReadOnlyString();
     }
     
+     @Override
      public boolean[] funcBool(boolean[] paramBool)
      {
         Log.v(TAG, "Blocking callfuncBool - should not be used ");
@@ -159,11 +160,13 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     }
 
     //Should not be called directly, use funcBoolAsync(String callId, boolean[] paramBool)
+    @Override
     public CompletableFuture<boolean[]> funcBoolAsync(boolean[] paramBool)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcBoolAsync(paramBool);
     }
+     @Override
      public int[] funcInt(int[] paramInt)
      {
         Log.v(TAG, "Blocking callfuncInt - should not be used ");
@@ -177,11 +180,13 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     }
 
     //Should not be called directly, use funcIntAsync(String callId, int[] paramInt)
+    @Override
     public CompletableFuture<int[]> funcIntAsync(int[] paramInt)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcIntAsync(paramInt);
     }
+     @Override
      public int[] funcInt32(int[] paramInt32)
      {
         Log.v(TAG, "Blocking callfuncInt32 - should not be used ");
@@ -195,11 +200,13 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     }
 
     //Should not be called directly, use funcInt32Async(String callId, int[] paramInt32)
+    @Override
     public CompletableFuture<int[]> funcInt32Async(int[] paramInt32)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcInt32Async(paramInt32);
     }
+     @Override
      public long[] funcInt64(long[] paramInt64)
      {
         Log.v(TAG, "Blocking callfuncInt64 - should not be used ");
@@ -213,11 +220,13 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     }
 
     //Should not be called directly, use funcInt64Async(String callId, long[] paramInt64)
+    @Override
     public CompletableFuture<long[]> funcInt64Async(long[] paramInt64)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcInt64Async(paramInt64);
     }
+     @Override
      public float[] funcFloat(float[] paramFloat)
      {
         Log.v(TAG, "Blocking callfuncFloat - should not be used ");
@@ -231,11 +240,13 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     }
 
     //Should not be called directly, use funcFloatAsync(String callId, float[] paramFloat)
+    @Override
     public CompletableFuture<float[]> funcFloatAsync(float[] paramFloat)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcFloatAsync(paramFloat);
     }
+     @Override
      public float[] funcFloat32(float[] paramFloat32)
      {
         Log.v(TAG, "Blocking callfuncFloat32 - should not be used ");
@@ -249,11 +260,13 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     }
 
     //Should not be called directly, use funcFloat32Async(String callId, float[] paramFloat32)
+    @Override
     public CompletableFuture<float[]> funcFloat32Async(float[] paramFloat32)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcFloat32Async(paramFloat32);
     }
+     @Override
      public double[] funcFloat64(double[] paramFloat)
      {
         Log.v(TAG, "Blocking callfuncFloat64 - should not be used ");
@@ -267,11 +280,13 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     }
 
     //Should not be called directly, use funcFloat64Async(String callId, double[] paramFloat)
+    @Override
     public CompletableFuture<double[]> funcFloat64Async(double[] paramFloat)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcFloat64Async(paramFloat);
     }
+     @Override
      public String[] funcString(String[] paramString)
      {
         Log.v(TAG, "Blocking callfuncString - should not be used ");
@@ -285,6 +300,7 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     }
 
     //Should not be called directly, use funcStringAsync(String callId, String[] paramString)
+    @Override
     public CompletableFuture<String[]> funcStringAsync(String[] paramString)
     {
         Log.v(TAG, "NON Blocking call method ");
