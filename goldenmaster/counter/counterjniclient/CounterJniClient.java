@@ -81,6 +81,7 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
         return mMessengerClient.getExternVectorArray();
     }
     
+     @Override
      public org.apache.commons.math3.geometry.euclidean.threed.Vector3D increment(org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec)
      {
         Log.v(TAG, "Blocking callincrement - should not be used ");
@@ -94,11 +95,13 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
     }
 
     //Should not be called directly, use incrementAsync(String callId, org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec)
+    @Override
     public CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> incrementAsync(org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.incrementAsync(vec);
     }
+     @Override
      public org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] incrementArray(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec)
      {
         Log.v(TAG, "Blocking callincrementArray - should not be used ");
@@ -112,11 +115,13 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
     }
 
     //Should not be called directly, use incrementArrayAsync(String callId, org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec)
+    @Override
     public CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]> incrementArrayAsync(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.incrementArrayAsync(vec);
     }
+     @Override
      public customTypes.customTypes_api.Vector3D decrement(customTypes.customTypes_api.Vector3D vec)
      {
         Log.v(TAG, "Blocking calldecrement - should not be used ");
@@ -130,11 +135,13 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
     }
 
     //Should not be called directly, use decrementAsync(String callId, customTypes.customTypes_api.Vector3D vec)
+    @Override
     public CompletableFuture<customTypes.customTypes_api.Vector3D> decrementAsync(customTypes.customTypes_api.Vector3D vec)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.decrementAsync(vec);
     }
+     @Override
      public customTypes.customTypes_api.Vector3D[] decrementArray(customTypes.customTypes_api.Vector3D[] vec)
      {
         Log.v(TAG, "Blocking calldecrementArray - should not be used ");
@@ -148,6 +155,7 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
     }
 
     //Should not be called directly, use decrementArrayAsync(String callId, customTypes.customTypes_api.Vector3D[] vec)
+    @Override
     public CompletableFuture<customTypes.customTypes_api.Vector3D[]> decrementArrayAsync(customTypes.customTypes_api.Vector3D[] vec)
     {
         Log.v(TAG, "NON Blocking call method ");

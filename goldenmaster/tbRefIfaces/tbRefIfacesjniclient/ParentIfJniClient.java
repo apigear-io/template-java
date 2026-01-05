@@ -83,6 +83,7 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
         return mMessengerClient.getImportedIfList();
     }
     
+     @Override
      public ISimpleLocalIf localIfMethod(ISimpleLocalIf param)
      {
         Log.v(TAG, "Blocking calllocalIfMethod - should not be used ");
@@ -96,11 +97,13 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
     }
 
     //Should not be called directly, use localIfMethodAsync(String callId, ISimpleLocalIf param)
+    @Override
     public CompletableFuture<ISimpleLocalIf> localIfMethodAsync(ISimpleLocalIf param)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.localIfMethodAsync(param);
     }
+     @Override
      public ISimpleLocalIf[] localIfMethodList(ISimpleLocalIf[] param)
      {
         Log.v(TAG, "Blocking calllocalIfMethodList - should not be used ");
@@ -114,11 +117,13 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
     }
 
     //Should not be called directly, use localIfMethodListAsync(String callId, ISimpleLocalIf[] param)
+    @Override
     public CompletableFuture<ISimpleLocalIf[]> localIfMethodListAsync(ISimpleLocalIf[] param)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.localIfMethodListAsync(param);
     }
+     @Override
      public tbIfaceimport.tbIfaceimport_api.IEmptyIf importedIfMethod(tbIfaceimport.tbIfaceimport_api.IEmptyIf param)
      {
         Log.v(TAG, "Blocking callimportedIfMethod - should not be used ");
@@ -132,11 +137,13 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
     }
 
     //Should not be called directly, use importedIfMethodAsync(String callId, tbIfaceimport.tbIfaceimport_api.IEmptyIf param)
+    @Override
     public CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf> importedIfMethodAsync(tbIfaceimport.tbIfaceimport_api.IEmptyIf param)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.importedIfMethodAsync(param);
     }
+     @Override
      public tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfMethodList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param)
      {
         Log.v(TAG, "Blocking callimportedIfMethodList - should not be used ");
@@ -150,6 +157,7 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
     }
 
     //Should not be called directly, use importedIfMethodListAsync(String callId, tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param)
+    @Override
     public CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf[]> importedIfMethodListAsync(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param)
     {
         Log.v(TAG, "NON Blocking call method ");

@@ -18,9 +18,11 @@ import java.util.HashSet;
   public abstract class AbstractNestedStruct3Interface implements INestedStruct3Interface {
     public Collection<INestedStruct3InterfaceEventListener> listeners = new HashSet<>();
 
+    @Override
     public void addEventListener(INestedStruct3InterfaceEventListener listener) {
       listeners.add(listener); 
     }
+    @Override
     public void removeEventListener(INestedStruct3InterfaceEventListener listener) {
       listeners.remove(listener);
     }

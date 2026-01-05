@@ -9,9 +9,11 @@ import java.util.HashSet;
   public abstract class AbstractNamEs implements INamEs {
     public Collection<INamEsEventListener> listeners = new HashSet<>();
 
+    @Override
     public void addEventListener(INamEsEventListener listener) {
       listeners.add(listener); 
     }
+    @Override
     public void removeEventListener(INamEsEventListener listener) {
       listeners.remove(listener);
     }

@@ -83,6 +83,7 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
         return mMessengerClient.getEnumProperty();
     }
     
+     @Override
      public void someFunction(boolean SOME_PARAM)
      {
         Log.v(TAG, "Blocking callsomeFunction - should not be used ");
@@ -96,11 +97,13 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
     }
 
     //Should not be called directly, use someFunctionAsync(String callId, boolean SOME_PARAM)
+    @Override
     public CompletableFuture<Void> someFunctionAsync(boolean SOME_PARAM)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.someFunctionAsync(SOME_PARAM);
     }
+     @Override
      public void someFunction2(boolean Some_Param)
      {
         Log.v(TAG, "Blocking callsomeFunction2 - should not be used ");
@@ -114,6 +117,7 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
     }
 
     //Should not be called directly, use someFunction2Async(String callId, boolean Some_Param)
+    @Override
     public CompletableFuture<Void> someFunction2Async(boolean Some_Param)
     {
         Log.v(TAG, "NON Blocking call method ");

@@ -44,6 +44,7 @@ public class SameEnum1InterfaceJniClient extends AbstractSameEnum1Interface impl
         return mMessengerClient.getProp1();
     }
     
+     @Override
      public Enum1 func1(Enum1 param1)
      {
         Log.v(TAG, "Blocking callfunc1 - should not be used ");
@@ -57,6 +58,7 @@ public class SameEnum1InterfaceJniClient extends AbstractSameEnum1Interface impl
     }
 
     //Should not be called directly, use func1Async(String callId, Enum1 param1)
+    @Override
     public CompletableFuture<Enum1> func1Async(Enum1 param1)
     {
         Log.v(TAG, "NON Blocking call method ");

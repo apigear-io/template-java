@@ -29,6 +29,7 @@ public class VoidInterfaceJniClient extends AbstractVoidInterface implements IVo
     {
         return mMessengerClient._isReady();
     }
+     @Override
      public void funcVoid()
      {
         Log.v(TAG, "Blocking callfuncVoid - should not be used ");
@@ -42,6 +43,7 @@ public class VoidInterfaceJniClient extends AbstractVoidInterface implements IVo
     }
 
     //Should not be called directly, use funcVoidAsync(String callId, )
+    @Override
     public CompletableFuture<Void> funcVoidAsync()
     {
         Log.v(TAG, "NON Blocking call method ");

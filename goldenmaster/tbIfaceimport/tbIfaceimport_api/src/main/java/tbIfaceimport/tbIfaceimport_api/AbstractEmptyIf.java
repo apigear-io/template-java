@@ -8,9 +8,11 @@ import java.util.HashSet;
   public abstract class AbstractEmptyIf implements IEmptyIf {
     public Collection<IEmptyIfEventListener> listeners = new HashSet<>();
 
+    @Override
     public void addEventListener(IEmptyIfEventListener listener) {
       listeners.add(listener); 
     }
+    @Override
     public void removeEventListener(IEmptyIfEventListener listener) {
       listeners.remove(listener);
     }

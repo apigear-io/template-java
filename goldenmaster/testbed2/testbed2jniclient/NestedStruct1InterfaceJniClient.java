@@ -44,6 +44,7 @@ public class NestedStruct1InterfaceJniClient extends AbstractNestedStruct1Interf
         return mMessengerClient.getProp1();
     }
     
+     @Override
      public void funcNoReturnValue(NestedStruct1 param1)
      {
         Log.v(TAG, "Blocking callfuncNoReturnValue - should not be used ");
@@ -57,11 +58,13 @@ public class NestedStruct1InterfaceJniClient extends AbstractNestedStruct1Interf
     }
 
     //Should not be called directly, use funcNoReturnValueAsync(String callId, NestedStruct1 param1)
+    @Override
     public CompletableFuture<Void> funcNoReturnValueAsync(NestedStruct1 param1)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcNoReturnValueAsync(param1);
     }
+     @Override
      public NestedStruct1 funcNoParams()
      {
         Log.v(TAG, "Blocking callfuncNoParams - should not be used ");
@@ -75,11 +78,13 @@ public class NestedStruct1InterfaceJniClient extends AbstractNestedStruct1Interf
     }
 
     //Should not be called directly, use funcNoParamsAsync(String callId, )
+    @Override
     public CompletableFuture<NestedStruct1> funcNoParamsAsync()
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcNoParamsAsync();
     }
+     @Override
      public NestedStruct1 func1(NestedStruct1 param1)
      {
         Log.v(TAG, "Blocking callfunc1 - should not be used ");
@@ -93,6 +98,7 @@ public class NestedStruct1InterfaceJniClient extends AbstractNestedStruct1Interf
     }
 
     //Should not be called directly, use func1Async(String callId, NestedStruct1 param1)
+    @Override
     public CompletableFuture<NestedStruct1> func1Async(NestedStruct1 param1)
     {
         Log.v(TAG, "NON Blocking call method ");

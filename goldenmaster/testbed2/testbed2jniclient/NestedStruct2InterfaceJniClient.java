@@ -59,6 +59,7 @@ public class NestedStruct2InterfaceJniClient extends AbstractNestedStruct2Interf
         return mMessengerClient.getProp2();
     }
     
+     @Override
      public NestedStruct1 func1(NestedStruct1 param1)
      {
         Log.v(TAG, "Blocking callfunc1 - should not be used ");
@@ -72,11 +73,13 @@ public class NestedStruct2InterfaceJniClient extends AbstractNestedStruct2Interf
     }
 
     //Should not be called directly, use func1Async(String callId, NestedStruct1 param1)
+    @Override
     public CompletableFuture<NestedStruct1> func1Async(NestedStruct1 param1)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.func1Async(param1);
     }
+     @Override
      public NestedStruct1 func2(NestedStruct1 param1, NestedStruct2 param2)
      {
         Log.v(TAG, "Blocking callfunc2 - should not be used ");
@@ -90,6 +93,7 @@ public class NestedStruct2InterfaceJniClient extends AbstractNestedStruct2Interf
     }
 
     //Should not be called directly, use func2Async(String callId, NestedStruct1 param1, NestedStruct2 param2)
+    @Override
     public CompletableFuture<NestedStruct1> func2Async(NestedStruct1 param1, NestedStruct2 param2)
     {
         Log.v(TAG, "NON Blocking call method ");
