@@ -6,27 +6,7 @@ import android.os.Parcelable;
 
 import java.util.Arrays;
 
-{{- $typesToImport := getEmptyStringList}}
-{{- $interfacesToImport := getEmptyStringList}}
-{{- $module := camel .Module.Name}}
-{{- range .Struct.Fields }}
-{{- if and (not .Schema.Import)  (not .IsPrimitive) }}
-{{- $type :=  Camel .Type }}
-{{- if eq .KindType "interface" }}
-{{- $interfacesToImport = (appendList $typesToImport $type) }}
-{{- else }}
-{{- $typesToImport = (appendList $typesToImport $type) }}
-{{- end }}
-{{- end }}
-{{- end }}
-{{- $typesToImport = unique $typesToImport }}
-{{- $interfacesToImport = unique $interfacesToImport }}
-{{- range $typesToImport}}
-import {{$module}}.{{$module}}_api.{{.}};
-{{- end}}
-{{- range $interfacesToImport}}
-import {{$module}}.{{$module}}_api.I{{.}};
-{{- end}}
+{{- template "importApiForStructTypes" .}}
 
   public  class {{Camel .Struct.Name}}Parcelable implements Parcelable {
 
