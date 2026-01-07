@@ -219,6 +219,7 @@ public class StructArray2InterfaceServiceAdapterTest
         
 			StructEnumWithArray receivedpropEnum = data.getParcelable("propEnum", StructEnumWithArrayParcelable.class).getStructEnumWithArray();
         
+    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(StructBoolWithArrayParcelable.class.getClassLoader());
         // assertEquals(receivedpropBool, initpropBool);
         // assertEquals(receivedpropInt, initpropInt);

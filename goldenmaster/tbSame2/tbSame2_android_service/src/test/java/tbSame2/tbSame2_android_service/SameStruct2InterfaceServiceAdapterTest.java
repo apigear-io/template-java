@@ -186,6 +186,7 @@ public class SameStruct2InterfaceServiceAdapterTest
         
 			Struct2 receivedprop2 = data.getParcelable("prop2", Struct2Parcelable.class).getStruct2();
         
+    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(Struct2Parcelable.class.getClassLoader());
         // assertEquals(receivedprop1, initprop1);
         // assertEquals(receivedprop2, initprop2);
@@ -328,6 +329,7 @@ public class SameStruct2InterfaceServiceAdapterTest
         assertEquals(SameStruct2InterfaceMessageType.SIG_Sig2.getValue(), response.what);
         Bundle data = response.getData();
         
+    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(Struct1Parcelable.class.getClassLoader());
         
 			Struct1 receivedparam1 = data.getParcelable("param1", Struct1Parcelable.class).getStruct1();

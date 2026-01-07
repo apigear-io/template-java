@@ -320,7 +320,6 @@ public class ParentIfServiceAdapter extends Service
 
 					Bundle data = msg.getData();
 					
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
@@ -350,7 +349,6 @@ public class ParentIfServiceAdapter extends Service
 
 					Bundle data = msg.getData();
 					
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					

@@ -405,6 +405,7 @@ public class NestedStruct3InterfaceClientTest
         assertEquals(NestedStruct3InterfaceMessageType.RPC_Func2Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
         
+    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
         
 			NestedStruct1 receivedparam1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
@@ -456,6 +457,7 @@ public class NestedStruct3InterfaceClientTest
         assertEquals(NestedStruct3InterfaceMessageType.RPC_Func3Req.getValue(), method_request.what);
         Bundle data = method_request.getData();
         
+    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
         
 			NestedStruct1 receivedparam1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();

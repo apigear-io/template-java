@@ -189,6 +189,7 @@ public class SameEnum2InterfaceClient extends AbstractSameEnum2Interface impleme
                 {
                     Bundle data = msg.getData();
                     
+    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(Enum1Parcelable.class.getClassLoader());
 			        
                     
@@ -239,6 +240,7 @@ public class SameEnum2InterfaceClient extends AbstractSameEnum2Interface impleme
 
 				    Bundle data = msg.getData();
                     
+    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(Enum1Parcelable.class.getClassLoader());
                 
 			        Enum1 param1 = data.getParcelable("param1", Enum1Parcelable.class).getEnum1();

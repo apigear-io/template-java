@@ -189,6 +189,7 @@ public class SameStruct2InterfaceClient extends AbstractSameStruct2Interface imp
                 {
                     Bundle data = msg.getData();
                     
+    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(Struct2Parcelable.class.getClassLoader());
 			        
                     
@@ -239,6 +240,7 @@ public class SameStruct2InterfaceClient extends AbstractSameStruct2Interface imp
 
 				    Bundle data = msg.getData();
                     
+    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(Struct1Parcelable.class.getClassLoader());
                 
 			        Struct1 param1 = data.getParcelable("param1", Struct1Parcelable.class).getStruct1();

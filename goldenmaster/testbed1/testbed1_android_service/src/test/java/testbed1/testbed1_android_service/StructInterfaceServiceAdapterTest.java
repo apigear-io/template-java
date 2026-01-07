@@ -213,6 +213,7 @@ public class StructInterfaceServiceAdapterTest
         
 			StructString receivedpropString = data.getParcelable("propString", StructStringParcelable.class).getStructString();
         
+    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(StructBoolParcelable.class.getClassLoader());
         // assertEquals(receivedpropBool, initpropBool);
         // assertEquals(receivedpropInt, initpropInt);

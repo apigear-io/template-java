@@ -208,6 +208,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
                 {
                     Bundle data = msg.getData();
                     
+    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(StructBoolWithArrayParcelable.class.getClassLoader());
 			        
                     
