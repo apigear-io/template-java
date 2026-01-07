@@ -260,7 +260,6 @@ public class CounterServiceAdapter extends Service
 
 					Bundle data = msg.getData();
 					
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
@@ -290,7 +289,6 @@ public class CounterServiceAdapter extends Service
 
 					Bundle data = msg.getData();
 					
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
@@ -320,7 +318,6 @@ public class CounterServiceAdapter extends Service
 
 					Bundle data = msg.getData();
 					
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
@@ -350,7 +347,6 @@ public class CounterServiceAdapter extends Service
 
 					Bundle data = msg.getData();
 					
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					

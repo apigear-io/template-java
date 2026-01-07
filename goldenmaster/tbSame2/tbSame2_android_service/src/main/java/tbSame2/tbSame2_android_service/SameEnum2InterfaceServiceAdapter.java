@@ -275,6 +275,7 @@ public class SameEnum2InterfaceServiceAdapter extends Service
 
 					Bundle data = msg.getData();
 					
+    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(Enum1Parcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					

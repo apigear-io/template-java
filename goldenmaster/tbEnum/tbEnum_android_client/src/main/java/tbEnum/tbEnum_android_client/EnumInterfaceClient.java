@@ -195,6 +195,7 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
                 {
                     Bundle data = msg.getData();
                     
+    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(Enum0Parcelable.class.getClassLoader());
 			        
                     

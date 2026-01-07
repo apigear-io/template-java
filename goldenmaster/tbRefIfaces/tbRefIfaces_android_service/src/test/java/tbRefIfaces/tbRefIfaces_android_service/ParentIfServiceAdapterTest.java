@@ -422,7 +422,6 @@ public class ParentIfServiceAdapterTest
         assertEquals(ParentIfMessageType.SIG_ImportedIfSignal.getValue(), response.what);
         Bundle data = response.getData();
         
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
         
 			tbIfaceimport.tbIfaceimport_api.IEmptyIf receivedparam = data.getParcelable("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class).getEmptyIf();
@@ -443,7 +442,6 @@ public class ParentIfServiceAdapterTest
         assertEquals(ParentIfMessageType.SIG_ImportedIfSignalList.getValue(), response.what);
         Bundle data = response.getData();
         
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
         
             tbIfaceimport.tbIfaceimport_api.IEmptyIf[] receivedparam =  tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class));
