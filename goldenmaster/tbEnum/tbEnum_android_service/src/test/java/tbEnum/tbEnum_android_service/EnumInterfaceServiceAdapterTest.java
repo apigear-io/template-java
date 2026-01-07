@@ -185,7 +185,8 @@ public class EnumInterfaceServiceAdapterTest
         
 			Enum3 receivedprop3 = data.getParcelable("prop3", Enum3Parcelable.class).getEnum3();
         
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
+    // all structs, even from other modules, are known at compile time (see gradle files) and share the same PathClassLoader,
+    // therefore, any class loader provide access to the same PathClassLoader.
         data.setClassLoader(Enum0Parcelable.class.getClassLoader());
         assertEquals(receivedprop0, initprop0);
         assertEquals(receivedprop1, initprop1);
