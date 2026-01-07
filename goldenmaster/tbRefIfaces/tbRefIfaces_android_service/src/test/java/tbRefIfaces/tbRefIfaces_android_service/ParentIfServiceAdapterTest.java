@@ -186,7 +186,8 @@ public class ParentIfServiceAdapterTest
         
             tbIfaceimport.tbIfaceimport_api.IEmptyIf[] receivedimportedIfList =  tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class));
         
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
+    // all structs, even from other modules, are known at compile time (see gradle files) and share the same PathClassLoader,
+    // therefore, any class loader provide access to the same PathClassLoader.
         data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
         // assertEquals(receivedlocalIf, initlocalIf);
         // assertEquals(receivedlocalIfList, initlocalIfList);

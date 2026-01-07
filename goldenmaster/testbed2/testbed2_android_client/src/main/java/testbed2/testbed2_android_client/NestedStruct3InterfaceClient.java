@@ -192,7 +192,8 @@ public class NestedStruct3InterfaceClient extends AbstractNestedStruct3Interface
                 {
                     Bundle data = msg.getData();
                     
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
+    // all structs, even from other modules, are known at compile time (see gradle files) and share the same PathClassLoader,
+    // therefore, any class loader provide access to the same PathClassLoader.
         data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
 			        
                     
@@ -257,7 +258,8 @@ public class NestedStruct3InterfaceClient extends AbstractNestedStruct3Interface
 
 				    Bundle data = msg.getData();
                     
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
+    // all structs, even from other modules, are known at compile time (see gradle files) and share the same PathClassLoader,
+    // therefore, any class loader provide access to the same PathClassLoader.
         data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
                 
 			        NestedStruct1 param1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
@@ -270,7 +272,8 @@ public class NestedStruct3InterfaceClient extends AbstractNestedStruct3Interface
 
 				    Bundle data = msg.getData();
                     
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
+    // all structs, even from other modules, are known at compile time (see gradle files) and share the same PathClassLoader,
+    // therefore, any class loader provide access to the same PathClassLoader.
         data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
                 
 			        NestedStruct1 param1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
