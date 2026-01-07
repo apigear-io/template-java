@@ -20,13 +20,13 @@
 	{{- end }}
 
     {{- if $numOfStructsSameModule }}
-        {{- if ge $numOfStructsOtherModule 1 }}
+        {{- if or (gt $numOfStructsSameModule 1) (ge $numOfStructsOtherModule 1) }}
     // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         {{- end }}
         data.setClassLoader({{template "getParcelable" $parcelableFromSameModule }}.class.getClassLoader());
 
     {{- else if $numOfStructsOtherModule}}
-        {{- if ge  $numOfStructsOtherModule 1 }}
+        {{- if gt $numOfStructsOtherModule 1 }}
     // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         {{- end }}
         data.setClassLoader({{template "getParcelable" $parcelableFromOtherModule }}.class.getClassLoader());

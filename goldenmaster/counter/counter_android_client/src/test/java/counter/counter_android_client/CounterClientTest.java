@@ -352,7 +352,6 @@ public class CounterClientTest
         assertEquals(CounterMessageType.RPC_IncrementReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
         
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
         
 			org.apache.commons.math3.geometry.euclidean.threed.Vector3D receivedvec = data.getParcelable("vec", externTypes.externTypes_android_messenger.MyVector3DParcelable.class).getMyVector3D();
@@ -401,7 +400,6 @@ public class CounterClientTest
         assertEquals(CounterMessageType.RPC_IncrementArrayReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
         
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
         
             org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] receivedvec =  externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])data.getParcelableArray("vec", externTypes.externTypes_android_messenger.MyVector3DParcelable.class));
@@ -448,7 +446,6 @@ public class CounterClientTest
         assertEquals(CounterMessageType.RPC_DecrementReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
         
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
         
 			customTypes.customTypes_api.Vector3D receivedvec = data.getParcelable("vec", customTypes.customTypes_android_messenger.Vector3DParcelable.class).getVector3D();
@@ -497,7 +494,6 @@ public class CounterClientTest
         assertEquals(CounterMessageType.RPC_DecrementArrayReq.getValue(), method_request.what);
         Bundle data = method_request.getData();
         
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
         
             customTypes.customTypes_api.Vector3D[] receivedvec =  customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray((customTypes.customTypes_android_messenger.Vector3DParcelable[])data.getParcelableArray("vec", customTypes.customTypes_android_messenger.Vector3DParcelable.class));

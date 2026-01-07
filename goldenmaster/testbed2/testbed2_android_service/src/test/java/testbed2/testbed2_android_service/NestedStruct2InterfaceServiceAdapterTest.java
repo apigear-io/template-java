@@ -198,6 +198,7 @@ public class NestedStruct2InterfaceServiceAdapterTest
         
 			NestedStruct2 receivedprop2 = data.getParcelable("prop2", NestedStruct2Parcelable.class).getNestedStruct2();
         
+    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
         // assertEquals(receivedprop1, initprop1);
         // assertEquals(receivedprop2, initprop2);
@@ -340,6 +341,7 @@ public class NestedStruct2InterfaceServiceAdapterTest
         assertEquals(NestedStruct2InterfaceMessageType.SIG_Sig2.getValue(), response.what);
         Bundle data = response.getData();
         
+    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
         data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
         
 			NestedStruct1 receivedparam1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
