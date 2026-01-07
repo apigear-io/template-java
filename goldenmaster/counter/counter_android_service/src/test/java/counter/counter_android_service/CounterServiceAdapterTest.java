@@ -183,7 +183,8 @@ public class CounterServiceAdapterTest
         
             org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] receivedextern_vectorArray =  externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])data.getParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.class));
         
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
+    // all structs, even from other modules, are known at compile time (see gradle files) and share the same PathClassLoader,
+    // therefore, any class loader provide access to the same PathClassLoader.
         data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
         // assertEquals(receivedvector, initvector);
         // assertEquals(receivedextern_vector, initextern_vector);
@@ -385,7 +386,8 @@ public class CounterServiceAdapterTest
         assertEquals(CounterMessageType.SIG_ValueChanged.getValue(), response.what);
         Bundle data = response.getData();
         
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
+    // all structs, even from other modules, are known at compile time (see gradle files) and share the same PathClassLoader,
+    // therefore, any class loader provide access to the same PathClassLoader.
         data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
         
 			customTypes.customTypes_api.Vector3D receivedvector = data.getParcelable("vector", customTypes.customTypes_android_messenger.Vector3DParcelable.class).getVector3D();

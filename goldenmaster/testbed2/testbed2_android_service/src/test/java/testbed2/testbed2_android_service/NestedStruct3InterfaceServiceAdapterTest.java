@@ -204,7 +204,8 @@ public class NestedStruct3InterfaceServiceAdapterTest
         
 			NestedStruct3 receivedprop3 = data.getParcelable("prop3", NestedStruct3Parcelable.class).getNestedStruct3();
         
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
+    // all structs, even from other modules, are known at compile time (see gradle files) and share the same PathClassLoader,
+    // therefore, any class loader provide access to the same PathClassLoader.
         data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
         // assertEquals(receivedprop1, initprop1);
         // assertEquals(receivedprop2, initprop2);
@@ -382,7 +383,8 @@ public class NestedStruct3InterfaceServiceAdapterTest
         assertEquals(NestedStruct3InterfaceMessageType.SIG_Sig2.getValue(), response.what);
         Bundle data = response.getData();
         
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
+    // all structs, even from other modules, are known at compile time (see gradle files) and share the same PathClassLoader,
+    // therefore, any class loader provide access to the same PathClassLoader.
         data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
         
 			NestedStruct1 receivedparam1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
@@ -407,7 +409,8 @@ public class NestedStruct3InterfaceServiceAdapterTest
         assertEquals(NestedStruct3InterfaceMessageType.SIG_Sig3.getValue(), response.what);
         Bundle data = response.getData();
         
-    // all structs (even from other modules) are known at compile time (see gradle files) and share same PathClassLoader, any class loader provides access to it.
+    // all structs, even from other modules, are known at compile time (see gradle files) and share the same PathClassLoader,
+    // therefore, any class loader provide access to the same PathClassLoader.
         data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
         
 			NestedStruct1 receivedparam1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
