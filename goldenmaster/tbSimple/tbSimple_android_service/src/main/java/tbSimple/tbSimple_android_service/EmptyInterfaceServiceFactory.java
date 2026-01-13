@@ -78,4 +78,9 @@ public class EmptyInterfaceServiceFactory extends HandlerThread implements IEmpt
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		m_Service = null;
+	}
 }

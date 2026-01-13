@@ -29,13 +29,14 @@ public class CounterServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private static Messenger mMessenger;
+	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
+	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// The ServiceAdapter is just a user of the backend. 
+	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static ICounter mBackendService;
 	private static ICounterServiceFactory mServiceFactory;
-	private static final Object mutex = new Object();
-
-	//private final List<Message> mMessagesQueue = new ArrayList<>();
+	private static final Object sBackendMutex = new Object();
 
 	public CounterServiceAdapter()
 	{
@@ -44,22 +45,29 @@ public class CounterServiceAdapter extends Service
 	public static ICounter setService(ICounterServiceFactory factory)
 	{
 		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory  != factory)
+		if (mServiceFactory != factory)
 		{
 			mServiceFactory = factory;
 		}
-		synchronized (mutex)
+		synchronized (sBackendMutex)
 		{
 			if (mHandler != null && mBackendService != null)
 			{
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			mBackendService = mServiceFactory.getServiceInstance();
-			if (mHandler != null)
+			if (mServiceFactory != null)
 			{
-				Log.i(TAG, "LIFECYCLE: setService(Counter) called. For handler " + mHandler);
-				mBackendService.addEventListener(mHandler);
+				mBackendService = mServiceFactory.getServiceInstance();
+				if (mHandler != null)
+				{
+					Log.i(TAG, "LIFECYCLE: setService(Counter) called. For handler " + mHandler);
+					mBackendService.addEventListener(mHandler);
+				}
+			}
+			else
+			{
+				mBackendService = null;
 			}
 		}
 		return mBackendService;
@@ -71,7 +79,7 @@ public class CounterServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(CounterService) called. context = " + this);
-		synchronized (mutex) {
+		synchronized (sBackendMutex) {
 			if (mHandler != null && mBackendService != null)
 			{
 				// The handler (event listener) is about to change.
@@ -107,18 +115,19 @@ public class CounterServiceAdapter extends Service
 	public void onDestroy()
 	{
 		Log.i(TAG, "LIFECYCLE: onDestroy(CounterService) - proc = " + ", mMessenger = " + mMessenger);
-
-		if (mHandler != null)
+		synchronized (sBackendMutex)
 		{
-			if (mBackendService != null)
+			if (mHandler != null)
 			{
-				mBackendService.removeEventListener(mHandler);
+				if (mBackendService != null)
+				{
+					mBackendService.removeEventListener(mHandler);
+				}
+				mHandler.removeCallbacksAndMessages(null);
+				mHandler = null;
 			}
-			mHandler.removeCallbacksAndMessages(null);
-			mHandler = null;
+			mMessenger = null;
 		}
-		mBackendService = null;
-		mMessenger = null;
 
 		super.onDestroy();
 	}
@@ -180,9 +189,14 @@ public class CounterServiceAdapter extends Service
 
 		@Override
 		public void handleMessage(Message msg)
-			{
+		{
 			Log.i(TAG, "Handle msg " + msg);
-			if (mBackendService == null || !mBackendService._isReady())
+			ICounter backend;
+			synchronized (CounterServiceAdapter.sBackendMutex)
+			{
+				backend = CounterServiceAdapter.mBackendService;
+			}
+			if (backend == null || !backend._isReady())
 			{
 				if (CounterMessageType.fromInteger(msg.what) != CounterMessageType.REGISTER_CLIENT
 					&& CounterMessageType.fromInteger(msg.what) != CounterMessageType.UNREGISTER_CLIENT)
@@ -206,7 +220,7 @@ public class CounterServiceAdapter extends Service
 						data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
 						
 			        customTypes.customTypes_api.Vector3D vector = data.getParcelable("vector", customTypes.customTypes_android_messenger.Vector3DParcelable.class).getVector3D();
-						mBackendService.setVector(vector);
+						backend.setVector(vector);
 						break;
 					}
 					case PROP_ExternVector:
@@ -215,7 +229,7 @@ public class CounterServiceAdapter extends Service
 						data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
 						
 			        org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector = data.getParcelable("extern_vector", externTypes.externTypes_android_messenger.MyVector3DParcelable.class).getMyVector3D();
-						mBackendService.setExternVector(extern_vector);
+						backend.setExternVector(extern_vector);
 						break;
 					}
 					case PROP_VectorArray:
@@ -224,7 +238,7 @@ public class CounterServiceAdapter extends Service
 						data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
 						
                     customTypes.customTypes_api.Vector3D[] vectorArray =  customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray((customTypes.customTypes_android_messenger.Vector3DParcelable[])data.getParcelableArray("vectorArray", customTypes.customTypes_android_messenger.Vector3DParcelable.class));
-						mBackendService.setVectorArray(vectorArray);
+						backend.setVectorArray(vectorArray);
 						break;
 					}
 					case PROP_ExternVectorArray:
@@ -233,7 +247,7 @@ public class CounterServiceAdapter extends Service
 						data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
 						
                     org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] extern_vectorArray =  externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])data.getParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.class));
-						mBackendService.setExternVectorArray(extern_vectorArray);
+						backend.setExternVectorArray(extern_vectorArray);
 						break;
 					}
 			// TODO params may be different structs from different modules, there should be a custom class loader 
@@ -248,8 +262,7 @@ public class CounterServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec = data.getParcelable("vec", externTypes.externTypes_android_messenger.MyVector3DParcelable.class).getMyVector3D();
-
-					org.apache.commons.math3.geometry.euclidean.threed.Vector3D result =  mBackendService.increment(vec);
+					org.apache.commons.math3.geometry.euclidean.threed.Vector3D result =  backend.increment(vec);
 
 					Message respMsg = new Message();
 					respMsg.what = CounterMessageType.RPC_IncrementResp.getValue();
@@ -279,8 +292,7 @@ public class CounterServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
                     org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec =  externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])data.getParcelableArray("vec", externTypes.externTypes_android_messenger.MyVector3DParcelable.class));
-
-					org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] result =  mBackendService.incrementArray(vec);
+					org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] result =  backend.incrementArray(vec);
 
 					Message respMsg = new Message();
 					respMsg.what = CounterMessageType.RPC_IncrementArrayResp.getValue();
@@ -310,8 +322,7 @@ public class CounterServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        customTypes.customTypes_api.Vector3D vec = data.getParcelable("vec", customTypes.customTypes_android_messenger.Vector3DParcelable.class).getVector3D();
-
-					customTypes.customTypes_api.Vector3D result =  mBackendService.decrement(vec);
+					customTypes.customTypes_api.Vector3D result =  backend.decrement(vec);
 
 					Message respMsg = new Message();
 					respMsg.what = CounterMessageType.RPC_DecrementResp.getValue();
@@ -341,8 +352,7 @@ public class CounterServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
                     customTypes.customTypes_api.Vector3D[] vec =  customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray((customTypes.customTypes_android_messenger.Vector3DParcelable[])data.getParcelableArray("vec", customTypes.customTypes_android_messenger.Vector3DParcelable.class));
-
-					customTypes.customTypes_api.Vector3D[] result =  mBackendService.decrementArray(vec);
+					customTypes.customTypes_api.Vector3D[] result =  backend.decrementArray(vec);
 
 					Message respMsg = new Message();
 					respMsg.what = CounterMessageType.RPC_DecrementArrayResp.getValue();
@@ -394,21 +404,29 @@ public class CounterServiceAdapter extends Service
 			Message msg = new Message();
 			msg.what = CounterMessageType.INIT.getValue();
 			Bundle data = new Bundle();
-			
-			customTypes.customTypes_api.Vector3D vector = mBackendService.getVector();
-			
+			ICounter backend;
+			synchronized (CounterServiceAdapter.sBackendMutex)
+			{
+				backend = CounterServiceAdapter.mBackendService;
+			}
+			if (backend != null && backend._isReady())
+			{
+				
+				customTypes.customTypes_api.Vector3D vector = backend.getVector();
+				
 		        data.putParcelable("vector", new customTypes.customTypes_android_messenger.Vector3DParcelable(vector));
-			org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector = mBackendService.getExternVector();
-			
+				org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector = backend.getExternVector();
+				
 		        data.putParcelable("extern_vector", new externTypes.externTypes_android_messenger.MyVector3DParcelable(extern_vector));
-			customTypes.customTypes_api.Vector3D[] vectorArray = mBackendService.getVectorArray();
-			
+				customTypes.customTypes_api.Vector3D[] vectorArray = backend.getVectorArray();
+				
 		        data.putParcelableArray("vectorArray", customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(vectorArray));
-			org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] extern_vectorArray = mBackendService.getExternVectorArray();
-			
+				org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] extern_vectorArray = backend.getExternVectorArray();
+				
 		        data.putParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(extern_vectorArray));
-			msg.setData(data);
-			sendMessageToClients(msg);
+				msg.setData(data);
+				sendMessageToClients(msg);
+			}
 		}
 		@Override
 		public void onVectorChanged(customTypes.customTypes_api.Vector3D vector){

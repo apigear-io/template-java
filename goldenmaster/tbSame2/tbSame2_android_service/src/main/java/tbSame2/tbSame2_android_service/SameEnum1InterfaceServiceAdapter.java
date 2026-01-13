@@ -31,13 +31,14 @@ public class SameEnum1InterfaceServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private static Messenger mMessenger;
+	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
+	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// The ServiceAdapter is just a user of the backend. 
+	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static ISameEnum1Interface mBackendService;
 	private static ISameEnum1InterfaceServiceFactory mServiceFactory;
-	private static final Object mutex = new Object();
-
-	//private final List<Message> mMessagesQueue = new ArrayList<>();
+	private static final Object sBackendMutex = new Object();
 
 	public SameEnum1InterfaceServiceAdapter()
 	{
@@ -46,22 +47,29 @@ public class SameEnum1InterfaceServiceAdapter extends Service
 	public static ISameEnum1Interface setService(ISameEnum1InterfaceServiceFactory factory)
 	{
 		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory  != factory)
+		if (mServiceFactory != factory)
 		{
 			mServiceFactory = factory;
 		}
-		synchronized (mutex)
+		synchronized (sBackendMutex)
 		{
 			if (mHandler != null && mBackendService != null)
 			{
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			mBackendService = mServiceFactory.getServiceInstance();
-			if (mHandler != null)
+			if (mServiceFactory != null)
 			{
-				Log.i(TAG, "LIFECYCLE: setService(SameEnum1Interface) called. For handler " + mHandler);
-				mBackendService.addEventListener(mHandler);
+				mBackendService = mServiceFactory.getServiceInstance();
+				if (mHandler != null)
+				{
+					Log.i(TAG, "LIFECYCLE: setService(SameEnum1Interface) called. For handler " + mHandler);
+					mBackendService.addEventListener(mHandler);
+				}
+			}
+			else
+			{
+				mBackendService = null;
 			}
 		}
 		return mBackendService;
@@ -73,7 +81,7 @@ public class SameEnum1InterfaceServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(SameEnum1InterfaceService) called. context = " + this);
-		synchronized (mutex) {
+		synchronized (sBackendMutex) {
 			if (mHandler != null && mBackendService != null)
 			{
 				// The handler (event listener) is about to change.
@@ -109,18 +117,19 @@ public class SameEnum1InterfaceServiceAdapter extends Service
 	public void onDestroy()
 	{
 		Log.i(TAG, "LIFECYCLE: onDestroy(SameEnum1InterfaceService) - proc = " + ", mMessenger = " + mMessenger);
-
-		if (mHandler != null)
+		synchronized (sBackendMutex)
 		{
-			if (mBackendService != null)
+			if (mHandler != null)
 			{
-				mBackendService.removeEventListener(mHandler);
+				if (mBackendService != null)
+				{
+					mBackendService.removeEventListener(mHandler);
+				}
+				mHandler.removeCallbacksAndMessages(null);
+				mHandler = null;
 			}
-			mHandler.removeCallbacksAndMessages(null);
-			mHandler = null;
+			mMessenger = null;
 		}
-		mBackendService = null;
-		mMessenger = null;
 
 		super.onDestroy();
 	}
@@ -182,9 +191,14 @@ public class SameEnum1InterfaceServiceAdapter extends Service
 
 		@Override
 		public void handleMessage(Message msg)
-			{
+		{
 			Log.i(TAG, "Handle msg " + msg);
-			if (mBackendService == null || !mBackendService._isReady())
+			ISameEnum1Interface backend;
+			synchronized (SameEnum1InterfaceServiceAdapter.sBackendMutex)
+			{
+				backend = SameEnum1InterfaceServiceAdapter.mBackendService;
+			}
+			if (backend == null || !backend._isReady())
 			{
 				if (SameEnum1InterfaceMessageType.fromInteger(msg.what) != SameEnum1InterfaceMessageType.REGISTER_CLIENT
 					&& SameEnum1InterfaceMessageType.fromInteger(msg.what) != SameEnum1InterfaceMessageType.UNREGISTER_CLIENT)
@@ -208,7 +222,7 @@ public class SameEnum1InterfaceServiceAdapter extends Service
 						data.setClassLoader(Enum1Parcelable.class.getClassLoader());
 						
 			        Enum1 prop1 = data.getParcelable("prop1", Enum1Parcelable.class).getEnum1();
-						mBackendService.setProp1(prop1);
+						backend.setProp1(prop1);
 						break;
 					}
 			// TODO params may be different structs from different modules, there should be a custom class loader 
@@ -222,8 +236,7 @@ public class SameEnum1InterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        Enum1 param1 = data.getParcelable("param1", Enum1Parcelable.class).getEnum1();
-
-					Enum1 result =  mBackendService.func1(param1);
+					Enum1 result =  backend.func1(param1);
 
 					Message respMsg = new Message();
 					respMsg.what = SameEnum1InterfaceMessageType.RPC_Func1Resp.getValue();
@@ -275,12 +288,20 @@ public class SameEnum1InterfaceServiceAdapter extends Service
 			Message msg = new Message();
 			msg.what = SameEnum1InterfaceMessageType.INIT.getValue();
 			Bundle data = new Bundle();
-			
-			Enum1 prop1 = mBackendService.getProp1();
-			
+			ISameEnum1Interface backend;
+			synchronized (SameEnum1InterfaceServiceAdapter.sBackendMutex)
+			{
+				backend = SameEnum1InterfaceServiceAdapter.mBackendService;
+			}
+			if (backend != null && backend._isReady())
+			{
+				
+				Enum1 prop1 = backend.getProp1();
+				
 		        data.putParcelable("prop1", new Enum1Parcelable(prop1));
-			msg.setData(data);
-			sendMessageToClients(msg);
+				msg.setData(data);
+				sendMessageToClients(msg);
+			}
 		}
 		@Override
 		public void onProp1Changed(Enum1 prop1){

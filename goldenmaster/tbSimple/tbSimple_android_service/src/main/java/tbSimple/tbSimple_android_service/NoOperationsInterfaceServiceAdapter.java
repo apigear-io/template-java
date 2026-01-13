@@ -29,13 +29,14 @@ public class NoOperationsInterfaceServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private static Messenger mMessenger;
+	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
+	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// The ServiceAdapter is just a user of the backend. 
+	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static INoOperationsInterface mBackendService;
 	private static INoOperationsInterfaceServiceFactory mServiceFactory;
-	private static final Object mutex = new Object();
-
-	//private final List<Message> mMessagesQueue = new ArrayList<>();
+	private static final Object sBackendMutex = new Object();
 
 	public NoOperationsInterfaceServiceAdapter()
 	{
@@ -44,22 +45,29 @@ public class NoOperationsInterfaceServiceAdapter extends Service
 	public static INoOperationsInterface setService(INoOperationsInterfaceServiceFactory factory)
 	{
 		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory  != factory)
+		if (mServiceFactory != factory)
 		{
 			mServiceFactory = factory;
 		}
-		synchronized (mutex)
+		synchronized (sBackendMutex)
 		{
 			if (mHandler != null && mBackendService != null)
 			{
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			mBackendService = mServiceFactory.getServiceInstance();
-			if (mHandler != null)
+			if (mServiceFactory != null)
 			{
-				Log.i(TAG, "LIFECYCLE: setService(NoOperationsInterface) called. For handler " + mHandler);
-				mBackendService.addEventListener(mHandler);
+				mBackendService = mServiceFactory.getServiceInstance();
+				if (mHandler != null)
+				{
+					Log.i(TAG, "LIFECYCLE: setService(NoOperationsInterface) called. For handler " + mHandler);
+					mBackendService.addEventListener(mHandler);
+				}
+			}
+			else
+			{
+				mBackendService = null;
 			}
 		}
 		return mBackendService;
@@ -71,7 +79,7 @@ public class NoOperationsInterfaceServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(NoOperationsInterfaceService) called. context = " + this);
-		synchronized (mutex) {
+		synchronized (sBackendMutex) {
 			if (mHandler != null && mBackendService != null)
 			{
 				// The handler (event listener) is about to change.
@@ -107,18 +115,19 @@ public class NoOperationsInterfaceServiceAdapter extends Service
 	public void onDestroy()
 	{
 		Log.i(TAG, "LIFECYCLE: onDestroy(NoOperationsInterfaceService) - proc = " + ", mMessenger = " + mMessenger);
-
-		if (mHandler != null)
+		synchronized (sBackendMutex)
 		{
-			if (mBackendService != null)
+			if (mHandler != null)
 			{
-				mBackendService.removeEventListener(mHandler);
+				if (mBackendService != null)
+				{
+					mBackendService.removeEventListener(mHandler);
+				}
+				mHandler.removeCallbacksAndMessages(null);
+				mHandler = null;
 			}
-			mHandler.removeCallbacksAndMessages(null);
-			mHandler = null;
+			mMessenger = null;
 		}
-		mBackendService = null;
-		mMessenger = null;
 
 		super.onDestroy();
 	}
@@ -180,9 +189,14 @@ public class NoOperationsInterfaceServiceAdapter extends Service
 
 		@Override
 		public void handleMessage(Message msg)
-			{
+		{
 			Log.i(TAG, "Handle msg " + msg);
-			if (mBackendService == null || !mBackendService._isReady())
+			INoOperationsInterface backend;
+			synchronized (NoOperationsInterfaceServiceAdapter.sBackendMutex)
+			{
+				backend = NoOperationsInterfaceServiceAdapter.mBackendService;
+			}
+			if (backend == null || !backend._isReady())
 			{
 				if (NoOperationsInterfaceMessageType.fromInteger(msg.what) != NoOperationsInterfaceMessageType.REGISTER_CLIENT
 					&& NoOperationsInterfaceMessageType.fromInteger(msg.what) != NoOperationsInterfaceMessageType.UNREGISTER_CLIENT)
@@ -205,7 +219,7 @@ public class NoOperationsInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						
 			        boolean propBool = data.getBoolean("propBool", false);
-						mBackendService.setPropBool(propBool);
+						backend.setPropBool(propBool);
 						break;
 					}
 					case PROP_PropInt:
@@ -213,7 +227,7 @@ public class NoOperationsInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						
 			        int propInt = data.getInt("propInt", 0);
-						mBackendService.setPropInt(propInt);
+						backend.setPropInt(propInt);
 						break;
 					}
 				default:
@@ -250,15 +264,23 @@ public class NoOperationsInterfaceServiceAdapter extends Service
 			Message msg = new Message();
 			msg.what = NoOperationsInterfaceMessageType.INIT.getValue();
 			Bundle data = new Bundle();
-			
-			boolean propBool = mBackendService.getPropBool();
-			
+			INoOperationsInterface backend;
+			synchronized (NoOperationsInterfaceServiceAdapter.sBackendMutex)
+			{
+				backend = NoOperationsInterfaceServiceAdapter.mBackendService;
+			}
+			if (backend != null && backend._isReady())
+			{
+				
+				boolean propBool = backend.getPropBool();
+				
 		        data.putBoolean("propBool", propBool);
-			int propInt = mBackendService.getPropInt();
-			
+				int propInt = backend.getPropInt();
+				
 		        data.putInt("propInt", propInt);
-			msg.setData(data);
-			sendMessageToClients(msg);
+				msg.setData(data);
+				sendMessageToClients(msg);
+			}
 		}
 		@Override
 		public void onPropBoolChanged(boolean propBool){

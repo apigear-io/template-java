@@ -16,9 +16,8 @@ public class VoidInterfaceServiceStarter {
     static Intent androidService = null;
     private static final String TAG = "VoidInterfaceStarter";
 
-
-
-    public static IVoidInterface start(Context context) {
+    public static IVoidInterface start(Context context)
+    {
         stop(context);
         androidService = new Intent(context, VoidInterfaceServiceAdapter.class);
         Log.i(TAG, "starter: created intent");
@@ -31,6 +30,9 @@ public class VoidInterfaceServiceStarter {
 
     public static void stop(Context context)
     {
+        VoidInterfaceServiceFactory factory = VoidInterfaceServiceFactory.get();
+        factory.clear();
+        VoidInterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

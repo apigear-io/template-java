@@ -16,9 +16,8 @@ public class NoPropertiesInterfaceServiceStarter {
     static Intent androidService = null;
     private static final String TAG = "NoPropertiesInterfaceStarter";
 
-
-
-    public static INoPropertiesInterface start(Context context) {
+    public static INoPropertiesInterface start(Context context)
+    {
         stop(context);
         androidService = new Intent(context, NoPropertiesInterfaceServiceAdapter.class);
         Log.i(TAG, "starter: created intent");
@@ -31,6 +30,9 @@ public class NoPropertiesInterfaceServiceStarter {
 
     public static void stop(Context context)
     {
+        NoPropertiesInterfaceServiceFactory factory = NoPropertiesInterfaceServiceFactory.get();
+        factory.clear();
+        NoPropertiesInterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

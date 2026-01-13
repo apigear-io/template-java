@@ -78,4 +78,9 @@ public class SimpleInterfaceServiceFactory extends HandlerThread implements ISim
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		m_Service = null;
+	}
 }

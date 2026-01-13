@@ -78,4 +78,9 @@ public class NestedStruct1InterfaceJniServiceFactory extends HandlerThread imple
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		jniService = null;
+	}
 }

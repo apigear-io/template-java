@@ -16,9 +16,8 @@ public class CounterServiceStarter {
     static Intent androidService = null;
     private static final String TAG = "CounterStarter";
 
-
-
-    public static ICounter start(Context context) {
+    public static ICounter start(Context context)
+    {
         stop(context);
         androidService = new Intent(context, CounterServiceAdapter.class);
         Log.i(TAG, "starter: created intent");
@@ -31,6 +30,9 @@ public class CounterServiceStarter {
 
     public static void stop(Context context)
     {
+        CounterServiceFactory factory = CounterServiceFactory.get();
+        factory.clear();
+        CounterServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

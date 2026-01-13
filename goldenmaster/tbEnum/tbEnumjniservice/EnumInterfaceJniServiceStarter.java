@@ -31,6 +31,9 @@ public class EnumInterfaceJniServiceStarter {
 
     public static void stop(Context context)
     {
+        EnumInterfaceJniServiceFactory factory = EnumInterfaceJniServiceFactory.get();
+        factory.clear();
+        EnumInterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

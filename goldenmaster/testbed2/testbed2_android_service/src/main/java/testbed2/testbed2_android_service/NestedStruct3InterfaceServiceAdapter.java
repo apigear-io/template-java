@@ -35,13 +35,14 @@ public class NestedStruct3InterfaceServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private static Messenger mMessenger;
+	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
+	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// The ServiceAdapter is just a user of the backend. 
+	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static INestedStruct3Interface mBackendService;
 	private static INestedStruct3InterfaceServiceFactory mServiceFactory;
-	private static final Object mutex = new Object();
-
-	//private final List<Message> mMessagesQueue = new ArrayList<>();
+	private static final Object sBackendMutex = new Object();
 
 	public NestedStruct3InterfaceServiceAdapter()
 	{
@@ -50,22 +51,29 @@ public class NestedStruct3InterfaceServiceAdapter extends Service
 	public static INestedStruct3Interface setService(INestedStruct3InterfaceServiceFactory factory)
 	{
 		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory  != factory)
+		if (mServiceFactory != factory)
 		{
 			mServiceFactory = factory;
 		}
-		synchronized (mutex)
+		synchronized (sBackendMutex)
 		{
 			if (mHandler != null && mBackendService != null)
 			{
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			mBackendService = mServiceFactory.getServiceInstance();
-			if (mHandler != null)
+			if (mServiceFactory != null)
 			{
-				Log.i(TAG, "LIFECYCLE: setService(NestedStruct3Interface) called. For handler " + mHandler);
-				mBackendService.addEventListener(mHandler);
+				mBackendService = mServiceFactory.getServiceInstance();
+				if (mHandler != null)
+				{
+					Log.i(TAG, "LIFECYCLE: setService(NestedStruct3Interface) called. For handler " + mHandler);
+					mBackendService.addEventListener(mHandler);
+				}
+			}
+			else
+			{
+				mBackendService = null;
 			}
 		}
 		return mBackendService;
@@ -77,7 +85,7 @@ public class NestedStruct3InterfaceServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(NestedStruct3InterfaceService) called. context = " + this);
-		synchronized (mutex) {
+		synchronized (sBackendMutex) {
 			if (mHandler != null && mBackendService != null)
 			{
 				// The handler (event listener) is about to change.
@@ -113,18 +121,19 @@ public class NestedStruct3InterfaceServiceAdapter extends Service
 	public void onDestroy()
 	{
 		Log.i(TAG, "LIFECYCLE: onDestroy(NestedStruct3InterfaceService) - proc = " + ", mMessenger = " + mMessenger);
-
-		if (mHandler != null)
+		synchronized (sBackendMutex)
 		{
-			if (mBackendService != null)
+			if (mHandler != null)
 			{
-				mBackendService.removeEventListener(mHandler);
+				if (mBackendService != null)
+				{
+					mBackendService.removeEventListener(mHandler);
+				}
+				mHandler.removeCallbacksAndMessages(null);
+				mHandler = null;
 			}
-			mHandler.removeCallbacksAndMessages(null);
-			mHandler = null;
+			mMessenger = null;
 		}
-		mBackendService = null;
-		mMessenger = null;
 
 		super.onDestroy();
 	}
@@ -186,9 +195,14 @@ public class NestedStruct3InterfaceServiceAdapter extends Service
 
 		@Override
 		public void handleMessage(Message msg)
-			{
+		{
 			Log.i(TAG, "Handle msg " + msg);
-			if (mBackendService == null || !mBackendService._isReady())
+			INestedStruct3Interface backend;
+			synchronized (NestedStruct3InterfaceServiceAdapter.sBackendMutex)
+			{
+				backend = NestedStruct3InterfaceServiceAdapter.mBackendService;
+			}
+			if (backend == null || !backend._isReady())
 			{
 				if (NestedStruct3InterfaceMessageType.fromInteger(msg.what) != NestedStruct3InterfaceMessageType.REGISTER_CLIENT
 					&& NestedStruct3InterfaceMessageType.fromInteger(msg.what) != NestedStruct3InterfaceMessageType.UNREGISTER_CLIENT)
@@ -212,7 +226,7 @@ public class NestedStruct3InterfaceServiceAdapter extends Service
 						data.setClassLoader(NestedStruct1Parcelable.class.getClassLoader());
 						
 			        NestedStruct1 prop1 = data.getParcelable("prop1", NestedStruct1Parcelable.class).getNestedStruct1();
-						mBackendService.setProp1(prop1);
+						backend.setProp1(prop1);
 						break;
 					}
 					case PROP_Prop2:
@@ -221,7 +235,7 @@ public class NestedStruct3InterfaceServiceAdapter extends Service
 						data.setClassLoader(NestedStruct2Parcelable.class.getClassLoader());
 						
 			        NestedStruct2 prop2 = data.getParcelable("prop2", NestedStruct2Parcelable.class).getNestedStruct2();
-						mBackendService.setProp2(prop2);
+						backend.setProp2(prop2);
 						break;
 					}
 					case PROP_Prop3:
@@ -230,7 +244,7 @@ public class NestedStruct3InterfaceServiceAdapter extends Service
 						data.setClassLoader(NestedStruct3Parcelable.class.getClassLoader());
 						
 			        NestedStruct3 prop3 = data.getParcelable("prop3", NestedStruct3Parcelable.class).getNestedStruct3();
-						mBackendService.setProp3(prop3);
+						backend.setProp3(prop3);
 						break;
 					}
 			// TODO params may be different structs from different modules, there should be a custom class loader 
@@ -244,8 +258,7 @@ public class NestedStruct3InterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        NestedStruct1 param1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
-
-					NestedStruct1 result =  mBackendService.func1(param1);
+					NestedStruct1 result =  backend.func1(param1);
 
 					Message respMsg = new Message();
 					respMsg.what = NestedStruct3InterfaceMessageType.RPC_Func1Resp.getValue();
@@ -276,8 +289,7 @@ public class NestedStruct3InterfaceServiceAdapter extends Service
 			        NestedStruct1 param1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
 					
 			        NestedStruct2 param2 = data.getParcelable("param2", NestedStruct2Parcelable.class).getNestedStruct2();
-
-					NestedStruct1 result =  mBackendService.func2(param1, param2);
+					NestedStruct1 result =  backend.func2(param1, param2);
 
 					Message respMsg = new Message();
 					respMsg.what = NestedStruct3InterfaceMessageType.RPC_Func2Resp.getValue();
@@ -310,8 +322,7 @@ public class NestedStruct3InterfaceServiceAdapter extends Service
 			        NestedStruct2 param2 = data.getParcelable("param2", NestedStruct2Parcelable.class).getNestedStruct2();
 					
 			        NestedStruct3 param3 = data.getParcelable("param3", NestedStruct3Parcelable.class).getNestedStruct3();
-
-					NestedStruct1 result =  mBackendService.func3(param1, param2, param3);
+					NestedStruct1 result =  backend.func3(param1, param2, param3);
 
 					Message respMsg = new Message();
 					respMsg.what = NestedStruct3InterfaceMessageType.RPC_Func3Resp.getValue();
@@ -363,18 +374,26 @@ public class NestedStruct3InterfaceServiceAdapter extends Service
 			Message msg = new Message();
 			msg.what = NestedStruct3InterfaceMessageType.INIT.getValue();
 			Bundle data = new Bundle();
-			
-			NestedStruct1 prop1 = mBackendService.getProp1();
-			
+			INestedStruct3Interface backend;
+			synchronized (NestedStruct3InterfaceServiceAdapter.sBackendMutex)
+			{
+				backend = NestedStruct3InterfaceServiceAdapter.mBackendService;
+			}
+			if (backend != null && backend._isReady())
+			{
+				
+				NestedStruct1 prop1 = backend.getProp1();
+				
 		        data.putParcelable("prop1", new NestedStruct1Parcelable(prop1));
-			NestedStruct2 prop2 = mBackendService.getProp2();
-			
+				NestedStruct2 prop2 = backend.getProp2();
+				
 		        data.putParcelable("prop2", new NestedStruct2Parcelable(prop2));
-			NestedStruct3 prop3 = mBackendService.getProp3();
-			
+				NestedStruct3 prop3 = backend.getProp3();
+				
 		        data.putParcelable("prop3", new NestedStruct3Parcelable(prop3));
-			msg.setData(data);
-			sendMessageToClients(msg);
+				msg.setData(data);
+				sendMessageToClients(msg);
+			}
 		}
 		@Override
 		public void onProp1Changed(NestedStruct1 prop1){

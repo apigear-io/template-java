@@ -78,4 +78,9 @@ public class EnumInterfaceJniServiceFactory extends HandlerThread implements IEn
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		jniService = null;
+	}
 }

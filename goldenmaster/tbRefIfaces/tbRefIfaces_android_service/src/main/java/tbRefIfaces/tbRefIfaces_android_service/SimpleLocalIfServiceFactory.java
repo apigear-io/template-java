@@ -78,4 +78,9 @@ public class SimpleLocalIfServiceFactory extends HandlerThread implements ISimpl
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		m_Service = null;
+	}
 }

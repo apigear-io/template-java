@@ -16,9 +16,8 @@ public class SameEnum2InterfaceServiceStarter {
     static Intent androidService = null;
     private static final String TAG = "SameEnum2InterfaceStarter";
 
-
-
-    public static ISameEnum2Interface start(Context context) {
+    public static ISameEnum2Interface start(Context context)
+    {
         stop(context);
         androidService = new Intent(context, SameEnum2InterfaceServiceAdapter.class);
         Log.i(TAG, "starter: created intent");
@@ -31,6 +30,9 @@ public class SameEnum2InterfaceServiceStarter {
 
     public static void stop(Context context)
     {
+        SameEnum2InterfaceServiceFactory factory = SameEnum2InterfaceServiceFactory.get();
+        factory.clear();
+        SameEnum2InterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

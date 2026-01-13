@@ -16,9 +16,8 @@ public class NestedStruct3InterfaceServiceStarter {
     static Intent androidService = null;
     private static final String TAG = "NestedStruct3InterfaceStarter";
 
-
-
-    public static INestedStruct3Interface start(Context context) {
+    public static INestedStruct3Interface start(Context context)
+    {
         stop(context);
         androidService = new Intent(context, NestedStruct3InterfaceServiceAdapter.class);
         Log.i(TAG, "starter: created intent");
@@ -31,6 +30,9 @@ public class NestedStruct3InterfaceServiceStarter {
 
     public static void stop(Context context)
     {
+        NestedStruct3InterfaceServiceFactory factory = NestedStruct3InterfaceServiceFactory.get();
+        factory.clear();
+        NestedStruct3InterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

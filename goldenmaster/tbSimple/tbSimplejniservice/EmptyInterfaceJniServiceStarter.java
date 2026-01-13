@@ -31,6 +31,9 @@ public class EmptyInterfaceJniServiceStarter {
 
     public static void stop(Context context)
     {
+        EmptyInterfaceJniServiceFactory factory = EmptyInterfaceJniServiceFactory.get();
+        factory.clear();
+        EmptyInterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

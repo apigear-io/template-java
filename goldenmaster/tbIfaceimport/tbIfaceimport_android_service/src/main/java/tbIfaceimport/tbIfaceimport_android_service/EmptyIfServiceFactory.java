@@ -78,4 +78,9 @@ public class EmptyIfServiceFactory extends HandlerThread implements IEmptyIfServ
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		m_Service = null;
+	}
 }

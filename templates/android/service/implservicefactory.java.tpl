@@ -78,4 +78,9 @@ public class {{Camel .Interface.Name}}ServiceFactory extends HandlerThread imple
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		m_Service = null;
+	}
 }

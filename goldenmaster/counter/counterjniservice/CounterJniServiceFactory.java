@@ -78,4 +78,9 @@ public class CounterJniServiceFactory extends HandlerThread implements ICounterS
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		jniService = null;
+	}
 }
