@@ -78,4 +78,9 @@ public class ParentIfJniServiceFactory extends HandlerThread implements IParentI
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		jniService = null;
+	}
 }

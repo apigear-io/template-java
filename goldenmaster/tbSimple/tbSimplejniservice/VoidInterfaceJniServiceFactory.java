@@ -78,4 +78,9 @@ public class VoidInterfaceJniServiceFactory extends HandlerThread implements IVo
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		jniService = null;
+	}
 }

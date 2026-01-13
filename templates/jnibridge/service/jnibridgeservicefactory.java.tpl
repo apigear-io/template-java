@@ -78,4 +78,9 @@ public class {{Camel .Interface.Name}}JniServiceFactory extends HandlerThread im
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		jniService = null;
+	}
 }

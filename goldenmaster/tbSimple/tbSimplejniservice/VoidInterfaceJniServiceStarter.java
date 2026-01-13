@@ -31,6 +31,9 @@ public class VoidInterfaceJniServiceStarter {
 
     public static void stop(Context context)
     {
+        VoidInterfaceJniServiceFactory factory = VoidInterfaceJniServiceFactory.get();
+        factory.clear();
+        VoidInterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

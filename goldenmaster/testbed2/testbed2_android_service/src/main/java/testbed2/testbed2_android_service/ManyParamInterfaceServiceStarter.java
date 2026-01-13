@@ -16,9 +16,8 @@ public class ManyParamInterfaceServiceStarter {
     static Intent androidService = null;
     private static final String TAG = "ManyParamInterfaceStarter";
 
-
-
-    public static IManyParamInterface start(Context context) {
+    public static IManyParamInterface start(Context context)
+    {
         stop(context);
         androidService = new Intent(context, ManyParamInterfaceServiceAdapter.class);
         Log.i(TAG, "starter: created intent");
@@ -31,6 +30,9 @@ public class ManyParamInterfaceServiceStarter {
 
     public static void stop(Context context)
     {
+        ManyParamInterfaceServiceFactory factory = ManyParamInterfaceServiceFactory.get();
+        factory.clear();
+        ManyParamInterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

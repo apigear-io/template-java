@@ -78,4 +78,9 @@ public class SameStruct1InterfaceJniServiceFactory extends HandlerThread impleme
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		jniService = null;
+	}
 }

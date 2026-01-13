@@ -29,13 +29,14 @@ public class SimpleLocalIfServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private static Messenger mMessenger;
+	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
+	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// The ServiceAdapter is just a user of the backend. 
+	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static ISimpleLocalIf mBackendService;
 	private static ISimpleLocalIfServiceFactory mServiceFactory;
-	private static final Object mutex = new Object();
-
-	//private final List<Message> mMessagesQueue = new ArrayList<>();
+	private static final Object sBackendMutex = new Object();
 
 	public SimpleLocalIfServiceAdapter()
 	{
@@ -44,22 +45,29 @@ public class SimpleLocalIfServiceAdapter extends Service
 	public static ISimpleLocalIf setService(ISimpleLocalIfServiceFactory factory)
 	{
 		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory  != factory)
+		if (mServiceFactory != factory)
 		{
 			mServiceFactory = factory;
 		}
-		synchronized (mutex)
+		synchronized (sBackendMutex)
 		{
 			if (mHandler != null && mBackendService != null)
 			{
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			mBackendService = mServiceFactory.getServiceInstance();
-			if (mHandler != null)
+			if (mServiceFactory != null)
 			{
-				Log.i(TAG, "LIFECYCLE: setService(SimpleLocalIf) called. For handler " + mHandler);
-				mBackendService.addEventListener(mHandler);
+				mBackendService = mServiceFactory.getServiceInstance();
+				if (mHandler != null)
+				{
+					Log.i(TAG, "LIFECYCLE: setService(SimpleLocalIf) called. For handler " + mHandler);
+					mBackendService.addEventListener(mHandler);
+				}
+			}
+			else
+			{
+				mBackendService = null;
 			}
 		}
 		return mBackendService;
@@ -71,7 +79,7 @@ public class SimpleLocalIfServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(SimpleLocalIfService) called. context = " + this);
-		synchronized (mutex) {
+		synchronized (sBackendMutex) {
 			if (mHandler != null && mBackendService != null)
 			{
 				// The handler (event listener) is about to change.
@@ -107,18 +115,19 @@ public class SimpleLocalIfServiceAdapter extends Service
 	public void onDestroy()
 	{
 		Log.i(TAG, "LIFECYCLE: onDestroy(SimpleLocalIfService) - proc = " + ", mMessenger = " + mMessenger);
-
-		if (mHandler != null)
+		synchronized (sBackendMutex)
 		{
-			if (mBackendService != null)
+			if (mHandler != null)
 			{
-				mBackendService.removeEventListener(mHandler);
+				if (mBackendService != null)
+				{
+					mBackendService.removeEventListener(mHandler);
+				}
+				mHandler.removeCallbacksAndMessages(null);
+				mHandler = null;
 			}
-			mHandler.removeCallbacksAndMessages(null);
-			mHandler = null;
+			mMessenger = null;
 		}
-		mBackendService = null;
-		mMessenger = null;
 
 		super.onDestroy();
 	}
@@ -180,9 +189,14 @@ public class SimpleLocalIfServiceAdapter extends Service
 
 		@Override
 		public void handleMessage(Message msg)
-			{
+		{
 			Log.i(TAG, "Handle msg " + msg);
-			if (mBackendService == null || !mBackendService._isReady())
+			ISimpleLocalIf backend;
+			synchronized (SimpleLocalIfServiceAdapter.sBackendMutex)
+			{
+				backend = SimpleLocalIfServiceAdapter.mBackendService;
+			}
+			if (backend == null || !backend._isReady())
 			{
 				if (SimpleLocalIfMessageType.fromInteger(msg.what) != SimpleLocalIfMessageType.REGISTER_CLIENT
 					&& SimpleLocalIfMessageType.fromInteger(msg.what) != SimpleLocalIfMessageType.UNREGISTER_CLIENT)
@@ -205,7 +219,7 @@ public class SimpleLocalIfServiceAdapter extends Service
 						Bundle data = msg.getData();
 						
 			        int intProperty = data.getInt("intProperty", 0);
-						mBackendService.setIntProperty(intProperty);
+						backend.setIntProperty(intProperty);
 						break;
 					}
 			// TODO params may be different structs from different modules, there should be a custom class loader 
@@ -218,8 +232,7 @@ public class SimpleLocalIfServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        int param = data.getInt("param", 0);
-
-					int result =  mBackendService.intMethod(param);
+					int result =  backend.intMethod(param);
 
 					Message respMsg = new Message();
 					respMsg.what = SimpleLocalIfMessageType.RPC_IntMethodResp.getValue();
@@ -271,12 +284,20 @@ public class SimpleLocalIfServiceAdapter extends Service
 			Message msg = new Message();
 			msg.what = SimpleLocalIfMessageType.INIT.getValue();
 			Bundle data = new Bundle();
-			
-			int intProperty = mBackendService.getIntProperty();
-			
+			ISimpleLocalIf backend;
+			synchronized (SimpleLocalIfServiceAdapter.sBackendMutex)
+			{
+				backend = SimpleLocalIfServiceAdapter.mBackendService;
+			}
+			if (backend != null && backend._isReady())
+			{
+				
+				int intProperty = backend.getIntProperty();
+				
 		        data.putInt("intProperty", intProperty);
-			msg.setData(data);
-			sendMessageToClients(msg);
+				msg.setData(data);
+				sendMessageToClients(msg);
+			}
 		}
 		@Override
 		public void onIntPropertyChanged(int intProperty){

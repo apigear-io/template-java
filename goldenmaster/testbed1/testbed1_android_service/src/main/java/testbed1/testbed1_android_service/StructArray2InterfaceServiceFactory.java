@@ -78,4 +78,9 @@ public class StructArray2InterfaceServiceFactory extends HandlerThread implement
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		m_Service = null;
+	}
 }

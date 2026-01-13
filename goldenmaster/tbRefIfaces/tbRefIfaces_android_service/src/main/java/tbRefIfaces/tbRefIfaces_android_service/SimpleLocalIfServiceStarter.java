@@ -16,9 +16,8 @@ public class SimpleLocalIfServiceStarter {
     static Intent androidService = null;
     private static final String TAG = "SimpleLocalIfStarter";
 
-
-
-    public static ISimpleLocalIf start(Context context) {
+    public static ISimpleLocalIf start(Context context)
+    {
         stop(context);
         androidService = new Intent(context, SimpleLocalIfServiceAdapter.class);
         Log.i(TAG, "starter: created intent");
@@ -31,6 +30,9 @@ public class SimpleLocalIfServiceStarter {
 
     public static void stop(Context context)
     {
+        SimpleLocalIfServiceFactory factory = SimpleLocalIfServiceFactory.get();
+        factory.clear();
+        SimpleLocalIfServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

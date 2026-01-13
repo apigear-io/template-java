@@ -78,4 +78,9 @@ public class SameEnum2InterfaceServiceFactory extends HandlerThread implements I
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		m_Service = null;
+	}
 }

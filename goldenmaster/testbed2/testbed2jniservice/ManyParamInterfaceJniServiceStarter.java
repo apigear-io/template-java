@@ -31,6 +31,9 @@ public class ManyParamInterfaceJniServiceStarter {
 
     public static void stop(Context context)
     {
+        ManyParamInterfaceJniServiceFactory factory = ManyParamInterfaceJniServiceFactory.get();
+        factory.clear();
+        ManyParamInterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

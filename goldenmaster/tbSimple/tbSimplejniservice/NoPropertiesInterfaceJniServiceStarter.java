@@ -31,6 +31,9 @@ public class NoPropertiesInterfaceJniServiceStarter {
 
     public static void stop(Context context)
     {
+        NoPropertiesInterfaceJniServiceFactory factory = NoPropertiesInterfaceJniServiceFactory.get();
+        factory.clear();
+        NoPropertiesInterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

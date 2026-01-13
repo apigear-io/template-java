@@ -16,9 +16,8 @@ public class StructArray2InterfaceServiceStarter {
     static Intent androidService = null;
     private static final String TAG = "StructArray2InterfaceStarter";
 
-
-
-    public static IStructArray2Interface start(Context context) {
+    public static IStructArray2Interface start(Context context)
+    {
         stop(context);
         androidService = new Intent(context, StructArray2InterfaceServiceAdapter.class);
         Log.i(TAG, "starter: created intent");
@@ -31,6 +30,9 @@ public class StructArray2InterfaceServiceStarter {
 
     public static void stop(Context context)
     {
+        StructArray2InterfaceServiceFactory factory = StructArray2InterfaceServiceFactory.get();
+        factory.clear();
+        StructArray2InterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

@@ -37,13 +37,14 @@ public class EnumInterfaceServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private static Messenger mMessenger;
+	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
+	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// The ServiceAdapter is just a user of the backend. 
+	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static IEnumInterface mBackendService;
 	private static IEnumInterfaceServiceFactory mServiceFactory;
-	private static final Object mutex = new Object();
-
-	//private final List<Message> mMessagesQueue = new ArrayList<>();
+	private static final Object sBackendMutex = new Object();
 
 	public EnumInterfaceServiceAdapter()
 	{
@@ -52,22 +53,29 @@ public class EnumInterfaceServiceAdapter extends Service
 	public static IEnumInterface setService(IEnumInterfaceServiceFactory factory)
 	{
 		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory  != factory)
+		if (mServiceFactory != factory)
 		{
 			mServiceFactory = factory;
 		}
-		synchronized (mutex)
+		synchronized (sBackendMutex)
 		{
 			if (mHandler != null && mBackendService != null)
 			{
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			mBackendService = mServiceFactory.getServiceInstance();
-			if (mHandler != null)
+			if (mServiceFactory != null)
 			{
-				Log.i(TAG, "LIFECYCLE: setService(EnumInterface) called. For handler " + mHandler);
-				mBackendService.addEventListener(mHandler);
+				mBackendService = mServiceFactory.getServiceInstance();
+				if (mHandler != null)
+				{
+					Log.i(TAG, "LIFECYCLE: setService(EnumInterface) called. For handler " + mHandler);
+					mBackendService.addEventListener(mHandler);
+				}
+			}
+			else
+			{
+				mBackendService = null;
 			}
 		}
 		return mBackendService;
@@ -79,7 +87,7 @@ public class EnumInterfaceServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(EnumInterfaceService) called. context = " + this);
-		synchronized (mutex) {
+		synchronized (sBackendMutex) {
 			if (mHandler != null && mBackendService != null)
 			{
 				// The handler (event listener) is about to change.
@@ -115,18 +123,19 @@ public class EnumInterfaceServiceAdapter extends Service
 	public void onDestroy()
 	{
 		Log.i(TAG, "LIFECYCLE: onDestroy(EnumInterfaceService) - proc = " + ", mMessenger = " + mMessenger);
-
-		if (mHandler != null)
+		synchronized (sBackendMutex)
 		{
-			if (mBackendService != null)
+			if (mHandler != null)
 			{
-				mBackendService.removeEventListener(mHandler);
+				if (mBackendService != null)
+				{
+					mBackendService.removeEventListener(mHandler);
+				}
+				mHandler.removeCallbacksAndMessages(null);
+				mHandler = null;
 			}
-			mHandler.removeCallbacksAndMessages(null);
-			mHandler = null;
+			mMessenger = null;
 		}
-		mBackendService = null;
-		mMessenger = null;
 
 		super.onDestroy();
 	}
@@ -188,9 +197,14 @@ public class EnumInterfaceServiceAdapter extends Service
 
 		@Override
 		public void handleMessage(Message msg)
-			{
+		{
 			Log.i(TAG, "Handle msg " + msg);
-			if (mBackendService == null || !mBackendService._isReady())
+			IEnumInterface backend;
+			synchronized (EnumInterfaceServiceAdapter.sBackendMutex)
+			{
+				backend = EnumInterfaceServiceAdapter.mBackendService;
+			}
+			if (backend == null || !backend._isReady())
 			{
 				if (EnumInterfaceMessageType.fromInteger(msg.what) != EnumInterfaceMessageType.REGISTER_CLIENT
 					&& EnumInterfaceMessageType.fromInteger(msg.what) != EnumInterfaceMessageType.UNREGISTER_CLIENT)
@@ -214,7 +228,7 @@ public class EnumInterfaceServiceAdapter extends Service
 						data.setClassLoader(Enum0Parcelable.class.getClassLoader());
 						
 			        Enum0 prop0 = data.getParcelable("prop0", Enum0Parcelable.class).getEnum0();
-						mBackendService.setProp0(prop0);
+						backend.setProp0(prop0);
 						break;
 					}
 					case PROP_Prop1:
@@ -223,7 +237,7 @@ public class EnumInterfaceServiceAdapter extends Service
 						data.setClassLoader(Enum1Parcelable.class.getClassLoader());
 						
 			        Enum1 prop1 = data.getParcelable("prop1", Enum1Parcelable.class).getEnum1();
-						mBackendService.setProp1(prop1);
+						backend.setProp1(prop1);
 						break;
 					}
 					case PROP_Prop2:
@@ -232,7 +246,7 @@ public class EnumInterfaceServiceAdapter extends Service
 						data.setClassLoader(Enum2Parcelable.class.getClassLoader());
 						
 			        Enum2 prop2 = data.getParcelable("prop2", Enum2Parcelable.class).getEnum2();
-						mBackendService.setProp2(prop2);
+						backend.setProp2(prop2);
 						break;
 					}
 					case PROP_Prop3:
@@ -241,7 +255,7 @@ public class EnumInterfaceServiceAdapter extends Service
 						data.setClassLoader(Enum3Parcelable.class.getClassLoader());
 						
 			        Enum3 prop3 = data.getParcelable("prop3", Enum3Parcelable.class).getEnum3();
-						mBackendService.setProp3(prop3);
+						backend.setProp3(prop3);
 						break;
 					}
 			// TODO params may be different structs from different modules, there should be a custom class loader 
@@ -255,8 +269,7 @@ public class EnumInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        Enum0 param0 = data.getParcelable("param0", Enum0Parcelable.class).getEnum0();
-
-					Enum0 result =  mBackendService.func0(param0);
+					Enum0 result =  backend.func0(param0);
 
 					Message respMsg = new Message();
 					respMsg.what = EnumInterfaceMessageType.RPC_Func0Resp.getValue();
@@ -285,8 +298,7 @@ public class EnumInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        Enum1 param1 = data.getParcelable("param1", Enum1Parcelable.class).getEnum1();
-
-					Enum1 result =  mBackendService.func1(param1);
+					Enum1 result =  backend.func1(param1);
 
 					Message respMsg = new Message();
 					respMsg.what = EnumInterfaceMessageType.RPC_Func1Resp.getValue();
@@ -315,8 +327,7 @@ public class EnumInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        Enum2 param2 = data.getParcelable("param2", Enum2Parcelable.class).getEnum2();
-
-					Enum2 result =  mBackendService.func2(param2);
+					Enum2 result =  backend.func2(param2);
 
 					Message respMsg = new Message();
 					respMsg.what = EnumInterfaceMessageType.RPC_Func2Resp.getValue();
@@ -345,8 +356,7 @@ public class EnumInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        Enum3 param3 = data.getParcelable("param3", Enum3Parcelable.class).getEnum3();
-
-					Enum3 result =  mBackendService.func3(param3);
+					Enum3 result =  backend.func3(param3);
 
 					Message respMsg = new Message();
 					respMsg.what = EnumInterfaceMessageType.RPC_Func3Resp.getValue();
@@ -398,21 +408,29 @@ public class EnumInterfaceServiceAdapter extends Service
 			Message msg = new Message();
 			msg.what = EnumInterfaceMessageType.INIT.getValue();
 			Bundle data = new Bundle();
-			
-			Enum0 prop0 = mBackendService.getProp0();
-			
+			IEnumInterface backend;
+			synchronized (EnumInterfaceServiceAdapter.sBackendMutex)
+			{
+				backend = EnumInterfaceServiceAdapter.mBackendService;
+			}
+			if (backend != null && backend._isReady())
+			{
+				
+				Enum0 prop0 = backend.getProp0();
+				
 		        data.putParcelable("prop0", new Enum0Parcelable(prop0));
-			Enum1 prop1 = mBackendService.getProp1();
-			
+				Enum1 prop1 = backend.getProp1();
+				
 		        data.putParcelable("prop1", new Enum1Parcelable(prop1));
-			Enum2 prop2 = mBackendService.getProp2();
-			
+				Enum2 prop2 = backend.getProp2();
+				
 		        data.putParcelable("prop2", new Enum2Parcelable(prop2));
-			Enum3 prop3 = mBackendService.getProp3();
-			
+				Enum3 prop3 = backend.getProp3();
+				
 		        data.putParcelable("prop3", new Enum3Parcelable(prop3));
-			msg.setData(data);
-			sendMessageToClients(msg);
+				msg.setData(data);
+				sendMessageToClients(msg);
+			}
 		}
 		@Override
 		public void onProp0Changed(Enum0 prop0){

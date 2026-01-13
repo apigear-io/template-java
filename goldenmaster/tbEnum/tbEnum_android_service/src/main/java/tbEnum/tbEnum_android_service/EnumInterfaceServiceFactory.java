@@ -78,4 +78,9 @@ public class EnumInterfaceServiceFactory extends HandlerThread implements IEnumI
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		m_Service = null;
+	}
 }

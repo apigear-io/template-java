@@ -31,13 +31,14 @@ public class ParentIfServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private static Messenger mMessenger;
+	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
+	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// The ServiceAdapter is just a user of the backend. 
+	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static IParentIf mBackendService;
 	private static IParentIfServiceFactory mServiceFactory;
-	private static final Object mutex = new Object();
-
-	//private final List<Message> mMessagesQueue = new ArrayList<>();
+	private static final Object sBackendMutex = new Object();
 
 	public ParentIfServiceAdapter()
 	{
@@ -46,22 +47,29 @@ public class ParentIfServiceAdapter extends Service
 	public static IParentIf setService(IParentIfServiceFactory factory)
 	{
 		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory  != factory)
+		if (mServiceFactory != factory)
 		{
 			mServiceFactory = factory;
 		}
-		synchronized (mutex)
+		synchronized (sBackendMutex)
 		{
 			if (mHandler != null && mBackendService != null)
 			{
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			mBackendService = mServiceFactory.getServiceInstance();
-			if (mHandler != null)
+			if (mServiceFactory != null)
 			{
-				Log.i(TAG, "LIFECYCLE: setService(ParentIf) called. For handler " + mHandler);
-				mBackendService.addEventListener(mHandler);
+				mBackendService = mServiceFactory.getServiceInstance();
+				if (mHandler != null)
+				{
+					Log.i(TAG, "LIFECYCLE: setService(ParentIf) called. For handler " + mHandler);
+					mBackendService.addEventListener(mHandler);
+				}
+			}
+			else
+			{
+				mBackendService = null;
 			}
 		}
 		return mBackendService;
@@ -73,7 +81,7 @@ public class ParentIfServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(ParentIfService) called. context = " + this);
-		synchronized (mutex) {
+		synchronized (sBackendMutex) {
 			if (mHandler != null && mBackendService != null)
 			{
 				// The handler (event listener) is about to change.
@@ -109,18 +117,19 @@ public class ParentIfServiceAdapter extends Service
 	public void onDestroy()
 	{
 		Log.i(TAG, "LIFECYCLE: onDestroy(ParentIfService) - proc = " + ", mMessenger = " + mMessenger);
-
-		if (mHandler != null)
+		synchronized (sBackendMutex)
 		{
-			if (mBackendService != null)
+			if (mHandler != null)
 			{
-				mBackendService.removeEventListener(mHandler);
+				if (mBackendService != null)
+				{
+					mBackendService.removeEventListener(mHandler);
+				}
+				mHandler.removeCallbacksAndMessages(null);
+				mHandler = null;
 			}
-			mHandler.removeCallbacksAndMessages(null);
-			mHandler = null;
+			mMessenger = null;
 		}
-		mBackendService = null;
-		mMessenger = null;
 
 		super.onDestroy();
 	}
@@ -182,9 +191,14 @@ public class ParentIfServiceAdapter extends Service
 
 		@Override
 		public void handleMessage(Message msg)
-			{
+		{
 			Log.i(TAG, "Handle msg " + msg);
-			if (mBackendService == null || !mBackendService._isReady())
+			IParentIf backend;
+			synchronized (ParentIfServiceAdapter.sBackendMutex)
+			{
+				backend = ParentIfServiceAdapter.mBackendService;
+			}
+			if (backend == null || !backend._isReady())
 			{
 				if (ParentIfMessageType.fromInteger(msg.what) != ParentIfMessageType.REGISTER_CLIENT
 					&& ParentIfMessageType.fromInteger(msg.what) != ParentIfMessageType.UNREGISTER_CLIENT)
@@ -208,7 +222,7 @@ public class ParentIfServiceAdapter extends Service
 						data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
 						
 			        ISimpleLocalIf localIf = data.getParcelable("localIf", SimpleLocalIfParcelable.class).getSimpleLocalIf();
-						mBackendService.setLocalIf(localIf);
+						backend.setLocalIf(localIf);
 						break;
 					}
 					case PROP_LocalIfList:
@@ -217,7 +231,7 @@ public class ParentIfServiceAdapter extends Service
 						data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
 						
                     ISimpleLocalIf[] localIfList =  SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("localIfList", SimpleLocalIfParcelable.class));
-						mBackendService.setLocalIfList(localIfList);
+						backend.setLocalIfList(localIfList);
 						break;
 					}
 					case PROP_ImportedIf:
@@ -226,7 +240,7 @@ public class ParentIfServiceAdapter extends Service
 						data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
 						
 			        tbIfaceimport.tbIfaceimport_api.IEmptyIf importedIf = data.getParcelable("importedIf", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class).getEmptyIf();
-						mBackendService.setImportedIf(importedIf);
+						backend.setImportedIf(importedIf);
 						break;
 					}
 					case PROP_ImportedIfList:
@@ -235,7 +249,7 @@ public class ParentIfServiceAdapter extends Service
 						data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
 						
                     tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfList =  tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class));
-						mBackendService.setImportedIfList(importedIfList);
+						backend.setImportedIfList(importedIfList);
 						break;
 					}
 			// TODO params may be different structs from different modules, there should be a custom class loader 
@@ -249,8 +263,7 @@ public class ParentIfServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        ISimpleLocalIf param = data.getParcelable("param", SimpleLocalIfParcelable.class).getSimpleLocalIf();
-
-					ISimpleLocalIf result =  mBackendService.localIfMethod(param);
+					ISimpleLocalIf result =  backend.localIfMethod(param);
 
 					Message respMsg = new Message();
 					respMsg.what = ParentIfMessageType.RPC_LocalIfMethodResp.getValue();
@@ -279,8 +292,7 @@ public class ParentIfServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
                     ISimpleLocalIf[] param =  SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("param", SimpleLocalIfParcelable.class));
-
-					ISimpleLocalIf[] result =  mBackendService.localIfMethodList(param);
+					ISimpleLocalIf[] result =  backend.localIfMethodList(param);
 
 					Message respMsg = new Message();
 					respMsg.what = ParentIfMessageType.RPC_LocalIfMethodListResp.getValue();
@@ -310,8 +322,7 @@ public class ParentIfServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        tbIfaceimport.tbIfaceimport_api.IEmptyIf param = data.getParcelable("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class).getEmptyIf();
-
-					tbIfaceimport.tbIfaceimport_api.IEmptyIf result =  mBackendService.importedIfMethod(param);
+					tbIfaceimport.tbIfaceimport_api.IEmptyIf result =  backend.importedIfMethod(param);
 
 					Message respMsg = new Message();
 					respMsg.what = ParentIfMessageType.RPC_ImportedIfMethodResp.getValue();
@@ -341,8 +352,7 @@ public class ParentIfServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
                     tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param =  tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class));
-
-					tbIfaceimport.tbIfaceimport_api.IEmptyIf[] result =  mBackendService.importedIfMethodList(param);
+					tbIfaceimport.tbIfaceimport_api.IEmptyIf[] result =  backend.importedIfMethodList(param);
 
 					Message respMsg = new Message();
 					respMsg.what = ParentIfMessageType.RPC_ImportedIfMethodListResp.getValue();
@@ -394,21 +404,29 @@ public class ParentIfServiceAdapter extends Service
 			Message msg = new Message();
 			msg.what = ParentIfMessageType.INIT.getValue();
 			Bundle data = new Bundle();
-			
-			ISimpleLocalIf localIf = mBackendService.getLocalIf();
-			
+			IParentIf backend;
+			synchronized (ParentIfServiceAdapter.sBackendMutex)
+			{
+				backend = ParentIfServiceAdapter.mBackendService;
+			}
+			if (backend != null && backend._isReady())
+			{
+				
+				ISimpleLocalIf localIf = backend.getLocalIf();
+				
 		        data.putParcelable("localIf", new SimpleLocalIfParcelable(localIf));
-			ISimpleLocalIf[] localIfList = mBackendService.getLocalIfList();
-			
+				ISimpleLocalIf[] localIfList = backend.getLocalIfList();
+				
 		        data.putParcelableArray("localIfList", SimpleLocalIfParcelable.wrapArray(localIfList));
-			tbIfaceimport.tbIfaceimport_api.IEmptyIf importedIf = mBackendService.getImportedIf();
-			
+				tbIfaceimport.tbIfaceimport_api.IEmptyIf importedIf = backend.getImportedIf();
+				
 		        data.putParcelable("importedIf", new tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable(importedIf));
-			tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfList = mBackendService.getImportedIfList();
-			
+				tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfList = backend.getImportedIfList();
+				
 		        data.putParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(importedIfList));
-			msg.setData(data);
-			sendMessageToClients(msg);
+				msg.setData(data);
+				sendMessageToClients(msg);
+			}
 		}
 		@Override
 		public void onLocalIfChanged(ISimpleLocalIf localIf){

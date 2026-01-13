@@ -31,6 +31,9 @@ public class CounterJniServiceStarter {
 
     public static void stop(Context context)
     {
+        CounterJniServiceFactory factory = CounterJniServiceFactory.get();
+        factory.clear();
+        CounterServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

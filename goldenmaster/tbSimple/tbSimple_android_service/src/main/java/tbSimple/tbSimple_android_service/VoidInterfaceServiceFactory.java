@@ -78,4 +78,9 @@ public class VoidInterfaceServiceFactory extends HandlerThread implements IVoidI
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		m_Service = null;
+	}
 }

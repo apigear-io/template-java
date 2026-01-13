@@ -78,4 +78,9 @@ public class ParentIfServiceFactory extends HandlerThread implements IParentIfSe
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		m_Service = null;
+	}
 }

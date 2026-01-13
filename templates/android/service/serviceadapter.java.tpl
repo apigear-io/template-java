@@ -85,13 +85,14 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private static Messenger mMessenger;
+	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
+	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// The ServiceAdapter is just a user of the backend. 
+	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static I{{Camel .Interface.Name}} mBackendService;
 	private static I{{Camel .Interface.Name}}ServiceFactory mServiceFactory;
-	private static final Object mutex = new Object();
-
-	//private final List<Message> mMessagesQueue = new ArrayList<>();
+	private static final Object sBackendMutex = new Object();
 
 	public {{Camel .Interface.Name }}ServiceAdapter()
 	{
@@ -100,22 +101,29 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 	public static I{{Camel .Interface.Name}} setService(I{{Camel .Interface.Name}}ServiceFactory factory)
 	{
 		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory  != factory)
+		if (mServiceFactory != factory)
 		{
 			mServiceFactory = factory;
 		}
-		synchronized (mutex)
+		synchronized (sBackendMutex)
 		{
 			if (mHandler != null && mBackendService != null)
 			{
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			mBackendService = mServiceFactory.getServiceInstance();
-			if (mHandler != null)
+			if (mServiceFactory != null)
 			{
-				Log.i(TAG, "LIFECYCLE: setService({{Camel .Interface.Name}}) called. For handler " + mHandler);
-				mBackendService.addEventListener(mHandler);
+				mBackendService = mServiceFactory.getServiceInstance();
+				if (mHandler != null)
+				{
+					Log.i(TAG, "LIFECYCLE: setService({{Camel .Interface.Name}}) called. For handler " + mHandler);
+					mBackendService.addEventListener(mHandler);
+				}
+			}
+			else
+			{
+				mBackendService = null;
 			}
 		}
 		return mBackendService;
@@ -127,7 +135,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate({{Camel .Interface.Name }}Service) called. context = " + this);
-		synchronized (mutex) {
+		synchronized (sBackendMutex) {
 			if (mHandler != null && mBackendService != null)
 			{
 				// The handler (event listener) is about to change.
@@ -163,18 +171,19 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 	public void onDestroy()
 	{
 		Log.i(TAG, "LIFECYCLE: onDestroy({{Camel .Interface.Name }}Service) - proc = " + ", mMessenger = " + mMessenger);
-
-		if (mHandler != null)
+		synchronized (sBackendMutex)
 		{
-			if (mBackendService != null)
+			if (mHandler != null)
 			{
-				mBackendService.removeEventListener(mHandler);
+				if (mBackendService != null)
+				{
+					mBackendService.removeEventListener(mHandler);
+				}
+				mHandler.removeCallbacksAndMessages(null);
+				mHandler = null;
 			}
-			mHandler.removeCallbacksAndMessages(null);
-			mHandler = null;
+			mMessenger = null;
 		}
-		mBackendService = null;
-		mMessenger = null;
 
 		super.onDestroy();
 	}
@@ -237,9 +246,14 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 		@Override
 		{{- $InterfaceName := Camel .Interface.Name}}
 		public void handleMessage(Message msg)
-			{
+		{
 			Log.i(TAG, "Handle msg " + msg);
-			if (mBackendService == null || !mBackendService._isReady())
+			I{{Camel .Interface.Name}} backend;
+			synchronized ({{Camel .Interface.Name }}ServiceAdapter.sBackendMutex)
+			{
+				backend = {{Camel .Interface.Name }}ServiceAdapter.mBackendService;
+			}
+			if (backend == null || !backend._isReady())
 			{
 				if ({{Camel .Interface.Name}}MessageType.fromInteger(msg.what) != {{Camel .Interface.Name}}MessageType.REGISTER_CLIENT
 					&& {{Camel .Interface.Name}}MessageType.fromInteger(msg.what) != {{Camel .Interface.Name}}MessageType.UNREGISTER_CLIENT)
@@ -265,7 +279,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 						data.setClassLoader({{template "getParcelable" . }}.class.getClassLoader());
 						{{- end}}
 						{{template "getDataFromBundle" . }}
-						mBackendService.set{{Camel .Name}}({{javaVar .}});
+						backend.set{{Camel .Name}}({{javaVar .}});
 						break;
 					}
 			{{- end }}
@@ -282,8 +296,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 					{{- range .Params }}
 					{{template "getDataFromBundle" . }}
 					{{- end }}
-
-					{{ if not .Return.IsVoid }}{{javaReturn "" .Return}} result = {{ end}} mBackendService.{{camel .Name}}({{javaVars .Params}});
+					{{ if not .Return.IsVoid }}{{javaReturn "" .Return}} result = {{ end}} backend.{{camel .Name}}({{javaVars .Params}});
 
 					Message respMsg = new Message();
 					respMsg.what = {{$InterfaceName}}MessageType.RPC_{{Camel .Name}}Resp.getValue();
@@ -337,12 +350,20 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 			Message msg = new Message();
 			msg.what = {{$InterfaceName}}MessageType.INIT.getValue();
 			Bundle data = new Bundle();
-			{{range .Interface.Properties}}
-			{{javaReturn "" .}} {{javaVar .}} = mBackendService.get{{Camel .Name}}();
-			{{template "putDataIntoBundle" .}}
-			{{- end}}
-			msg.setData(data);
-			sendMessageToClients(msg);
+			I{{Camel .Interface.Name}} backend;
+			synchronized ({{Camel .Interface.Name }}ServiceAdapter.sBackendMutex)
+			{
+				backend = {{Camel .Interface.Name }}ServiceAdapter.mBackendService;
+			}
+			if (backend != null && backend._isReady())
+			{
+				{{range .Interface.Properties}}
+				{{javaReturn "" .}} {{javaVar .}} = backend.get{{Camel .Name}}();
+				{{template "putDataIntoBundle" .}}
+				{{- end}}
+				msg.setData(data);
+				sendMessageToClients(msg);
+			}
 		}
 
 		{{- range .Interface.Properties }}

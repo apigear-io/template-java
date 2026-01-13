@@ -31,6 +31,9 @@ public class NamEsJniServiceStarter {
 
     public static void stop(Context context)
     {
+        NamEsJniServiceFactory factory = NamEsJniServiceFactory.get();
+        factory.clear();
+        NamEsServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");
