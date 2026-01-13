@@ -16,9 +16,8 @@ public class EnumInterfaceServiceStarter {
     static Intent androidService = null;
     private static final String TAG = "EnumInterfaceStarter";
 
-
-
-    public static IEnumInterface start(Context context) {
+    public static IEnumInterface start(Context context)
+    {
         stop(context);
         androidService = new Intent(context, EnumInterfaceServiceAdapter.class);
         Log.i(TAG, "starter: created intent");
@@ -31,6 +30,9 @@ public class EnumInterfaceServiceStarter {
 
     public static void stop(Context context)
     {
+        EnumInterfaceServiceFactory factory = EnumInterfaceServiceFactory.get();
+        factory.clear();
+        EnumInterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

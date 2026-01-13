@@ -29,13 +29,14 @@ public class SimpleInterfaceServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private static Messenger mMessenger;
+	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
+	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// The ServiceAdapter is just a user of the backend. 
+	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static ISimpleInterface mBackendService;
 	private static ISimpleInterfaceServiceFactory mServiceFactory;
-	private static final Object mutex = new Object();
-
-	//private final List<Message> mMessagesQueue = new ArrayList<>();
+	private static final Object sBackendMutex = new Object();
 
 	public SimpleInterfaceServiceAdapter()
 	{
@@ -44,22 +45,29 @@ public class SimpleInterfaceServiceAdapter extends Service
 	public static ISimpleInterface setService(ISimpleInterfaceServiceFactory factory)
 	{
 		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory  != factory)
+		if (mServiceFactory != factory)
 		{
 			mServiceFactory = factory;
 		}
-		synchronized (mutex)
+		synchronized (sBackendMutex)
 		{
 			if (mHandler != null && mBackendService != null)
 			{
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			mBackendService = mServiceFactory.getServiceInstance();
-			if (mHandler != null)
+			if (mServiceFactory != null)
 			{
-				Log.i(TAG, "LIFECYCLE: setService(SimpleInterface) called. For handler " + mHandler);
-				mBackendService.addEventListener(mHandler);
+				mBackendService = mServiceFactory.getServiceInstance();
+				if (mHandler != null)
+				{
+					Log.i(TAG, "LIFECYCLE: setService(SimpleInterface) called. For handler " + mHandler);
+					mBackendService.addEventListener(mHandler);
+				}
+			}
+			else
+			{
+				mBackendService = null;
 			}
 		}
 		return mBackendService;
@@ -71,7 +79,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(SimpleInterfaceService) called. context = " + this);
-		synchronized (mutex) {
+		synchronized (sBackendMutex) {
 			if (mHandler != null && mBackendService != null)
 			{
 				// The handler (event listener) is about to change.
@@ -107,18 +115,19 @@ public class SimpleInterfaceServiceAdapter extends Service
 	public void onDestroy()
 	{
 		Log.i(TAG, "LIFECYCLE: onDestroy(SimpleInterfaceService) - proc = " + ", mMessenger = " + mMessenger);
-
-		if (mHandler != null)
+		synchronized (sBackendMutex)
 		{
-			if (mBackendService != null)
+			if (mHandler != null)
 			{
-				mBackendService.removeEventListener(mHandler);
+				if (mBackendService != null)
+				{
+					mBackendService.removeEventListener(mHandler);
+				}
+				mHandler.removeCallbacksAndMessages(null);
+				mHandler = null;
 			}
-			mHandler.removeCallbacksAndMessages(null);
-			mHandler = null;
+			mMessenger = null;
 		}
-		mBackendService = null;
-		mMessenger = null;
 
 		super.onDestroy();
 	}
@@ -180,9 +189,14 @@ public class SimpleInterfaceServiceAdapter extends Service
 
 		@Override
 		public void handleMessage(Message msg)
-			{
+		{
 			Log.i(TAG, "Handle msg " + msg);
-			if (mBackendService == null || !mBackendService._isReady())
+			ISimpleInterface backend;
+			synchronized (SimpleInterfaceServiceAdapter.sBackendMutex)
+			{
+				backend = SimpleInterfaceServiceAdapter.mBackendService;
+			}
+			if (backend == null || !backend._isReady())
 			{
 				if (SimpleInterfaceMessageType.fromInteger(msg.what) != SimpleInterfaceMessageType.REGISTER_CLIENT
 					&& SimpleInterfaceMessageType.fromInteger(msg.what) != SimpleInterfaceMessageType.UNREGISTER_CLIENT)
@@ -205,7 +219,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						
 			        boolean propBool = data.getBoolean("propBool", false);
-						mBackendService.setPropBool(propBool);
+						backend.setPropBool(propBool);
 						break;
 					}
 					case PROP_PropInt:
@@ -213,7 +227,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						
 			        int propInt = data.getInt("propInt", 0);
-						mBackendService.setPropInt(propInt);
+						backend.setPropInt(propInt);
 						break;
 					}
 					case PROP_PropInt32:
@@ -221,7 +235,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						
 			        int propInt32 = data.getInt("propInt32", 0);
-						mBackendService.setPropInt32(propInt32);
+						backend.setPropInt32(propInt32);
 						break;
 					}
 					case PROP_PropInt64:
@@ -229,7 +243,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						
 			        long propInt64 = data.getLong("propInt64", 0L);
-						mBackendService.setPropInt64(propInt64);
+						backend.setPropInt64(propInt64);
 						break;
 					}
 					case PROP_PropFloat:
@@ -237,7 +251,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						
 			        float propFloat = data.getFloat("propFloat", 0.0f);
-						mBackendService.setPropFloat(propFloat);
+						backend.setPropFloat(propFloat);
 						break;
 					}
 					case PROP_PropFloat32:
@@ -245,7 +259,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						
 			        float propFloat32 = data.getFloat("propFloat32", 0.0f);
-						mBackendService.setPropFloat32(propFloat32);
+						backend.setPropFloat32(propFloat32);
 						break;
 					}
 					case PROP_PropFloat64:
@@ -253,7 +267,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						
 			        double propFloat64 = data.getDouble("propFloat64", 0.0);
-						mBackendService.setPropFloat64(propFloat64);
+						backend.setPropFloat64(propFloat64);
 						break;
 					}
 					case PROP_PropString:
@@ -261,7 +275,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						
 			        String propString = data.getString("propString", new String());
-						mBackendService.setPropString(propString);
+						backend.setPropString(propString);
 						break;
 					}
 			// TODO params may be different structs from different modules, there should be a custom class loader 
@@ -274,8 +288,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        boolean paramBool = data.getBoolean("paramBool", false);
-
-					 mBackendService.funcNoReturnValue(paramBool);
+					 backend.funcNoReturnValue(paramBool);
 
 					Message respMsg = new Message();
 					respMsg.what = SimpleInterfaceMessageType.RPC_FuncNoReturnValueResp.getValue();
@@ -299,8 +312,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 					Bundle data = msg.getData();
 					
 					int callId = data.getInt("callId");
-
-					boolean result =  mBackendService.funcNoParams();
+					boolean result =  backend.funcNoParams();
 
 					Message respMsg = new Message();
 					respMsg.what = SimpleInterfaceMessageType.RPC_FuncNoParamsResp.getValue();
@@ -328,8 +340,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        boolean paramBool = data.getBoolean("paramBool", false);
-
-					boolean result =  mBackendService.funcBool(paramBool);
+					boolean result =  backend.funcBool(paramBool);
 
 					Message respMsg = new Message();
 					respMsg.what = SimpleInterfaceMessageType.RPC_FuncBoolResp.getValue();
@@ -357,8 +368,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        int paramInt = data.getInt("paramInt", 0);
-
-					int result =  mBackendService.funcInt(paramInt);
+					int result =  backend.funcInt(paramInt);
 
 					Message respMsg = new Message();
 					respMsg.what = SimpleInterfaceMessageType.RPC_FuncIntResp.getValue();
@@ -386,8 +396,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        int paramInt32 = data.getInt("paramInt32", 0);
-
-					int result =  mBackendService.funcInt32(paramInt32);
+					int result =  backend.funcInt32(paramInt32);
 
 					Message respMsg = new Message();
 					respMsg.what = SimpleInterfaceMessageType.RPC_FuncInt32Resp.getValue();
@@ -415,8 +424,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        long paramInt64 = data.getLong("paramInt64", 0L);
-
-					long result =  mBackendService.funcInt64(paramInt64);
+					long result =  backend.funcInt64(paramInt64);
 
 					Message respMsg = new Message();
 					respMsg.what = SimpleInterfaceMessageType.RPC_FuncInt64Resp.getValue();
@@ -444,8 +452,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        float paramFloat = data.getFloat("paramFloat", 0.0f);
-
-					float result =  mBackendService.funcFloat(paramFloat);
+					float result =  backend.funcFloat(paramFloat);
 
 					Message respMsg = new Message();
 					respMsg.what = SimpleInterfaceMessageType.RPC_FuncFloatResp.getValue();
@@ -473,8 +480,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        float paramFloat32 = data.getFloat("paramFloat32", 0.0f);
-
-					float result =  mBackendService.funcFloat32(paramFloat32);
+					float result =  backend.funcFloat32(paramFloat32);
 
 					Message respMsg = new Message();
 					respMsg.what = SimpleInterfaceMessageType.RPC_FuncFloat32Resp.getValue();
@@ -502,8 +508,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        double paramFloat = data.getDouble("paramFloat", 0.0);
-
-					double result =  mBackendService.funcFloat64(paramFloat);
+					double result =  backend.funcFloat64(paramFloat);
 
 					Message respMsg = new Message();
 					respMsg.what = SimpleInterfaceMessageType.RPC_FuncFloat64Resp.getValue();
@@ -531,8 +536,7 @@ public class SimpleInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        String paramString = data.getString("paramString", new String());
-
-					String result =  mBackendService.funcString(paramString);
+					String result =  backend.funcString(paramString);
 
 					Message respMsg = new Message();
 					respMsg.what = SimpleInterfaceMessageType.RPC_FuncStringResp.getValue();
@@ -584,33 +588,41 @@ public class SimpleInterfaceServiceAdapter extends Service
 			Message msg = new Message();
 			msg.what = SimpleInterfaceMessageType.INIT.getValue();
 			Bundle data = new Bundle();
-			
-			boolean propBool = mBackendService.getPropBool();
-			
+			ISimpleInterface backend;
+			synchronized (SimpleInterfaceServiceAdapter.sBackendMutex)
+			{
+				backend = SimpleInterfaceServiceAdapter.mBackendService;
+			}
+			if (backend != null && backend._isReady())
+			{
+				
+				boolean propBool = backend.getPropBool();
+				
 		        data.putBoolean("propBool", propBool);
-			int propInt = mBackendService.getPropInt();
-			
+				int propInt = backend.getPropInt();
+				
 		        data.putInt("propInt", propInt);
-			int propInt32 = mBackendService.getPropInt32();
-			
+				int propInt32 = backend.getPropInt32();
+				
 		        data.putInt("propInt32", propInt32);
-			long propInt64 = mBackendService.getPropInt64();
-			
+				long propInt64 = backend.getPropInt64();
+				
 		        data.putLong("propInt64", propInt64);
-			float propFloat = mBackendService.getPropFloat();
-			
+				float propFloat = backend.getPropFloat();
+				
 		        data.putFloat("propFloat", propFloat);
-			float propFloat32 = mBackendService.getPropFloat32();
-			
+				float propFloat32 = backend.getPropFloat32();
+				
 		        data.putFloat("propFloat32", propFloat32);
-			double propFloat64 = mBackendService.getPropFloat64();
-			
+				double propFloat64 = backend.getPropFloat64();
+				
 		        data.putDouble("propFloat64", propFloat64);
-			String propString = mBackendService.getPropString();
-			
+				String propString = backend.getPropString();
+				
 		        data.putString("propString", propString);
-			msg.setData(data);
-			sendMessageToClients(msg);
+				msg.setData(data);
+				sendMessageToClients(msg);
+			}
 		}
 		@Override
 		public void onPropBoolChanged(boolean propBool){

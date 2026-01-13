@@ -78,4 +78,9 @@ public class SimpleLocalIfJniServiceFactory extends HandlerThread implements ISi
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		jniService = null;
+	}
 }

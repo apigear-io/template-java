@@ -16,9 +16,8 @@ public class NamEsServiceStarter {
     static Intent androidService = null;
     private static final String TAG = "NamEsStarter";
 
-
-
-    public static INamEs start(Context context) {
+    public static INamEs start(Context context)
+    {
         stop(context);
         androidService = new Intent(context, NamEsServiceAdapter.class);
         Log.i(TAG, "starter: created intent");
@@ -31,6 +30,9 @@ public class NamEsServiceStarter {
 
     public static void stop(Context context)
     {
+        NamEsServiceFactory factory = NamEsServiceFactory.get();
+        factory.clear();
+        NamEsServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

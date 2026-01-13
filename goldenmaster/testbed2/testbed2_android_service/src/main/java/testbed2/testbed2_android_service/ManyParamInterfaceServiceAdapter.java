@@ -29,13 +29,14 @@ public class ManyParamInterfaceServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private static Messenger mMessenger;
+	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
+	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// The ServiceAdapter is just a user of the backend. 
+	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static IManyParamInterface mBackendService;
 	private static IManyParamInterfaceServiceFactory mServiceFactory;
-	private static final Object mutex = new Object();
-
-	//private final List<Message> mMessagesQueue = new ArrayList<>();
+	private static final Object sBackendMutex = new Object();
 
 	public ManyParamInterfaceServiceAdapter()
 	{
@@ -44,22 +45,29 @@ public class ManyParamInterfaceServiceAdapter extends Service
 	public static IManyParamInterface setService(IManyParamInterfaceServiceFactory factory)
 	{
 		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory  != factory)
+		if (mServiceFactory != factory)
 		{
 			mServiceFactory = factory;
 		}
-		synchronized (mutex)
+		synchronized (sBackendMutex)
 		{
 			if (mHandler != null && mBackendService != null)
 			{
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			mBackendService = mServiceFactory.getServiceInstance();
-			if (mHandler != null)
+			if (mServiceFactory != null)
 			{
-				Log.i(TAG, "LIFECYCLE: setService(ManyParamInterface) called. For handler " + mHandler);
-				mBackendService.addEventListener(mHandler);
+				mBackendService = mServiceFactory.getServiceInstance();
+				if (mHandler != null)
+				{
+					Log.i(TAG, "LIFECYCLE: setService(ManyParamInterface) called. For handler " + mHandler);
+					mBackendService.addEventListener(mHandler);
+				}
+			}
+			else
+			{
+				mBackendService = null;
 			}
 		}
 		return mBackendService;
@@ -71,7 +79,7 @@ public class ManyParamInterfaceServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(ManyParamInterfaceService) called. context = " + this);
-		synchronized (mutex) {
+		synchronized (sBackendMutex) {
 			if (mHandler != null && mBackendService != null)
 			{
 				// The handler (event listener) is about to change.
@@ -107,18 +115,19 @@ public class ManyParamInterfaceServiceAdapter extends Service
 	public void onDestroy()
 	{
 		Log.i(TAG, "LIFECYCLE: onDestroy(ManyParamInterfaceService) - proc = " + ", mMessenger = " + mMessenger);
-
-		if (mHandler != null)
+		synchronized (sBackendMutex)
 		{
-			if (mBackendService != null)
+			if (mHandler != null)
 			{
-				mBackendService.removeEventListener(mHandler);
+				if (mBackendService != null)
+				{
+					mBackendService.removeEventListener(mHandler);
+				}
+				mHandler.removeCallbacksAndMessages(null);
+				mHandler = null;
 			}
-			mHandler.removeCallbacksAndMessages(null);
-			mHandler = null;
+			mMessenger = null;
 		}
-		mBackendService = null;
-		mMessenger = null;
 
 		super.onDestroy();
 	}
@@ -180,9 +189,14 @@ public class ManyParamInterfaceServiceAdapter extends Service
 
 		@Override
 		public void handleMessage(Message msg)
-			{
+		{
 			Log.i(TAG, "Handle msg " + msg);
-			if (mBackendService == null || !mBackendService._isReady())
+			IManyParamInterface backend;
+			synchronized (ManyParamInterfaceServiceAdapter.sBackendMutex)
+			{
+				backend = ManyParamInterfaceServiceAdapter.mBackendService;
+			}
+			if (backend == null || !backend._isReady())
 			{
 				if (ManyParamInterfaceMessageType.fromInteger(msg.what) != ManyParamInterfaceMessageType.REGISTER_CLIENT
 					&& ManyParamInterfaceMessageType.fromInteger(msg.what) != ManyParamInterfaceMessageType.UNREGISTER_CLIENT)
@@ -205,7 +219,7 @@ public class ManyParamInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						
 			        int prop1 = data.getInt("prop1", 0);
-						mBackendService.setProp1(prop1);
+						backend.setProp1(prop1);
 						break;
 					}
 					case PROP_Prop2:
@@ -213,7 +227,7 @@ public class ManyParamInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						
 			        int prop2 = data.getInt("prop2", 0);
-						mBackendService.setProp2(prop2);
+						backend.setProp2(prop2);
 						break;
 					}
 					case PROP_Prop3:
@@ -221,7 +235,7 @@ public class ManyParamInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						
 			        int prop3 = data.getInt("prop3", 0);
-						mBackendService.setProp3(prop3);
+						backend.setProp3(prop3);
 						break;
 					}
 					case PROP_Prop4:
@@ -229,7 +243,7 @@ public class ManyParamInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						
 			        int prop4 = data.getInt("prop4", 0);
-						mBackendService.setProp4(prop4);
+						backend.setProp4(prop4);
 						break;
 					}
 			// TODO params may be different structs from different modules, there should be a custom class loader 
@@ -242,8 +256,7 @@ public class ManyParamInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        int param1 = data.getInt("param1", 0);
-
-					int result =  mBackendService.func1(param1);
+					int result =  backend.func1(param1);
 
 					Message respMsg = new Message();
 					respMsg.what = ManyParamInterfaceMessageType.RPC_Func1Resp.getValue();
@@ -273,8 +286,7 @@ public class ManyParamInterfaceServiceAdapter extends Service
 			        int param1 = data.getInt("param1", 0);
 					
 			        int param2 = data.getInt("param2", 0);
-
-					int result =  mBackendService.func2(param1, param2);
+					int result =  backend.func2(param1, param2);
 
 					Message respMsg = new Message();
 					respMsg.what = ManyParamInterfaceMessageType.RPC_Func2Resp.getValue();
@@ -306,8 +318,7 @@ public class ManyParamInterfaceServiceAdapter extends Service
 			        int param2 = data.getInt("param2", 0);
 					
 			        int param3 = data.getInt("param3", 0);
-
-					int result =  mBackendService.func3(param1, param2, param3);
+					int result =  backend.func3(param1, param2, param3);
 
 					Message respMsg = new Message();
 					respMsg.what = ManyParamInterfaceMessageType.RPC_Func3Resp.getValue();
@@ -341,8 +352,7 @@ public class ManyParamInterfaceServiceAdapter extends Service
 			        int param3 = data.getInt("param3", 0);
 					
 			        int param4 = data.getInt("param4", 0);
-
-					int result =  mBackendService.func4(param1, param2, param3, param4);
+					int result =  backend.func4(param1, param2, param3, param4);
 
 					Message respMsg = new Message();
 					respMsg.what = ManyParamInterfaceMessageType.RPC_Func4Resp.getValue();
@@ -394,21 +404,29 @@ public class ManyParamInterfaceServiceAdapter extends Service
 			Message msg = new Message();
 			msg.what = ManyParamInterfaceMessageType.INIT.getValue();
 			Bundle data = new Bundle();
-			
-			int prop1 = mBackendService.getProp1();
-			
+			IManyParamInterface backend;
+			synchronized (ManyParamInterfaceServiceAdapter.sBackendMutex)
+			{
+				backend = ManyParamInterfaceServiceAdapter.mBackendService;
+			}
+			if (backend != null && backend._isReady())
+			{
+				
+				int prop1 = backend.getProp1();
+				
 		        data.putInt("prop1", prop1);
-			int prop2 = mBackendService.getProp2();
-			
+				int prop2 = backend.getProp2();
+				
 		        data.putInt("prop2", prop2);
-			int prop3 = mBackendService.getProp3();
-			
+				int prop3 = backend.getProp3();
+				
 		        data.putInt("prop3", prop3);
-			int prop4 = mBackendService.getProp4();
-			
+				int prop4 = backend.getProp4();
+				
 		        data.putInt("prop4", prop4);
-			msg.setData(data);
-			sendMessageToClients(msg);
+				msg.setData(data);
+				sendMessageToClients(msg);
+			}
 		}
 		@Override
 		public void onProp1Changed(int prop1){

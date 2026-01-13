@@ -31,6 +31,9 @@ public class SimpleArrayInterfaceJniServiceStarter {
 
     public static void stop(Context context)
     {
+        SimpleArrayInterfaceJniServiceFactory factory = SimpleArrayInterfaceJniServiceFactory.get();
+        factory.clear();
+        SimpleArrayInterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

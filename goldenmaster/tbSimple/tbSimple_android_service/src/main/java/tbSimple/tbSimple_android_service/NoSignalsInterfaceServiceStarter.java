@@ -16,9 +16,8 @@ public class NoSignalsInterfaceServiceStarter {
     static Intent androidService = null;
     private static final String TAG = "NoSignalsInterfaceStarter";
 
-
-
-    public static INoSignalsInterface start(Context context) {
+    public static INoSignalsInterface start(Context context)
+    {
         stop(context);
         androidService = new Intent(context, NoSignalsInterfaceServiceAdapter.class);
         Log.i(TAG, "starter: created intent");
@@ -31,6 +30,9 @@ public class NoSignalsInterfaceServiceStarter {
 
     public static void stop(Context context)
     {
+        NoSignalsInterfaceServiceFactory factory = NoSignalsInterfaceServiceFactory.get();
+        factory.clear();
+        NoSignalsInterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

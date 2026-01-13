@@ -16,9 +16,8 @@ public class EmptyInterfaceServiceStarter {
     static Intent androidService = null;
     private static final String TAG = "EmptyInterfaceStarter";
 
-
-
-    public static IEmptyInterface start(Context context) {
+    public static IEmptyInterface start(Context context)
+    {
         stop(context);
         androidService = new Intent(context, EmptyInterfaceServiceAdapter.class);
         Log.i(TAG, "starter: created intent");
@@ -31,6 +30,9 @@ public class EmptyInterfaceServiceStarter {
 
     public static void stop(Context context)
     {
+        EmptyInterfaceServiceFactory factory = EmptyInterfaceServiceFactory.get();
+        factory.clear();
+        EmptyInterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

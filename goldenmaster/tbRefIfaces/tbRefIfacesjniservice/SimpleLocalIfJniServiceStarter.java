@@ -31,6 +31,9 @@ public class SimpleLocalIfJniServiceStarter {
 
     public static void stop(Context context)
     {
+        SimpleLocalIfJniServiceFactory factory = SimpleLocalIfJniServiceFactory.get();
+        factory.clear();
+        SimpleLocalIfServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

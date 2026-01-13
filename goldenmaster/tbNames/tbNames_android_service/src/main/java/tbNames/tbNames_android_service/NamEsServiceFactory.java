@@ -78,4 +78,9 @@ public class NamEsServiceFactory extends HandlerThread implements INamEsServiceF
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		m_Service = null;
+	}
 }

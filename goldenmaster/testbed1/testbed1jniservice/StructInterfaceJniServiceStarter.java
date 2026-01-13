@@ -31,6 +31,9 @@ public class StructInterfaceJniServiceStarter {
 
     public static void stop(Context context)
     {
+        StructInterfaceJniServiceFactory factory = StructInterfaceJniServiceFactory.get();
+        factory.clear();
+        StructInterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

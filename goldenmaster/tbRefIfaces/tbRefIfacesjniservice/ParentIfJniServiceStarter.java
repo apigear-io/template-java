@@ -31,6 +31,9 @@ public class ParentIfJniServiceStarter {
 
     public static void stop(Context context)
     {
+        ParentIfJniServiceFactory factory = ParentIfJniServiceFactory.get();
+        factory.clear();
+        ParentIfServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

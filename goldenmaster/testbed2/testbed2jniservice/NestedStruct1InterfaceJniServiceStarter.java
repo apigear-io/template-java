@@ -31,6 +31,9 @@ public class NestedStruct1InterfaceJniServiceStarter {
 
     public static void stop(Context context)
     {
+        NestedStruct1InterfaceJniServiceFactory factory = NestedStruct1InterfaceJniServiceFactory.get();
+        factory.clear();
+        NestedStruct1InterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

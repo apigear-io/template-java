@@ -31,6 +31,9 @@ public class NoSignalsInterfaceJniServiceStarter {
 
     public static void stop(Context context)
     {
+        NoSignalsInterfaceJniServiceFactory factory = NoSignalsInterfaceJniServiceFactory.get();
+        factory.clear();
+        NoSignalsInterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

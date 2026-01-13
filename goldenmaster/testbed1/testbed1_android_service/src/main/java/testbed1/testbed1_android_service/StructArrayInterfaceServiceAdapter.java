@@ -39,13 +39,14 @@ public class StructArrayInterfaceServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private static Messenger mMessenger;
+	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
+	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// The ServiceAdapter is just a user of the backend. 
+	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static IStructArrayInterface mBackendService;
 	private static IStructArrayInterfaceServiceFactory mServiceFactory;
-	private static final Object mutex = new Object();
-
-	//private final List<Message> mMessagesQueue = new ArrayList<>();
+	private static final Object sBackendMutex = new Object();
 
 	public StructArrayInterfaceServiceAdapter()
 	{
@@ -54,22 +55,29 @@ public class StructArrayInterfaceServiceAdapter extends Service
 	public static IStructArrayInterface setService(IStructArrayInterfaceServiceFactory factory)
 	{
 		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory  != factory)
+		if (mServiceFactory != factory)
 		{
 			mServiceFactory = factory;
 		}
-		synchronized (mutex)
+		synchronized (sBackendMutex)
 		{
 			if (mHandler != null && mBackendService != null)
 			{
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			mBackendService = mServiceFactory.getServiceInstance();
-			if (mHandler != null)
+			if (mServiceFactory != null)
 			{
-				Log.i(TAG, "LIFECYCLE: setService(StructArrayInterface) called. For handler " + mHandler);
-				mBackendService.addEventListener(mHandler);
+				mBackendService = mServiceFactory.getServiceInstance();
+				if (mHandler != null)
+				{
+					Log.i(TAG, "LIFECYCLE: setService(StructArrayInterface) called. For handler " + mHandler);
+					mBackendService.addEventListener(mHandler);
+				}
+			}
+			else
+			{
+				mBackendService = null;
 			}
 		}
 		return mBackendService;
@@ -81,7 +89,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(StructArrayInterfaceService) called. context = " + this);
-		synchronized (mutex) {
+		synchronized (sBackendMutex) {
 			if (mHandler != null && mBackendService != null)
 			{
 				// The handler (event listener) is about to change.
@@ -117,18 +125,19 @@ public class StructArrayInterfaceServiceAdapter extends Service
 	public void onDestroy()
 	{
 		Log.i(TAG, "LIFECYCLE: onDestroy(StructArrayInterfaceService) - proc = " + ", mMessenger = " + mMessenger);
-
-		if (mHandler != null)
+		synchronized (sBackendMutex)
 		{
-			if (mBackendService != null)
+			if (mHandler != null)
 			{
-				mBackendService.removeEventListener(mHandler);
+				if (mBackendService != null)
+				{
+					mBackendService.removeEventListener(mHandler);
+				}
+				mHandler.removeCallbacksAndMessages(null);
+				mHandler = null;
 			}
-			mHandler.removeCallbacksAndMessages(null);
-			mHandler = null;
+			mMessenger = null;
 		}
-		mBackendService = null;
-		mMessenger = null;
 
 		super.onDestroy();
 	}
@@ -190,9 +199,14 @@ public class StructArrayInterfaceServiceAdapter extends Service
 
 		@Override
 		public void handleMessage(Message msg)
-			{
+		{
 			Log.i(TAG, "Handle msg " + msg);
-			if (mBackendService == null || !mBackendService._isReady())
+			IStructArrayInterface backend;
+			synchronized (StructArrayInterfaceServiceAdapter.sBackendMutex)
+			{
+				backend = StructArrayInterfaceServiceAdapter.mBackendService;
+			}
+			if (backend == null || !backend._isReady())
 			{
 				if (StructArrayInterfaceMessageType.fromInteger(msg.what) != StructArrayInterfaceMessageType.REGISTER_CLIENT
 					&& StructArrayInterfaceMessageType.fromInteger(msg.what) != StructArrayInterfaceMessageType.UNREGISTER_CLIENT)
@@ -216,7 +230,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
 						data.setClassLoader(StructBoolParcelable.class.getClassLoader());
 						
                     StructBool[] propBool =  StructBoolParcelable.unwrapArray((StructBoolParcelable[])data.getParcelableArray("propBool", StructBoolParcelable.class));
-						mBackendService.setPropBool(propBool);
+						backend.setPropBool(propBool);
 						break;
 					}
 					case PROP_PropInt:
@@ -225,7 +239,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
 						data.setClassLoader(StructIntParcelable.class.getClassLoader());
 						
                     StructInt[] propInt =  StructIntParcelable.unwrapArray((StructIntParcelable[])data.getParcelableArray("propInt", StructIntParcelable.class));
-						mBackendService.setPropInt(propInt);
+						backend.setPropInt(propInt);
 						break;
 					}
 					case PROP_PropFloat:
@@ -234,7 +248,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
 						data.setClassLoader(StructFloatParcelable.class.getClassLoader());
 						
                     StructFloat[] propFloat =  StructFloatParcelable.unwrapArray((StructFloatParcelable[])data.getParcelableArray("propFloat", StructFloatParcelable.class));
-						mBackendService.setPropFloat(propFloat);
+						backend.setPropFloat(propFloat);
 						break;
 					}
 					case PROP_PropString:
@@ -243,7 +257,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
 						data.setClassLoader(StructStringParcelable.class.getClassLoader());
 						
                     StructString[] propString =  StructStringParcelable.unwrapArray((StructStringParcelable[])data.getParcelableArray("propString", StructStringParcelable.class));
-						mBackendService.setPropString(propString);
+						backend.setPropString(propString);
 						break;
 					}
 					case PROP_PropEnum:
@@ -252,7 +266,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
 						data.setClassLoader(Enum0Parcelable.class.getClassLoader());
 						
                     Enum0[] propEnum =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("propEnum", Enum0Parcelable.class));
-						mBackendService.setPropEnum(propEnum);
+						backend.setPropEnum(propEnum);
 						break;
 					}
 			// TODO params may be different structs from different modules, there should be a custom class loader 
@@ -266,8 +280,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
                     StructBool[] paramBool =  StructBoolParcelable.unwrapArray((StructBoolParcelable[])data.getParcelableArray("paramBool", StructBoolParcelable.class));
-
-					StructBool[] result =  mBackendService.funcBool(paramBool);
+					StructBool[] result =  backend.funcBool(paramBool);
 
 					Message respMsg = new Message();
 					respMsg.what = StructArrayInterfaceMessageType.RPC_FuncBoolResp.getValue();
@@ -296,8 +309,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
                     StructInt[] paramInt =  StructIntParcelable.unwrapArray((StructIntParcelable[])data.getParcelableArray("paramInt", StructIntParcelable.class));
-
-					StructInt[] result =  mBackendService.funcInt(paramInt);
+					StructInt[] result =  backend.funcInt(paramInt);
 
 					Message respMsg = new Message();
 					respMsg.what = StructArrayInterfaceMessageType.RPC_FuncIntResp.getValue();
@@ -326,8 +338,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
                     StructFloat[] paramFloat =  StructFloatParcelable.unwrapArray((StructFloatParcelable[])data.getParcelableArray("paramFloat", StructFloatParcelable.class));
-
-					StructFloat[] result =  mBackendService.funcFloat(paramFloat);
+					StructFloat[] result =  backend.funcFloat(paramFloat);
 
 					Message respMsg = new Message();
 					respMsg.what = StructArrayInterfaceMessageType.RPC_FuncFloatResp.getValue();
@@ -356,8 +367,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
                     StructString[] paramString =  StructStringParcelable.unwrapArray((StructStringParcelable[])data.getParcelableArray("paramString", StructStringParcelable.class));
-
-					StructString[] result =  mBackendService.funcString(paramString);
+					StructString[] result =  backend.funcString(paramString);
 
 					Message respMsg = new Message();
 					respMsg.what = StructArrayInterfaceMessageType.RPC_FuncStringResp.getValue();
@@ -386,8 +396,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
                     Enum0[] paramEnum =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("paramEnum", Enum0Parcelable.class));
-
-					Enum0[] result =  mBackendService.funcEnum(paramEnum);
+					Enum0[] result =  backend.funcEnum(paramEnum);
 
 					Message respMsg = new Message();
 					respMsg.what = StructArrayInterfaceMessageType.RPC_FuncEnumResp.getValue();
@@ -439,24 +448,32 @@ public class StructArrayInterfaceServiceAdapter extends Service
 			Message msg = new Message();
 			msg.what = StructArrayInterfaceMessageType.INIT.getValue();
 			Bundle data = new Bundle();
-			
-			StructBool[] propBool = mBackendService.getPropBool();
-			
+			IStructArrayInterface backend;
+			synchronized (StructArrayInterfaceServiceAdapter.sBackendMutex)
+			{
+				backend = StructArrayInterfaceServiceAdapter.mBackendService;
+			}
+			if (backend != null && backend._isReady())
+			{
+				
+				StructBool[] propBool = backend.getPropBool();
+				
 		        data.putParcelableArray("propBool", StructBoolParcelable.wrapArray(propBool));
-			StructInt[] propInt = mBackendService.getPropInt();
-			
+				StructInt[] propInt = backend.getPropInt();
+				
 		        data.putParcelableArray("propInt", StructIntParcelable.wrapArray(propInt));
-			StructFloat[] propFloat = mBackendService.getPropFloat();
-			
+				StructFloat[] propFloat = backend.getPropFloat();
+				
 		        data.putParcelableArray("propFloat", StructFloatParcelable.wrapArray(propFloat));
-			StructString[] propString = mBackendService.getPropString();
-			
+				StructString[] propString = backend.getPropString();
+				
 		        data.putParcelableArray("propString", StructStringParcelable.wrapArray(propString));
-			Enum0[] propEnum = mBackendService.getPropEnum();
-			
+				Enum0[] propEnum = backend.getPropEnum();
+				
 		        data.putParcelableArray("propEnum", Enum0Parcelable.wrapArray(propEnum));
-			msg.setData(data);
-			sendMessageToClients(msg);
+				msg.setData(data);
+				sendMessageToClients(msg);
+			}
 		}
 		@Override
 		public void onPropBoolChanged(StructBool[] propBool){

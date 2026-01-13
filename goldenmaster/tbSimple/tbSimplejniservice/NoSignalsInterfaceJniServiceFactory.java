@@ -78,4 +78,9 @@ public class NoSignalsInterfaceJniServiceFactory extends HandlerThread implement
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		jniService = null;
+	}
 }

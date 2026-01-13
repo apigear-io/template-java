@@ -78,4 +78,9 @@ public class StructInterfaceServiceFactory extends HandlerThread implements IStr
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		m_Service = null;
+	}
 }

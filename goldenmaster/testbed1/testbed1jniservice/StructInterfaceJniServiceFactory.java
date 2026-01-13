@@ -78,4 +78,9 @@ public class StructInterfaceJniServiceFactory extends HandlerThread implements I
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		jniService = null;
+	}
 }

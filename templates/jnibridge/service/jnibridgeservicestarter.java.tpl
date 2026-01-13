@@ -31,6 +31,9 @@ public class {{Camel .Interface.Name }}JniServiceStarter {
 
     public static void stop(Context context)
     {
+        {{Camel .Interface.Name}}JniServiceFactory factory = {{Camel .Interface.Name}}JniServiceFactory.get();
+        factory.clear();
+        {{Camel .Interface.Name }}ServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

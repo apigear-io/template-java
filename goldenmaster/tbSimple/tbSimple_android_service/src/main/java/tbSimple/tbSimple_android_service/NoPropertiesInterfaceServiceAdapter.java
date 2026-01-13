@@ -29,13 +29,14 @@ public class NoPropertiesInterfaceServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private static Messenger mMessenger;
+	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
+	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// The ServiceAdapter is just a user of the backend. 
+	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static INoPropertiesInterface mBackendService;
 	private static INoPropertiesInterfaceServiceFactory mServiceFactory;
-	private static final Object mutex = new Object();
-
-	//private final List<Message> mMessagesQueue = new ArrayList<>();
+	private static final Object sBackendMutex = new Object();
 
 	public NoPropertiesInterfaceServiceAdapter()
 	{
@@ -44,22 +45,29 @@ public class NoPropertiesInterfaceServiceAdapter extends Service
 	public static INoPropertiesInterface setService(INoPropertiesInterfaceServiceFactory factory)
 	{
 		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory  != factory)
+		if (mServiceFactory != factory)
 		{
 			mServiceFactory = factory;
 		}
-		synchronized (mutex)
+		synchronized (sBackendMutex)
 		{
 			if (mHandler != null && mBackendService != null)
 			{
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			mBackendService = mServiceFactory.getServiceInstance();
-			if (mHandler != null)
+			if (mServiceFactory != null)
 			{
-				Log.i(TAG, "LIFECYCLE: setService(NoPropertiesInterface) called. For handler " + mHandler);
-				mBackendService.addEventListener(mHandler);
+				mBackendService = mServiceFactory.getServiceInstance();
+				if (mHandler != null)
+				{
+					Log.i(TAG, "LIFECYCLE: setService(NoPropertiesInterface) called. For handler " + mHandler);
+					mBackendService.addEventListener(mHandler);
+				}
+			}
+			else
+			{
+				mBackendService = null;
 			}
 		}
 		return mBackendService;
@@ -71,7 +79,7 @@ public class NoPropertiesInterfaceServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(NoPropertiesInterfaceService) called. context = " + this);
-		synchronized (mutex) {
+		synchronized (sBackendMutex) {
 			if (mHandler != null && mBackendService != null)
 			{
 				// The handler (event listener) is about to change.
@@ -107,18 +115,19 @@ public class NoPropertiesInterfaceServiceAdapter extends Service
 	public void onDestroy()
 	{
 		Log.i(TAG, "LIFECYCLE: onDestroy(NoPropertiesInterfaceService) - proc = " + ", mMessenger = " + mMessenger);
-
-		if (mHandler != null)
+		synchronized (sBackendMutex)
 		{
-			if (mBackendService != null)
+			if (mHandler != null)
 			{
-				mBackendService.removeEventListener(mHandler);
+				if (mBackendService != null)
+				{
+					mBackendService.removeEventListener(mHandler);
+				}
+				mHandler.removeCallbacksAndMessages(null);
+				mHandler = null;
 			}
-			mHandler.removeCallbacksAndMessages(null);
-			mHandler = null;
+			mMessenger = null;
 		}
-		mBackendService = null;
-		mMessenger = null;
 
 		super.onDestroy();
 	}
@@ -180,9 +189,14 @@ public class NoPropertiesInterfaceServiceAdapter extends Service
 
 		@Override
 		public void handleMessage(Message msg)
-			{
+		{
 			Log.i(TAG, "Handle msg " + msg);
-			if (mBackendService == null || !mBackendService._isReady())
+			INoPropertiesInterface backend;
+			synchronized (NoPropertiesInterfaceServiceAdapter.sBackendMutex)
+			{
+				backend = NoPropertiesInterfaceServiceAdapter.mBackendService;
+			}
+			if (backend == null || !backend._isReady())
 			{
 				if (NoPropertiesInterfaceMessageType.fromInteger(msg.what) != NoPropertiesInterfaceMessageType.REGISTER_CLIENT
 					&& NoPropertiesInterfaceMessageType.fromInteger(msg.what) != NoPropertiesInterfaceMessageType.UNREGISTER_CLIENT)
@@ -208,8 +222,7 @@ public class NoPropertiesInterfaceServiceAdapter extends Service
 					Bundle data = msg.getData();
 					
 					int callId = data.getInt("callId");
-
-					 mBackendService.funcVoid();
+					 backend.funcVoid();
 
 					Message respMsg = new Message();
 					respMsg.what = NoPropertiesInterfaceMessageType.RPC_FuncVoidResp.getValue();
@@ -235,8 +248,7 @@ public class NoPropertiesInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        boolean paramBool = data.getBoolean("paramBool", false);
-
-					boolean result =  mBackendService.funcBool(paramBool);
+					boolean result =  backend.funcBool(paramBool);
 
 					Message respMsg = new Message();
 					respMsg.what = NoPropertiesInterfaceMessageType.RPC_FuncBoolResp.getValue();
@@ -288,9 +300,17 @@ public class NoPropertiesInterfaceServiceAdapter extends Service
 			Message msg = new Message();
 			msg.what = NoPropertiesInterfaceMessageType.INIT.getValue();
 			Bundle data = new Bundle();
-			
-			msg.setData(data);
-			sendMessageToClients(msg);
+			INoPropertiesInterface backend;
+			synchronized (NoPropertiesInterfaceServiceAdapter.sBackendMutex)
+			{
+				backend = NoPropertiesInterfaceServiceAdapter.mBackendService;
+			}
+			if (backend != null && backend._isReady())
+			{
+				
+				msg.setData(data);
+				sendMessageToClients(msg);
+			}
 		}
 		@Override
 		public void onSigVoid(){

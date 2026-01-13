@@ -78,4 +78,9 @@ public class SimpleArrayInterfaceJniServiceFactory extends HandlerThread impleme
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		jniService = null;
+	}
 }

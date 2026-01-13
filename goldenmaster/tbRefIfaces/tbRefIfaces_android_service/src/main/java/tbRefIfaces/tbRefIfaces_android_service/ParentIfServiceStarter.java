@@ -16,9 +16,8 @@ public class ParentIfServiceStarter {
     static Intent androidService = null;
     private static final String TAG = "ParentIfStarter";
 
-
-
-    public static IParentIf start(Context context) {
+    public static IParentIf start(Context context)
+    {
         stop(context);
         androidService = new Intent(context, ParentIfServiceAdapter.class);
         Log.i(TAG, "starter: created intent");
@@ -31,6 +30,9 @@ public class ParentIfServiceStarter {
 
     public static void stop(Context context)
     {
+        ParentIfServiceFactory factory = ParentIfServiceFactory.get();
+        factory.clear();
+        ParentIfServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

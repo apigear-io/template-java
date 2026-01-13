@@ -78,4 +78,9 @@ public class EmptyInterfaceJniServiceFactory extends HandlerThread implements IE
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		jniService = null;
+	}
 }

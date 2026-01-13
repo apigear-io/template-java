@@ -16,9 +16,8 @@ public class {{Camel .Interface.Name }}ServiceStarter {
     static Intent androidService = null;
     private static final String TAG = "{{Camel .Interface.Name }}Starter";
 
-
-
-    public static I{{Camel .Interface.Name }} start(Context context) {
+    public static I{{Camel .Interface.Name }} start(Context context)
+    {
         stop(context);
         androidService = new Intent(context, {{Camel .Interface.Name }}ServiceAdapter.class);
         Log.i(TAG, "starter: created intent");
@@ -36,6 +35,9 @@ public class {{Camel .Interface.Name }}ServiceStarter {
             Log.i(TAG, "starter: stop the service");
             context.stopService(androidService);
         }
+        {{Camel .Interface.Name}}ServiceFactory factory = {{Camel .Interface.Name}}ServiceFactory.get();
+        factory.clear();
+        {{Camel .Interface.Name }}ServiceAdapter.setService(null);
         androidService = null;
     }
 

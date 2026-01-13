@@ -78,4 +78,9 @@ public class SameStruct2InterfaceServiceFactory extends HandlerThread implements
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		m_Service = null;
+	}
 }

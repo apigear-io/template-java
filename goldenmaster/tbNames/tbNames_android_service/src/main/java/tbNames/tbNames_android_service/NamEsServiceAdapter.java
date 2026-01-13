@@ -31,13 +31,14 @@ public class NamEsServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private static Messenger mMessenger;
+	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
+	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// The ServiceAdapter is just a user of the backend. 
+	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static INamEs mBackendService;
 	private static INamEsServiceFactory mServiceFactory;
-	private static final Object mutex = new Object();
-
-	//private final List<Message> mMessagesQueue = new ArrayList<>();
+	private static final Object sBackendMutex = new Object();
 
 	public NamEsServiceAdapter()
 	{
@@ -46,22 +47,29 @@ public class NamEsServiceAdapter extends Service
 	public static INamEs setService(INamEsServiceFactory factory)
 	{
 		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory  != factory)
+		if (mServiceFactory != factory)
 		{
 			mServiceFactory = factory;
 		}
-		synchronized (mutex)
+		synchronized (sBackendMutex)
 		{
 			if (mHandler != null && mBackendService != null)
 			{
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			mBackendService = mServiceFactory.getServiceInstance();
-			if (mHandler != null)
+			if (mServiceFactory != null)
 			{
-				Log.i(TAG, "LIFECYCLE: setService(NamEs) called. For handler " + mHandler);
-				mBackendService.addEventListener(mHandler);
+				mBackendService = mServiceFactory.getServiceInstance();
+				if (mHandler != null)
+				{
+					Log.i(TAG, "LIFECYCLE: setService(NamEs) called. For handler " + mHandler);
+					mBackendService.addEventListener(mHandler);
+				}
+			}
+			else
+			{
+				mBackendService = null;
 			}
 		}
 		return mBackendService;
@@ -73,7 +81,7 @@ public class NamEsServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(NamEsService) called. context = " + this);
-		synchronized (mutex) {
+		synchronized (sBackendMutex) {
 			if (mHandler != null && mBackendService != null)
 			{
 				// The handler (event listener) is about to change.
@@ -109,18 +117,19 @@ public class NamEsServiceAdapter extends Service
 	public void onDestroy()
 	{
 		Log.i(TAG, "LIFECYCLE: onDestroy(NamEsService) - proc = " + ", mMessenger = " + mMessenger);
-
-		if (mHandler != null)
+		synchronized (sBackendMutex)
 		{
-			if (mBackendService != null)
+			if (mHandler != null)
 			{
-				mBackendService.removeEventListener(mHandler);
+				if (mBackendService != null)
+				{
+					mBackendService.removeEventListener(mHandler);
+				}
+				mHandler.removeCallbacksAndMessages(null);
+				mHandler = null;
 			}
-			mHandler.removeCallbacksAndMessages(null);
-			mHandler = null;
+			mMessenger = null;
 		}
-		mBackendService = null;
-		mMessenger = null;
 
 		super.onDestroy();
 	}
@@ -182,9 +191,14 @@ public class NamEsServiceAdapter extends Service
 
 		@Override
 		public void handleMessage(Message msg)
-			{
+		{
 			Log.i(TAG, "Handle msg " + msg);
-			if (mBackendService == null || !mBackendService._isReady())
+			INamEs backend;
+			synchronized (NamEsServiceAdapter.sBackendMutex)
+			{
+				backend = NamEsServiceAdapter.mBackendService;
+			}
+			if (backend == null || !backend._isReady())
 			{
 				if (NamEsMessageType.fromInteger(msg.what) != NamEsMessageType.REGISTER_CLIENT
 					&& NamEsMessageType.fromInteger(msg.what) != NamEsMessageType.UNREGISTER_CLIENT)
@@ -207,7 +221,7 @@ public class NamEsServiceAdapter extends Service
 						Bundle data = msg.getData();
 						
 			        boolean Switch = data.getBoolean("Switch", false);
-						mBackendService.setSwitch(Switch);
+						backend.setSwitch(Switch);
 						break;
 					}
 					case PROP_SomeProperty:
@@ -215,7 +229,7 @@ public class NamEsServiceAdapter extends Service
 						Bundle data = msg.getData();
 						
 			        int SOME_PROPERTY = data.getInt("SOME_PROPERTY", 0);
-						mBackendService.setSomeProperty(SOME_PROPERTY);
+						backend.setSomeProperty(SOME_PROPERTY);
 						break;
 					}
 					case PROP_SomePoperty2:
@@ -223,7 +237,7 @@ public class NamEsServiceAdapter extends Service
 						Bundle data = msg.getData();
 						
 			        int Some_Poperty2 = data.getInt("Some_Poperty2", 0);
-						mBackendService.setSomePoperty2(Some_Poperty2);
+						backend.setSomePoperty2(Some_Poperty2);
 						break;
 					}
 					case PROP_EnumProperty:
@@ -232,7 +246,7 @@ public class NamEsServiceAdapter extends Service
 						data.setClassLoader(EnumWithUnderScoresParcelable.class.getClassLoader());
 						
 			        EnumWithUnderScores enum_property = data.getParcelable("enum_property", EnumWithUnderScoresParcelable.class).getEnumWithUnderScores();
-						mBackendService.setEnumProperty(enum_property);
+						backend.setEnumProperty(enum_property);
 						break;
 					}
 			// TODO params may be different structs from different modules, there should be a custom class loader 
@@ -245,8 +259,7 @@ public class NamEsServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        boolean SOME_PARAM = data.getBoolean("SOME_PARAM", false);
-
-					 mBackendService.someFunction(SOME_PARAM);
+					 backend.someFunction(SOME_PARAM);
 
 					Message respMsg = new Message();
 					respMsg.what = NamEsMessageType.RPC_SomeFunctionResp.getValue();
@@ -272,8 +285,7 @@ public class NamEsServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        boolean Some_Param = data.getBoolean("Some_Param", false);
-
-					 mBackendService.someFunction2(Some_Param);
+					 backend.someFunction2(Some_Param);
 
 					Message respMsg = new Message();
 					respMsg.what = NamEsMessageType.RPC_SomeFunction2Resp.getValue();
@@ -323,21 +335,29 @@ public class NamEsServiceAdapter extends Service
 			Message msg = new Message();
 			msg.what = NamEsMessageType.INIT.getValue();
 			Bundle data = new Bundle();
-			
-			boolean Switch = mBackendService.getSwitch();
-			
+			INamEs backend;
+			synchronized (NamEsServiceAdapter.sBackendMutex)
+			{
+				backend = NamEsServiceAdapter.mBackendService;
+			}
+			if (backend != null && backend._isReady())
+			{
+				
+				boolean Switch = backend.getSwitch();
+				
 		        data.putBoolean("Switch", Switch);
-			int SOME_PROPERTY = mBackendService.getSomeProperty();
-			
+				int SOME_PROPERTY = backend.getSomeProperty();
+				
 		        data.putInt("SOME_PROPERTY", SOME_PROPERTY);
-			int Some_Poperty2 = mBackendService.getSomePoperty2();
-			
+				int Some_Poperty2 = backend.getSomePoperty2();
+				
 		        data.putInt("Some_Poperty2", Some_Poperty2);
-			EnumWithUnderScores enum_property = mBackendService.getEnumProperty();
-			
+				EnumWithUnderScores enum_property = backend.getEnumProperty();
+				
 		        data.putParcelable("enum_property", new EnumWithUnderScoresParcelable(enum_property));
-			msg.setData(data);
-			sendMessageToClients(msg);
+				msg.setData(data);
+				sendMessageToClients(msg);
+			}
 		}
 		@Override
 		public void onSwitchChanged(boolean Switch){

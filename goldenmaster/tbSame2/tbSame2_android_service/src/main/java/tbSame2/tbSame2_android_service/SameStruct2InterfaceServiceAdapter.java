@@ -33,13 +33,14 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 	/**
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
-	private static Messenger mMessenger;
+	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
+	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// The ServiceAdapter is just a user of the backend. 
+	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static ISameStruct2Interface mBackendService;
 	private static ISameStruct2InterfaceServiceFactory mServiceFactory;
-	private static final Object mutex = new Object();
-
-	//private final List<Message> mMessagesQueue = new ArrayList<>();
+	private static final Object sBackendMutex = new Object();
 
 	public SameStruct2InterfaceServiceAdapter()
 	{
@@ -48,22 +49,29 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 	public static ISameStruct2Interface setService(ISameStruct2InterfaceServiceFactory factory)
 	{
 		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory  != factory)
+		if (mServiceFactory != factory)
 		{
 			mServiceFactory = factory;
 		}
-		synchronized (mutex)
+		synchronized (sBackendMutex)
 		{
 			if (mHandler != null && mBackendService != null)
 			{
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			mBackendService = mServiceFactory.getServiceInstance();
-			if (mHandler != null)
+			if (mServiceFactory != null)
 			{
-				Log.i(TAG, "LIFECYCLE: setService(SameStruct2Interface) called. For handler " + mHandler);
-				mBackendService.addEventListener(mHandler);
+				mBackendService = mServiceFactory.getServiceInstance();
+				if (mHandler != null)
+				{
+					Log.i(TAG, "LIFECYCLE: setService(SameStruct2Interface) called. For handler " + mHandler);
+					mBackendService.addEventListener(mHandler);
+				}
+			}
+			else
+			{
+				mBackendService = null;
 			}
 		}
 		return mBackendService;
@@ -75,7 +83,7 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 	{
 		super.onCreate();
 		Log.i(TAG, "LIFECYCLE: onCreate(SameStruct2InterfaceService) called. context = " + this);
-		synchronized (mutex) {
+		synchronized (sBackendMutex) {
 			if (mHandler != null && mBackendService != null)
 			{
 				// The handler (event listener) is about to change.
@@ -111,18 +119,19 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 	public void onDestroy()
 	{
 		Log.i(TAG, "LIFECYCLE: onDestroy(SameStruct2InterfaceService) - proc = " + ", mMessenger = " + mMessenger);
-
-		if (mHandler != null)
+		synchronized (sBackendMutex)
 		{
-			if (mBackendService != null)
+			if (mHandler != null)
 			{
-				mBackendService.removeEventListener(mHandler);
+				if (mBackendService != null)
+				{
+					mBackendService.removeEventListener(mHandler);
+				}
+				mHandler.removeCallbacksAndMessages(null);
+				mHandler = null;
 			}
-			mHandler.removeCallbacksAndMessages(null);
-			mHandler = null;
+			mMessenger = null;
 		}
-		mBackendService = null;
-		mMessenger = null;
 
 		super.onDestroy();
 	}
@@ -184,9 +193,14 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 
 		@Override
 		public void handleMessage(Message msg)
-			{
+		{
 			Log.i(TAG, "Handle msg " + msg);
-			if (mBackendService == null || !mBackendService._isReady())
+			ISameStruct2Interface backend;
+			synchronized (SameStruct2InterfaceServiceAdapter.sBackendMutex)
+			{
+				backend = SameStruct2InterfaceServiceAdapter.mBackendService;
+			}
+			if (backend == null || !backend._isReady())
 			{
 				if (SameStruct2InterfaceMessageType.fromInteger(msg.what) != SameStruct2InterfaceMessageType.REGISTER_CLIENT
 					&& SameStruct2InterfaceMessageType.fromInteger(msg.what) != SameStruct2InterfaceMessageType.UNREGISTER_CLIENT)
@@ -210,7 +224,7 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 						data.setClassLoader(Struct2Parcelable.class.getClassLoader());
 						
 			        Struct2 prop1 = data.getParcelable("prop1", Struct2Parcelable.class).getStruct2();
-						mBackendService.setProp1(prop1);
+						backend.setProp1(prop1);
 						break;
 					}
 					case PROP_Prop2:
@@ -219,7 +233,7 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 						data.setClassLoader(Struct2Parcelable.class.getClassLoader());
 						
 			        Struct2 prop2 = data.getParcelable("prop2", Struct2Parcelable.class).getStruct2();
-						mBackendService.setProp2(prop2);
+						backend.setProp2(prop2);
 						break;
 					}
 			// TODO params may be different structs from different modules, there should be a custom class loader 
@@ -233,8 +247,7 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        Struct1 param1 = data.getParcelable("param1", Struct1Parcelable.class).getStruct1();
-
-					Struct1 result =  mBackendService.func1(param1);
+					Struct1 result =  backend.func1(param1);
 
 					Message respMsg = new Message();
 					respMsg.what = SameStruct2InterfaceMessageType.RPC_Func1Resp.getValue();
@@ -265,8 +278,7 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 			        Struct1 param1 = data.getParcelable("param1", Struct1Parcelable.class).getStruct1();
 					
 			        Struct2 param2 = data.getParcelable("param2", Struct2Parcelable.class).getStruct2();
-
-					Struct1 result =  mBackendService.func2(param1, param2);
+					Struct1 result =  backend.func2(param1, param2);
 
 					Message respMsg = new Message();
 					respMsg.what = SameStruct2InterfaceMessageType.RPC_Func2Resp.getValue();
@@ -318,15 +330,23 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 			Message msg = new Message();
 			msg.what = SameStruct2InterfaceMessageType.INIT.getValue();
 			Bundle data = new Bundle();
-			
-			Struct2 prop1 = mBackendService.getProp1();
-			
+			ISameStruct2Interface backend;
+			synchronized (SameStruct2InterfaceServiceAdapter.sBackendMutex)
+			{
+				backend = SameStruct2InterfaceServiceAdapter.mBackendService;
+			}
+			if (backend != null && backend._isReady())
+			{
+				
+				Struct2 prop1 = backend.getProp1();
+				
 		        data.putParcelable("prop1", new Struct2Parcelable(prop1));
-			Struct2 prop2 = mBackendService.getProp2();
-			
+				Struct2 prop2 = backend.getProp2();
+				
 		        data.putParcelable("prop2", new Struct2Parcelable(prop2));
-			msg.setData(data);
-			sendMessageToClients(msg);
+				msg.setData(data);
+				sendMessageToClients(msg);
+			}
 		}
 		@Override
 		public void onProp1Changed(Struct2 prop1){

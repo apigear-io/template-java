@@ -78,4 +78,9 @@ public class CounterServiceFactory extends HandlerThread implements ICounterServ
 		t.start();
 		return t;
 	}
+
+	public synchronized void clear()
+	{
+		m_Service = null;
+	}
 }

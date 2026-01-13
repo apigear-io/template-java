@@ -31,6 +31,9 @@ public class SameStruct2InterfaceJniServiceStarter {
 
     public static void stop(Context context)
     {
+        SameStruct2InterfaceJniServiceFactory factory = SameStruct2InterfaceJniServiceFactory.get();
+        factory.clear();
+        SameStruct2InterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");

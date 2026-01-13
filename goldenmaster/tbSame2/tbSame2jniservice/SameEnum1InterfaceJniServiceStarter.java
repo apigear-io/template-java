@@ -31,6 +31,9 @@ public class SameEnum1InterfaceJniServiceStarter {
 
     public static void stop(Context context)
     {
+        SameEnum1InterfaceJniServiceFactory factory = SameEnum1InterfaceJniServiceFactory.get();
+        factory.clear();
+        SameEnum1InterfaceServiceAdapter.setService(null);
         if (androidService != null)
         {
             Log.i(TAG, "starter: stop the service");
