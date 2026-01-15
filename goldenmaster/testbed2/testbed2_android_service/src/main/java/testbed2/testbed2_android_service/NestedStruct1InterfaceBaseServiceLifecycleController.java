@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import testbed2.testbed2_api.INestedStruct1InterfaceEventListener;
 import testbed2.testbed2_api.INestedStruct1Interface;
 import testbed2.testbed2_android_service.NestedStruct1InterfaceServiceAdapter;
-import testbed2.testbed2_android_service.INestedStruct1InterfaceServiceFactory;
+import testbed2.testbed2_android_service.INestedStruct1InterfaceServiceProvider;
 
 
 // This class describes the lifetime of an android server and controlls the provided to the server backend lifetime.
@@ -33,7 +33,7 @@ public abstract class NestedStruct1InterfaceBaseServiceLifecycleController
     private AtomicBoolean mIsBound = new AtomicBoolean(false);
 
     protected abstract String getTag();
-    protected abstract INestedStruct1InterfaceServiceFactory getFactoryInstance();
+    protected abstract INestedStruct1InterfaceServiceProvider getProviderInstance();
     protected abstract void onAndroidServiceConnectionStatusChanged(boolean status);
 
     public INestedStruct1Interface start(Context context)
@@ -49,7 +49,7 @@ public abstract class NestedStruct1InterfaceBaseServiceLifecycleController
         Intent androidService = new Intent(mContext, NestedStruct1InterfaceServiceAdapter.class);
         mContext.startService(androidService);
         Log.i(getTag(), "starter: Explicitly requested service start.");
-        INestedStruct1Interface service =  NestedStruct1InterfaceServiceAdapter.setService(getFactoryInstance());
+        INestedStruct1Interface service =  NestedStruct1InterfaceServiceAdapter.setService(getProviderInstance());
         bind(androidService);
         return service;
     }
@@ -73,8 +73,8 @@ public abstract class NestedStruct1InterfaceBaseServiceLifecycleController
         {
             Log.e(getTag(), "cannot stop the service, cannot make intent for NestedStruct1InterfaceServiceAdapter.class");
         }
-        INestedStruct1InterfaceServiceFactory factory = getFactoryInstance();
-        factory.clear();
+        INestedStruct1InterfaceServiceProvider provider = getProviderInstance();
+        provider.clear();
         NestedStruct1InterfaceServiceAdapter.setService(null);
     }
 

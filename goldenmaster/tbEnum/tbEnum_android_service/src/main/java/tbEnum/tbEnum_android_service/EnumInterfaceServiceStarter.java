@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbEnum.tbEnum_api.IEnumInterfaceEventListener;
 import tbEnum.tbEnum_api.IEnumInterface;
 import tbEnum.tbEnum_android_service.EnumInterfaceServiceAdapter;
-import tbEnum.tbEnum_android_service.EnumInterfaceServiceFactory;
+import tbEnum.tbEnum_android_service.EnumInterfaceServiceProvider;
 import tbEnum.tbEnum_android_service.EnumInterfaceBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class EnumInterfaceServiceStarter
         }
 
         @Override
-        protected IEnumInterfaceServiceFactory getFactoryInstance()
+        protected IEnumInterfaceServiceProvider getProviderInstance()
         {
-            return EnumInterfaceServiceFactory.get();
+            return EnumInterfaceServiceProvider.get();
         }
 
         @Override

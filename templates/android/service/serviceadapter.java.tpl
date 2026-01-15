@@ -72,7 +72,7 @@ import {{$module}}.{{$module}}_android_messenger.{{.}}Parcelable;
 {{- end}}
 
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
-import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.I{{Camel .Interface.Name}}ServiceFactory;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.I{{Camel .Interface.Name}}ServiceProvider;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.Abstract{{Camel .Interface.Name}};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Interface.Name}}MessageType;
@@ -87,23 +87,23 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 	 */
 	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
-	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// Lifetime of mBackendService and its accessibility through mServiceProvider is controlled by the backend provide with setService function.
 	// The ServiceAdapter is just a user of the backend. 
 	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static I{{Camel .Interface.Name}} mBackendService;
-	private static I{{Camel .Interface.Name}}ServiceFactory mServiceFactory;
+	private static I{{Camel .Interface.Name}}ServiceProvider mServiceProvider;
 	private static final Object sBackendMutex = new Object();
 
 	public {{Camel .Interface.Name }}ServiceAdapter()
 	{
 	}
 
-	public static I{{Camel .Interface.Name}} setService(I{{Camel .Interface.Name}}ServiceFactory factory)
+	public static I{{Camel .Interface.Name}} setService(I{{Camel .Interface.Name}}ServiceProvider serviceProvider)
 	{
-		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory != factory)
+		Log.i(TAG, "Setting serviceProvider: " + serviceProvider);
+		if (mServiceProvider != serviceProvider)
 		{
-			mServiceFactory = factory;
+			mServiceProvider = serviceProvider;
 		}
 		synchronized (sBackendMutex)
 		{
@@ -112,9 +112,9 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			if (mServiceFactory != null)
+			if (mServiceProvider != null)
 			{
-				mBackendService = mServiceFactory.getServiceInstance();
+				mBackendService = mServiceProvider.getServiceInstance();
 				if (mHandler != null)
 				{
 					Log.i(TAG, "LIFECYCLE: setService({{Camel .Interface.Name}}) called. For handler " + mHandler);

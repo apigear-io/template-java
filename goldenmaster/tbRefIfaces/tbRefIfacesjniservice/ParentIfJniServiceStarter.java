@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbRefIfaces.tbRefIfaces_api.IParentIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.IParentIf;
 import tbRefIfaces.tbRefIfaces_android_service.ParentIfServiceAdapter;
-import tbRefIfaces.tbRefIfacesjniservice.ParentIfJniServiceFactory;
+import tbRefIfaces.tbRefIfacesjniservice.ParentIfJniServiceProvider;
 import tbRefIfaces.tbRefIfaces_android_service.ParentIfBaseServiceLifecycleController;
 
 
@@ -29,9 +29,9 @@ public class ParentIfJniServiceStarter
         }
 
         @Override
-        protected IParentIfServiceFactory getFactoryInstance()
+        protected IParentIfServiceProvider getProviderInstance()
         {
-            return ParentIfJniServiceFactory.get();
+            return ParentIfJniServiceProvider.get();
         }
 
         //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,

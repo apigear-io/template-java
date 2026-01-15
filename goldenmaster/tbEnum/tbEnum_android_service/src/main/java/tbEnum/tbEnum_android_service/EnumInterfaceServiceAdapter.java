@@ -24,7 +24,7 @@ import tbEnum.tbEnum_api.Enum3;
 import tbEnum.tbEnum_android_messenger.Enum3Parcelable;
 
 import tbEnum.tbEnum_api.IEnumInterfaceEventListener;
-import tbEnum.tbEnum_android_service.IEnumInterfaceServiceFactory;
+import tbEnum.tbEnum_android_service.IEnumInterfaceServiceProvider;
 import tbEnum.tbEnum_api.IEnumInterface;
 import tbEnum.tbEnum_api.AbstractEnumInterface;
 import tbEnum.tbEnum_android_messenger.EnumInterfaceMessageType;
@@ -39,23 +39,23 @@ public class EnumInterfaceServiceAdapter extends Service
 	 */
 	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
-	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// Lifetime of mBackendService and its accessibility through mServiceProvider is controlled by the backend provide with setService function.
 	// The ServiceAdapter is just a user of the backend. 
 	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static IEnumInterface mBackendService;
-	private static IEnumInterfaceServiceFactory mServiceFactory;
+	private static IEnumInterfaceServiceProvider mServiceProvider;
 	private static final Object sBackendMutex = new Object();
 
 	public EnumInterfaceServiceAdapter()
 	{
 	}
 
-	public static IEnumInterface setService(IEnumInterfaceServiceFactory factory)
+	public static IEnumInterface setService(IEnumInterfaceServiceProvider serviceProvider)
 	{
-		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory != factory)
+		Log.i(TAG, "Setting serviceProvider: " + serviceProvider);
+		if (mServiceProvider != serviceProvider)
 		{
-			mServiceFactory = factory;
+			mServiceProvider = serviceProvider;
 		}
 		synchronized (sBackendMutex)
 		{
@@ -64,9 +64,9 @@ public class EnumInterfaceServiceAdapter extends Service
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			if (mServiceFactory != null)
+			if (mServiceProvider != null)
 			{
-				mBackendService = mServiceFactory.getServiceInstance();
+				mBackendService = mServiceProvider.getServiceInstance();
 				if (mHandler != null)
 				{
 					Log.i(TAG, "LIFECYCLE: setService(EnumInterface) called. For handler " + mHandler);

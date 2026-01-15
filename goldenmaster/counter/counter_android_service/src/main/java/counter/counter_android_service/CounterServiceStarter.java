@@ -7,7 +7,7 @@ import android.content.Intent;
 import counter.counter_api.ICounterEventListener;
 import counter.counter_api.ICounter;
 import counter.counter_android_service.CounterServiceAdapter;
-import counter.counter_android_service.CounterServiceFactory;
+import counter.counter_android_service.CounterServiceProvider;
 import counter.counter_android_service.CounterBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class CounterServiceStarter
         }
 
         @Override
-        protected ICounterServiceFactory getFactoryInstance()
+        protected ICounterServiceProvider getProviderInstance()
         {
-            return CounterServiceFactory.get();
+            return CounterServiceProvider.get();
         }
 
         @Override

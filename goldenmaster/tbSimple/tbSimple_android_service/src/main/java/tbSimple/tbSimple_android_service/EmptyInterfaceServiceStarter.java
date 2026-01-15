@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbSimple.tbSimple_api.IEmptyInterfaceEventListener;
 import tbSimple.tbSimple_api.IEmptyInterface;
 import tbSimple.tbSimple_android_service.EmptyInterfaceServiceAdapter;
-import tbSimple.tbSimple_android_service.EmptyInterfaceServiceFactory;
+import tbSimple.tbSimple_android_service.EmptyInterfaceServiceProvider;
 import tbSimple.tbSimple_android_service.EmptyInterfaceBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class EmptyInterfaceServiceStarter
         }
 
         @Override
-        protected IEmptyInterfaceServiceFactory getFactoryInstance()
+        protected IEmptyInterfaceServiceProvider getProviderInstance()
         {
-            return EmptyInterfaceServiceFactory.get();
+            return EmptyInterfaceServiceProvider.get();
         }
 
         @Override

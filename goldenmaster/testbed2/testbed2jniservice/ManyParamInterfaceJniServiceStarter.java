@@ -7,7 +7,7 @@ import android.content.Intent;
 import testbed2.testbed2_api.IManyParamInterfaceEventListener;
 import testbed2.testbed2_api.IManyParamInterface;
 import testbed2.testbed2_android_service.ManyParamInterfaceServiceAdapter;
-import testbed2.testbed2jniservice.ManyParamInterfaceJniServiceFactory;
+import testbed2.testbed2jniservice.ManyParamInterfaceJniServiceProvider;
 import testbed2.testbed2_android_service.ManyParamInterfaceBaseServiceLifecycleController;
 
 
@@ -29,9 +29,9 @@ public class ManyParamInterfaceJniServiceStarter
         }
 
         @Override
-        protected IManyParamInterfaceServiceFactory getFactoryInstance()
+        protected IManyParamInterfaceServiceProvider getProviderInstance()
         {
-            return ManyParamInterfaceJniServiceFactory.get();
+            return ManyParamInterfaceJniServiceProvider.get();
         }
 
         //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,

@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbSame1.tbSame1_api.ISameEnum2InterfaceEventListener;
 import tbSame1.tbSame1_api.ISameEnum2Interface;
 import tbSame1.tbSame1_android_service.SameEnum2InterfaceServiceAdapter;
-import tbSame1.tbSame1_android_service.SameEnum2InterfaceServiceFactory;
+import tbSame1.tbSame1_android_service.SameEnum2InterfaceServiceProvider;
 import tbSame1.tbSame1_android_service.SameEnum2InterfaceBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class SameEnum2InterfaceServiceStarter
         }
 
         @Override
-        protected ISameEnum2InterfaceServiceFactory getFactoryInstance()
+        protected ISameEnum2InterfaceServiceProvider getProviderInstance()
         {
-            return SameEnum2InterfaceServiceFactory.get();
+            return SameEnum2InterfaceServiceProvider.get();
         }
 
         @Override

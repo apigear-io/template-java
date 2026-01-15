@@ -42,7 +42,7 @@ import tbSimple.tbSimple_impl.EmptyInterfaceService;
 
 
 import tbSimple.tbSimple_api.IVoidInterfaceEventListener;
-import tbSimple.tbSimple_android_service.IVoidInterfaceServiceFactory;
+import tbSimple.tbSimple_android_service.IVoidInterfaceServiceProvider;
 import tbSimple.tbSimple_api.IVoidInterface;
 import tbSimple.tbSimple_api.AbstractVoidInterface;
 import tbSimple.tbSimple_android_messenger.VoidInterfaceMessageType;
@@ -117,7 +117,7 @@ public class VoidInterfaceServiceAdapterTest
     private Messenger clientReplyMessenger;
     private String mTestConnectionID1 = "MyTestClient";
    
-    private IVoidInterfaceServiceFactory serviceFactory = mock(IVoidInterfaceServiceFactory.class);
+    private IVoidInterfaceServiceProvider ServiceProvider = mock(IVoidInterfaceServiceProvider.class);
     private IVoidInterfaceMessageGetter clientMessagesStorage = mock(IVoidInterfaceMessageGetter.class);
 
     ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
@@ -200,8 +200,8 @@ public class VoidInterfaceServiceAdapterTest
         IBinder binder = (IBinder)testedServiceAdapter.onBind(new Intent()) ;
         mServiceMessenger = new Messenger(binder);
 
-        when(serviceFactory.getServiceInstance()).thenReturn(backendServiceMock);
-        testedServiceAdapter.setService(serviceFactory);
+        when(ServiceProvider.getServiceInstance()).thenReturn(backendServiceMock);
+        testedServiceAdapter.setService(ServiceProvider);
 		// service adapter should pass its member to backend to get notifications on changes.
         ArgumentCaptor<IVoidInterfaceEventListener> eventListnerCaptor = ArgumentCaptor.forClass(IVoidInterfaceEventListener.class);
         inOrderBackendService.verify(backendServiceMock, times(1)).addEventListener(eventListnerCaptor.capture());

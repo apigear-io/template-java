@@ -18,7 +18,7 @@ import tbSame2.tbSame2_api.Struct1;
 import tbSame2.tbSame2_android_messenger.Struct1Parcelable;
 
 import tbSame2.tbSame2_api.ISameStruct1InterfaceEventListener;
-import tbSame2.tbSame2_android_service.ISameStruct1InterfaceServiceFactory;
+import tbSame2.tbSame2_android_service.ISameStruct1InterfaceServiceProvider;
 import tbSame2.tbSame2_api.ISameStruct1Interface;
 import tbSame2.tbSame2_api.AbstractSameStruct1Interface;
 import tbSame2.tbSame2_android_messenger.SameStruct1InterfaceMessageType;
@@ -33,23 +33,23 @@ public class SameStruct1InterfaceServiceAdapter extends Service
 	 */
 	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
-	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// Lifetime of mBackendService and its accessibility through mServiceProvider is controlled by the backend provide with setService function.
 	// The ServiceAdapter is just a user of the backend. 
 	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static ISameStruct1Interface mBackendService;
-	private static ISameStruct1InterfaceServiceFactory mServiceFactory;
+	private static ISameStruct1InterfaceServiceProvider mServiceProvider;
 	private static final Object sBackendMutex = new Object();
 
 	public SameStruct1InterfaceServiceAdapter()
 	{
 	}
 
-	public static ISameStruct1Interface setService(ISameStruct1InterfaceServiceFactory factory)
+	public static ISameStruct1Interface setService(ISameStruct1InterfaceServiceProvider serviceProvider)
 	{
-		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory != factory)
+		Log.i(TAG, "Setting serviceProvider: " + serviceProvider);
+		if (mServiceProvider != serviceProvider)
 		{
-			mServiceFactory = factory;
+			mServiceProvider = serviceProvider;
 		}
 		synchronized (sBackendMutex)
 		{
@@ -58,9 +58,9 @@ public class SameStruct1InterfaceServiceAdapter extends Service
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			if (mServiceFactory != null)
+			if (mServiceProvider != null)
 			{
-				mBackendService = mServiceFactory.getServiceInstance();
+				mBackendService = mServiceProvider.getServiceInstance();
 				if (mHandler != null)
 				{
 					Log.i(TAG, "LIFECYCLE: setService(SameStruct1Interface) called. For handler " + mHandler);

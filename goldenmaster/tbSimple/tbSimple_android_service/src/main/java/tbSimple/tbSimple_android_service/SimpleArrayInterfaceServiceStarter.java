@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbSimple.tbSimple_api.ISimpleArrayInterfaceEventListener;
 import tbSimple.tbSimple_api.ISimpleArrayInterface;
 import tbSimple.tbSimple_android_service.SimpleArrayInterfaceServiceAdapter;
-import tbSimple.tbSimple_android_service.SimpleArrayInterfaceServiceFactory;
+import tbSimple.tbSimple_android_service.SimpleArrayInterfaceServiceProvider;
 import tbSimple.tbSimple_android_service.SimpleArrayInterfaceBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class SimpleArrayInterfaceServiceStarter
         }
 
         @Override
-        protected ISimpleArrayInterfaceServiceFactory getFactoryInstance()
+        protected ISimpleArrayInterfaceServiceProvider getProviderInstance()
         {
-            return SimpleArrayInterfaceServiceFactory.get();
+            return SimpleArrayInterfaceServiceProvider.get();
         }
 
         @Override

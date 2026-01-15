@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import tbSame1.tbSame1_api.ISameStruct2InterfaceEventListener;
 import tbSame1.tbSame1_api.ISameStruct2Interface;
 import tbSame1.tbSame1_android_service.SameStruct2InterfaceServiceAdapter;
-import tbSame1.tbSame1_android_service.ISameStruct2InterfaceServiceFactory;
+import tbSame1.tbSame1_android_service.ISameStruct2InterfaceServiceProvider;
 
 
 // This class describes the lifetime of an android server and controlls the provided to the server backend lifetime.
@@ -33,7 +33,7 @@ public abstract class SameStruct2InterfaceBaseServiceLifecycleController
     private AtomicBoolean mIsBound = new AtomicBoolean(false);
 
     protected abstract String getTag();
-    protected abstract ISameStruct2InterfaceServiceFactory getFactoryInstance();
+    protected abstract ISameStruct2InterfaceServiceProvider getProviderInstance();
     protected abstract void onAndroidServiceConnectionStatusChanged(boolean status);
 
     public ISameStruct2Interface start(Context context)
@@ -49,7 +49,7 @@ public abstract class SameStruct2InterfaceBaseServiceLifecycleController
         Intent androidService = new Intent(mContext, SameStruct2InterfaceServiceAdapter.class);
         mContext.startService(androidService);
         Log.i(getTag(), "starter: Explicitly requested service start.");
-        ISameStruct2Interface service =  SameStruct2InterfaceServiceAdapter.setService(getFactoryInstance());
+        ISameStruct2Interface service =  SameStruct2InterfaceServiceAdapter.setService(getProviderInstance());
         bind(androidService);
         return service;
     }
@@ -73,8 +73,8 @@ public abstract class SameStruct2InterfaceBaseServiceLifecycleController
         {
             Log.e(getTag(), "cannot stop the service, cannot make intent for SameStruct2InterfaceServiceAdapter.class");
         }
-        ISameStruct2InterfaceServiceFactory factory = getFactoryInstance();
-        factory.clear();
+        ISameStruct2InterfaceServiceProvider provider = getProviderInstance();
+        provider.clear();
         SameStruct2InterfaceServiceAdapter.setService(null);
     }
 

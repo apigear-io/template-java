@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import tbSimple.tbSimple_api.ISimpleArrayInterfaceEventListener;
 import tbSimple.tbSimple_api.ISimpleArrayInterface;
 import tbSimple.tbSimple_android_service.SimpleArrayInterfaceServiceAdapter;
-import tbSimple.tbSimple_android_service.ISimpleArrayInterfaceServiceFactory;
+import tbSimple.tbSimple_android_service.ISimpleArrayInterfaceServiceProvider;
 
 
 // This class describes the lifetime of an android server and controlls the provided to the server backend lifetime.
@@ -33,7 +33,7 @@ public abstract class SimpleArrayInterfaceBaseServiceLifecycleController
     private AtomicBoolean mIsBound = new AtomicBoolean(false);
 
     protected abstract String getTag();
-    protected abstract ISimpleArrayInterfaceServiceFactory getFactoryInstance();
+    protected abstract ISimpleArrayInterfaceServiceProvider getProviderInstance();
     protected abstract void onAndroidServiceConnectionStatusChanged(boolean status);
 
     public ISimpleArrayInterface start(Context context)
@@ -49,7 +49,7 @@ public abstract class SimpleArrayInterfaceBaseServiceLifecycleController
         Intent androidService = new Intent(mContext, SimpleArrayInterfaceServiceAdapter.class);
         mContext.startService(androidService);
         Log.i(getTag(), "starter: Explicitly requested service start.");
-        ISimpleArrayInterface service =  SimpleArrayInterfaceServiceAdapter.setService(getFactoryInstance());
+        ISimpleArrayInterface service =  SimpleArrayInterfaceServiceAdapter.setService(getProviderInstance());
         bind(androidService);
         return service;
     }
@@ -73,8 +73,8 @@ public abstract class SimpleArrayInterfaceBaseServiceLifecycleController
         {
             Log.e(getTag(), "cannot stop the service, cannot make intent for SimpleArrayInterfaceServiceAdapter.class");
         }
-        ISimpleArrayInterfaceServiceFactory factory = getFactoryInstance();
-        factory.clear();
+        ISimpleArrayInterfaceServiceProvider provider = getProviderInstance();
+        provider.clear();
         SimpleArrayInterfaceServiceAdapter.setService(null);
     }
 

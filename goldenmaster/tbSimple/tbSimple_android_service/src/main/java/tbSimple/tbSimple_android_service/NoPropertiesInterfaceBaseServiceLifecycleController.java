@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import tbSimple.tbSimple_api.INoPropertiesInterfaceEventListener;
 import tbSimple.tbSimple_api.INoPropertiesInterface;
 import tbSimple.tbSimple_android_service.NoPropertiesInterfaceServiceAdapter;
-import tbSimple.tbSimple_android_service.INoPropertiesInterfaceServiceFactory;
+import tbSimple.tbSimple_android_service.INoPropertiesInterfaceServiceProvider;
 
 
 // This class describes the lifetime of an android server and controlls the provided to the server backend lifetime.
@@ -33,7 +33,7 @@ public abstract class NoPropertiesInterfaceBaseServiceLifecycleController
     private AtomicBoolean mIsBound = new AtomicBoolean(false);
 
     protected abstract String getTag();
-    protected abstract INoPropertiesInterfaceServiceFactory getFactoryInstance();
+    protected abstract INoPropertiesInterfaceServiceProvider getProviderInstance();
     protected abstract void onAndroidServiceConnectionStatusChanged(boolean status);
 
     public INoPropertiesInterface start(Context context)
@@ -49,7 +49,7 @@ public abstract class NoPropertiesInterfaceBaseServiceLifecycleController
         Intent androidService = new Intent(mContext, NoPropertiesInterfaceServiceAdapter.class);
         mContext.startService(androidService);
         Log.i(getTag(), "starter: Explicitly requested service start.");
-        INoPropertiesInterface service =  NoPropertiesInterfaceServiceAdapter.setService(getFactoryInstance());
+        INoPropertiesInterface service =  NoPropertiesInterfaceServiceAdapter.setService(getProviderInstance());
         bind(androidService);
         return service;
     }
@@ -73,8 +73,8 @@ public abstract class NoPropertiesInterfaceBaseServiceLifecycleController
         {
             Log.e(getTag(), "cannot stop the service, cannot make intent for NoPropertiesInterfaceServiceAdapter.class");
         }
-        INoPropertiesInterfaceServiceFactory factory = getFactoryInstance();
-        factory.clear();
+        INoPropertiesInterfaceServiceProvider provider = getProviderInstance();
+        provider.clear();
         NoPropertiesInterfaceServiceAdapter.setService(null);
     }
 

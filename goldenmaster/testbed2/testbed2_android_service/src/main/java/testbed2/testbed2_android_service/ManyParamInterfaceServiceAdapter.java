@@ -16,7 +16,7 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import testbed2.testbed2_api.IManyParamInterfaceEventListener;
-import testbed2.testbed2_android_service.IManyParamInterfaceServiceFactory;
+import testbed2.testbed2_android_service.IManyParamInterfaceServiceProvider;
 import testbed2.testbed2_api.IManyParamInterface;
 import testbed2.testbed2_api.AbstractManyParamInterface;
 import testbed2.testbed2_android_messenger.ManyParamInterfaceMessageType;
@@ -31,23 +31,23 @@ public class ManyParamInterfaceServiceAdapter extends Service
 	 */
 	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
-	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// Lifetime of mBackendService and its accessibility through mServiceProvider is controlled by the backend provide with setService function.
 	// The ServiceAdapter is just a user of the backend. 
 	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static IManyParamInterface mBackendService;
-	private static IManyParamInterfaceServiceFactory mServiceFactory;
+	private static IManyParamInterfaceServiceProvider mServiceProvider;
 	private static final Object sBackendMutex = new Object();
 
 	public ManyParamInterfaceServiceAdapter()
 	{
 	}
 
-	public static IManyParamInterface setService(IManyParamInterfaceServiceFactory factory)
+	public static IManyParamInterface setService(IManyParamInterfaceServiceProvider serviceProvider)
 	{
-		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory != factory)
+		Log.i(TAG, "Setting serviceProvider: " + serviceProvider);
+		if (mServiceProvider != serviceProvider)
 		{
-			mServiceFactory = factory;
+			mServiceProvider = serviceProvider;
 		}
 		synchronized (sBackendMutex)
 		{
@@ -56,9 +56,9 @@ public class ManyParamInterfaceServiceAdapter extends Service
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			if (mServiceFactory != null)
+			if (mServiceProvider != null)
 			{
-				mBackendService = mServiceFactory.getServiceInstance();
+				mBackendService = mServiceProvider.getServiceInstance();
 				if (mHandler != null)
 				{
 					Log.i(TAG, "LIFECYCLE: setService(ManyParamInterface) called. For handler " + mHandler);

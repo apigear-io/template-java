@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import tbSimple.tbSimple_api.INoSignalsInterfaceEventListener;
 import tbSimple.tbSimple_api.INoSignalsInterface;
 import tbSimple.tbSimple_android_service.NoSignalsInterfaceServiceAdapter;
-import tbSimple.tbSimple_android_service.INoSignalsInterfaceServiceFactory;
+import tbSimple.tbSimple_android_service.INoSignalsInterfaceServiceProvider;
 
 
 // This class describes the lifetime of an android server and controlls the provided to the server backend lifetime.
@@ -33,7 +33,7 @@ public abstract class NoSignalsInterfaceBaseServiceLifecycleController
     private AtomicBoolean mIsBound = new AtomicBoolean(false);
 
     protected abstract String getTag();
-    protected abstract INoSignalsInterfaceServiceFactory getFactoryInstance();
+    protected abstract INoSignalsInterfaceServiceProvider getProviderInstance();
     protected abstract void onAndroidServiceConnectionStatusChanged(boolean status);
 
     public INoSignalsInterface start(Context context)
@@ -49,7 +49,7 @@ public abstract class NoSignalsInterfaceBaseServiceLifecycleController
         Intent androidService = new Intent(mContext, NoSignalsInterfaceServiceAdapter.class);
         mContext.startService(androidService);
         Log.i(getTag(), "starter: Explicitly requested service start.");
-        INoSignalsInterface service =  NoSignalsInterfaceServiceAdapter.setService(getFactoryInstance());
+        INoSignalsInterface service =  NoSignalsInterfaceServiceAdapter.setService(getProviderInstance());
         bind(androidService);
         return service;
     }
@@ -73,8 +73,8 @@ public abstract class NoSignalsInterfaceBaseServiceLifecycleController
         {
             Log.e(getTag(), "cannot stop the service, cannot make intent for NoSignalsInterfaceServiceAdapter.class");
         }
-        INoSignalsInterfaceServiceFactory factory = getFactoryInstance();
-        factory.clear();
+        INoSignalsInterfaceServiceProvider provider = getProviderInstance();
+        provider.clear();
         NoSignalsInterfaceServiceAdapter.setService(null);
     }
 

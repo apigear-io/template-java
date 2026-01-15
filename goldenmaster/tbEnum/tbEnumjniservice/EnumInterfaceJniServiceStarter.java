@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbEnum.tbEnum_api.IEnumInterfaceEventListener;
 import tbEnum.tbEnum_api.IEnumInterface;
 import tbEnum.tbEnum_android_service.EnumInterfaceServiceAdapter;
-import tbEnum.tbEnumjniservice.EnumInterfaceJniServiceFactory;
+import tbEnum.tbEnumjniservice.EnumInterfaceJniServiceProvider;
 import tbEnum.tbEnum_android_service.EnumInterfaceBaseServiceLifecycleController;
 
 
@@ -29,9 +29,9 @@ public class EnumInterfaceJniServiceStarter
         }
 
         @Override
-        protected IEnumInterfaceServiceFactory getFactoryInstance()
+        protected IEnumInterfaceServiceProvider getProviderInstance()
         {
-            return EnumInterfaceJniServiceFactory.get();
+            return EnumInterfaceJniServiceProvider.get();
         }
 
         //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,

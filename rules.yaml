@@ -71,12 +71,12 @@ features:
       - match: interface
         prefix: "{{camel .Module.Name}}/{{camel .Module.Name}}_android_service/src/main/java/{{camel .Module.Name}}/{{camel .Module.Name}}_android_service/"
         documents:
-          - source: "android/service/iservicefactory.java.tpl"
-            target: "I{{Camel .Interface.Name}}ServiceFactory.java"
+          - source: "android/service/iserviceprovider.java.tpl"
+            target: "I{{Camel .Interface.Name}}ServiceProvider.java"
           - source: "android/service/serviceadapter.java.tpl"
             target: "{{Camel .Interface.Name}}ServiceAdapter.java"
-          - source: "android/service/implservicefactory.java.tpl"
-            target: "{{Camel .Interface.Name}}ServiceFactory.java"
+          - source: "android/service/implserviceprovider.java.tpl"
+            target: "{{Camel .Interface.Name}}ServiceProvider.java"
           - source: "android/service/implservicestarter.java.tpl"
             target: "{{Camel .Interface.Name }}ServiceStarter.java"
           - source: "android/service/baseservicelifecyclecontroller.java.tpl"
@@ -140,8 +140,8 @@ features:
       - match: interface
         prefix: "{{camel .Module.Name}}/{{camel .Module.Name}}jniservice/"
         documents:
-          - source: "jnibridge/service/jnibridgeservicefactory.java.tpl"
-            target: "{{Camel .Interface.Name}}JniServiceFactory.java"
+          - source: "jnibridge/service/jnibridgeserviceprovider.java.tpl"
+            target: "{{Camel .Interface.Name}}JniServiceProvider.java"
           - source: "jnibridge/service/jnibridgeservice.java.tpl"
             target: "{{Camel .Interface.Name}}JniService.java"
           - source: "jnibridge/service/jnibridgeservicestarter.java.tpl"

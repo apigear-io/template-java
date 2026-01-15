@@ -7,7 +7,7 @@ import android.content.Intent;
 import testbed1.testbed1_api.IStructArray2InterfaceEventListener;
 import testbed1.testbed1_api.IStructArray2Interface;
 import testbed1.testbed1_android_service.StructArray2InterfaceServiceAdapter;
-import testbed1.testbed1_android_service.StructArray2InterfaceServiceFactory;
+import testbed1.testbed1_android_service.StructArray2InterfaceServiceProvider;
 import testbed1.testbed1_android_service.StructArray2InterfaceBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class StructArray2InterfaceServiceStarter
         }
 
         @Override
-        protected IStructArray2InterfaceServiceFactory getFactoryInstance()
+        protected IStructArray2InterfaceServiceProvider getProviderInstance()
         {
-            return StructArray2InterfaceServiceFactory.get();
+            return StructArray2InterfaceServiceProvider.get();
         }
 
         @Override

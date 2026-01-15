@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbSimple.tbSimple_api.ISimpleArrayInterfaceEventListener;
 import tbSimple.tbSimple_api.ISimpleArrayInterface;
 import tbSimple.tbSimple_android_service.SimpleArrayInterfaceServiceAdapter;
-import tbSimple.tbSimplejniservice.SimpleArrayInterfaceJniServiceFactory;
+import tbSimple.tbSimplejniservice.SimpleArrayInterfaceJniServiceProvider;
 import tbSimple.tbSimple_android_service.SimpleArrayInterfaceBaseServiceLifecycleController;
 
 
@@ -29,9 +29,9 @@ public class SimpleArrayInterfaceJniServiceStarter
         }
 
         @Override
-        protected ISimpleArrayInterfaceServiceFactory getFactoryInstance()
+        protected ISimpleArrayInterfaceServiceProvider getProviderInstance()
         {
-            return SimpleArrayInterfaceJniServiceFactory.get();
+            return SimpleArrayInterfaceJniServiceProvider.get();
         }
 
         //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,

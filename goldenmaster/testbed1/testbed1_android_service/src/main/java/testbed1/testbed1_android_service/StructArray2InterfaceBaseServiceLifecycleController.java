@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import testbed1.testbed1_api.IStructArray2InterfaceEventListener;
 import testbed1.testbed1_api.IStructArray2Interface;
 import testbed1.testbed1_android_service.StructArray2InterfaceServiceAdapter;
-import testbed1.testbed1_android_service.IStructArray2InterfaceServiceFactory;
+import testbed1.testbed1_android_service.IStructArray2InterfaceServiceProvider;
 
 
 // This class describes the lifetime of an android server and controlls the provided to the server backend lifetime.
@@ -33,7 +33,7 @@ public abstract class StructArray2InterfaceBaseServiceLifecycleController
     private AtomicBoolean mIsBound = new AtomicBoolean(false);
 
     protected abstract String getTag();
-    protected abstract IStructArray2InterfaceServiceFactory getFactoryInstance();
+    protected abstract IStructArray2InterfaceServiceProvider getProviderInstance();
     protected abstract void onAndroidServiceConnectionStatusChanged(boolean status);
 
     public IStructArray2Interface start(Context context)
@@ -49,7 +49,7 @@ public abstract class StructArray2InterfaceBaseServiceLifecycleController
         Intent androidService = new Intent(mContext, StructArray2InterfaceServiceAdapter.class);
         mContext.startService(androidService);
         Log.i(getTag(), "starter: Explicitly requested service start.");
-        IStructArray2Interface service =  StructArray2InterfaceServiceAdapter.setService(getFactoryInstance());
+        IStructArray2Interface service =  StructArray2InterfaceServiceAdapter.setService(getProviderInstance());
         bind(androidService);
         return service;
     }
@@ -73,8 +73,8 @@ public abstract class StructArray2InterfaceBaseServiceLifecycleController
         {
             Log.e(getTag(), "cannot stop the service, cannot make intent for StructArray2InterfaceServiceAdapter.class");
         }
-        IStructArray2InterfaceServiceFactory factory = getFactoryInstance();
-        factory.clear();
+        IStructArray2InterfaceServiceProvider provider = getProviderInstance();
+        provider.clear();
         StructArray2InterfaceServiceAdapter.setService(null);
     }
 

@@ -7,7 +7,7 @@ import android.content.Intent;
 import testbed2.testbed2_api.INestedStruct3InterfaceEventListener;
 import testbed2.testbed2_api.INestedStruct3Interface;
 import testbed2.testbed2_android_service.NestedStruct3InterfaceServiceAdapter;
-import testbed2.testbed2_android_service.NestedStruct3InterfaceServiceFactory;
+import testbed2.testbed2_android_service.NestedStruct3InterfaceServiceProvider;
 import testbed2.testbed2_android_service.NestedStruct3InterfaceBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class NestedStruct3InterfaceServiceStarter
         }
 
         @Override
-        protected INestedStruct3InterfaceServiceFactory getFactoryInstance()
+        protected INestedStruct3InterfaceServiceProvider getProviderInstance()
         {
-            return NestedStruct3InterfaceServiceFactory.get();
+            return NestedStruct3InterfaceServiceProvider.get();
         }
 
         @Override

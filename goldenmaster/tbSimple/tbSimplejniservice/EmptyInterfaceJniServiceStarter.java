@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbSimple.tbSimple_api.IEmptyInterfaceEventListener;
 import tbSimple.tbSimple_api.IEmptyInterface;
 import tbSimple.tbSimple_android_service.EmptyInterfaceServiceAdapter;
-import tbSimple.tbSimplejniservice.EmptyInterfaceJniServiceFactory;
+import tbSimple.tbSimplejniservice.EmptyInterfaceJniServiceProvider;
 import tbSimple.tbSimple_android_service.EmptyInterfaceBaseServiceLifecycleController;
 
 
@@ -29,9 +29,9 @@ public class EmptyInterfaceJniServiceStarter
         }
 
         @Override
-        protected IEmptyInterfaceServiceFactory getFactoryInstance()
+        protected IEmptyInterfaceServiceProvider getProviderInstance()
         {
-            return EmptyInterfaceJniServiceFactory.get();
+            return EmptyInterfaceJniServiceProvider.get();
         }
 
         //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,
