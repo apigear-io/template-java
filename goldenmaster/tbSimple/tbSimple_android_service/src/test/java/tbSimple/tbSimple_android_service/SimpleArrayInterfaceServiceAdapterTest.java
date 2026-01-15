@@ -42,7 +42,7 @@ import tbSimple.tbSimple_impl.EmptyInterfaceService;
 
 
 import tbSimple.tbSimple_api.ISimpleArrayInterfaceEventListener;
-import tbSimple.tbSimple_android_service.ISimpleArrayInterfaceServiceFactory;
+import tbSimple.tbSimple_android_service.ISimpleArrayInterfaceServiceProvider;
 import tbSimple.tbSimple_api.ISimpleArrayInterface;
 import tbSimple.tbSimple_api.AbstractSimpleArrayInterface;
 import tbSimple.tbSimple_android_messenger.SimpleArrayInterfaceMessageType;
@@ -117,7 +117,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
     private Messenger clientReplyMessenger;
     private String mTestConnectionID1 = "MyTestClient";
    
-    private ISimpleArrayInterfaceServiceFactory serviceFactory = mock(ISimpleArrayInterfaceServiceFactory.class);
+    private ISimpleArrayInterfaceServiceProvider ServiceProvider = mock(ISimpleArrayInterfaceServiceProvider.class);
     private ISimpleArrayInterfaceMessageGetter clientMessagesStorage = mock(ISimpleArrayInterfaceMessageGetter.class);
 
     ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
@@ -270,8 +270,8 @@ public class SimpleArrayInterfaceServiceAdapterTest
         IBinder binder = (IBinder)testedServiceAdapter.onBind(new Intent()) ;
         mServiceMessenger = new Messenger(binder);
 
-        when(serviceFactory.getServiceInstance()).thenReturn(backendServiceMock);
-        testedServiceAdapter.setService(serviceFactory);
+        when(ServiceProvider.getServiceInstance()).thenReturn(backendServiceMock);
+        testedServiceAdapter.setService(ServiceProvider);
 		// service adapter should pass its member to backend to get notifications on changes.
         ArgumentCaptor<ISimpleArrayInterfaceEventListener> eventListnerCaptor = ArgumentCaptor.forClass(ISimpleArrayInterfaceEventListener.class);
         inOrderBackendService.verify(backendServiceMock, times(1)).addEventListener(eventListnerCaptor.capture());

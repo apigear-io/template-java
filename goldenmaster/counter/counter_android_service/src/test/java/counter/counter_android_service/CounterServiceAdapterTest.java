@@ -24,7 +24,7 @@ import counter.counter_impl.CounterService;
 
 
 import counter.counter_api.ICounterEventListener;
-import counter.counter_android_service.ICounterServiceFactory;
+import counter.counter_android_service.ICounterServiceProvider;
 import counter.counter_api.ICounter;
 import counter.counter_api.AbstractCounter;
 import counter.counter_android_messenger.CounterMessageType;
@@ -99,7 +99,7 @@ public class CounterServiceAdapterTest
     private Messenger clientReplyMessenger;
     private String mTestConnectionID1 = "MyTestClient";
    
-    private ICounterServiceFactory serviceFactory = mock(ICounterServiceFactory.class);
+    private ICounterServiceProvider ServiceProvider = mock(ICounterServiceProvider.class);
     private ICounterMessageGetter clientMessagesStorage = mock(ICounterMessageGetter.class);
 
     ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
@@ -214,8 +214,8 @@ public class CounterServiceAdapterTest
         IBinder binder = (IBinder)testedServiceAdapter.onBind(new Intent()) ;
         mServiceMessenger = new Messenger(binder);
 
-        when(serviceFactory.getServiceInstance()).thenReturn(backendServiceMock);
-        testedServiceAdapter.setService(serviceFactory);
+        when(ServiceProvider.getServiceInstance()).thenReturn(backendServiceMock);
+        testedServiceAdapter.setService(ServiceProvider);
 		// service adapter should pass its member to backend to get notifications on changes.
         ArgumentCaptor<ICounterEventListener> eventListnerCaptor = ArgumentCaptor.forClass(ICounterEventListener.class);
         inOrderBackendService.verify(backendServiceMock, times(1)).addEventListener(eventListnerCaptor.capture());

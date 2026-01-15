@@ -16,7 +16,7 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import counter.counter_api.ICounterEventListener;
-import counter.counter_android_service.ICounterServiceFactory;
+import counter.counter_android_service.ICounterServiceProvider;
 import counter.counter_api.ICounter;
 import counter.counter_api.AbstractCounter;
 import counter.counter_android_messenger.CounterMessageType;
@@ -31,23 +31,23 @@ public class CounterServiceAdapter extends Service
 	 */
 	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
-	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// Lifetime of mBackendService and its accessibility through mServiceProvider is controlled by the backend provide with setService function.
 	// The ServiceAdapter is just a user of the backend. 
 	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static ICounter mBackendService;
-	private static ICounterServiceFactory mServiceFactory;
+	private static ICounterServiceProvider mServiceProvider;
 	private static final Object sBackendMutex = new Object();
 
 	public CounterServiceAdapter()
 	{
 	}
 
-	public static ICounter setService(ICounterServiceFactory factory)
+	public static ICounter setService(ICounterServiceProvider serviceProvider)
 	{
-		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory != factory)
+		Log.i(TAG, "Setting serviceProvider: " + serviceProvider);
+		if (mServiceProvider != serviceProvider)
 		{
-			mServiceFactory = factory;
+			mServiceProvider = serviceProvider;
 		}
 		synchronized (sBackendMutex)
 		{
@@ -56,9 +56,9 @@ public class CounterServiceAdapter extends Service
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			if (mServiceFactory != null)
+			if (mServiceProvider != null)
 			{
-				mBackendService = mServiceFactory.getServiceInstance();
+				mBackendService = mServiceProvider.getServiceInstance();
 				if (mHandler != null)
 				{
 					Log.i(TAG, "LIFECYCLE: setService(Counter) called. For handler " + mHandler);

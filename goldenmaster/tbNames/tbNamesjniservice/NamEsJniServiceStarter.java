@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbNames.tbNames_api.INamEsEventListener;
 import tbNames.tbNames_api.INamEs;
 import tbNames.tbNames_android_service.NamEsServiceAdapter;
-import tbNames.tbNamesjniservice.NamEsJniServiceFactory;
+import tbNames.tbNamesjniservice.NamEsJniServiceProvider;
 import tbNames.tbNames_android_service.NamEsBaseServiceLifecycleController;
 
 
@@ -29,9 +29,9 @@ public class NamEsJniServiceStarter
         }
 
         @Override
-        protected INamEsServiceFactory getFactoryInstance()
+        protected INamEsServiceProvider getProviderInstance()
         {
-            return NamEsJniServiceFactory.get();
+            return NamEsJniServiceProvider.get();
         }
 
         //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,

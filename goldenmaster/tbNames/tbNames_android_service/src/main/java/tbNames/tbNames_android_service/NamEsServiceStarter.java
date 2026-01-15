@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbNames.tbNames_api.INamEsEventListener;
 import tbNames.tbNames_api.INamEs;
 import tbNames.tbNames_android_service.NamEsServiceAdapter;
-import tbNames.tbNames_android_service.NamEsServiceFactory;
+import tbNames.tbNames_android_service.NamEsServiceProvider;
 import tbNames.tbNames_android_service.NamEsBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class NamEsServiceStarter
         }
 
         @Override
-        protected INamEsServiceFactory getFactoryInstance()
+        protected INamEsServiceProvider getProviderInstance()
         {
-            return NamEsServiceFactory.get();
+            return NamEsServiceProvider.get();
         }
 
         @Override

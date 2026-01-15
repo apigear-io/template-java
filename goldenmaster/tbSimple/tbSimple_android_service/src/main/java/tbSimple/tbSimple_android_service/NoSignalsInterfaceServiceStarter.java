@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbSimple.tbSimple_api.INoSignalsInterfaceEventListener;
 import tbSimple.tbSimple_api.INoSignalsInterface;
 import tbSimple.tbSimple_android_service.NoSignalsInterfaceServiceAdapter;
-import tbSimple.tbSimple_android_service.NoSignalsInterfaceServiceFactory;
+import tbSimple.tbSimple_android_service.NoSignalsInterfaceServiceProvider;
 import tbSimple.tbSimple_android_service.NoSignalsInterfaceBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class NoSignalsInterfaceServiceStarter
         }
 
         @Override
-        protected INoSignalsInterfaceServiceFactory getFactoryInstance()
+        protected INoSignalsInterfaceServiceProvider getProviderInstance()
         {
-            return NoSignalsInterfaceServiceFactory.get();
+            return NoSignalsInterfaceServiceProvider.get();
         }
 
         @Override

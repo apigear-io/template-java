@@ -14,7 +14,7 @@ import android.content.Intent;
 //TODO for each interface there coudl be a tab? now only first one is added
 
 import testbed1.testbed1_android_service.StructInterfaceServiceAdapter;
-import testbed1.testbed1_android_service.StructInterfaceServiceFactory;
+import testbed1.testbed1_android_service.StructInterfaceServiceProvider;
 import testbed1.testbed1_android_service.StructInterfaceServiceStarter;
 
 //import message type and parcelabe types
@@ -222,7 +222,7 @@ public class Testbed1TestServiceApp extends Activity implements IStructInterface
         stub_service = new Intent(this, StructInterfaceServiceAdapter.class);
         this.startService(stub_service);
         Log.i(TAG, "Service started with stub backend");
-        mBackend = StructInterfaceServiceAdapter.setService(StructInterfaceServiceFactory.get());
+        mBackend = StructInterfaceServiceAdapter.setService(StructInterfaceServiceProvider.get());
         mBackend.addEventListener(this);
     }
 

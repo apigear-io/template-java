@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel .Interface.Name }}ServiceAdapter;
-import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.I{{Camel .Interface.Name}}ServiceFactory;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.I{{Camel .Interface.Name}}ServiceProvider;
 
 
 // This class describes the lifetime of an android server and controlls the provided to the server backend lifetime.
@@ -33,7 +33,7 @@ public abstract class {{Camel .Interface.Name }}BaseServiceLifecycleController
     private AtomicBoolean mIsBound = new AtomicBoolean(false);
 
     protected abstract String getTag();
-    protected abstract I{{Camel .Interface.Name}}ServiceFactory getFactoryInstance();
+    protected abstract I{{Camel .Interface.Name}}ServiceProvider getProviderInstance();
     protected abstract void onAndroidServiceConnectionStatusChanged(boolean status);
 
     public I{{Camel .Interface.Name }} start(Context context)
@@ -49,7 +49,7 @@ public abstract class {{Camel .Interface.Name }}BaseServiceLifecycleController
         Intent androidService = new Intent(mContext, {{Camel .Interface.Name }}ServiceAdapter.class);
         mContext.startService(androidService);
         Log.i(getTag(), "starter: Explicitly requested service start.");
-        I{{Camel .Interface.Name }} service =  {{Camel .Interface.Name }}ServiceAdapter.setService(getFactoryInstance());
+        I{{Camel .Interface.Name }} service =  {{Camel .Interface.Name }}ServiceAdapter.setService(getProviderInstance());
         bind(androidService);
         return service;
     }
@@ -73,8 +73,8 @@ public abstract class {{Camel .Interface.Name }}BaseServiceLifecycleController
         {
             Log.e(getTag(), "cannot stop the service, cannot make intent for {{Camel .Interface.Name }}ServiceAdapter.class");
         }
-        I{{Camel .Interface.Name}}ServiceFactory factory = getFactoryInstance();
-        factory.clear();
+        I{{Camel .Interface.Name}}ServiceProvider provider = getProviderInstance();
+        provider.clear();
         {{Camel .Interface.Name }}ServiceAdapter.setService(null);
     }
 

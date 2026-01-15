@@ -36,7 +36,7 @@ import testbed1.testbed1_api.StructStringWithArray;
 import testbed1.testbed1_android_messenger.StructStringWithArrayParcelable;
 
 import testbed1.testbed1_api.IStructArray2InterfaceEventListener;
-import testbed1.testbed1_android_service.IStructArray2InterfaceServiceFactory;
+import testbed1.testbed1_android_service.IStructArray2InterfaceServiceProvider;
 import testbed1.testbed1_api.IStructArray2Interface;
 import testbed1.testbed1_api.AbstractStructArray2Interface;
 import testbed1.testbed1_android_messenger.StructArray2InterfaceMessageType;
@@ -51,23 +51,23 @@ public class StructArray2InterfaceServiceAdapter extends Service
 	 */
 	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
-	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// Lifetime of mBackendService and its accessibility through mServiceProvider is controlled by the backend provide with setService function.
 	// The ServiceAdapter is just a user of the backend. 
 	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static IStructArray2Interface mBackendService;
-	private static IStructArray2InterfaceServiceFactory mServiceFactory;
+	private static IStructArray2InterfaceServiceProvider mServiceProvider;
 	private static final Object sBackendMutex = new Object();
 
 	public StructArray2InterfaceServiceAdapter()
 	{
 	}
 
-	public static IStructArray2Interface setService(IStructArray2InterfaceServiceFactory factory)
+	public static IStructArray2Interface setService(IStructArray2InterfaceServiceProvider serviceProvider)
 	{
-		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory != factory)
+		Log.i(TAG, "Setting serviceProvider: " + serviceProvider);
+		if (mServiceProvider != serviceProvider)
 		{
-			mServiceFactory = factory;
+			mServiceProvider = serviceProvider;
 		}
 		synchronized (sBackendMutex)
 		{
@@ -76,9 +76,9 @@ public class StructArray2InterfaceServiceAdapter extends Service
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			if (mServiceFactory != null)
+			if (mServiceProvider != null)
 			{
-				mBackendService = mServiceFactory.getServiceInstance();
+				mBackendService = mServiceProvider.getServiceInstance();
 				if (mHandler != null)
 				{
 					Log.i(TAG, "LIFECYCLE: setService(StructArray2Interface) called. For handler " + mHandler);

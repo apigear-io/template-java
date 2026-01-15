@@ -35,7 +35,7 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_impl.{{Camel .Name}}Service
 
 
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
-import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.I{{Camel .Interface.Name}}ServiceFactory;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.I{{Camel .Interface.Name}}ServiceProvider;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.Abstract{{Camel .Interface.Name}};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Interface.Name}}MessageType;
@@ -126,7 +126,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
     private Messenger clientReplyMessenger;
     private String mTestConnectionID1 = "MyTestClient";
    
-    private I{{Camel .Interface.Name}}ServiceFactory serviceFactory = mock(I{{Camel .Interface.Name}}ServiceFactory.class);
+    private I{{Camel .Interface.Name}}ServiceProvider ServiceProvider = mock(I{{Camel .Interface.Name}}ServiceProvider.class);
     private I{{Camel .Interface.Name }}MessageGetter clientMessagesStorage = mock(I{{Camel .Interface.Name }}MessageGetter.class);
 
     ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
@@ -227,8 +227,8 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         IBinder binder = (IBinder)testedServiceAdapter.onBind(new Intent()) ;
         mServiceMessenger = new Messenger(binder);
 
-        when(serviceFactory.getServiceInstance()).thenReturn(backendServiceMock);
-        testedServiceAdapter.setService(serviceFactory);
+        when(ServiceProvider.getServiceInstance()).thenReturn(backendServiceMock);
+        testedServiceAdapter.setService(ServiceProvider);
 		// service adapter should pass its member to backend to get notifications on changes.
         ArgumentCaptor<I{{Camel .Interface.Name }}EventListener> eventListnerCaptor = ArgumentCaptor.forClass(I{{Camel .Interface.Name }}EventListener.class);
         inOrderBackendService.verify(backendServiceMock, times(1)).addEventListener(eventListnerCaptor.capture());

@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbSimple.tbSimple_api.IVoidInterfaceEventListener;
 import tbSimple.tbSimple_api.IVoidInterface;
 import tbSimple.tbSimple_android_service.VoidInterfaceServiceAdapter;
-import tbSimple.tbSimplejniservice.VoidInterfaceJniServiceFactory;
+import tbSimple.tbSimplejniservice.VoidInterfaceJniServiceProvider;
 import tbSimple.tbSimple_android_service.VoidInterfaceBaseServiceLifecycleController;
 
 
@@ -29,9 +29,9 @@ public class VoidInterfaceJniServiceStarter
         }
 
         @Override
-        protected IVoidInterfaceServiceFactory getFactoryInstance()
+        protected IVoidInterfaceServiceProvider getProviderInstance()
         {
-            return VoidInterfaceJniServiceFactory.get();
+            return VoidInterfaceJniServiceProvider.get();
         }
 
         //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,

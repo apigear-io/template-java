@@ -7,7 +7,7 @@ import android.content.Intent;
 import testbed1.testbed1_api.IStructArrayInterfaceEventListener;
 import testbed1.testbed1_api.IStructArrayInterface;
 import testbed1.testbed1_android_service.StructArrayInterfaceServiceAdapter;
-import testbed1.testbed1jniservice.StructArrayInterfaceJniServiceFactory;
+import testbed1.testbed1jniservice.StructArrayInterfaceJniServiceProvider;
 import testbed1.testbed1_android_service.StructArrayInterfaceBaseServiceLifecycleController;
 
 
@@ -29,9 +29,9 @@ public class StructArrayInterfaceJniServiceStarter
         }
 
         @Override
-        protected IStructArrayInterfaceServiceFactory getFactoryInstance()
+        protected IStructArrayInterfaceServiceProvider getProviderInstance()
         {
-            return StructArrayInterfaceJniServiceFactory.get();
+            return StructArrayInterfaceJniServiceProvider.get();
         }
 
         //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,

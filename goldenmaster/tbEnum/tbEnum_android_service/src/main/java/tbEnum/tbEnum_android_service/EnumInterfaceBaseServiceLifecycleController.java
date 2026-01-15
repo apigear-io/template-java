@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import tbEnum.tbEnum_api.IEnumInterfaceEventListener;
 import tbEnum.tbEnum_api.IEnumInterface;
 import tbEnum.tbEnum_android_service.EnumInterfaceServiceAdapter;
-import tbEnum.tbEnum_android_service.IEnumInterfaceServiceFactory;
+import tbEnum.tbEnum_android_service.IEnumInterfaceServiceProvider;
 
 
 // This class describes the lifetime of an android server and controlls the provided to the server backend lifetime.
@@ -33,7 +33,7 @@ public abstract class EnumInterfaceBaseServiceLifecycleController
     private AtomicBoolean mIsBound = new AtomicBoolean(false);
 
     protected abstract String getTag();
-    protected abstract IEnumInterfaceServiceFactory getFactoryInstance();
+    protected abstract IEnumInterfaceServiceProvider getProviderInstance();
     protected abstract void onAndroidServiceConnectionStatusChanged(boolean status);
 
     public IEnumInterface start(Context context)
@@ -49,7 +49,7 @@ public abstract class EnumInterfaceBaseServiceLifecycleController
         Intent androidService = new Intent(mContext, EnumInterfaceServiceAdapter.class);
         mContext.startService(androidService);
         Log.i(getTag(), "starter: Explicitly requested service start.");
-        IEnumInterface service =  EnumInterfaceServiceAdapter.setService(getFactoryInstance());
+        IEnumInterface service =  EnumInterfaceServiceAdapter.setService(getProviderInstance());
         bind(androidService);
         return service;
     }
@@ -73,8 +73,8 @@ public abstract class EnumInterfaceBaseServiceLifecycleController
         {
             Log.e(getTag(), "cannot stop the service, cannot make intent for EnumInterfaceServiceAdapter.class");
         }
-        IEnumInterfaceServiceFactory factory = getFactoryInstance();
-        factory.clear();
+        IEnumInterfaceServiceProvider provider = getProviderInstance();
+        provider.clear();
         EnumInterfaceServiceAdapter.setService(null);
     }
 

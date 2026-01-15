@@ -16,7 +16,7 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIfEventListener;
-import tbRefIfaces.tbRefIfaces_android_service.ISimpleLocalIfServiceFactory;
+import tbRefIfaces.tbRefIfaces_android_service.ISimpleLocalIfServiceProvider;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_api.AbstractSimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_android_messenger.SimpleLocalIfMessageType;
@@ -31,23 +31,23 @@ public class SimpleLocalIfServiceAdapter extends Service
 	 */
 	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
-	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// Lifetime of mBackendService and its accessibility through mServiceProvider is controlled by the backend provide with setService function.
 	// The ServiceAdapter is just a user of the backend. 
 	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static ISimpleLocalIf mBackendService;
-	private static ISimpleLocalIfServiceFactory mServiceFactory;
+	private static ISimpleLocalIfServiceProvider mServiceProvider;
 	private static final Object sBackendMutex = new Object();
 
 	public SimpleLocalIfServiceAdapter()
 	{
 	}
 
-	public static ISimpleLocalIf setService(ISimpleLocalIfServiceFactory factory)
+	public static ISimpleLocalIf setService(ISimpleLocalIfServiceProvider serviceProvider)
 	{
-		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory != factory)
+		Log.i(TAG, "Setting serviceProvider: " + serviceProvider);
+		if (mServiceProvider != serviceProvider)
 		{
-			mServiceFactory = factory;
+			mServiceProvider = serviceProvider;
 		}
 		synchronized (sBackendMutex)
 		{
@@ -56,9 +56,9 @@ public class SimpleLocalIfServiceAdapter extends Service
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			if (mServiceFactory != null)
+			if (mServiceProvider != null)
 			{
-				mBackendService = mServiceFactory.getServiceInstance();
+				mBackendService = mServiceProvider.getServiceInstance();
 				if (mHandler != null)
 				{
 					Log.i(TAG, "LIFECYCLE: setService(SimpleLocalIf) called. For handler " + mHandler);

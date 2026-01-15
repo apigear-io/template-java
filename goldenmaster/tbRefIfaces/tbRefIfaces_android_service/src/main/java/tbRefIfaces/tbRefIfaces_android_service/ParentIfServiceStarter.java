@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbRefIfaces.tbRefIfaces_api.IParentIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.IParentIf;
 import tbRefIfaces.tbRefIfaces_android_service.ParentIfServiceAdapter;
-import tbRefIfaces.tbRefIfaces_android_service.ParentIfServiceFactory;
+import tbRefIfaces.tbRefIfaces_android_service.ParentIfServiceProvider;
 import tbRefIfaces.tbRefIfaces_android_service.ParentIfBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class ParentIfServiceStarter
         }
 
         @Override
-        protected IParentIfServiceFactory getFactoryInstance()
+        protected IParentIfServiceProvider getProviderInstance()
         {
-            return ParentIfServiceFactory.get();
+            return ParentIfServiceProvider.get();
         }
 
         @Override

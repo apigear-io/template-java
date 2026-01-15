@@ -16,7 +16,7 @@ import android.os.RemoteException;
 import android.util.Log;
 
 import tbIfaceimport.tbIfaceimport_api.IEmptyIfEventListener;
-import tbIfaceimport.tbIfaceimport_android_service.IEmptyIfServiceFactory;
+import tbIfaceimport.tbIfaceimport_android_service.IEmptyIfServiceProvider;
 import tbIfaceimport.tbIfaceimport_api.IEmptyIf;
 import tbIfaceimport.tbIfaceimport_api.AbstractEmptyIf;
 import tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfMessageType;
@@ -31,23 +31,23 @@ public class EmptyIfServiceAdapter extends Service
 	 */
 	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
-	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// Lifetime of mBackendService and its accessibility through mServiceProvider is controlled by the backend provide with setService function.
 	// The ServiceAdapter is just a user of the backend. 
 	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static IEmptyIf mBackendService;
-	private static IEmptyIfServiceFactory mServiceFactory;
+	private static IEmptyIfServiceProvider mServiceProvider;
 	private static final Object sBackendMutex = new Object();
 
 	public EmptyIfServiceAdapter()
 	{
 	}
 
-	public static IEmptyIf setService(IEmptyIfServiceFactory factory)
+	public static IEmptyIf setService(IEmptyIfServiceProvider serviceProvider)
 	{
-		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory != factory)
+		Log.i(TAG, "Setting serviceProvider: " + serviceProvider);
+		if (mServiceProvider != serviceProvider)
 		{
-			mServiceFactory = factory;
+			mServiceProvider = serviceProvider;
 		}
 		synchronized (sBackendMutex)
 		{
@@ -56,9 +56,9 @@ public class EmptyIfServiceAdapter extends Service
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			if (mServiceFactory != null)
+			if (mServiceProvider != null)
 			{
-				mBackendService = mServiceFactory.getServiceInstance();
+				mBackendService = mServiceProvider.getServiceInstance();
 				if (mHandler != null)
 				{
 					Log.i(TAG, "LIFECYCLE: setService(EmptyIf) called. For handler " + mHandler);

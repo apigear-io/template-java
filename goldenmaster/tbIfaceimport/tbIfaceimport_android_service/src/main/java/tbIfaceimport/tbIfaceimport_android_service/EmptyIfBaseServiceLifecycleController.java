@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import tbIfaceimport.tbIfaceimport_api.IEmptyIfEventListener;
 import tbIfaceimport.tbIfaceimport_api.IEmptyIf;
 import tbIfaceimport.tbIfaceimport_android_service.EmptyIfServiceAdapter;
-import tbIfaceimport.tbIfaceimport_android_service.IEmptyIfServiceFactory;
+import tbIfaceimport.tbIfaceimport_android_service.IEmptyIfServiceProvider;
 
 
 // This class describes the lifetime of an android server and controlls the provided to the server backend lifetime.
@@ -33,7 +33,7 @@ public abstract class EmptyIfBaseServiceLifecycleController
     private AtomicBoolean mIsBound = new AtomicBoolean(false);
 
     protected abstract String getTag();
-    protected abstract IEmptyIfServiceFactory getFactoryInstance();
+    protected abstract IEmptyIfServiceProvider getProviderInstance();
     protected abstract void onAndroidServiceConnectionStatusChanged(boolean status);
 
     public IEmptyIf start(Context context)
@@ -49,7 +49,7 @@ public abstract class EmptyIfBaseServiceLifecycleController
         Intent androidService = new Intent(mContext, EmptyIfServiceAdapter.class);
         mContext.startService(androidService);
         Log.i(getTag(), "starter: Explicitly requested service start.");
-        IEmptyIf service =  EmptyIfServiceAdapter.setService(getFactoryInstance());
+        IEmptyIf service =  EmptyIfServiceAdapter.setService(getProviderInstance());
         bind(androidService);
         return service;
     }
@@ -73,8 +73,8 @@ public abstract class EmptyIfBaseServiceLifecycleController
         {
             Log.e(getTag(), "cannot stop the service, cannot make intent for EmptyIfServiceAdapter.class");
         }
-        IEmptyIfServiceFactory factory = getFactoryInstance();
-        factory.clear();
+        IEmptyIfServiceProvider provider = getProviderInstance();
+        provider.clear();
         EmptyIfServiceAdapter.setService(null);
     }
 

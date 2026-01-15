@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfServiceAdapter;
-import tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfServiceFactory;
+import tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfServiceProvider;
 import tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class SimpleLocalIfServiceStarter
         }
 
         @Override
-        protected ISimpleLocalIfServiceFactory getFactoryInstance()
+        protected ISimpleLocalIfServiceProvider getProviderInstance()
         {
-            return SimpleLocalIfServiceFactory.get();
+            return SimpleLocalIfServiceProvider.get();
         }
 
         @Override

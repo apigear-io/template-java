@@ -56,7 +56,7 @@ import testbed1.testbed1_impl.StructArray2InterfaceService;
 
 
 import testbed1.testbed1_api.IStructArrayInterfaceEventListener;
-import testbed1.testbed1_android_service.IStructArrayInterfaceServiceFactory;
+import testbed1.testbed1_android_service.IStructArrayInterfaceServiceProvider;
 import testbed1.testbed1_api.IStructArrayInterface;
 import testbed1.testbed1_api.AbstractStructArrayInterface;
 import testbed1.testbed1_android_messenger.StructArrayInterfaceMessageType;
@@ -131,7 +131,7 @@ public class StructArrayInterfaceServiceAdapterTest
     private Messenger clientReplyMessenger;
     private String mTestConnectionID1 = "MyTestClient";
    
-    private IStructArrayInterfaceServiceFactory serviceFactory = mock(IStructArrayInterfaceServiceFactory.class);
+    private IStructArrayInterfaceServiceProvider ServiceProvider = mock(IStructArrayInterfaceServiceProvider.class);
     private IStructArrayInterfaceMessageGetter clientMessagesStorage = mock(IStructArrayInterfaceMessageGetter.class);
 
     ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
@@ -255,8 +255,8 @@ public class StructArrayInterfaceServiceAdapterTest
         IBinder binder = (IBinder)testedServiceAdapter.onBind(new Intent()) ;
         mServiceMessenger = new Messenger(binder);
 
-        when(serviceFactory.getServiceInstance()).thenReturn(backendServiceMock);
-        testedServiceAdapter.setService(serviceFactory);
+        when(ServiceProvider.getServiceInstance()).thenReturn(backendServiceMock);
+        testedServiceAdapter.setService(ServiceProvider);
 		// service adapter should pass its member to backend to get notifications on changes.
         ArgumentCaptor<IStructArrayInterfaceEventListener> eventListnerCaptor = ArgumentCaptor.forClass(IStructArrayInterfaceEventListener.class);
         inOrderBackendService.verify(backendServiceMock, times(1)).addEventListener(eventListnerCaptor.capture());

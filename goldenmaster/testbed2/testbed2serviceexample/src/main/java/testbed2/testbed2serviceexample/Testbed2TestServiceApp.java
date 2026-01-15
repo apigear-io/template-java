@@ -14,7 +14,7 @@ import android.content.Intent;
 //TODO for each interface there coudl be a tab? now only first one is added
 
 import testbed2.testbed2_android_service.ManyParamInterfaceServiceAdapter;
-import testbed2.testbed2_android_service.ManyParamInterfaceServiceFactory;
+import testbed2.testbed2_android_service.ManyParamInterfaceServiceProvider;
 import testbed2.testbed2_android_service.ManyParamInterfaceServiceStarter;
 
 //import message type and parcelabe types
@@ -220,7 +220,7 @@ public class Testbed2TestServiceApp extends Activity implements IManyParamInterf
         stub_service = new Intent(this, ManyParamInterfaceServiceAdapter.class);
         this.startService(stub_service);
         Log.i(TAG, "Service started with stub backend");
-        mBackend = ManyParamInterfaceServiceAdapter.setService(ManyParamInterfaceServiceFactory.get());
+        mBackend = ManyParamInterfaceServiceAdapter.setService(ManyParamInterfaceServiceProvider.get());
         mBackend.addEventListener(this);
     }
 

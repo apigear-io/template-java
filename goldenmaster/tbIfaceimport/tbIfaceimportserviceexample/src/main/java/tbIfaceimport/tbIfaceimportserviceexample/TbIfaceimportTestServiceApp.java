@@ -14,7 +14,7 @@ import android.content.Intent;
 //TODO for each interface there coudl be a tab? now only first one is added
 
 import tbIfaceimport.tbIfaceimport_android_service.EmptyIfServiceAdapter;
-import tbIfaceimport.tbIfaceimport_android_service.EmptyIfServiceFactory;
+import tbIfaceimport.tbIfaceimport_android_service.EmptyIfServiceProvider;
 import tbIfaceimport.tbIfaceimport_android_service.EmptyIfServiceStarter;
 
 //import message type and parcelabe types
@@ -130,7 +130,7 @@ public class TbIfaceimportTestServiceApp extends Activity implements IEmptyIfEve
         stub_service = new Intent(this, EmptyIfServiceAdapter.class);
         this.startService(stub_service);
         Log.i(TAG, "Service started with stub backend");
-        mBackend = EmptyIfServiceAdapter.setService(EmptyIfServiceFactory.get());
+        mBackend = EmptyIfServiceAdapter.setService(EmptyIfServiceProvider.get());
         mBackend.addEventListener(this);
     }
 

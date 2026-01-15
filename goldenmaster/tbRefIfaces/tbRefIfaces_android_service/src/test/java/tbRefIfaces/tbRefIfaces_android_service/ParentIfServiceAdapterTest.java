@@ -27,7 +27,7 @@ import tbRefIfaces.tbRefIfaces_impl.ParentIfService;
 
 
 import tbRefIfaces.tbRefIfaces_api.IParentIfEventListener;
-import tbRefIfaces.tbRefIfaces_android_service.IParentIfServiceFactory;
+import tbRefIfaces.tbRefIfaces_android_service.IParentIfServiceProvider;
 import tbRefIfaces.tbRefIfaces_api.IParentIf;
 import tbRefIfaces.tbRefIfaces_api.AbstractParentIf;
 import tbRefIfaces.tbRefIfaces_android_messenger.ParentIfMessageType;
@@ -102,7 +102,7 @@ public class ParentIfServiceAdapterTest
     private Messenger clientReplyMessenger;
     private String mTestConnectionID1 = "MyTestClient";
    
-    private IParentIfServiceFactory serviceFactory = mock(IParentIfServiceFactory.class);
+    private IParentIfServiceProvider ServiceProvider = mock(IParentIfServiceProvider.class);
     private IParentIfMessageGetter clientMessagesStorage = mock(IParentIfMessageGetter.class);
 
     ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
@@ -217,8 +217,8 @@ public class ParentIfServiceAdapterTest
         IBinder binder = (IBinder)testedServiceAdapter.onBind(new Intent()) ;
         mServiceMessenger = new Messenger(binder);
 
-        when(serviceFactory.getServiceInstance()).thenReturn(backendServiceMock);
-        testedServiceAdapter.setService(serviceFactory);
+        when(ServiceProvider.getServiceInstance()).thenReturn(backendServiceMock);
+        testedServiceAdapter.setService(ServiceProvider);
 		// service adapter should pass its member to backend to get notifications on changes.
         ArgumentCaptor<IParentIfEventListener> eventListnerCaptor = ArgumentCaptor.forClass(IParentIfEventListener.class);
         inOrderBackendService.verify(backendServiceMock, times(1)).addEventListener(eventListnerCaptor.capture());

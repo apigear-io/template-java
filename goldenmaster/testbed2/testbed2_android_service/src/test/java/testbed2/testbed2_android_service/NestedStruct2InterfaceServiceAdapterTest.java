@@ -53,7 +53,7 @@ import testbed2.testbed2_impl.NestedStruct3InterfaceService;
 
 
 import testbed2.testbed2_api.INestedStruct2InterfaceEventListener;
-import testbed2.testbed2_android_service.INestedStruct2InterfaceServiceFactory;
+import testbed2.testbed2_android_service.INestedStruct2InterfaceServiceProvider;
 import testbed2.testbed2_api.INestedStruct2Interface;
 import testbed2.testbed2_api.AbstractNestedStruct2Interface;
 import testbed2.testbed2_android_messenger.NestedStruct2InterfaceMessageType;
@@ -128,7 +128,7 @@ public class NestedStruct2InterfaceServiceAdapterTest
     private Messenger clientReplyMessenger;
     private String mTestConnectionID1 = "MyTestClient";
    
-    private INestedStruct2InterfaceServiceFactory serviceFactory = mock(INestedStruct2InterfaceServiceFactory.class);
+    private INestedStruct2InterfaceServiceProvider ServiceProvider = mock(INestedStruct2InterfaceServiceProvider.class);
     private INestedStruct2InterfaceMessageGetter clientMessagesStorage = mock(INestedStruct2InterfaceMessageGetter.class);
 
     ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
@@ -226,8 +226,8 @@ public class NestedStruct2InterfaceServiceAdapterTest
         IBinder binder = (IBinder)testedServiceAdapter.onBind(new Intent()) ;
         mServiceMessenger = new Messenger(binder);
 
-        when(serviceFactory.getServiceInstance()).thenReturn(backendServiceMock);
-        testedServiceAdapter.setService(serviceFactory);
+        when(ServiceProvider.getServiceInstance()).thenReturn(backendServiceMock);
+        testedServiceAdapter.setService(ServiceProvider);
 		// service adapter should pass its member to backend to get notifications on changes.
         ArgumentCaptor<INestedStruct2InterfaceEventListener> eventListnerCaptor = ArgumentCaptor.forClass(INestedStruct2InterfaceEventListener.class);
         inOrderBackendService.verify(backendServiceMock, times(1)).addEventListener(eventListnerCaptor.capture());

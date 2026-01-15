@@ -7,7 +7,7 @@ import android.content.Intent;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel .Interface.Name }}ServiceAdapter;
-import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel .Interface.Name}}ServiceFactory;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel .Interface.Name}}ServiceProvider;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel .Interface.Name }}BaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class {{Camel .Interface.Name }}ServiceStarter
         }
 
         @Override
-        protected I{{Camel .Interface.Name}}ServiceFactory getFactoryInstance()
+        protected I{{Camel .Interface.Name}}ServiceProvider getProviderInstance()
         {
-            return {{Camel .Interface.Name}}ServiceFactory.get();
+            return {{Camel .Interface.Name}}ServiceProvider.get();
         }
 
         @Override

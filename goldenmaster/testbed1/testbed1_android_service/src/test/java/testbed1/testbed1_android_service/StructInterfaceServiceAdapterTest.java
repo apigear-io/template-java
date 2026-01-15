@@ -56,7 +56,7 @@ import testbed1.testbed1_impl.StructArray2InterfaceService;
 
 
 import testbed1.testbed1_api.IStructInterfaceEventListener;
-import testbed1.testbed1_android_service.IStructInterfaceServiceFactory;
+import testbed1.testbed1_android_service.IStructInterfaceServiceProvider;
 import testbed1.testbed1_api.IStructInterface;
 import testbed1.testbed1_api.AbstractStructInterface;
 import testbed1.testbed1_android_messenger.StructInterfaceMessageType;
@@ -131,7 +131,7 @@ public class StructInterfaceServiceAdapterTest
     private Messenger clientReplyMessenger;
     private String mTestConnectionID1 = "MyTestClient";
    
-    private IStructInterfaceServiceFactory serviceFactory = mock(IStructInterfaceServiceFactory.class);
+    private IStructInterfaceServiceProvider ServiceProvider = mock(IStructInterfaceServiceProvider.class);
     private IStructInterfaceMessageGetter clientMessagesStorage = mock(IStructInterfaceMessageGetter.class);
 
     ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
@@ -243,8 +243,8 @@ public class StructInterfaceServiceAdapterTest
         IBinder binder = (IBinder)testedServiceAdapter.onBind(new Intent()) ;
         mServiceMessenger = new Messenger(binder);
 
-        when(serviceFactory.getServiceInstance()).thenReturn(backendServiceMock);
-        testedServiceAdapter.setService(serviceFactory);
+        when(ServiceProvider.getServiceInstance()).thenReturn(backendServiceMock);
+        testedServiceAdapter.setService(ServiceProvider);
 		// service adapter should pass its member to backend to get notifications on changes.
         ArgumentCaptor<IStructInterfaceEventListener> eventListnerCaptor = ArgumentCaptor.forClass(IStructInterfaceEventListener.class);
         inOrderBackendService.verify(backendServiceMock, times(1)).addEventListener(eventListnerCaptor.capture());
