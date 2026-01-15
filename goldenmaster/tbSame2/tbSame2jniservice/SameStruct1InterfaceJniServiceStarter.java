@@ -8,38 +8,51 @@ import tbSame2.tbSame2_api.ISameStruct1InterfaceEventListener;
 import tbSame2.tbSame2_api.ISameStruct1Interface;
 import tbSame2.tbSame2_android_service.SameStruct1InterfaceServiceAdapter;
 import tbSame2.tbSame2jniservice.SameStruct1InterfaceJniServiceFactory;
+import tbSame2.tbSame2_android_service.SameStruct1InterfaceBaseServiceLifecycleController;
 
 
-//Use this class to manage lifetime of android server with native backend service.
-public class SameStruct1InterfaceJniServiceStarter {
-
-    static Intent androidService = null;
+// This class provides concrete implementation, for SameStruct1InterfaceBaseServiceLifecycleController,
+// which describes the lifetime of an android server and controlls the provided to the server backend lifetime.
+// This class sets type of backend provided to the service to Jni Bridge type.
+// Please see SameStruct1InterfaceBaseServiceLifecycleController for the details.
+public class SameStruct1InterfaceJniServiceStarter
+{
     private static final String TAG = "SameStruct1InterfaceJniStarter";
 
-
-
-    public static ISameStruct1Interface start(Context context) {
-        stop(context);
-        androidService = new Intent(context, SameStruct1InterfaceServiceAdapter.class);
-        Log.i(TAG, "starter: created intent");
-        context.startService(androidService);
-        Log.i(TAG, "starter: started intent (service) ");
-        SameStruct1InterfaceJniServiceFactory factory = SameStruct1InterfaceJniServiceFactory.get();
-        Log.i(TAG, "starter: factory set for SameStruct1InterfaceJniServiceFactory");
-        return SameStruct1InterfaceServiceAdapter.setService(factory);
-    }
-
-    public static void stop(Context context)
+    private static final SameStruct1InterfaceBaseServiceLifecycleController IMPL =
+    new SameStruct1InterfaceBaseServiceLifecycleController()
     {
-        SameStruct1InterfaceJniServiceFactory factory = SameStruct1InterfaceJniServiceFactory.get();
-        factory.clear();
-        SameStruct1InterfaceServiceAdapter.setService(null);
-        if (androidService != null)
+        @Override
+        protected String getTag()
         {
-            Log.i(TAG, "starter: stop the service");
-            context.stopService(androidService);
+            return TAG;
         }
-        androidService = null;
+
+        @Override
+        protected ISameStruct1InterfaceServiceFactory getFactoryInstance()
+        {
+            return SameStruct1InterfaceJniServiceFactory.get();
+        }
+
+        //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,
+        // but the onAndroidServiceConnectionStatusChanged(false) is called only when the service died,
+        // not when it is stopped explicitly.
+        @Override
+        protected void onAndroidServiceConnectionStatusChanged(boolean status)
+        {
+            nativeOnAndroidServiceConnectionStatusChanged(status);
+        }
+    };
+
+    public static ISameStruct1Interface start(Context ctx)
+    {
+        return IMPL.start(ctx);
     }
 
+    public static void stop(Context ctx)
+    {
+        IMPL.stop(ctx);
+    }
+
+    private static native void nativeOnAndroidServiceConnectionStatusChanged(boolean status);
 }

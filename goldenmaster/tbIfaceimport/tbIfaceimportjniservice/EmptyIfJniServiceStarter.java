@@ -8,38 +8,51 @@ import tbIfaceimport.tbIfaceimport_api.IEmptyIfEventListener;
 import tbIfaceimport.tbIfaceimport_api.IEmptyIf;
 import tbIfaceimport.tbIfaceimport_android_service.EmptyIfServiceAdapter;
 import tbIfaceimport.tbIfaceimportjniservice.EmptyIfJniServiceFactory;
+import tbIfaceimport.tbIfaceimport_android_service.EmptyIfBaseServiceLifecycleController;
 
 
-//Use this class to manage lifetime of android server with native backend service.
-public class EmptyIfJniServiceStarter {
-
-    static Intent androidService = null;
+// This class provides concrete implementation, for EmptyIfBaseServiceLifecycleController,
+// which describes the lifetime of an android server and controlls the provided to the server backend lifetime.
+// This class sets type of backend provided to the service to Jni Bridge type.
+// Please see EmptyIfBaseServiceLifecycleController for the details.
+public class EmptyIfJniServiceStarter
+{
     private static final String TAG = "EmptyIfJniStarter";
 
-
-
-    public static IEmptyIf start(Context context) {
-        stop(context);
-        androidService = new Intent(context, EmptyIfServiceAdapter.class);
-        Log.i(TAG, "starter: created intent");
-        context.startService(androidService);
-        Log.i(TAG, "starter: started intent (service) ");
-        EmptyIfJniServiceFactory factory = EmptyIfJniServiceFactory.get();
-        Log.i(TAG, "starter: factory set for EmptyIfJniServiceFactory");
-        return EmptyIfServiceAdapter.setService(factory);
-    }
-
-    public static void stop(Context context)
+    private static final EmptyIfBaseServiceLifecycleController IMPL =
+    new EmptyIfBaseServiceLifecycleController()
     {
-        EmptyIfJniServiceFactory factory = EmptyIfJniServiceFactory.get();
-        factory.clear();
-        EmptyIfServiceAdapter.setService(null);
-        if (androidService != null)
+        @Override
+        protected String getTag()
         {
-            Log.i(TAG, "starter: stop the service");
-            context.stopService(androidService);
+            return TAG;
         }
-        androidService = null;
+
+        @Override
+        protected IEmptyIfServiceFactory getFactoryInstance()
+        {
+            return EmptyIfJniServiceFactory.get();
+        }
+
+        //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,
+        // but the onAndroidServiceConnectionStatusChanged(false) is called only when the service died,
+        // not when it is stopped explicitly.
+        @Override
+        protected void onAndroidServiceConnectionStatusChanged(boolean status)
+        {
+            nativeOnAndroidServiceConnectionStatusChanged(status);
+        }
+    };
+
+    public static IEmptyIf start(Context ctx)
+    {
+        return IMPL.start(ctx);
     }
 
+    public static void stop(Context ctx)
+    {
+        IMPL.stop(ctx);
+    }
+
+    private static native void nativeOnAndroidServiceConnectionStatusChanged(boolean status);
 }

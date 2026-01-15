@@ -4,4 +4,5 @@ import testbed1.testbed1_api.IStructArrayInterface;
 
 public interface IStructArrayInterfaceServiceFactory {
     public  IStructArrayInterface getServiceInstance();
+    public void clear();
 }

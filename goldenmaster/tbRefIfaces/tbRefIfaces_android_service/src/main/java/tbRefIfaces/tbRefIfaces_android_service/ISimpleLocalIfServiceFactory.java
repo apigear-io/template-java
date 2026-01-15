@@ -4,4 +4,5 @@ import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 
 public interface ISimpleLocalIfServiceFactory {
     public  ISimpleLocalIf getServiceInstance();
+    public void clear();
 }

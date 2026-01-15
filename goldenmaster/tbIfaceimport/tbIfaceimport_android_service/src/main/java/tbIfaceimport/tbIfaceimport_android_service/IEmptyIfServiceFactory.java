@@ -4,4 +4,5 @@ import tbIfaceimport.tbIfaceimport_api.IEmptyIf;
 
 public interface IEmptyIfServiceFactory {
     public  IEmptyIf getServiceInstance();
+    public void clear();
 }

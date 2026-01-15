@@ -8,37 +8,72 @@ import tbEnum.tbEnum_api.IEnumInterfaceEventListener;
 import tbEnum.tbEnum_api.IEnumInterface;
 import tbEnum.tbEnum_android_service.EnumInterfaceServiceAdapter;
 import tbEnum.tbEnum_android_service.EnumInterfaceServiceFactory;
+import tbEnum.tbEnum_android_service.EnumInterfaceBaseServiceLifecycleController;
 
 
-//Use this class to manage lifetime of android server with Implemented backend service from package tbEnum.tbEnum_impl; .
-public class EnumInterfaceServiceStarter {
-
-    static Intent androidService = null;
+// This class provides concrete implementation, for EnumInterfaceBaseServiceLifecycleController,
+// which describes the lifetime of an android server and controlls the provided to the server backend lifetime.
+// This class sets type of backend provided to the service Implemented backend service from package tbEnum.tbEnum_impl;.
+// Please see EnumInterfaceBaseServiceLifecycleController for the details.
+public class EnumInterfaceServiceStarter
+{
     private static final String TAG = "EnumInterfaceStarter";
 
-    public static IEnumInterface start(Context context)
+    public interface ServiceLifecycleListener
     {
-        stop(context);
-        androidService = new Intent(context, EnumInterfaceServiceAdapter.class);
-        Log.i(TAG, "starter: created intent");
-        context.startService(androidService);
-        Log.i(TAG, "starter: started intent (service) ");
-        EnumInterfaceServiceFactory factory = EnumInterfaceServiceFactory.get();
-        Log.i(TAG, "starter: factory set for EnumInterfaceServiceFactory");
-        return EnumInterfaceServiceAdapter.setService(factory);
+        // Called when service connects successfully.
+        void onServiceConnected();
+
+        // Called when service is killed by Android or crashed, not when stopped.
+        void onServiceDied();
     }
 
-    public static void stop(Context context)
+    private static ServiceLifecycleListener sListener = null;
+
+    public static void setServiceLifecycleListener(ServiceLifecycleListener listener)
     {
-        EnumInterfaceServiceFactory factory = EnumInterfaceServiceFactory.get();
-        factory.clear();
-        EnumInterfaceServiceAdapter.setService(null);
-        if (androidService != null)
+        sListener = listener;
+    }
+
+    private static final EnumInterfaceBaseServiceLifecycleController IMPL =
+    new EnumInterfaceBaseServiceLifecycleController()
+    {
+        @Override
+        protected String getTag()
         {
-            Log.i(TAG, "starter: stop the service");
-            context.stopService(androidService);
+            return TAG;
         }
-        androidService = null;
+
+        @Override
+        protected IEnumInterfaceServiceFactory getFactoryInstance()
+        {
+            return EnumInterfaceServiceFactory.get();
+        }
+
+        @Override
+        protected void onAndroidServiceConnectionStatusChanged(boolean status)
+        {
+            if (sListener != null)
+            {
+                if (status)
+                {
+                    sListener.onServiceConnected();
+                }
+                else
+                {
+                    sListener.onServiceDied();
+                }
+            }
+        }
+    };
+
+    public static IEnumInterface start(Context ctx)
+    {
+        return IMPL.start(ctx);
     }
 
+    public static void stop(Context ctx)
+    {
+        IMPL.stop(ctx);
+    }
 }

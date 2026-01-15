@@ -8,37 +8,72 @@ import tbSimple.tbSimple_api.IEmptyInterfaceEventListener;
 import tbSimple.tbSimple_api.IEmptyInterface;
 import tbSimple.tbSimple_android_service.EmptyInterfaceServiceAdapter;
 import tbSimple.tbSimple_android_service.EmptyInterfaceServiceFactory;
+import tbSimple.tbSimple_android_service.EmptyInterfaceBaseServiceLifecycleController;
 
 
-//Use this class to manage lifetime of android server with Implemented backend service from package tbSimple.tbSimple_impl; .
-public class EmptyInterfaceServiceStarter {
-
-    static Intent androidService = null;
+// This class provides concrete implementation, for EmptyInterfaceBaseServiceLifecycleController,
+// which describes the lifetime of an android server and controlls the provided to the server backend lifetime.
+// This class sets type of backend provided to the service Implemented backend service from package tbSimple.tbSimple_impl;.
+// Please see EmptyInterfaceBaseServiceLifecycleController for the details.
+public class EmptyInterfaceServiceStarter
+{
     private static final String TAG = "EmptyInterfaceStarter";
 
-    public static IEmptyInterface start(Context context)
+    public interface ServiceLifecycleListener
     {
-        stop(context);
-        androidService = new Intent(context, EmptyInterfaceServiceAdapter.class);
-        Log.i(TAG, "starter: created intent");
-        context.startService(androidService);
-        Log.i(TAG, "starter: started intent (service) ");
-        EmptyInterfaceServiceFactory factory = EmptyInterfaceServiceFactory.get();
-        Log.i(TAG, "starter: factory set for EmptyInterfaceServiceFactory");
-        return EmptyInterfaceServiceAdapter.setService(factory);
+        // Called when service connects successfully.
+        void onServiceConnected();
+
+        // Called when service is killed by Android or crashed, not when stopped.
+        void onServiceDied();
     }
 
-    public static void stop(Context context)
+    private static ServiceLifecycleListener sListener = null;
+
+    public static void setServiceLifecycleListener(ServiceLifecycleListener listener)
     {
-        EmptyInterfaceServiceFactory factory = EmptyInterfaceServiceFactory.get();
-        factory.clear();
-        EmptyInterfaceServiceAdapter.setService(null);
-        if (androidService != null)
+        sListener = listener;
+    }
+
+    private static final EmptyInterfaceBaseServiceLifecycleController IMPL =
+    new EmptyInterfaceBaseServiceLifecycleController()
+    {
+        @Override
+        protected String getTag()
         {
-            Log.i(TAG, "starter: stop the service");
-            context.stopService(androidService);
+            return TAG;
         }
-        androidService = null;
+
+        @Override
+        protected IEmptyInterfaceServiceFactory getFactoryInstance()
+        {
+            return EmptyInterfaceServiceFactory.get();
+        }
+
+        @Override
+        protected void onAndroidServiceConnectionStatusChanged(boolean status)
+        {
+            if (sListener != null)
+            {
+                if (status)
+                {
+                    sListener.onServiceConnected();
+                }
+                else
+                {
+                    sListener.onServiceDied();
+                }
+            }
+        }
+    };
+
+    public static IEmptyInterface start(Context ctx)
+    {
+        return IMPL.start(ctx);
     }
 
+    public static void stop(Context ctx)
+    {
+        IMPL.stop(ctx);
+    }
 }

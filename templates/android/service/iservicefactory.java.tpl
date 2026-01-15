@@ -4,4 +4,5 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Nam
 
 public interface I{{Camel .Interface.Name}}ServiceFactory {
     public  I{{Camel .Interface.Name }} getServiceInstance();
+    public void clear();
 }
