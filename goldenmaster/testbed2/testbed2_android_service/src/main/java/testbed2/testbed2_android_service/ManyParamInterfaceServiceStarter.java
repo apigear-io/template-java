@@ -8,37 +8,72 @@ import testbed2.testbed2_api.IManyParamInterfaceEventListener;
 import testbed2.testbed2_api.IManyParamInterface;
 import testbed2.testbed2_android_service.ManyParamInterfaceServiceAdapter;
 import testbed2.testbed2_android_service.ManyParamInterfaceServiceFactory;
+import testbed2.testbed2_android_service.ManyParamInterfaceBaseServiceLifecycleController;
 
 
-//Use this class to manage lifetime of android server with Implemented backend service from package testbed2.testbed2_impl; .
-public class ManyParamInterfaceServiceStarter {
-
-    static Intent androidService = null;
+// This class provides concrete implementation, for ManyParamInterfaceBaseServiceLifecycleController,
+// which describes the lifetime of an android server and controlls the provided to the server backend lifetime.
+// This class sets type of backend provided to the service Implemented backend service from package testbed2.testbed2_impl;.
+// Please see ManyParamInterfaceBaseServiceLifecycleController for the details.
+public class ManyParamInterfaceServiceStarter
+{
     private static final String TAG = "ManyParamInterfaceStarter";
 
-    public static IManyParamInterface start(Context context)
+    public interface ServiceLifecycleListener
     {
-        stop(context);
-        androidService = new Intent(context, ManyParamInterfaceServiceAdapter.class);
-        Log.i(TAG, "starter: created intent");
-        context.startService(androidService);
-        Log.i(TAG, "starter: started intent (service) ");
-        ManyParamInterfaceServiceFactory factory = ManyParamInterfaceServiceFactory.get();
-        Log.i(TAG, "starter: factory set for ManyParamInterfaceServiceFactory");
-        return ManyParamInterfaceServiceAdapter.setService(factory);
+        // Called when service connects successfully.
+        void onServiceConnected();
+
+        // Called when service is killed by Android or crashed, not when stopped.
+        void onServiceDied();
     }
 
-    public static void stop(Context context)
+    private static ServiceLifecycleListener sListener = null;
+
+    public static void setServiceLifecycleListener(ServiceLifecycleListener listener)
     {
-        ManyParamInterfaceServiceFactory factory = ManyParamInterfaceServiceFactory.get();
-        factory.clear();
-        ManyParamInterfaceServiceAdapter.setService(null);
-        if (androidService != null)
+        sListener = listener;
+    }
+
+    private static final ManyParamInterfaceBaseServiceLifecycleController IMPL =
+    new ManyParamInterfaceBaseServiceLifecycleController()
+    {
+        @Override
+        protected String getTag()
         {
-            Log.i(TAG, "starter: stop the service");
-            context.stopService(androidService);
+            return TAG;
         }
-        androidService = null;
+
+        @Override
+        protected IManyParamInterfaceServiceFactory getFactoryInstance()
+        {
+            return ManyParamInterfaceServiceFactory.get();
+        }
+
+        @Override
+        protected void onAndroidServiceConnectionStatusChanged(boolean status)
+        {
+            if (sListener != null)
+            {
+                if (status)
+                {
+                    sListener.onServiceConnected();
+                }
+                else
+                {
+                    sListener.onServiceDied();
+                }
+            }
+        }
+    };
+
+    public static IManyParamInterface start(Context ctx)
+    {
+        return IMPL.start(ctx);
     }
 
+    public static void stop(Context ctx)
+    {
+        IMPL.stop(ctx);
+    }
 }

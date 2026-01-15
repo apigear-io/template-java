@@ -8,37 +8,72 @@ import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfServiceAdapter;
 import tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfServiceFactory;
+import tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfBaseServiceLifecycleController;
 
 
-//Use this class to manage lifetime of android server with Implemented backend service from package tbRefIfaces.tbRefIfaces_impl; .
-public class SimpleLocalIfServiceStarter {
-
-    static Intent androidService = null;
+// This class provides concrete implementation, for SimpleLocalIfBaseServiceLifecycleController,
+// which describes the lifetime of an android server and controlls the provided to the server backend lifetime.
+// This class sets type of backend provided to the service Implemented backend service from package tbRefIfaces.tbRefIfaces_impl;.
+// Please see SimpleLocalIfBaseServiceLifecycleController for the details.
+public class SimpleLocalIfServiceStarter
+{
     private static final String TAG = "SimpleLocalIfStarter";
 
-    public static ISimpleLocalIf start(Context context)
+    public interface ServiceLifecycleListener
     {
-        stop(context);
-        androidService = new Intent(context, SimpleLocalIfServiceAdapter.class);
-        Log.i(TAG, "starter: created intent");
-        context.startService(androidService);
-        Log.i(TAG, "starter: started intent (service) ");
-        SimpleLocalIfServiceFactory factory = SimpleLocalIfServiceFactory.get();
-        Log.i(TAG, "starter: factory set for SimpleLocalIfServiceFactory");
-        return SimpleLocalIfServiceAdapter.setService(factory);
+        // Called when service connects successfully.
+        void onServiceConnected();
+
+        // Called when service is killed by Android or crashed, not when stopped.
+        void onServiceDied();
     }
 
-    public static void stop(Context context)
+    private static ServiceLifecycleListener sListener = null;
+
+    public static void setServiceLifecycleListener(ServiceLifecycleListener listener)
     {
-        SimpleLocalIfServiceFactory factory = SimpleLocalIfServiceFactory.get();
-        factory.clear();
-        SimpleLocalIfServiceAdapter.setService(null);
-        if (androidService != null)
+        sListener = listener;
+    }
+
+    private static final SimpleLocalIfBaseServiceLifecycleController IMPL =
+    new SimpleLocalIfBaseServiceLifecycleController()
+    {
+        @Override
+        protected String getTag()
         {
-            Log.i(TAG, "starter: stop the service");
-            context.stopService(androidService);
+            return TAG;
         }
-        androidService = null;
+
+        @Override
+        protected ISimpleLocalIfServiceFactory getFactoryInstance()
+        {
+            return SimpleLocalIfServiceFactory.get();
+        }
+
+        @Override
+        protected void onAndroidServiceConnectionStatusChanged(boolean status)
+        {
+            if (sListener != null)
+            {
+                if (status)
+                {
+                    sListener.onServiceConnected();
+                }
+                else
+                {
+                    sListener.onServiceDied();
+                }
+            }
+        }
+    };
+
+    public static ISimpleLocalIf start(Context ctx)
+    {
+        return IMPL.start(ctx);
     }
 
+    public static void stop(Context ctx)
+    {
+        IMPL.stop(ctx);
+    }
 }

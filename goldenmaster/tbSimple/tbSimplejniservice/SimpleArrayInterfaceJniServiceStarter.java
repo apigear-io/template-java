@@ -8,38 +8,51 @@ import tbSimple.tbSimple_api.ISimpleArrayInterfaceEventListener;
 import tbSimple.tbSimple_api.ISimpleArrayInterface;
 import tbSimple.tbSimple_android_service.SimpleArrayInterfaceServiceAdapter;
 import tbSimple.tbSimplejniservice.SimpleArrayInterfaceJniServiceFactory;
+import tbSimple.tbSimple_android_service.SimpleArrayInterfaceBaseServiceLifecycleController;
 
 
-//Use this class to manage lifetime of android server with native backend service.
-public class SimpleArrayInterfaceJniServiceStarter {
-
-    static Intent androidService = null;
+// This class provides concrete implementation, for SimpleArrayInterfaceBaseServiceLifecycleController,
+// which describes the lifetime of an android server and controlls the provided to the server backend lifetime.
+// This class sets type of backend provided to the service to Jni Bridge type.
+// Please see SimpleArrayInterfaceBaseServiceLifecycleController for the details.
+public class SimpleArrayInterfaceJniServiceStarter
+{
     private static final String TAG = "SimpleArrayInterfaceJniStarter";
 
-
-
-    public static ISimpleArrayInterface start(Context context) {
-        stop(context);
-        androidService = new Intent(context, SimpleArrayInterfaceServiceAdapter.class);
-        Log.i(TAG, "starter: created intent");
-        context.startService(androidService);
-        Log.i(TAG, "starter: started intent (service) ");
-        SimpleArrayInterfaceJniServiceFactory factory = SimpleArrayInterfaceJniServiceFactory.get();
-        Log.i(TAG, "starter: factory set for SimpleArrayInterfaceJniServiceFactory");
-        return SimpleArrayInterfaceServiceAdapter.setService(factory);
-    }
-
-    public static void stop(Context context)
+    private static final SimpleArrayInterfaceBaseServiceLifecycleController IMPL =
+    new SimpleArrayInterfaceBaseServiceLifecycleController()
     {
-        SimpleArrayInterfaceJniServiceFactory factory = SimpleArrayInterfaceJniServiceFactory.get();
-        factory.clear();
-        SimpleArrayInterfaceServiceAdapter.setService(null);
-        if (androidService != null)
+        @Override
+        protected String getTag()
         {
-            Log.i(TAG, "starter: stop the service");
-            context.stopService(androidService);
+            return TAG;
         }
-        androidService = null;
+
+        @Override
+        protected ISimpleArrayInterfaceServiceFactory getFactoryInstance()
+        {
+            return SimpleArrayInterfaceJniServiceFactory.get();
+        }
+
+        //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,
+        // but the onAndroidServiceConnectionStatusChanged(false) is called only when the service died,
+        // not when it is stopped explicitly.
+        @Override
+        protected void onAndroidServiceConnectionStatusChanged(boolean status)
+        {
+            nativeOnAndroidServiceConnectionStatusChanged(status);
+        }
+    };
+
+    public static ISimpleArrayInterface start(Context ctx)
+    {
+        return IMPL.start(ctx);
     }
 
+    public static void stop(Context ctx)
+    {
+        IMPL.stop(ctx);
+    }
+
+    private static native void nativeOnAndroidServiceConnectionStatusChanged(boolean status);
 }

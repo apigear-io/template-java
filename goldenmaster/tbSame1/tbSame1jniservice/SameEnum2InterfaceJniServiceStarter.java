@@ -8,38 +8,51 @@ import tbSame1.tbSame1_api.ISameEnum2InterfaceEventListener;
 import tbSame1.tbSame1_api.ISameEnum2Interface;
 import tbSame1.tbSame1_android_service.SameEnum2InterfaceServiceAdapter;
 import tbSame1.tbSame1jniservice.SameEnum2InterfaceJniServiceFactory;
+import tbSame1.tbSame1_android_service.SameEnum2InterfaceBaseServiceLifecycleController;
 
 
-//Use this class to manage lifetime of android server with native backend service.
-public class SameEnum2InterfaceJniServiceStarter {
-
-    static Intent androidService = null;
+// This class provides concrete implementation, for SameEnum2InterfaceBaseServiceLifecycleController,
+// which describes the lifetime of an android server and controlls the provided to the server backend lifetime.
+// This class sets type of backend provided to the service to Jni Bridge type.
+// Please see SameEnum2InterfaceBaseServiceLifecycleController for the details.
+public class SameEnum2InterfaceJniServiceStarter
+{
     private static final String TAG = "SameEnum2InterfaceJniStarter";
 
-
-
-    public static ISameEnum2Interface start(Context context) {
-        stop(context);
-        androidService = new Intent(context, SameEnum2InterfaceServiceAdapter.class);
-        Log.i(TAG, "starter: created intent");
-        context.startService(androidService);
-        Log.i(TAG, "starter: started intent (service) ");
-        SameEnum2InterfaceJniServiceFactory factory = SameEnum2InterfaceJniServiceFactory.get();
-        Log.i(TAG, "starter: factory set for SameEnum2InterfaceJniServiceFactory");
-        return SameEnum2InterfaceServiceAdapter.setService(factory);
-    }
-
-    public static void stop(Context context)
+    private static final SameEnum2InterfaceBaseServiceLifecycleController IMPL =
+    new SameEnum2InterfaceBaseServiceLifecycleController()
     {
-        SameEnum2InterfaceJniServiceFactory factory = SameEnum2InterfaceJniServiceFactory.get();
-        factory.clear();
-        SameEnum2InterfaceServiceAdapter.setService(null);
-        if (androidService != null)
+        @Override
+        protected String getTag()
         {
-            Log.i(TAG, "starter: stop the service");
-            context.stopService(androidService);
+            return TAG;
         }
-        androidService = null;
+
+        @Override
+        protected ISameEnum2InterfaceServiceFactory getFactoryInstance()
+        {
+            return SameEnum2InterfaceJniServiceFactory.get();
+        }
+
+        //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,
+        // but the onAndroidServiceConnectionStatusChanged(false) is called only when the service died,
+        // not when it is stopped explicitly.
+        @Override
+        protected void onAndroidServiceConnectionStatusChanged(boolean status)
+        {
+            nativeOnAndroidServiceConnectionStatusChanged(status);
+        }
+    };
+
+    public static ISameEnum2Interface start(Context ctx)
+    {
+        return IMPL.start(ctx);
     }
 
+    public static void stop(Context ctx)
+    {
+        IMPL.stop(ctx);
+    }
+
+    private static native void nativeOnAndroidServiceConnectionStatusChanged(boolean status);
 }

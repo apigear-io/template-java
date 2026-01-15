@@ -8,37 +8,72 @@ import testbed2.testbed2_api.INestedStruct1InterfaceEventListener;
 import testbed2.testbed2_api.INestedStruct1Interface;
 import testbed2.testbed2_android_service.NestedStruct1InterfaceServiceAdapter;
 import testbed2.testbed2_android_service.NestedStruct1InterfaceServiceFactory;
+import testbed2.testbed2_android_service.NestedStruct1InterfaceBaseServiceLifecycleController;
 
 
-//Use this class to manage lifetime of android server with Implemented backend service from package testbed2.testbed2_impl; .
-public class NestedStruct1InterfaceServiceStarter {
-
-    static Intent androidService = null;
+// This class provides concrete implementation, for NestedStruct1InterfaceBaseServiceLifecycleController,
+// which describes the lifetime of an android server and controlls the provided to the server backend lifetime.
+// This class sets type of backend provided to the service Implemented backend service from package testbed2.testbed2_impl;.
+// Please see NestedStruct1InterfaceBaseServiceLifecycleController for the details.
+public class NestedStruct1InterfaceServiceStarter
+{
     private static final String TAG = "NestedStruct1InterfaceStarter";
 
-    public static INestedStruct1Interface start(Context context)
+    public interface ServiceLifecycleListener
     {
-        stop(context);
-        androidService = new Intent(context, NestedStruct1InterfaceServiceAdapter.class);
-        Log.i(TAG, "starter: created intent");
-        context.startService(androidService);
-        Log.i(TAG, "starter: started intent (service) ");
-        NestedStruct1InterfaceServiceFactory factory = NestedStruct1InterfaceServiceFactory.get();
-        Log.i(TAG, "starter: factory set for NestedStruct1InterfaceServiceFactory");
-        return NestedStruct1InterfaceServiceAdapter.setService(factory);
+        // Called when service connects successfully.
+        void onServiceConnected();
+
+        // Called when service is killed by Android or crashed, not when stopped.
+        void onServiceDied();
     }
 
-    public static void stop(Context context)
+    private static ServiceLifecycleListener sListener = null;
+
+    public static void setServiceLifecycleListener(ServiceLifecycleListener listener)
     {
-        NestedStruct1InterfaceServiceFactory factory = NestedStruct1InterfaceServiceFactory.get();
-        factory.clear();
-        NestedStruct1InterfaceServiceAdapter.setService(null);
-        if (androidService != null)
+        sListener = listener;
+    }
+
+    private static final NestedStruct1InterfaceBaseServiceLifecycleController IMPL =
+    new NestedStruct1InterfaceBaseServiceLifecycleController()
+    {
+        @Override
+        protected String getTag()
         {
-            Log.i(TAG, "starter: stop the service");
-            context.stopService(androidService);
+            return TAG;
         }
-        androidService = null;
+
+        @Override
+        protected INestedStruct1InterfaceServiceFactory getFactoryInstance()
+        {
+            return NestedStruct1InterfaceServiceFactory.get();
+        }
+
+        @Override
+        protected void onAndroidServiceConnectionStatusChanged(boolean status)
+        {
+            if (sListener != null)
+            {
+                if (status)
+                {
+                    sListener.onServiceConnected();
+                }
+                else
+                {
+                    sListener.onServiceDied();
+                }
+            }
+        }
+    };
+
+    public static INestedStruct1Interface start(Context ctx)
+    {
+        return IMPL.start(ctx);
     }
 
+    public static void stop(Context ctx)
+    {
+        IMPL.stop(ctx);
+    }
 }

@@ -4,4 +4,5 @@ import tbSimple.tbSimple_api.INoPropertiesInterface;
 
 public interface INoPropertiesInterfaceServiceFactory {
     public  INoPropertiesInterface getServiceInstance();
+    public void clear();
 }

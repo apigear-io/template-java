@@ -4,4 +4,5 @@ import tbSimple.tbSimple_api.IVoidInterface;
 
 public interface IVoidInterfaceServiceFactory {
     public  IVoidInterface getServiceInstance();
+    public void clear();
 }

@@ -79,6 +79,8 @@ features:
             target: "{{Camel .Interface.Name}}ServiceFactory.java"
           - source: "android/service/implservicestarter.java.tpl"
             target: "{{Camel .Interface.Name }}ServiceStarter.java"
+          - source: "android/service/baseservicelifecyclecontroller.java.tpl"
+            target: "{{Camel .Interface.Name }}BaseServiceLifecycleController.java"
       - match: interface
         prefix: "{{camel .Module.Name}}/{{camel .Module.Name}}_android_service/src/test/java/{{camel .Module.Name}}/{{camel .Module.Name}}_android_service/"
         documents:
