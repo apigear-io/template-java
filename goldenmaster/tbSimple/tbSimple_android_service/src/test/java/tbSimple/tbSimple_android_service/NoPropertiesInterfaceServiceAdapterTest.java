@@ -42,7 +42,7 @@ import tbSimple.tbSimple_impl.EmptyInterfaceService;
 
 
 import tbSimple.tbSimple_api.INoPropertiesInterfaceEventListener;
-import tbSimple.tbSimple_android_service.INoPropertiesInterfaceServiceFactory;
+import tbSimple.tbSimple_android_service.INoPropertiesInterfaceServiceProvider;
 import tbSimple.tbSimple_api.INoPropertiesInterface;
 import tbSimple.tbSimple_api.AbstractNoPropertiesInterface;
 import tbSimple.tbSimple_android_messenger.NoPropertiesInterfaceMessageType;
@@ -117,7 +117,7 @@ public class NoPropertiesInterfaceServiceAdapterTest
     private Messenger clientReplyMessenger;
     private String mTestConnectionID1 = "MyTestClient";
    
-    private INoPropertiesInterfaceServiceFactory serviceFactory = mock(INoPropertiesInterfaceServiceFactory.class);
+    private INoPropertiesInterfaceServiceProvider ServiceProvider = mock(INoPropertiesInterfaceServiceProvider.class);
     private INoPropertiesInterfaceMessageGetter clientMessagesStorage = mock(INoPropertiesInterfaceMessageGetter.class);
 
     ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
@@ -200,8 +200,8 @@ public class NoPropertiesInterfaceServiceAdapterTest
         IBinder binder = (IBinder)testedServiceAdapter.onBind(new Intent()) ;
         mServiceMessenger = new Messenger(binder);
 
-        when(serviceFactory.getServiceInstance()).thenReturn(backendServiceMock);
-        testedServiceAdapter.setService(serviceFactory);
+        when(ServiceProvider.getServiceInstance()).thenReturn(backendServiceMock);
+        testedServiceAdapter.setService(ServiceProvider);
 		// service adapter should pass its member to backend to get notifications on changes.
         ArgumentCaptor<INoPropertiesInterfaceEventListener> eventListnerCaptor = ArgumentCaptor.forClass(INoPropertiesInterfaceEventListener.class);
         inOrderBackendService.verify(backendServiceMock, times(1)).addEventListener(eventListnerCaptor.capture());

@@ -7,7 +7,7 @@ import android.content.Intent;
 import testbed1.testbed1_api.IStructInterfaceEventListener;
 import testbed1.testbed1_api.IStructInterface;
 import testbed1.testbed1_android_service.StructInterfaceServiceAdapter;
-import testbed1.testbed1_android_service.StructInterfaceServiceFactory;
+import testbed1.testbed1_android_service.StructInterfaceServiceProvider;
 import testbed1.testbed1_android_service.StructInterfaceBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class StructInterfaceServiceStarter
         }
 
         @Override
-        protected IStructInterfaceServiceFactory getFactoryInstance()
+        protected IStructInterfaceServiceProvider getProviderInstance()
         {
-            return StructInterfaceServiceFactory.get();
+            return StructInterfaceServiceProvider.get();
         }
 
         @Override

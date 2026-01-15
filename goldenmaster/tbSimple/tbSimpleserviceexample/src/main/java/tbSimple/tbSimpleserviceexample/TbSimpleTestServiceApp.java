@@ -14,7 +14,7 @@ import android.content.Intent;
 //TODO for each interface there coudl be a tab? now only first one is added
 
 import tbSimple.tbSimple_android_service.VoidInterfaceServiceAdapter;
-import tbSimple.tbSimple_android_service.VoidInterfaceServiceFactory;
+import tbSimple.tbSimple_android_service.VoidInterfaceServiceProvider;
 import tbSimple.tbSimple_android_service.VoidInterfaceServiceStarter;
 
 //import message type and parcelabe types
@@ -139,7 +139,7 @@ public class TbSimpleTestServiceApp extends Activity implements IVoidInterfaceEv
         stub_service = new Intent(this, VoidInterfaceServiceAdapter.class);
         this.startService(stub_service);
         Log.i(TAG, "Service started with stub backend");
-        mBackend = VoidInterfaceServiceAdapter.setService(VoidInterfaceServiceFactory.get());
+        mBackend = VoidInterfaceServiceAdapter.setService(VoidInterfaceServiceProvider.get());
         mBackend.addEventListener(this);
     }
 

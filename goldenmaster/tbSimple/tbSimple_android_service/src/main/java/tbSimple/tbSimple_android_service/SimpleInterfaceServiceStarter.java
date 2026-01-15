@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbSimple.tbSimple_api.ISimpleInterfaceEventListener;
 import tbSimple.tbSimple_api.ISimpleInterface;
 import tbSimple.tbSimple_android_service.SimpleInterfaceServiceAdapter;
-import tbSimple.tbSimple_android_service.SimpleInterfaceServiceFactory;
+import tbSimple.tbSimple_android_service.SimpleInterfaceServiceProvider;
 import tbSimple.tbSimple_android_service.SimpleInterfaceBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class SimpleInterfaceServiceStarter
         }
 
         @Override
-        protected ISimpleInterfaceServiceFactory getFactoryInstance()
+        protected ISimpleInterfaceServiceProvider getProviderInstance()
         {
-            return SimpleInterfaceServiceFactory.get();
+            return SimpleInterfaceServiceProvider.get();
         }
 
         @Override

@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import counter.counter_api.ICounterEventListener;
 import counter.counter_api.ICounter;
 import counter.counter_android_service.CounterServiceAdapter;
-import counter.counter_android_service.ICounterServiceFactory;
+import counter.counter_android_service.ICounterServiceProvider;
 
 
 // This class describes the lifetime of an android server and controlls the provided to the server backend lifetime.
@@ -33,7 +33,7 @@ public abstract class CounterBaseServiceLifecycleController
     private AtomicBoolean mIsBound = new AtomicBoolean(false);
 
     protected abstract String getTag();
-    protected abstract ICounterServiceFactory getFactoryInstance();
+    protected abstract ICounterServiceProvider getProviderInstance();
     protected abstract void onAndroidServiceConnectionStatusChanged(boolean status);
 
     public ICounter start(Context context)
@@ -49,7 +49,7 @@ public abstract class CounterBaseServiceLifecycleController
         Intent androidService = new Intent(mContext, CounterServiceAdapter.class);
         mContext.startService(androidService);
         Log.i(getTag(), "starter: Explicitly requested service start.");
-        ICounter service =  CounterServiceAdapter.setService(getFactoryInstance());
+        ICounter service =  CounterServiceAdapter.setService(getProviderInstance());
         bind(androidService);
         return service;
     }
@@ -73,8 +73,8 @@ public abstract class CounterBaseServiceLifecycleController
         {
             Log.e(getTag(), "cannot stop the service, cannot make intent for CounterServiceAdapter.class");
         }
-        ICounterServiceFactory factory = getFactoryInstance();
-        factory.clear();
+        ICounterServiceProvider provider = getProviderInstance();
+        provider.clear();
         CounterServiceAdapter.setService(null);
     }
 

@@ -41,7 +41,7 @@ import tbSame2.tbSame2_impl.SameEnum2InterfaceService;
 
 
 import tbSame2.tbSame2_api.ISameStruct2InterfaceEventListener;
-import tbSame2.tbSame2_android_service.ISameStruct2InterfaceServiceFactory;
+import tbSame2.tbSame2_android_service.ISameStruct2InterfaceServiceProvider;
 import tbSame2.tbSame2_api.ISameStruct2Interface;
 import tbSame2.tbSame2_api.AbstractSameStruct2Interface;
 import tbSame2.tbSame2_android_messenger.SameStruct2InterfaceMessageType;
@@ -116,7 +116,7 @@ public class SameStruct2InterfaceServiceAdapterTest
     private Messenger clientReplyMessenger;
     private String mTestConnectionID1 = "MyTestClient";
    
-    private ISameStruct2InterfaceServiceFactory serviceFactory = mock(ISameStruct2InterfaceServiceFactory.class);
+    private ISameStruct2InterfaceServiceProvider ServiceProvider = mock(ISameStruct2InterfaceServiceProvider.class);
     private ISameStruct2InterfaceMessageGetter clientMessagesStorage = mock(ISameStruct2InterfaceMessageGetter.class);
 
     ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
@@ -214,8 +214,8 @@ public class SameStruct2InterfaceServiceAdapterTest
         IBinder binder = (IBinder)testedServiceAdapter.onBind(new Intent()) ;
         mServiceMessenger = new Messenger(binder);
 
-        when(serviceFactory.getServiceInstance()).thenReturn(backendServiceMock);
-        testedServiceAdapter.setService(serviceFactory);
+        when(ServiceProvider.getServiceInstance()).thenReturn(backendServiceMock);
+        testedServiceAdapter.setService(ServiceProvider);
 		// service adapter should pass its member to backend to get notifications on changes.
         ArgumentCaptor<ISameStruct2InterfaceEventListener> eventListnerCaptor = ArgumentCaptor.forClass(ISameStruct2InterfaceEventListener.class);
         inOrderBackendService.verify(backendServiceMock, times(1)).addEventListener(eventListnerCaptor.capture());

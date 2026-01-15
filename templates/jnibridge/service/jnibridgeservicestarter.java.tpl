@@ -7,7 +7,7 @@ import android.content.Intent;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel .Interface.Name }}ServiceAdapter;
-import {{camel .Module.Name}}.{{camel .Module.Name}}jniservice.{{Camel .Interface.Name}}JniServiceFactory;
+import {{camel .Module.Name}}.{{camel .Module.Name}}jniservice.{{Camel .Interface.Name}}JniServiceProvider;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel .Interface.Name }}BaseServiceLifecycleController;
 
 
@@ -29,9 +29,9 @@ public class {{Camel .Interface.Name }}JniServiceStarter
         }
 
         @Override
-        protected I{{Camel .Interface.Name}}ServiceFactory getFactoryInstance()
+        protected I{{Camel .Interface.Name}}ServiceProvider getProviderInstance()
         {
-            return {{Camel .Interface.Name}}JniServiceFactory.get();
+            return {{Camel .Interface.Name}}JniServiceProvider.get();
         }
 
         //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,

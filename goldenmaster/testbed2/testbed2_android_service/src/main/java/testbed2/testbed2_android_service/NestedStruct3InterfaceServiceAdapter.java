@@ -22,7 +22,7 @@ import testbed2.testbed2_api.NestedStruct3;
 import testbed2.testbed2_android_messenger.NestedStruct3Parcelable;
 
 import testbed2.testbed2_api.INestedStruct3InterfaceEventListener;
-import testbed2.testbed2_android_service.INestedStruct3InterfaceServiceFactory;
+import testbed2.testbed2_android_service.INestedStruct3InterfaceServiceProvider;
 import testbed2.testbed2_api.INestedStruct3Interface;
 import testbed2.testbed2_api.AbstractNestedStruct3Interface;
 import testbed2.testbed2_android_messenger.NestedStruct3InterfaceMessageType;
@@ -37,23 +37,23 @@ public class NestedStruct3InterfaceServiceAdapter extends Service
 	 */
 	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
-	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// Lifetime of mBackendService and its accessibility through mServiceProvider is controlled by the backend provide with setService function.
 	// The ServiceAdapter is just a user of the backend. 
 	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static INestedStruct3Interface mBackendService;
-	private static INestedStruct3InterfaceServiceFactory mServiceFactory;
+	private static INestedStruct3InterfaceServiceProvider mServiceProvider;
 	private static final Object sBackendMutex = new Object();
 
 	public NestedStruct3InterfaceServiceAdapter()
 	{
 	}
 
-	public static INestedStruct3Interface setService(INestedStruct3InterfaceServiceFactory factory)
+	public static INestedStruct3Interface setService(INestedStruct3InterfaceServiceProvider serviceProvider)
 	{
-		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory != factory)
+		Log.i(TAG, "Setting serviceProvider: " + serviceProvider);
+		if (mServiceProvider != serviceProvider)
 		{
-			mServiceFactory = factory;
+			mServiceProvider = serviceProvider;
 		}
 		synchronized (sBackendMutex)
 		{
@@ -62,9 +62,9 @@ public class NestedStruct3InterfaceServiceAdapter extends Service
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			if (mServiceFactory != null)
+			if (mServiceProvider != null)
 			{
-				mBackendService = mServiceFactory.getServiceInstance();
+				mBackendService = mServiceProvider.getServiceInstance();
 				if (mHandler != null)
 				{
 					Log.i(TAG, "LIFECYCLE: setService(NestedStruct3Interface) called. For handler " + mHandler);

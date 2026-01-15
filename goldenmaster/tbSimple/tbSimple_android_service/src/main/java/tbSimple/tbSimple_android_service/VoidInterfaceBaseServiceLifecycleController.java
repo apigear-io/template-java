@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import tbSimple.tbSimple_api.IVoidInterfaceEventListener;
 import tbSimple.tbSimple_api.IVoidInterface;
 import tbSimple.tbSimple_android_service.VoidInterfaceServiceAdapter;
-import tbSimple.tbSimple_android_service.IVoidInterfaceServiceFactory;
+import tbSimple.tbSimple_android_service.IVoidInterfaceServiceProvider;
 
 
 // This class describes the lifetime of an android server and controlls the provided to the server backend lifetime.
@@ -33,7 +33,7 @@ public abstract class VoidInterfaceBaseServiceLifecycleController
     private AtomicBoolean mIsBound = new AtomicBoolean(false);
 
     protected abstract String getTag();
-    protected abstract IVoidInterfaceServiceFactory getFactoryInstance();
+    protected abstract IVoidInterfaceServiceProvider getProviderInstance();
     protected abstract void onAndroidServiceConnectionStatusChanged(boolean status);
 
     public IVoidInterface start(Context context)
@@ -49,7 +49,7 @@ public abstract class VoidInterfaceBaseServiceLifecycleController
         Intent androidService = new Intent(mContext, VoidInterfaceServiceAdapter.class);
         mContext.startService(androidService);
         Log.i(getTag(), "starter: Explicitly requested service start.");
-        IVoidInterface service =  VoidInterfaceServiceAdapter.setService(getFactoryInstance());
+        IVoidInterface service =  VoidInterfaceServiceAdapter.setService(getProviderInstance());
         bind(androidService);
         return service;
     }
@@ -73,8 +73,8 @@ public abstract class VoidInterfaceBaseServiceLifecycleController
         {
             Log.e(getTag(), "cannot stop the service, cannot make intent for VoidInterfaceServiceAdapter.class");
         }
-        IVoidInterfaceServiceFactory factory = getFactoryInstance();
-        factory.clear();
+        IVoidInterfaceServiceProvider provider = getProviderInstance();
+        provider.clear();
         VoidInterfaceServiceAdapter.setService(null);
     }
 

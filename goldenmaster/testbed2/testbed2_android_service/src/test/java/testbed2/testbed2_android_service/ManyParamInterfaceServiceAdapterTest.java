@@ -53,7 +53,7 @@ import testbed2.testbed2_impl.NestedStruct3InterfaceService;
 
 
 import testbed2.testbed2_api.IManyParamInterfaceEventListener;
-import testbed2.testbed2_android_service.IManyParamInterfaceServiceFactory;
+import testbed2.testbed2_android_service.IManyParamInterfaceServiceProvider;
 import testbed2.testbed2_api.IManyParamInterface;
 import testbed2.testbed2_api.AbstractManyParamInterface;
 import testbed2.testbed2_android_messenger.ManyParamInterfaceMessageType;
@@ -128,7 +128,7 @@ public class ManyParamInterfaceServiceAdapterTest
     private Messenger clientReplyMessenger;
     private String mTestConnectionID1 = "MyTestClient";
    
-    private IManyParamInterfaceServiceFactory serviceFactory = mock(IManyParamInterfaceServiceFactory.class);
+    private IManyParamInterfaceServiceProvider ServiceProvider = mock(IManyParamInterfaceServiceProvider.class);
     private IManyParamInterfaceMessageGetter clientMessagesStorage = mock(IManyParamInterfaceMessageGetter.class);
 
     ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
@@ -235,8 +235,8 @@ public class ManyParamInterfaceServiceAdapterTest
         IBinder binder = (IBinder)testedServiceAdapter.onBind(new Intent()) ;
         mServiceMessenger = new Messenger(binder);
 
-        when(serviceFactory.getServiceInstance()).thenReturn(backendServiceMock);
-        testedServiceAdapter.setService(serviceFactory);
+        when(ServiceProvider.getServiceInstance()).thenReturn(backendServiceMock);
+        testedServiceAdapter.setService(ServiceProvider);
 		// service adapter should pass its member to backend to get notifications on changes.
         ArgumentCaptor<IManyParamInterfaceEventListener> eventListnerCaptor = ArgumentCaptor.forClass(IManyParamInterfaceEventListener.class);
         inOrderBackendService.verify(backendServiceMock, times(1)).addEventListener(eventListnerCaptor.capture());

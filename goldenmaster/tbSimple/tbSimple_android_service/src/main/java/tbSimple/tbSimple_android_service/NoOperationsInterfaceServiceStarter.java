@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbSimple.tbSimple_api.INoOperationsInterfaceEventListener;
 import tbSimple.tbSimple_api.INoOperationsInterface;
 import tbSimple.tbSimple_android_service.NoOperationsInterfaceServiceAdapter;
-import tbSimple.tbSimple_android_service.NoOperationsInterfaceServiceFactory;
+import tbSimple.tbSimple_android_service.NoOperationsInterfaceServiceProvider;
 import tbSimple.tbSimple_android_service.NoOperationsInterfaceBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class NoOperationsInterfaceServiceStarter
         }
 
         @Override
-        protected INoOperationsInterfaceServiceFactory getFactoryInstance()
+        protected INoOperationsInterfaceServiceProvider getProviderInstance()
         {
-            return NoOperationsInterfaceServiceFactory.get();
+            return NoOperationsInterfaceServiceProvider.get();
         }
 
         @Override

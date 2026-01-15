@@ -14,7 +14,7 @@ import android.content.Intent;
 //TODO for each interface there coudl be a tab? now only first one is added
 
 import tbSame2.tbSame2_android_service.SameStruct1InterfaceServiceAdapter;
-import tbSame2.tbSame2_android_service.SameStruct1InterfaceServiceFactory;
+import tbSame2.tbSame2_android_service.SameStruct1InterfaceServiceProvider;
 import tbSame2.tbSame2_android_service.SameStruct1InterfaceServiceStarter;
 
 //import message type and parcelabe types
@@ -153,7 +153,7 @@ public class TbSame2TestServiceApp extends Activity implements ISameStruct1Inter
         stub_service = new Intent(this, SameStruct1InterfaceServiceAdapter.class);
         this.startService(stub_service);
         Log.i(TAG, "Service started with stub backend");
-        mBackend = SameStruct1InterfaceServiceAdapter.setService(SameStruct1InterfaceServiceFactory.get());
+        mBackend = SameStruct1InterfaceServiceAdapter.setService(SameStruct1InterfaceServiceProvider.get());
         mBackend.addEventListener(this);
     }
 

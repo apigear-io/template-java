@@ -18,7 +18,7 @@ import tbNames.tbNames_api.EnumWithUnderScores;
 import tbNames.tbNames_android_messenger.EnumWithUnderScoresParcelable;
 
 import tbNames.tbNames_api.INamEsEventListener;
-import tbNames.tbNames_android_service.INamEsServiceFactory;
+import tbNames.tbNames_android_service.INamEsServiceProvider;
 import tbNames.tbNames_api.INamEs;
 import tbNames.tbNames_api.AbstractNamEs;
 import tbNames.tbNames_android_messenger.NamEsMessageType;
@@ -33,23 +33,23 @@ public class NamEsServiceAdapter extends Service
 	 */
 	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
-	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// Lifetime of mBackendService and its accessibility through mServiceProvider is controlled by the backend provide with setService function.
 	// The ServiceAdapter is just a user of the backend. 
 	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static INamEs mBackendService;
-	private static INamEsServiceFactory mServiceFactory;
+	private static INamEsServiceProvider mServiceProvider;
 	private static final Object sBackendMutex = new Object();
 
 	public NamEsServiceAdapter()
 	{
 	}
 
-	public static INamEs setService(INamEsServiceFactory factory)
+	public static INamEs setService(INamEsServiceProvider serviceProvider)
 	{
-		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory != factory)
+		Log.i(TAG, "Setting serviceProvider: " + serviceProvider);
+		if (mServiceProvider != serviceProvider)
 		{
-			mServiceFactory = factory;
+			mServiceProvider = serviceProvider;
 		}
 		synchronized (sBackendMutex)
 		{
@@ -58,9 +58,9 @@ public class NamEsServiceAdapter extends Service
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			if (mServiceFactory != null)
+			if (mServiceProvider != null)
 			{
-				mBackendService = mServiceFactory.getServiceInstance();
+				mBackendService = mServiceProvider.getServiceInstance();
 				if (mHandler != null)
 				{
 					Log.i(TAG, "LIFECYCLE: setService(NamEs) called. For handler " + mHandler);

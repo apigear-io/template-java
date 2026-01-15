@@ -26,7 +26,7 @@ import tbNames.tbNames_impl.NamEsService;
 
 
 import tbNames.tbNames_api.INamEsEventListener;
-import tbNames.tbNames_android_service.INamEsServiceFactory;
+import tbNames.tbNames_android_service.INamEsServiceProvider;
 import tbNames.tbNames_api.INamEs;
 import tbNames.tbNames_api.AbstractNamEs;
 import tbNames.tbNames_android_messenger.NamEsMessageType;
@@ -101,7 +101,7 @@ public class NamEsServiceAdapterTest
     private Messenger clientReplyMessenger;
     private String mTestConnectionID1 = "MyTestClient";
    
-    private INamEsServiceFactory serviceFactory = mock(INamEsServiceFactory.class);
+    private INamEsServiceProvider ServiceProvider = mock(INamEsServiceProvider.class);
     private INamEsMessageGetter clientMessagesStorage = mock(INamEsMessageGetter.class);
 
     ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
@@ -209,8 +209,8 @@ public class NamEsServiceAdapterTest
         IBinder binder = (IBinder)testedServiceAdapter.onBind(new Intent()) ;
         mServiceMessenger = new Messenger(binder);
 
-        when(serviceFactory.getServiceInstance()).thenReturn(backendServiceMock);
-        testedServiceAdapter.setService(serviceFactory);
+        when(ServiceProvider.getServiceInstance()).thenReturn(backendServiceMock);
+        testedServiceAdapter.setService(ServiceProvider);
 		// service adapter should pass its member to backend to get notifications on changes.
         ArgumentCaptor<INamEsEventListener> eventListnerCaptor = ArgumentCaptor.forClass(INamEsEventListener.class);
         inOrderBackendService.verify(backendServiceMock, times(1)).addEventListener(eventListnerCaptor.capture());

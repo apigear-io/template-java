@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbSimple.tbSimple_api.IVoidInterfaceEventListener;
 import tbSimple.tbSimple_api.IVoidInterface;
 import tbSimple.tbSimple_android_service.VoidInterfaceServiceAdapter;
-import tbSimple.tbSimple_android_service.VoidInterfaceServiceFactory;
+import tbSimple.tbSimple_android_service.VoidInterfaceServiceProvider;
 import tbSimple.tbSimple_android_service.VoidInterfaceBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class VoidInterfaceServiceStarter
         }
 
         @Override
-        protected IVoidInterfaceServiceFactory getFactoryInstance()
+        protected IVoidInterfaceServiceProvider getProviderInstance()
         {
-            return VoidInterfaceServiceFactory.get();
+            return VoidInterfaceServiceProvider.get();
         }
 
         @Override

@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import testbed1.testbed1_api.IStructInterfaceEventListener;
 import testbed1.testbed1_api.IStructInterface;
 import testbed1.testbed1_android_service.StructInterfaceServiceAdapter;
-import testbed1.testbed1_android_service.IStructInterfaceServiceFactory;
+import testbed1.testbed1_android_service.IStructInterfaceServiceProvider;
 
 
 // This class describes the lifetime of an android server and controlls the provided to the server backend lifetime.
@@ -33,7 +33,7 @@ public abstract class StructInterfaceBaseServiceLifecycleController
     private AtomicBoolean mIsBound = new AtomicBoolean(false);
 
     protected abstract String getTag();
-    protected abstract IStructInterfaceServiceFactory getFactoryInstance();
+    protected abstract IStructInterfaceServiceProvider getProviderInstance();
     protected abstract void onAndroidServiceConnectionStatusChanged(boolean status);
 
     public IStructInterface start(Context context)
@@ -49,7 +49,7 @@ public abstract class StructInterfaceBaseServiceLifecycleController
         Intent androidService = new Intent(mContext, StructInterfaceServiceAdapter.class);
         mContext.startService(androidService);
         Log.i(getTag(), "starter: Explicitly requested service start.");
-        IStructInterface service =  StructInterfaceServiceAdapter.setService(getFactoryInstance());
+        IStructInterface service =  StructInterfaceServiceAdapter.setService(getProviderInstance());
         bind(androidService);
         return service;
     }
@@ -73,8 +73,8 @@ public abstract class StructInterfaceBaseServiceLifecycleController
         {
             Log.e(getTag(), "cannot stop the service, cannot make intent for StructInterfaceServiceAdapter.class");
         }
-        IStructInterfaceServiceFactory factory = getFactoryInstance();
-        factory.clear();
+        IStructInterfaceServiceProvider provider = getProviderInstance();
+        provider.clear();
         StructInterfaceServiceAdapter.setService(null);
     }
 

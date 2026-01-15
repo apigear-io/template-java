@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbIfaceimport.tbIfaceimport_api.IEmptyIfEventListener;
 import tbIfaceimport.tbIfaceimport_api.IEmptyIf;
 import tbIfaceimport.tbIfaceimport_android_service.EmptyIfServiceAdapter;
-import tbIfaceimport.tbIfaceimport_android_service.EmptyIfServiceFactory;
+import tbIfaceimport.tbIfaceimport_android_service.EmptyIfServiceProvider;
 import tbIfaceimport.tbIfaceimport_android_service.EmptyIfBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class EmptyIfServiceStarter
         }
 
         @Override
-        protected IEmptyIfServiceFactory getFactoryInstance()
+        protected IEmptyIfServiceProvider getProviderInstance()
         {
-            return EmptyIfServiceFactory.get();
+            return EmptyIfServiceProvider.get();
         }
 
         @Override

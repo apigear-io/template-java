@@ -32,7 +32,7 @@ import tbEnum.tbEnum_impl.EnumInterfaceService;
 
 
 import tbEnum.tbEnum_api.IEnumInterfaceEventListener;
-import tbEnum.tbEnum_android_service.IEnumInterfaceServiceFactory;
+import tbEnum.tbEnum_android_service.IEnumInterfaceServiceProvider;
 import tbEnum.tbEnum_api.IEnumInterface;
 import tbEnum.tbEnum_api.AbstractEnumInterface;
 import tbEnum.tbEnum_android_messenger.EnumInterfaceMessageType;
@@ -107,7 +107,7 @@ public class EnumInterfaceServiceAdapterTest
     private Messenger clientReplyMessenger;
     private String mTestConnectionID1 = "MyTestClient";
    
-    private IEnumInterfaceServiceFactory serviceFactory = mock(IEnumInterfaceServiceFactory.class);
+    private IEnumInterfaceServiceProvider ServiceProvider = mock(IEnumInterfaceServiceProvider.class);
     private IEnumInterfaceMessageGetter clientMessagesStorage = mock(IEnumInterfaceMessageGetter.class);
 
     ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
@@ -215,8 +215,8 @@ public class EnumInterfaceServiceAdapterTest
         IBinder binder = (IBinder)testedServiceAdapter.onBind(new Intent()) ;
         mServiceMessenger = new Messenger(binder);
 
-        when(serviceFactory.getServiceInstance()).thenReturn(backendServiceMock);
-        testedServiceAdapter.setService(serviceFactory);
+        when(ServiceProvider.getServiceInstance()).thenReturn(backendServiceMock);
+        testedServiceAdapter.setService(ServiceProvider);
 		// service adapter should pass its member to backend to get notifications on changes.
         ArgumentCaptor<IEnumInterfaceEventListener> eventListnerCaptor = ArgumentCaptor.forClass(IEnumInterfaceEventListener.class);
         inOrderBackendService.verify(backendServiceMock, times(1)).addEventListener(eventListnerCaptor.capture());

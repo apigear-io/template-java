@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import tbNames.tbNames_api.INamEsEventListener;
 import tbNames.tbNames_api.INamEs;
 import tbNames.tbNames_android_service.NamEsServiceAdapter;
-import tbNames.tbNames_android_service.INamEsServiceFactory;
+import tbNames.tbNames_android_service.INamEsServiceProvider;
 
 
 // This class describes the lifetime of an android server and controlls the provided to the server backend lifetime.
@@ -33,7 +33,7 @@ public abstract class NamEsBaseServiceLifecycleController
     private AtomicBoolean mIsBound = new AtomicBoolean(false);
 
     protected abstract String getTag();
-    protected abstract INamEsServiceFactory getFactoryInstance();
+    protected abstract INamEsServiceProvider getProviderInstance();
     protected abstract void onAndroidServiceConnectionStatusChanged(boolean status);
 
     public INamEs start(Context context)
@@ -49,7 +49,7 @@ public abstract class NamEsBaseServiceLifecycleController
         Intent androidService = new Intent(mContext, NamEsServiceAdapter.class);
         mContext.startService(androidService);
         Log.i(getTag(), "starter: Explicitly requested service start.");
-        INamEs service =  NamEsServiceAdapter.setService(getFactoryInstance());
+        INamEs service =  NamEsServiceAdapter.setService(getProviderInstance());
         bind(androidService);
         return service;
     }
@@ -73,8 +73,8 @@ public abstract class NamEsBaseServiceLifecycleController
         {
             Log.e(getTag(), "cannot stop the service, cannot make intent for NamEsServiceAdapter.class");
         }
-        INamEsServiceFactory factory = getFactoryInstance();
-        factory.clear();
+        INamEsServiceProvider provider = getProviderInstance();
+        provider.clear();
         NamEsServiceAdapter.setService(null);
     }
 

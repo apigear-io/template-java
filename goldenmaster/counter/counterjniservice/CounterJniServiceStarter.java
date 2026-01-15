@@ -7,7 +7,7 @@ import android.content.Intent;
 import counter.counter_api.ICounterEventListener;
 import counter.counter_api.ICounter;
 import counter.counter_android_service.CounterServiceAdapter;
-import counter.counterjniservice.CounterJniServiceFactory;
+import counter.counterjniservice.CounterJniServiceProvider;
 import counter.counter_android_service.CounterBaseServiceLifecycleController;
 
 
@@ -29,9 +29,9 @@ public class CounterJniServiceStarter
         }
 
         @Override
-        protected ICounterServiceFactory getFactoryInstance()
+        protected ICounterServiceProvider getProviderInstance()
         {
-            return CounterJniServiceFactory.get();
+            return CounterJniServiceProvider.get();
         }
 
         //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,

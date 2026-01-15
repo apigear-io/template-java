@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import tbSame2.tbSame2_api.ISameEnum2InterfaceEventListener;
 import tbSame2.tbSame2_api.ISameEnum2Interface;
 import tbSame2.tbSame2_android_service.SameEnum2InterfaceServiceAdapter;
-import tbSame2.tbSame2_android_service.ISameEnum2InterfaceServiceFactory;
+import tbSame2.tbSame2_android_service.ISameEnum2InterfaceServiceProvider;
 
 
 // This class describes the lifetime of an android server and controlls the provided to the server backend lifetime.
@@ -33,7 +33,7 @@ public abstract class SameEnum2InterfaceBaseServiceLifecycleController
     private AtomicBoolean mIsBound = new AtomicBoolean(false);
 
     protected abstract String getTag();
-    protected abstract ISameEnum2InterfaceServiceFactory getFactoryInstance();
+    protected abstract ISameEnum2InterfaceServiceProvider getProviderInstance();
     protected abstract void onAndroidServiceConnectionStatusChanged(boolean status);
 
     public ISameEnum2Interface start(Context context)
@@ -49,7 +49,7 @@ public abstract class SameEnum2InterfaceBaseServiceLifecycleController
         Intent androidService = new Intent(mContext, SameEnum2InterfaceServiceAdapter.class);
         mContext.startService(androidService);
         Log.i(getTag(), "starter: Explicitly requested service start.");
-        ISameEnum2Interface service =  SameEnum2InterfaceServiceAdapter.setService(getFactoryInstance());
+        ISameEnum2Interface service =  SameEnum2InterfaceServiceAdapter.setService(getProviderInstance());
         bind(androidService);
         return service;
     }
@@ -73,8 +73,8 @@ public abstract class SameEnum2InterfaceBaseServiceLifecycleController
         {
             Log.e(getTag(), "cannot stop the service, cannot make intent for SameEnum2InterfaceServiceAdapter.class");
         }
-        ISameEnum2InterfaceServiceFactory factory = getFactoryInstance();
-        factory.clear();
+        ISameEnum2InterfaceServiceProvider provider = getProviderInstance();
+        provider.clear();
         SameEnum2InterfaceServiceAdapter.setService(null);
     }
 

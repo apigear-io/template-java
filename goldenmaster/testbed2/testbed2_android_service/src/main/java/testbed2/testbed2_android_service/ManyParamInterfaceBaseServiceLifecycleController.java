@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import testbed2.testbed2_api.IManyParamInterfaceEventListener;
 import testbed2.testbed2_api.IManyParamInterface;
 import testbed2.testbed2_android_service.ManyParamInterfaceServiceAdapter;
-import testbed2.testbed2_android_service.IManyParamInterfaceServiceFactory;
+import testbed2.testbed2_android_service.IManyParamInterfaceServiceProvider;
 
 
 // This class describes the lifetime of an android server and controlls the provided to the server backend lifetime.
@@ -33,7 +33,7 @@ public abstract class ManyParamInterfaceBaseServiceLifecycleController
     private AtomicBoolean mIsBound = new AtomicBoolean(false);
 
     protected abstract String getTag();
-    protected abstract IManyParamInterfaceServiceFactory getFactoryInstance();
+    protected abstract IManyParamInterfaceServiceProvider getProviderInstance();
     protected abstract void onAndroidServiceConnectionStatusChanged(boolean status);
 
     public IManyParamInterface start(Context context)
@@ -49,7 +49,7 @@ public abstract class ManyParamInterfaceBaseServiceLifecycleController
         Intent androidService = new Intent(mContext, ManyParamInterfaceServiceAdapter.class);
         mContext.startService(androidService);
         Log.i(getTag(), "starter: Explicitly requested service start.");
-        IManyParamInterface service =  ManyParamInterfaceServiceAdapter.setService(getFactoryInstance());
+        IManyParamInterface service =  ManyParamInterfaceServiceAdapter.setService(getProviderInstance());
         bind(androidService);
         return service;
     }
@@ -73,8 +73,8 @@ public abstract class ManyParamInterfaceBaseServiceLifecycleController
         {
             Log.e(getTag(), "cannot stop the service, cannot make intent for ManyParamInterfaceServiceAdapter.class");
         }
-        IManyParamInterfaceServiceFactory factory = getFactoryInstance();
-        factory.clear();
+        IManyParamInterfaceServiceProvider provider = getProviderInstance();
+        provider.clear();
         ManyParamInterfaceServiceAdapter.setService(null);
     }
 

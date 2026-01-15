@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbSimple.tbSimple_api.INoPropertiesInterfaceEventListener;
 import tbSimple.tbSimple_api.INoPropertiesInterface;
 import tbSimple.tbSimple_android_service.NoPropertiesInterfaceServiceAdapter;
-import tbSimple.tbSimplejniservice.NoPropertiesInterfaceJniServiceFactory;
+import tbSimple.tbSimplejniservice.NoPropertiesInterfaceJniServiceProvider;
 import tbSimple.tbSimple_android_service.NoPropertiesInterfaceBaseServiceLifecycleController;
 
 
@@ -29,9 +29,9 @@ public class NoPropertiesInterfaceJniServiceStarter
         }
 
         @Override
-        protected INoPropertiesInterfaceServiceFactory getFactoryInstance()
+        protected INoPropertiesInterfaceServiceProvider getProviderInstance()
         {
-            return NoPropertiesInterfaceJniServiceFactory.get();
+            return NoPropertiesInterfaceJniServiceProvider.get();
         }
 
         //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,

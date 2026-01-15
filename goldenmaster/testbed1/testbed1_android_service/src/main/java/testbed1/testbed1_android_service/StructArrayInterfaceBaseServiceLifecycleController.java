@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import testbed1.testbed1_api.IStructArrayInterfaceEventListener;
 import testbed1.testbed1_api.IStructArrayInterface;
 import testbed1.testbed1_android_service.StructArrayInterfaceServiceAdapter;
-import testbed1.testbed1_android_service.IStructArrayInterfaceServiceFactory;
+import testbed1.testbed1_android_service.IStructArrayInterfaceServiceProvider;
 
 
 // This class describes the lifetime of an android server and controlls the provided to the server backend lifetime.
@@ -33,7 +33,7 @@ public abstract class StructArrayInterfaceBaseServiceLifecycleController
     private AtomicBoolean mIsBound = new AtomicBoolean(false);
 
     protected abstract String getTag();
-    protected abstract IStructArrayInterfaceServiceFactory getFactoryInstance();
+    protected abstract IStructArrayInterfaceServiceProvider getProviderInstance();
     protected abstract void onAndroidServiceConnectionStatusChanged(boolean status);
 
     public IStructArrayInterface start(Context context)
@@ -49,7 +49,7 @@ public abstract class StructArrayInterfaceBaseServiceLifecycleController
         Intent androidService = new Intent(mContext, StructArrayInterfaceServiceAdapter.class);
         mContext.startService(androidService);
         Log.i(getTag(), "starter: Explicitly requested service start.");
-        IStructArrayInterface service =  StructArrayInterfaceServiceAdapter.setService(getFactoryInstance());
+        IStructArrayInterface service =  StructArrayInterfaceServiceAdapter.setService(getProviderInstance());
         bind(androidService);
         return service;
     }
@@ -73,8 +73,8 @@ public abstract class StructArrayInterfaceBaseServiceLifecycleController
         {
             Log.e(getTag(), "cannot stop the service, cannot make intent for StructArrayInterfaceServiceAdapter.class");
         }
-        IStructArrayInterfaceServiceFactory factory = getFactoryInstance();
-        factory.clear();
+        IStructArrayInterfaceServiceProvider provider = getProviderInstance();
+        provider.clear();
         StructArrayInterfaceServiceAdapter.setService(null);
     }
 

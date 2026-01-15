@@ -7,7 +7,7 @@ import android.content.Intent;
 import testbed2.testbed2_api.IManyParamInterfaceEventListener;
 import testbed2.testbed2_api.IManyParamInterface;
 import testbed2.testbed2_android_service.ManyParamInterfaceServiceAdapter;
-import testbed2.testbed2_android_service.ManyParamInterfaceServiceFactory;
+import testbed2.testbed2_android_service.ManyParamInterfaceServiceProvider;
 import testbed2.testbed2_android_service.ManyParamInterfaceBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class ManyParamInterfaceServiceStarter
         }
 
         @Override
-        protected IManyParamInterfaceServiceFactory getFactoryInstance()
+        protected IManyParamInterfaceServiceProvider getProviderInstance()
         {
-            return ManyParamInterfaceServiceFactory.get();
+            return ManyParamInterfaceServiceProvider.get();
         }
 
         @Override

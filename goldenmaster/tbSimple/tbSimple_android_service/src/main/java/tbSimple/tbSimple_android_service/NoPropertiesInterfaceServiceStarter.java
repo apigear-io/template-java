@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbSimple.tbSimple_api.INoPropertiesInterfaceEventListener;
 import tbSimple.tbSimple_api.INoPropertiesInterface;
 import tbSimple.tbSimple_android_service.NoPropertiesInterfaceServiceAdapter;
-import tbSimple.tbSimple_android_service.NoPropertiesInterfaceServiceFactory;
+import tbSimple.tbSimple_android_service.NoPropertiesInterfaceServiceProvider;
 import tbSimple.tbSimple_android_service.NoPropertiesInterfaceBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class NoPropertiesInterfaceServiceStarter
         }
 
         @Override
-        protected INoPropertiesInterfaceServiceFactory getFactoryInstance()
+        protected INoPropertiesInterfaceServiceProvider getProviderInstance()
         {
-            return NoPropertiesInterfaceServiceFactory.get();
+            return NoPropertiesInterfaceServiceProvider.get();
         }
 
         @Override

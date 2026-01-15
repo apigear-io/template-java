@@ -24,7 +24,7 @@ import testbed1.testbed1_api.StructString;
 import testbed1.testbed1_android_messenger.StructStringParcelable;
 
 import testbed1.testbed1_api.IStructInterfaceEventListener;
-import testbed1.testbed1_android_service.IStructInterfaceServiceFactory;
+import testbed1.testbed1_android_service.IStructInterfaceServiceProvider;
 import testbed1.testbed1_api.IStructInterface;
 import testbed1.testbed1_api.AbstractStructInterface;
 import testbed1.testbed1_android_messenger.StructInterfaceMessageType;
@@ -39,23 +39,23 @@ public class StructInterfaceServiceAdapter extends Service
 	 */
 	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
-	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// Lifetime of mBackendService and its accessibility through mServiceProvider is controlled by the backend provide with setService function.
 	// The ServiceAdapter is just a user of the backend. 
 	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static IStructInterface mBackendService;
-	private static IStructInterfaceServiceFactory mServiceFactory;
+	private static IStructInterfaceServiceProvider mServiceProvider;
 	private static final Object sBackendMutex = new Object();
 
 	public StructInterfaceServiceAdapter()
 	{
 	}
 
-	public static IStructInterface setService(IStructInterfaceServiceFactory factory)
+	public static IStructInterface setService(IStructInterfaceServiceProvider serviceProvider)
 	{
-		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory != factory)
+		Log.i(TAG, "Setting serviceProvider: " + serviceProvider);
+		if (mServiceProvider != serviceProvider)
 		{
-			mServiceFactory = factory;
+			mServiceProvider = serviceProvider;
 		}
 		synchronized (sBackendMutex)
 		{
@@ -64,9 +64,9 @@ public class StructInterfaceServiceAdapter extends Service
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			if (mServiceFactory != null)
+			if (mServiceProvider != null)
 			{
-				mBackendService = mServiceFactory.getServiceInstance();
+				mBackendService = mServiceProvider.getServiceInstance();
 				if (mHandler != null)
 				{
 					Log.i(TAG, "LIFECYCLE: setService(StructInterface) called. For handler " + mHandler);

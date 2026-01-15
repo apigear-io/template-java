@@ -14,7 +14,7 @@ import android.content.Intent;
 //TODO for each interface there coudl be a tab? now only first one is added
 
 import tbNames.tbNames_android_service.NamEsServiceAdapter;
-import tbNames.tbNames_android_service.NamEsServiceFactory;
+import tbNames.tbNames_android_service.NamEsServiceProvider;
 import tbNames.tbNames_android_service.NamEsServiceStarter;
 
 //import message type and parcelabe types
@@ -196,7 +196,7 @@ public class TbNamesTestServiceApp extends Activity implements INamEsEventListen
         stub_service = new Intent(this, NamEsServiceAdapter.class);
         this.startService(stub_service);
         Log.i(TAG, "Service started with stub backend");
-        mBackend = NamEsServiceAdapter.setService(NamEsServiceFactory.get());
+        mBackend = NamEsServiceAdapter.setService(NamEsServiceProvider.get());
         mBackend.addEventListener(this);
     }
 

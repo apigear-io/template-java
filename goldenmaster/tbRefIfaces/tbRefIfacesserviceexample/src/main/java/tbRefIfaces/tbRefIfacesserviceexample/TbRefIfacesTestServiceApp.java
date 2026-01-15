@@ -14,7 +14,7 @@ import android.content.Intent;
 //TODO for each interface there coudl be a tab? now only first one is added
 
 import tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfServiceAdapter;
-import tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfServiceFactory;
+import tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfServiceProvider;
 import tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfServiceStarter;
 
 //import message type and parcelabe types
@@ -151,7 +151,7 @@ public class TbRefIfacesTestServiceApp extends Activity implements ISimpleLocalI
         stub_service = new Intent(this, SimpleLocalIfServiceAdapter.class);
         this.startService(stub_service);
         Log.i(TAG, "Service started with stub backend");
-        mBackend = SimpleLocalIfServiceAdapter.setService(SimpleLocalIfServiceFactory.get());
+        mBackend = SimpleLocalIfServiceAdapter.setService(SimpleLocalIfServiceProvider.get());
         mBackend.addEventListener(this);
     }
 

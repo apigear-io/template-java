@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbSame1.tbSame1_api.ISameStruct2InterfaceEventListener;
 import tbSame1.tbSame1_api.ISameStruct2Interface;
 import tbSame1.tbSame1_android_service.SameStruct2InterfaceServiceAdapter;
-import tbSame1.tbSame1jniservice.SameStruct2InterfaceJniServiceFactory;
+import tbSame1.tbSame1jniservice.SameStruct2InterfaceJniServiceProvider;
 import tbSame1.tbSame1_android_service.SameStruct2InterfaceBaseServiceLifecycleController;
 
 
@@ -29,9 +29,9 @@ public class SameStruct2InterfaceJniServiceStarter
         }
 
         @Override
-        protected ISameStruct2InterfaceServiceFactory getFactoryInstance()
+        protected ISameStruct2InterfaceServiceProvider getProviderInstance()
         {
-            return SameStruct2InterfaceJniServiceFactory.get();
+            return SameStruct2InterfaceJniServiceProvider.get();
         }
 
         //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,

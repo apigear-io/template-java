@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbSame2.tbSame2_api.ISameStruct1InterfaceEventListener;
 import tbSame2.tbSame2_api.ISameStruct1Interface;
 import tbSame2.tbSame2_android_service.SameStruct1InterfaceServiceAdapter;
-import tbSame2.tbSame2_android_service.SameStruct1InterfaceServiceFactory;
+import tbSame2.tbSame2_android_service.SameStruct1InterfaceServiceProvider;
 import tbSame2.tbSame2_android_service.SameStruct1InterfaceBaseServiceLifecycleController;
 
 
@@ -45,9 +45,9 @@ public class SameStruct1InterfaceServiceStarter
         }
 
         @Override
-        protected ISameStruct1InterfaceServiceFactory getFactoryInstance()
+        protected ISameStruct1InterfaceServiceProvider getProviderInstance()
         {
-            return SameStruct1InterfaceServiceFactory.get();
+            return SameStruct1InterfaceServiceProvider.get();
         }
 
         @Override

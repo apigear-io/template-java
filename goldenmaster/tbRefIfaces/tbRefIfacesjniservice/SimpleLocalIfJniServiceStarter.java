@@ -7,7 +7,7 @@ import android.content.Intent;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfServiceAdapter;
-import tbRefIfaces.tbRefIfacesjniservice.SimpleLocalIfJniServiceFactory;
+import tbRefIfaces.tbRefIfacesjniservice.SimpleLocalIfJniServiceProvider;
 import tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfBaseServiceLifecycleController;
 
 
@@ -29,9 +29,9 @@ public class SimpleLocalIfJniServiceStarter
         }
 
         @Override
-        protected ISimpleLocalIfServiceFactory getFactoryInstance()
+        protected ISimpleLocalIfServiceProvider getProviderInstance()
         {
-            return SimpleLocalIfJniServiceFactory.get();
+            return SimpleLocalIfJniServiceProvider.get();
         }
 
         //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,

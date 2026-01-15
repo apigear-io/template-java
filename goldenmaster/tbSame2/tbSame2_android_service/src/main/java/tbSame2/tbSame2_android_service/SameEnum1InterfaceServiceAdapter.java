@@ -18,7 +18,7 @@ import tbSame2.tbSame2_api.Enum1;
 import tbSame2.tbSame2_android_messenger.Enum1Parcelable;
 
 import tbSame2.tbSame2_api.ISameEnum1InterfaceEventListener;
-import tbSame2.tbSame2_android_service.ISameEnum1InterfaceServiceFactory;
+import tbSame2.tbSame2_android_service.ISameEnum1InterfaceServiceProvider;
 import tbSame2.tbSame2_api.ISameEnum1Interface;
 import tbSame2.tbSame2_api.AbstractSameEnum1Interface;
 import tbSame2.tbSame2_android_messenger.SameEnum1InterfaceMessageType;
@@ -33,23 +33,23 @@ public class SameEnum1InterfaceServiceAdapter extends Service
 	 */
 	private Messenger mMessenger;
 	private static IncomingHandler mHandler = null;
-	// Lifetime of mBackendService and its accessibility through mServiceFactory is controlled by the backend provide with setService function.
+	// Lifetime of mBackendService and its accessibility through mServiceProvider is controlled by the backend provide with setService function.
 	// The ServiceAdapter is just a user of the backend. 
 	// Use provided ServiceStarter classes and the start and stop functions for that.
 	private static ISameEnum1Interface mBackendService;
-	private static ISameEnum1InterfaceServiceFactory mServiceFactory;
+	private static ISameEnum1InterfaceServiceProvider mServiceProvider;
 	private static final Object sBackendMutex = new Object();
 
 	public SameEnum1InterfaceServiceAdapter()
 	{
 	}
 
-	public static ISameEnum1Interface setService(ISameEnum1InterfaceServiceFactory factory)
+	public static ISameEnum1Interface setService(ISameEnum1InterfaceServiceProvider serviceProvider)
 	{
-		Log.i(TAG, "Setting factory: " + factory);
-		if (mServiceFactory != factory)
+		Log.i(TAG, "Setting serviceProvider: " + serviceProvider);
+		if (mServiceProvider != serviceProvider)
 		{
-			mServiceFactory = factory;
+			mServiceProvider = serviceProvider;
 		}
 		synchronized (sBackendMutex)
 		{
@@ -58,9 +58,9 @@ public class SameEnum1InterfaceServiceAdapter extends Service
 				// remove old event listener (backend is about to change)
 				mBackendService.removeEventListener(mHandler);
 			}
-			if (mServiceFactory != null)
+			if (mServiceProvider != null)
 			{
-				mBackendService = mServiceFactory.getServiceInstance();
+				mBackendService = mServiceProvider.getServiceInstance();
 				if (mHandler != null)
 				{
 					Log.i(TAG, "LIFECYCLE: setService(SameEnum1Interface) called. For handler " + mHandler);

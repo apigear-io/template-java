@@ -27,7 +27,7 @@ import tbRefIfaces.tbRefIfaces_impl.ParentIfService;
 
 
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIfEventListener;
-import tbRefIfaces.tbRefIfaces_android_service.ISimpleLocalIfServiceFactory;
+import tbRefIfaces.tbRefIfaces_android_service.ISimpleLocalIfServiceProvider;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_api.AbstractSimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_android_messenger.SimpleLocalIfMessageType;
@@ -102,7 +102,7 @@ public class SimpleLocalIfServiceAdapterTest
     private Messenger clientReplyMessenger;
     private String mTestConnectionID1 = "MyTestClient";
    
-    private ISimpleLocalIfServiceFactory serviceFactory = mock(ISimpleLocalIfServiceFactory.class);
+    private ISimpleLocalIfServiceProvider ServiceProvider = mock(ISimpleLocalIfServiceProvider.class);
     private ISimpleLocalIfMessageGetter clientMessagesStorage = mock(ISimpleLocalIfMessageGetter.class);
 
     ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
@@ -191,8 +191,8 @@ public class SimpleLocalIfServiceAdapterTest
         IBinder binder = (IBinder)testedServiceAdapter.onBind(new Intent()) ;
         mServiceMessenger = new Messenger(binder);
 
-        when(serviceFactory.getServiceInstance()).thenReturn(backendServiceMock);
-        testedServiceAdapter.setService(serviceFactory);
+        when(ServiceProvider.getServiceInstance()).thenReturn(backendServiceMock);
+        testedServiceAdapter.setService(ServiceProvider);
 		// service adapter should pass its member to backend to get notifications on changes.
         ArgumentCaptor<ISimpleLocalIfEventListener> eventListnerCaptor = ArgumentCaptor.forClass(ISimpleLocalIfEventListener.class);
         inOrderBackendService.verify(backendServiceMock, times(1)).addEventListener(eventListnerCaptor.capture());

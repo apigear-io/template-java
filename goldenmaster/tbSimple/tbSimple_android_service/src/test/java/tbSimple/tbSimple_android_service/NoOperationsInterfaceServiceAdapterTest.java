@@ -42,7 +42,7 @@ import tbSimple.tbSimple_impl.EmptyInterfaceService;
 
 
 import tbSimple.tbSimple_api.INoOperationsInterfaceEventListener;
-import tbSimple.tbSimple_android_service.INoOperationsInterfaceServiceFactory;
+import tbSimple.tbSimple_android_service.INoOperationsInterfaceServiceProvider;
 import tbSimple.tbSimple_api.INoOperationsInterface;
 import tbSimple.tbSimple_api.AbstractNoOperationsInterface;
 import tbSimple.tbSimple_android_messenger.NoOperationsInterfaceMessageType;
@@ -117,7 +117,7 @@ public class NoOperationsInterfaceServiceAdapterTest
     private Messenger clientReplyMessenger;
     private String mTestConnectionID1 = "MyTestClient";
    
-    private INoOperationsInterfaceServiceFactory serviceFactory = mock(INoOperationsInterfaceServiceFactory.class);
+    private INoOperationsInterfaceServiceProvider ServiceProvider = mock(INoOperationsInterfaceServiceProvider.class);
     private INoOperationsInterfaceMessageGetter clientMessagesStorage = mock(INoOperationsInterfaceMessageGetter.class);
 
     ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
@@ -212,8 +212,8 @@ public class NoOperationsInterfaceServiceAdapterTest
         IBinder binder = (IBinder)testedServiceAdapter.onBind(new Intent()) ;
         mServiceMessenger = new Messenger(binder);
 
-        when(serviceFactory.getServiceInstance()).thenReturn(backendServiceMock);
-        testedServiceAdapter.setService(serviceFactory);
+        when(ServiceProvider.getServiceInstance()).thenReturn(backendServiceMock);
+        testedServiceAdapter.setService(ServiceProvider);
 		// service adapter should pass its member to backend to get notifications on changes.
         ArgumentCaptor<INoOperationsInterfaceEventListener> eventListnerCaptor = ArgumentCaptor.forClass(INoOperationsInterfaceEventListener.class);
         inOrderBackendService.verify(backendServiceMock, times(1)).addEventListener(eventListnerCaptor.capture());

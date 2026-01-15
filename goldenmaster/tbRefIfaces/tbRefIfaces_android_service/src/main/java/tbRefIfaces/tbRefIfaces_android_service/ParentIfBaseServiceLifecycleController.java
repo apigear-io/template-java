@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import tbRefIfaces.tbRefIfaces_api.IParentIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.IParentIf;
 import tbRefIfaces.tbRefIfaces_android_service.ParentIfServiceAdapter;
-import tbRefIfaces.tbRefIfaces_android_service.IParentIfServiceFactory;
+import tbRefIfaces.tbRefIfaces_android_service.IParentIfServiceProvider;
 
 
 // This class describes the lifetime of an android server and controlls the provided to the server backend lifetime.
@@ -33,7 +33,7 @@ public abstract class ParentIfBaseServiceLifecycleController
     private AtomicBoolean mIsBound = new AtomicBoolean(false);
 
     protected abstract String getTag();
-    protected abstract IParentIfServiceFactory getFactoryInstance();
+    protected abstract IParentIfServiceProvider getProviderInstance();
     protected abstract void onAndroidServiceConnectionStatusChanged(boolean status);
 
     public IParentIf start(Context context)
@@ -49,7 +49,7 @@ public abstract class ParentIfBaseServiceLifecycleController
         Intent androidService = new Intent(mContext, ParentIfServiceAdapter.class);
         mContext.startService(androidService);
         Log.i(getTag(), "starter: Explicitly requested service start.");
-        IParentIf service =  ParentIfServiceAdapter.setService(getFactoryInstance());
+        IParentIf service =  ParentIfServiceAdapter.setService(getProviderInstance());
         bind(androidService);
         return service;
     }
@@ -73,8 +73,8 @@ public abstract class ParentIfBaseServiceLifecycleController
         {
             Log.e(getTag(), "cannot stop the service, cannot make intent for ParentIfServiceAdapter.class");
         }
-        IParentIfServiceFactory factory = getFactoryInstance();
-        factory.clear();
+        IParentIfServiceProvider provider = getProviderInstance();
+        provider.clear();
         ParentIfServiceAdapter.setService(null);
     }
 

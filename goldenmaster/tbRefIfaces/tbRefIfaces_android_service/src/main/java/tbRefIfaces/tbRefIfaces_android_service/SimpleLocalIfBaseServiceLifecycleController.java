@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfServiceAdapter;
-import tbRefIfaces.tbRefIfaces_android_service.ISimpleLocalIfServiceFactory;
+import tbRefIfaces.tbRefIfaces_android_service.ISimpleLocalIfServiceProvider;
 
 
 // This class describes the lifetime of an android server and controlls the provided to the server backend lifetime.
@@ -33,7 +33,7 @@ public abstract class SimpleLocalIfBaseServiceLifecycleController
     private AtomicBoolean mIsBound = new AtomicBoolean(false);
 
     protected abstract String getTag();
-    protected abstract ISimpleLocalIfServiceFactory getFactoryInstance();
+    protected abstract ISimpleLocalIfServiceProvider getProviderInstance();
     protected abstract void onAndroidServiceConnectionStatusChanged(boolean status);
 
     public ISimpleLocalIf start(Context context)
@@ -49,7 +49,7 @@ public abstract class SimpleLocalIfBaseServiceLifecycleController
         Intent androidService = new Intent(mContext, SimpleLocalIfServiceAdapter.class);
         mContext.startService(androidService);
         Log.i(getTag(), "starter: Explicitly requested service start.");
-        ISimpleLocalIf service =  SimpleLocalIfServiceAdapter.setService(getFactoryInstance());
+        ISimpleLocalIf service =  SimpleLocalIfServiceAdapter.setService(getProviderInstance());
         bind(androidService);
         return service;
     }
@@ -73,8 +73,8 @@ public abstract class SimpleLocalIfBaseServiceLifecycleController
         {
             Log.e(getTag(), "cannot stop the service, cannot make intent for SimpleLocalIfServiceAdapter.class");
         }
-        ISimpleLocalIfServiceFactory factory = getFactoryInstance();
-        factory.clear();
+        ISimpleLocalIfServiceProvider provider = getProviderInstance();
+        provider.clear();
         SimpleLocalIfServiceAdapter.setService(null);
     }
 

@@ -24,7 +24,7 @@ import tbIfaceimport.tbIfaceimport_impl.EmptyIfService;
 
 
 import tbIfaceimport.tbIfaceimport_api.IEmptyIfEventListener;
-import tbIfaceimport.tbIfaceimport_android_service.IEmptyIfServiceFactory;
+import tbIfaceimport.tbIfaceimport_android_service.IEmptyIfServiceProvider;
 import tbIfaceimport.tbIfaceimport_api.IEmptyIf;
 import tbIfaceimport.tbIfaceimport_api.AbstractEmptyIf;
 import tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfMessageType;
@@ -99,7 +99,7 @@ public class EmptyIfServiceAdapterTest
     private Messenger clientReplyMessenger;
     private String mTestConnectionID1 = "MyTestClient";
    
-    private IEmptyIfServiceFactory serviceFactory = mock(IEmptyIfServiceFactory.class);
+    private IEmptyIfServiceProvider ServiceProvider = mock(IEmptyIfServiceProvider.class);
     private IEmptyIfMessageGetter clientMessagesStorage = mock(IEmptyIfMessageGetter.class);
 
     ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
@@ -182,8 +182,8 @@ public class EmptyIfServiceAdapterTest
         IBinder binder = (IBinder)testedServiceAdapter.onBind(new Intent()) ;
         mServiceMessenger = new Messenger(binder);
 
-        when(serviceFactory.getServiceInstance()).thenReturn(backendServiceMock);
-        testedServiceAdapter.setService(serviceFactory);
+        when(ServiceProvider.getServiceInstance()).thenReturn(backendServiceMock);
+        testedServiceAdapter.setService(ServiceProvider);
 		// service adapter should pass its member to backend to get notifications on changes.
         ArgumentCaptor<IEmptyIfEventListener> eventListnerCaptor = ArgumentCaptor.forClass(IEmptyIfEventListener.class);
         inOrderBackendService.verify(backendServiceMock, times(1)).addEventListener(eventListnerCaptor.capture());

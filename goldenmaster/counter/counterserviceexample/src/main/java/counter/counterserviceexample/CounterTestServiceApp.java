@@ -14,7 +14,7 @@ import android.content.Intent;
 //TODO for each interface there coudl be a tab? now only first one is added
 
 import counter.counter_android_service.CounterServiceAdapter;
-import counter.counter_android_service.CounterServiceFactory;
+import counter.counter_android_service.CounterServiceProvider;
 import counter.counter_android_service.CounterServiceStarter;
 
 //import message type and parcelabe types
@@ -187,7 +187,7 @@ public class CounterTestServiceApp extends Activity implements ICounterEventList
         stub_service = new Intent(this, CounterServiceAdapter.class);
         this.startService(stub_service);
         Log.i(TAG, "Service started with stub backend");
-        mBackend = CounterServiceAdapter.setService(CounterServiceFactory.get());
+        mBackend = CounterServiceAdapter.setService(CounterServiceProvider.get());
         mBackend.addEventListener(this);
     }
 

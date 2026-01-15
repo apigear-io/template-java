@@ -16,7 +16,7 @@ import android.content.Intent;
 {{- $Interface := (index .Module.Interfaces 0) }}
 
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel $Interface.Name }}ServiceAdapter;
-import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel $Interface.Name}}ServiceFactory;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel $Interface.Name}}ServiceProvider;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel $Interface.Name }}ServiceStarter;
 
 //import message type and parcelabe types
@@ -217,7 +217,7 @@ public class {{Camel .Module.Name}}TestServiceApp extends Activity implements I{
         stub_service = new Intent(this, {{Camel $Interface.Name }}ServiceAdapter.class);
         this.startService(stub_service);
         Log.i(TAG, "Service started with stub backend");
-        mBackend = {{Camel $Interface.Name }}ServiceAdapter.setService({{Camel $Interface.Name }}ServiceFactory.get());
+        mBackend = {{Camel $Interface.Name }}ServiceAdapter.setService({{Camel $Interface.Name }}ServiceProvider.get());
         mBackend.addEventListener(this);
     }
 
