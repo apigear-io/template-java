@@ -4,4 +4,5 @@ import tbSimple.tbSimple_api.IEmptyInterface;
 
 public interface IEmptyInterfaceServiceFactory {
     public  IEmptyInterface getServiceInstance();
+    public void clear();
 }

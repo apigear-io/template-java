@@ -108,8 +108,11 @@ public class SameEnum1InterfaceServiceAdapter extends Service
 	{
 		Log.i(TAG, "LIFECYCLE: SameEnum1InterfaceService::onStartCommand called. context = " + this +
 				", startID=" + startId);
-
-		return START_STICKY;
+		// START_STICKY means the android may or may not at some point restart the service.
+		// It will also not give any feedback if it did, hence we don't want the android to try.
+		// Check the LifecycleController classes for the notification about service lifecycle events.
+		// Use it to start it again.
+		return START_NOT_STICKY;
 	}
 
 	// execution of the service will stop on calling this method

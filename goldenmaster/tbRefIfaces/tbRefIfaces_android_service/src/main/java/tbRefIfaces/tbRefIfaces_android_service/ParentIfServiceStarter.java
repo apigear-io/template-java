@@ -8,37 +8,72 @@ import tbRefIfaces.tbRefIfaces_api.IParentIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.IParentIf;
 import tbRefIfaces.tbRefIfaces_android_service.ParentIfServiceAdapter;
 import tbRefIfaces.tbRefIfaces_android_service.ParentIfServiceFactory;
+import tbRefIfaces.tbRefIfaces_android_service.ParentIfBaseServiceLifecycleController;
 
 
-//Use this class to manage lifetime of android server with Implemented backend service from package tbRefIfaces.tbRefIfaces_impl; .
-public class ParentIfServiceStarter {
-
-    static Intent androidService = null;
+// This class provides concrete implementation, for ParentIfBaseServiceLifecycleController,
+// which describes the lifetime of an android server and controlls the provided to the server backend lifetime.
+// This class sets type of backend provided to the service Implemented backend service from package tbRefIfaces.tbRefIfaces_impl;.
+// Please see ParentIfBaseServiceLifecycleController for the details.
+public class ParentIfServiceStarter
+{
     private static final String TAG = "ParentIfStarter";
 
-    public static IParentIf start(Context context)
+    public interface ServiceLifecycleListener
     {
-        stop(context);
-        androidService = new Intent(context, ParentIfServiceAdapter.class);
-        Log.i(TAG, "starter: created intent");
-        context.startService(androidService);
-        Log.i(TAG, "starter: started intent (service) ");
-        ParentIfServiceFactory factory = ParentIfServiceFactory.get();
-        Log.i(TAG, "starter: factory set for ParentIfServiceFactory");
-        return ParentIfServiceAdapter.setService(factory);
+        // Called when service connects successfully.
+        void onServiceConnected();
+
+        // Called when service is killed by Android or crashed, not when stopped.
+        void onServiceDied();
     }
 
-    public static void stop(Context context)
+    private static ServiceLifecycleListener sListener = null;
+
+    public static void setServiceLifecycleListener(ServiceLifecycleListener listener)
     {
-        ParentIfServiceFactory factory = ParentIfServiceFactory.get();
-        factory.clear();
-        ParentIfServiceAdapter.setService(null);
-        if (androidService != null)
+        sListener = listener;
+    }
+
+    private static final ParentIfBaseServiceLifecycleController IMPL =
+    new ParentIfBaseServiceLifecycleController()
+    {
+        @Override
+        protected String getTag()
         {
-            Log.i(TAG, "starter: stop the service");
-            context.stopService(androidService);
+            return TAG;
         }
-        androidService = null;
+
+        @Override
+        protected IParentIfServiceFactory getFactoryInstance()
+        {
+            return ParentIfServiceFactory.get();
+        }
+
+        @Override
+        protected void onAndroidServiceConnectionStatusChanged(boolean status)
+        {
+            if (sListener != null)
+            {
+                if (status)
+                {
+                    sListener.onServiceConnected();
+                }
+                else
+                {
+                    sListener.onServiceDied();
+                }
+            }
+        }
+    };
+
+    public static IParentIf start(Context ctx)
+    {
+        return IMPL.start(ctx);
     }
 
+    public static void stop(Context ctx)
+    {
+        IMPL.stop(ctx);
+    }
 }

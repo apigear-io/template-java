@@ -8,37 +8,72 @@ import tbSame2.tbSame2_api.ISameStruct1InterfaceEventListener;
 import tbSame2.tbSame2_api.ISameStruct1Interface;
 import tbSame2.tbSame2_android_service.SameStruct1InterfaceServiceAdapter;
 import tbSame2.tbSame2_android_service.SameStruct1InterfaceServiceFactory;
+import tbSame2.tbSame2_android_service.SameStruct1InterfaceBaseServiceLifecycleController;
 
 
-//Use this class to manage lifetime of android server with Implemented backend service from package tbSame2.tbSame2_impl; .
-public class SameStruct1InterfaceServiceStarter {
-
-    static Intent androidService = null;
+// This class provides concrete implementation, for SameStruct1InterfaceBaseServiceLifecycleController,
+// which describes the lifetime of an android server and controlls the provided to the server backend lifetime.
+// This class sets type of backend provided to the service Implemented backend service from package tbSame2.tbSame2_impl;.
+// Please see SameStruct1InterfaceBaseServiceLifecycleController for the details.
+public class SameStruct1InterfaceServiceStarter
+{
     private static final String TAG = "SameStruct1InterfaceStarter";
 
-    public static ISameStruct1Interface start(Context context)
+    public interface ServiceLifecycleListener
     {
-        stop(context);
-        androidService = new Intent(context, SameStruct1InterfaceServiceAdapter.class);
-        Log.i(TAG, "starter: created intent");
-        context.startService(androidService);
-        Log.i(TAG, "starter: started intent (service) ");
-        SameStruct1InterfaceServiceFactory factory = SameStruct1InterfaceServiceFactory.get();
-        Log.i(TAG, "starter: factory set for SameStruct1InterfaceServiceFactory");
-        return SameStruct1InterfaceServiceAdapter.setService(factory);
+        // Called when service connects successfully.
+        void onServiceConnected();
+
+        // Called when service is killed by Android or crashed, not when stopped.
+        void onServiceDied();
     }
 
-    public static void stop(Context context)
+    private static ServiceLifecycleListener sListener = null;
+
+    public static void setServiceLifecycleListener(ServiceLifecycleListener listener)
     {
-        SameStruct1InterfaceServiceFactory factory = SameStruct1InterfaceServiceFactory.get();
-        factory.clear();
-        SameStruct1InterfaceServiceAdapter.setService(null);
-        if (androidService != null)
+        sListener = listener;
+    }
+
+    private static final SameStruct1InterfaceBaseServiceLifecycleController IMPL =
+    new SameStruct1InterfaceBaseServiceLifecycleController()
+    {
+        @Override
+        protected String getTag()
         {
-            Log.i(TAG, "starter: stop the service");
-            context.stopService(androidService);
+            return TAG;
         }
-        androidService = null;
+
+        @Override
+        protected ISameStruct1InterfaceServiceFactory getFactoryInstance()
+        {
+            return SameStruct1InterfaceServiceFactory.get();
+        }
+
+        @Override
+        protected void onAndroidServiceConnectionStatusChanged(boolean status)
+        {
+            if (sListener != null)
+            {
+                if (status)
+                {
+                    sListener.onServiceConnected();
+                }
+                else
+                {
+                    sListener.onServiceDied();
+                }
+            }
+        }
+    };
+
+    public static ISameStruct1Interface start(Context ctx)
+    {
+        return IMPL.start(ctx);
     }
 
+    public static void stop(Context ctx)
+    {
+        IMPL.stop(ctx);
+    }
 }

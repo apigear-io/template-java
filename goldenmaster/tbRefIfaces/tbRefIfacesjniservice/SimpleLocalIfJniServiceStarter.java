@@ -8,38 +8,51 @@ import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfServiceAdapter;
 import tbRefIfaces.tbRefIfacesjniservice.SimpleLocalIfJniServiceFactory;
+import tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfBaseServiceLifecycleController;
 
 
-//Use this class to manage lifetime of android server with native backend service.
-public class SimpleLocalIfJniServiceStarter {
-
-    static Intent androidService = null;
+// This class provides concrete implementation, for SimpleLocalIfBaseServiceLifecycleController,
+// which describes the lifetime of an android server and controlls the provided to the server backend lifetime.
+// This class sets type of backend provided to the service to Jni Bridge type.
+// Please see SimpleLocalIfBaseServiceLifecycleController for the details.
+public class SimpleLocalIfJniServiceStarter
+{
     private static final String TAG = "SimpleLocalIfJniStarter";
 
-
-
-    public static ISimpleLocalIf start(Context context) {
-        stop(context);
-        androidService = new Intent(context, SimpleLocalIfServiceAdapter.class);
-        Log.i(TAG, "starter: created intent");
-        context.startService(androidService);
-        Log.i(TAG, "starter: started intent (service) ");
-        SimpleLocalIfJniServiceFactory factory = SimpleLocalIfJniServiceFactory.get();
-        Log.i(TAG, "starter: factory set for SimpleLocalIfJniServiceFactory");
-        return SimpleLocalIfServiceAdapter.setService(factory);
-    }
-
-    public static void stop(Context context)
+    private static final SimpleLocalIfBaseServiceLifecycleController IMPL =
+    new SimpleLocalIfBaseServiceLifecycleController()
     {
-        SimpleLocalIfJniServiceFactory factory = SimpleLocalIfJniServiceFactory.get();
-        factory.clear();
-        SimpleLocalIfServiceAdapter.setService(null);
-        if (androidService != null)
+        @Override
+        protected String getTag()
         {
-            Log.i(TAG, "starter: stop the service");
-            context.stopService(androidService);
+            return TAG;
         }
-        androidService = null;
+
+        @Override
+        protected ISimpleLocalIfServiceFactory getFactoryInstance()
+        {
+            return SimpleLocalIfJniServiceFactory.get();
+        }
+
+        //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,
+        // but the onAndroidServiceConnectionStatusChanged(false) is called only when the service died,
+        // not when it is stopped explicitly.
+        @Override
+        protected void onAndroidServiceConnectionStatusChanged(boolean status)
+        {
+            nativeOnAndroidServiceConnectionStatusChanged(status);
+        }
+    };
+
+    public static ISimpleLocalIf start(Context ctx)
+    {
+        return IMPL.start(ctx);
     }
 
+    public static void stop(Context ctx)
+    {
+        IMPL.stop(ctx);
+    }
+
+    private static native void nativeOnAndroidServiceConnectionStatusChanged(boolean status);
 }

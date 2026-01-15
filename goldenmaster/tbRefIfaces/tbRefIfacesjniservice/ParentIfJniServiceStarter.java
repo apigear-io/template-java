@@ -8,38 +8,51 @@ import tbRefIfaces.tbRefIfaces_api.IParentIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.IParentIf;
 import tbRefIfaces.tbRefIfaces_android_service.ParentIfServiceAdapter;
 import tbRefIfaces.tbRefIfacesjniservice.ParentIfJniServiceFactory;
+import tbRefIfaces.tbRefIfaces_android_service.ParentIfBaseServiceLifecycleController;
 
 
-//Use this class to manage lifetime of android server with native backend service.
-public class ParentIfJniServiceStarter {
-
-    static Intent androidService = null;
+// This class provides concrete implementation, for ParentIfBaseServiceLifecycleController,
+// which describes the lifetime of an android server and controlls the provided to the server backend lifetime.
+// This class sets type of backend provided to the service to Jni Bridge type.
+// Please see ParentIfBaseServiceLifecycleController for the details.
+public class ParentIfJniServiceStarter
+{
     private static final String TAG = "ParentIfJniStarter";
 
-
-
-    public static IParentIf start(Context context) {
-        stop(context);
-        androidService = new Intent(context, ParentIfServiceAdapter.class);
-        Log.i(TAG, "starter: created intent");
-        context.startService(androidService);
-        Log.i(TAG, "starter: started intent (service) ");
-        ParentIfJniServiceFactory factory = ParentIfJniServiceFactory.get();
-        Log.i(TAG, "starter: factory set for ParentIfJniServiceFactory");
-        return ParentIfServiceAdapter.setService(factory);
-    }
-
-    public static void stop(Context context)
+    private static final ParentIfBaseServiceLifecycleController IMPL =
+    new ParentIfBaseServiceLifecycleController()
     {
-        ParentIfJniServiceFactory factory = ParentIfJniServiceFactory.get();
-        factory.clear();
-        ParentIfServiceAdapter.setService(null);
-        if (androidService != null)
+        @Override
+        protected String getTag()
         {
-            Log.i(TAG, "starter: stop the service");
-            context.stopService(androidService);
+            return TAG;
         }
-        androidService = null;
+
+        @Override
+        protected IParentIfServiceFactory getFactoryInstance()
+        {
+            return ParentIfJniServiceFactory.get();
+        }
+
+        //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,
+        // but the onAndroidServiceConnectionStatusChanged(false) is called only when the service died,
+        // not when it is stopped explicitly.
+        @Override
+        protected void onAndroidServiceConnectionStatusChanged(boolean status)
+        {
+            nativeOnAndroidServiceConnectionStatusChanged(status);
+        }
+    };
+
+    public static IParentIf start(Context ctx)
+    {
+        return IMPL.start(ctx);
     }
 
+    public static void stop(Context ctx)
+    {
+        IMPL.stop(ctx);
+    }
+
+    private static native void nativeOnAndroidServiceConnectionStatusChanged(boolean status);
 }

@@ -8,38 +8,51 @@ import counter.counter_api.ICounterEventListener;
 import counter.counter_api.ICounter;
 import counter.counter_android_service.CounterServiceAdapter;
 import counter.counterjniservice.CounterJniServiceFactory;
+import counter.counter_android_service.CounterBaseServiceLifecycleController;
 
 
-//Use this class to manage lifetime of android server with native backend service.
-public class CounterJniServiceStarter {
-
-    static Intent androidService = null;
+// This class provides concrete implementation, for CounterBaseServiceLifecycleController,
+// which describes the lifetime of an android server and controlls the provided to the server backend lifetime.
+// This class sets type of backend provided to the service to Jni Bridge type.
+// Please see CounterBaseServiceLifecycleController for the details.
+public class CounterJniServiceStarter
+{
     private static final String TAG = "CounterJniStarter";
 
-
-
-    public static ICounter start(Context context) {
-        stop(context);
-        androidService = new Intent(context, CounterServiceAdapter.class);
-        Log.i(TAG, "starter: created intent");
-        context.startService(androidService);
-        Log.i(TAG, "starter: started intent (service) ");
-        CounterJniServiceFactory factory = CounterJniServiceFactory.get();
-        Log.i(TAG, "starter: factory set for CounterJniServiceFactory");
-        return CounterServiceAdapter.setService(factory);
-    }
-
-    public static void stop(Context context)
+    private static final CounterBaseServiceLifecycleController IMPL =
+    new CounterBaseServiceLifecycleController()
     {
-        CounterJniServiceFactory factory = CounterJniServiceFactory.get();
-        factory.clear();
-        CounterServiceAdapter.setService(null);
-        if (androidService != null)
+        @Override
+        protected String getTag()
         {
-            Log.i(TAG, "starter: stop the service");
-            context.stopService(androidService);
+            return TAG;
         }
-        androidService = null;
+
+        @Override
+        protected ICounterServiceFactory getFactoryInstance()
+        {
+            return CounterJniServiceFactory.get();
+        }
+
+        //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,
+        // but the onAndroidServiceConnectionStatusChanged(false) is called only when the service died,
+        // not when it is stopped explicitly.
+        @Override
+        protected void onAndroidServiceConnectionStatusChanged(boolean status)
+        {
+            nativeOnAndroidServiceConnectionStatusChanged(status);
+        }
+    };
+
+    public static ICounter start(Context ctx)
+    {
+        return IMPL.start(ctx);
     }
 
+    public static void stop(Context ctx)
+    {
+        IMPL.stop(ctx);
+    }
+
+    private static native void nativeOnAndroidServiceConnectionStatusChanged(boolean status);
 }

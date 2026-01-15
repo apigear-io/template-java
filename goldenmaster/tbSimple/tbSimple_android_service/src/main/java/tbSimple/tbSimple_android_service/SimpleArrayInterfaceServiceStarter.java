@@ -8,37 +8,72 @@ import tbSimple.tbSimple_api.ISimpleArrayInterfaceEventListener;
 import tbSimple.tbSimple_api.ISimpleArrayInterface;
 import tbSimple.tbSimple_android_service.SimpleArrayInterfaceServiceAdapter;
 import tbSimple.tbSimple_android_service.SimpleArrayInterfaceServiceFactory;
+import tbSimple.tbSimple_android_service.SimpleArrayInterfaceBaseServiceLifecycleController;
 
 
-//Use this class to manage lifetime of android server with Implemented backend service from package tbSimple.tbSimple_impl; .
-public class SimpleArrayInterfaceServiceStarter {
-
-    static Intent androidService = null;
+// This class provides concrete implementation, for SimpleArrayInterfaceBaseServiceLifecycleController,
+// which describes the lifetime of an android server and controlls the provided to the server backend lifetime.
+// This class sets type of backend provided to the service Implemented backend service from package tbSimple.tbSimple_impl;.
+// Please see SimpleArrayInterfaceBaseServiceLifecycleController for the details.
+public class SimpleArrayInterfaceServiceStarter
+{
     private static final String TAG = "SimpleArrayInterfaceStarter";
 
-    public static ISimpleArrayInterface start(Context context)
+    public interface ServiceLifecycleListener
     {
-        stop(context);
-        androidService = new Intent(context, SimpleArrayInterfaceServiceAdapter.class);
-        Log.i(TAG, "starter: created intent");
-        context.startService(androidService);
-        Log.i(TAG, "starter: started intent (service) ");
-        SimpleArrayInterfaceServiceFactory factory = SimpleArrayInterfaceServiceFactory.get();
-        Log.i(TAG, "starter: factory set for SimpleArrayInterfaceServiceFactory");
-        return SimpleArrayInterfaceServiceAdapter.setService(factory);
+        // Called when service connects successfully.
+        void onServiceConnected();
+
+        // Called when service is killed by Android or crashed, not when stopped.
+        void onServiceDied();
     }
 
-    public static void stop(Context context)
+    private static ServiceLifecycleListener sListener = null;
+
+    public static void setServiceLifecycleListener(ServiceLifecycleListener listener)
     {
-        SimpleArrayInterfaceServiceFactory factory = SimpleArrayInterfaceServiceFactory.get();
-        factory.clear();
-        SimpleArrayInterfaceServiceAdapter.setService(null);
-        if (androidService != null)
+        sListener = listener;
+    }
+
+    private static final SimpleArrayInterfaceBaseServiceLifecycleController IMPL =
+    new SimpleArrayInterfaceBaseServiceLifecycleController()
+    {
+        @Override
+        protected String getTag()
         {
-            Log.i(TAG, "starter: stop the service");
-            context.stopService(androidService);
+            return TAG;
         }
-        androidService = null;
+
+        @Override
+        protected ISimpleArrayInterfaceServiceFactory getFactoryInstance()
+        {
+            return SimpleArrayInterfaceServiceFactory.get();
+        }
+
+        @Override
+        protected void onAndroidServiceConnectionStatusChanged(boolean status)
+        {
+            if (sListener != null)
+            {
+                if (status)
+                {
+                    sListener.onServiceConnected();
+                }
+                else
+                {
+                    sListener.onServiceDied();
+                }
+            }
+        }
+    };
+
+    public static ISimpleArrayInterface start(Context ctx)
+    {
+        return IMPL.start(ctx);
     }
 
+    public static void stop(Context ctx)
+    {
+        IMPL.stop(ctx);
+    }
 }

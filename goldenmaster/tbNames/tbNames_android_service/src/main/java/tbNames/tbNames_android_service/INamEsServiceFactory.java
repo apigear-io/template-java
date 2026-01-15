@@ -4,4 +4,5 @@ import tbNames.tbNames_api.INamEs;
 
 public interface INamEsServiceFactory {
     public  INamEs getServiceInstance();
+    public void clear();
 }

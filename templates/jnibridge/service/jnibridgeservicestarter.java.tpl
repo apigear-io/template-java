@@ -8,38 +8,51 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Nam
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel .Interface.Name }}ServiceAdapter;
 import {{camel .Module.Name}}.{{camel .Module.Name}}jniservice.{{Camel .Interface.Name}}JniServiceFactory;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel .Interface.Name }}BaseServiceLifecycleController;
 
 
-//Use this class to manage lifetime of android server with native backend service.
-public class {{Camel .Interface.Name }}JniServiceStarter {
-
-    static Intent androidService = null;
+// This class provides concrete implementation, for {{Camel .Interface.Name }}BaseServiceLifecycleController,
+// which describes the lifetime of an android server and controlls the provided to the server backend lifetime.
+// This class sets type of backend provided to the service to Jni Bridge type.
+// Please see {{Camel .Interface.Name }}BaseServiceLifecycleController for the details.
+public class {{Camel .Interface.Name }}JniServiceStarter
+{
     private static final String TAG = "{{Camel .Interface.Name }}JniStarter";
 
-
-
-    public static I{{Camel .Interface.Name }} start(Context context) {
-        stop(context);
-        androidService = new Intent(context, {{Camel .Interface.Name }}ServiceAdapter.class);
-        Log.i(TAG, "starter: created intent");
-        context.startService(androidService);
-        Log.i(TAG, "starter: started intent (service) ");
-        {{Camel .Interface.Name}}JniServiceFactory factory = {{Camel .Interface.Name}}JniServiceFactory.get();
-        Log.i(TAG, "starter: factory set for {{Camel .Interface.Name}}JniServiceFactory");
-        return {{Camel .Interface.Name }}ServiceAdapter.setService(factory);
-    }
-
-    public static void stop(Context context)
+    private static final {{Camel .Interface.Name }}BaseServiceLifecycleController IMPL =
+    new {{Camel .Interface.Name }}BaseServiceLifecycleController()
     {
-        {{Camel .Interface.Name}}JniServiceFactory factory = {{Camel .Interface.Name}}JniServiceFactory.get();
-        factory.clear();
-        {{Camel .Interface.Name }}ServiceAdapter.setService(null);
-        if (androidService != null)
+        @Override
+        protected String getTag()
         {
-            Log.i(TAG, "starter: stop the service");
-            context.stopService(androidService);
+            return TAG;
         }
-        androidService = null;
+
+        @Override
+        protected I{{Camel .Interface.Name}}ServiceFactory getFactoryInstance()
+        {
+            return {{Camel .Interface.Name}}JniServiceFactory.get();
+        }
+
+        //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,
+        // but the onAndroidServiceConnectionStatusChanged(false) is called only when the service died,
+        // not when it is stopped explicitly.
+        @Override
+        protected void onAndroidServiceConnectionStatusChanged(boolean status)
+        {
+            nativeOnAndroidServiceConnectionStatusChanged(status);
+        }
+    };
+
+    public static I{{Camel .Interface.Name }} start(Context ctx)
+    {
+        return IMPL.start(ctx);
     }
 
+    public static void stop(Context ctx)
+    {
+        IMPL.stop(ctx);
+    }
+
+    private static native void nativeOnAndroidServiceConnectionStatusChanged(boolean status);
 }

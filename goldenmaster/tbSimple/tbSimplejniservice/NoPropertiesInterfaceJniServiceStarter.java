@@ -8,38 +8,51 @@ import tbSimple.tbSimple_api.INoPropertiesInterfaceEventListener;
 import tbSimple.tbSimple_api.INoPropertiesInterface;
 import tbSimple.tbSimple_android_service.NoPropertiesInterfaceServiceAdapter;
 import tbSimple.tbSimplejniservice.NoPropertiesInterfaceJniServiceFactory;
+import tbSimple.tbSimple_android_service.NoPropertiesInterfaceBaseServiceLifecycleController;
 
 
-//Use this class to manage lifetime of android server with native backend service.
-public class NoPropertiesInterfaceJniServiceStarter {
-
-    static Intent androidService = null;
+// This class provides concrete implementation, for NoPropertiesInterfaceBaseServiceLifecycleController,
+// which describes the lifetime of an android server and controlls the provided to the server backend lifetime.
+// This class sets type of backend provided to the service to Jni Bridge type.
+// Please see NoPropertiesInterfaceBaseServiceLifecycleController for the details.
+public class NoPropertiesInterfaceJniServiceStarter
+{
     private static final String TAG = "NoPropertiesInterfaceJniStarter";
 
-
-
-    public static INoPropertiesInterface start(Context context) {
-        stop(context);
-        androidService = new Intent(context, NoPropertiesInterfaceServiceAdapter.class);
-        Log.i(TAG, "starter: created intent");
-        context.startService(androidService);
-        Log.i(TAG, "starter: started intent (service) ");
-        NoPropertiesInterfaceJniServiceFactory factory = NoPropertiesInterfaceJniServiceFactory.get();
-        Log.i(TAG, "starter: factory set for NoPropertiesInterfaceJniServiceFactory");
-        return NoPropertiesInterfaceServiceAdapter.setService(factory);
-    }
-
-    public static void stop(Context context)
+    private static final NoPropertiesInterfaceBaseServiceLifecycleController IMPL =
+    new NoPropertiesInterfaceBaseServiceLifecycleController()
     {
-        NoPropertiesInterfaceJniServiceFactory factory = NoPropertiesInterfaceJniServiceFactory.get();
-        factory.clear();
-        NoPropertiesInterfaceServiceAdapter.setService(null);
-        if (androidService != null)
+        @Override
+        protected String getTag()
         {
-            Log.i(TAG, "starter: stop the service");
-            context.stopService(androidService);
+            return TAG;
         }
-        androidService = null;
+
+        @Override
+        protected INoPropertiesInterfaceServiceFactory getFactoryInstance()
+        {
+            return NoPropertiesInterfaceJniServiceFactory.get();
+        }
+
+        //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,
+        // but the onAndroidServiceConnectionStatusChanged(false) is called only when the service died,
+        // not when it is stopped explicitly.
+        @Override
+        protected void onAndroidServiceConnectionStatusChanged(boolean status)
+        {
+            nativeOnAndroidServiceConnectionStatusChanged(status);
+        }
+    };
+
+    public static INoPropertiesInterface start(Context ctx)
+    {
+        return IMPL.start(ctx);
     }
 
+    public static void stop(Context ctx)
+    {
+        IMPL.stop(ctx);
+    }
+
+    private static native void nativeOnAndroidServiceConnectionStatusChanged(boolean status);
 }

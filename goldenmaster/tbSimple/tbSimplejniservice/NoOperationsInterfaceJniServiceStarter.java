@@ -8,38 +8,51 @@ import tbSimple.tbSimple_api.INoOperationsInterfaceEventListener;
 import tbSimple.tbSimple_api.INoOperationsInterface;
 import tbSimple.tbSimple_android_service.NoOperationsInterfaceServiceAdapter;
 import tbSimple.tbSimplejniservice.NoOperationsInterfaceJniServiceFactory;
+import tbSimple.tbSimple_android_service.NoOperationsInterfaceBaseServiceLifecycleController;
 
 
-//Use this class to manage lifetime of android server with native backend service.
-public class NoOperationsInterfaceJniServiceStarter {
-
-    static Intent androidService = null;
+// This class provides concrete implementation, for NoOperationsInterfaceBaseServiceLifecycleController,
+// which describes the lifetime of an android server and controlls the provided to the server backend lifetime.
+// This class sets type of backend provided to the service to Jni Bridge type.
+// Please see NoOperationsInterfaceBaseServiceLifecycleController for the details.
+public class NoOperationsInterfaceJniServiceStarter
+{
     private static final String TAG = "NoOperationsInterfaceJniStarter";
 
-
-
-    public static INoOperationsInterface start(Context context) {
-        stop(context);
-        androidService = new Intent(context, NoOperationsInterfaceServiceAdapter.class);
-        Log.i(TAG, "starter: created intent");
-        context.startService(androidService);
-        Log.i(TAG, "starter: started intent (service) ");
-        NoOperationsInterfaceJniServiceFactory factory = NoOperationsInterfaceJniServiceFactory.get();
-        Log.i(TAG, "starter: factory set for NoOperationsInterfaceJniServiceFactory");
-        return NoOperationsInterfaceServiceAdapter.setService(factory);
-    }
-
-    public static void stop(Context context)
+    private static final NoOperationsInterfaceBaseServiceLifecycleController IMPL =
+    new NoOperationsInterfaceBaseServiceLifecycleController()
     {
-        NoOperationsInterfaceJniServiceFactory factory = NoOperationsInterfaceJniServiceFactory.get();
-        factory.clear();
-        NoOperationsInterfaceServiceAdapter.setService(null);
-        if (androidService != null)
+        @Override
+        protected String getTag()
         {
-            Log.i(TAG, "starter: stop the service");
-            context.stopService(androidService);
+            return TAG;
         }
-        androidService = null;
+
+        @Override
+        protected INoOperationsInterfaceServiceFactory getFactoryInstance()
+        {
+            return NoOperationsInterfaceJniServiceFactory.get();
+        }
+
+        //Important note, onAndroidServiceConnectionStatusChanged(true) is always called when service starts,
+        // but the onAndroidServiceConnectionStatusChanged(false) is called only when the service died,
+        // not when it is stopped explicitly.
+        @Override
+        protected void onAndroidServiceConnectionStatusChanged(boolean status)
+        {
+            nativeOnAndroidServiceConnectionStatusChanged(status);
+        }
+    };
+
+    public static INoOperationsInterface start(Context ctx)
+    {
+        return IMPL.start(ctx);
     }
 
+    public static void stop(Context ctx)
+    {
+        IMPL.stop(ctx);
+    }
+
+    private static native void nativeOnAndroidServiceConnectionStatusChanged(boolean status);
 }
