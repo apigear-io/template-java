@@ -20,7 +20,7 @@ import java.util.Arrays;
     }
 
     protected Vector3DParcelable(Parcel in) {
-    this.data = new Vector3D();
+        this.data = new Vector3D();
         data.x = in.readFloat();
         data.y = in.readFloat();
         data.z = in.readFloat();

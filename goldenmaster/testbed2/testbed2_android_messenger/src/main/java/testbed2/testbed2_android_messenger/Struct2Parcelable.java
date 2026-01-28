@@ -20,7 +20,7 @@ import java.util.Arrays;
     }
 
     protected Struct2Parcelable(Parcel in) {
-    this.data = new Struct2();
+        this.data = new Struct2();
         data.field1 = in.readInt();
         data.field2 = in.readInt();
     }

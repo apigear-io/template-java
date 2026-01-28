@@ -21,7 +21,7 @@ import testbed1.testbed1_api.StructStringWithArray;
     }
 
     protected StructStructWithArrayParcelable(Parcel in) {
-    this.data = new StructStructWithArray();
+        this.data = new StructStructWithArray();
         StructStringWithArrayParcelable[] l_parcelablefieldStruct = in.createTypedArray(StructStringWithArrayParcelable.CREATOR);
         data.fieldStruct = StructStringWithArrayParcelable.unwrapArray(l_parcelablefieldStruct);
     }
