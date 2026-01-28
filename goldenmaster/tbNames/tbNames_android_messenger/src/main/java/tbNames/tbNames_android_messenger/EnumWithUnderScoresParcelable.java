@@ -23,8 +23,7 @@ import java.util.Arrays;
     }
 
     protected EnumWithUnderScoresParcelable(Parcel in) {
-        int intValue = in.readInt();
-        this.data = EnumWithUnderScores.fromValue(intValue);
+        this.data = EnumWithUnderScores.fromValue(in.readInt());
     }
 
     public static final Creator<EnumWithUnderScoresParcelable> CREATOR = new Creator<EnumWithUnderScoresParcelable>() {
