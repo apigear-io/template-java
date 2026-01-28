@@ -23,8 +23,7 @@ import java.util.Arrays;
     }
 
     protected Enum2Parcelable(Parcel in) {
-        int intValue = in.readInt();
-        this.data = Enum2.fromValue(intValue);
+        this.data = Enum2.fromValue(in.readInt());
     }
 
     public static final Creator<Enum2Parcelable> CREATOR = new Creator<Enum2Parcelable>() {
