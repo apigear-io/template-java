@@ -23,8 +23,7 @@ import java.util.Arrays;
     }
 
     protected {{Camel .Enum.Name }}Parcelable(Parcel in) {
-        int intValue = in.readInt();
-        this.data = {{Camel .Enum.Name}}.fromValue(intValue);
+        this.data = {{Camel .Enum.Name}}.fromValue(in.readInt());
     }
 
     public static final Creator<{{Camel .Enum.Name }}Parcelable> CREATOR = new Creator<{{Camel .Enum.Name}}Parcelable>() {
