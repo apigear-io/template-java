@@ -23,7 +23,8 @@ import java.util.Arrays;
     }
 
     protected EnumWithUnderScoresParcelable(Parcel in) {
-        this.data = EnumWithUnderScores.fromValue(in.readInt());
+        boolean dataIsValid = in.readBoolean();
+        this.data = dataIsValid ? EnumWithUnderScores.fromValue(in.readInt()) : null;
     }
 
     public static final Creator<EnumWithUnderScoresParcelable> CREATOR = new Creator<EnumWithUnderScoresParcelable>() {
@@ -41,7 +42,10 @@ import java.util.Arrays;
     @Override
     public void writeToParcel(Parcel dest, int flags) {
 
-        dest.writeInt(data.getValue());
+        dest.writeBoolean(data != null);
+        if (data != null) {
+            dest.writeInt(data.getValue());
+        }
     }
 
     public static EnumWithUnderScoresParcelable[] wrapArray(EnumWithUnderScores[] enums) {
