@@ -21,7 +21,7 @@ import testbed1.testbed1_api.StructString;
     }
 
     protected StructStructParcelable(Parcel in) {
-    this.data = new StructStruct();
+        this.data = new StructStruct();
         StructStringParcelable l_parcelablefieldString = in.readParcelable(StructStringParcelable.class.getClassLoader(), StructStringParcelable.class);
         data.fieldString = l_parcelablefieldString != null ? l_parcelablefieldString.data : null;
     }

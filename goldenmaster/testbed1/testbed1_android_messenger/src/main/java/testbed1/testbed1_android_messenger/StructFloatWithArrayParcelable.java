@@ -20,7 +20,7 @@ import java.util.Arrays;
     }
 
     protected StructFloatWithArrayParcelable(Parcel in) {
-    this.data = new StructFloatWithArray();
+        this.data = new StructFloatWithArray();
         data.fieldFloat = in.createFloatArray();
     }
 
