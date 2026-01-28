@@ -22,7 +22,7 @@ import testbed2.testbed2_api.Struct2;
     }
 
     protected NestedStruct2Parcelable(Parcel in) {
-    this.data = new NestedStruct2();
+        this.data = new NestedStruct2();
         Struct1Parcelable l_parcelablefield1 = in.readParcelable(Struct1Parcelable.class.getClassLoader(), Struct1Parcelable.class);
         data.field1 = l_parcelablefield1 != null ? l_parcelablefield1.data : null;
         Struct2Parcelable l_parcelablefield2 = in.readParcelable(Struct2Parcelable.class.getClassLoader(), Struct2Parcelable.class);

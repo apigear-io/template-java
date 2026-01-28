@@ -22,7 +22,7 @@ import java.util.Arrays;
     }
 
     protected {{Camel .Struct.Name}}Parcelable(Parcel in) {
-    this.data = new {{Camel .Struct.Name}}();
+        this.data = new {{Camel .Struct.Name}}();
 {{- range .Struct.Fields }}
 {{- if .IsArray}}
 {{- if .IsPrimitive }}

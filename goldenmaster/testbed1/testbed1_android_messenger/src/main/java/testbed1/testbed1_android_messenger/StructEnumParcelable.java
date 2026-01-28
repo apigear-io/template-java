@@ -21,7 +21,7 @@ import testbed1.testbed1_api.Enum0;
     }
 
     protected StructEnumParcelable(Parcel in) {
-    this.data = new StructEnum();
+        this.data = new StructEnum();
         Enum0Parcelable l_parcelablefieldEnum = in.readParcelable(Enum0Parcelable.class.getClassLoader(), Enum0Parcelable.class);
         data.fieldEnum = l_parcelablefieldEnum != null ? l_parcelablefieldEnum.data : null;
     }

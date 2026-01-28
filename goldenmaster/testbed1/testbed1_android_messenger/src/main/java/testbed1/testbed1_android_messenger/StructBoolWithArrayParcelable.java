@@ -20,7 +20,7 @@ import java.util.Arrays;
     }
 
     protected StructBoolWithArrayParcelable(Parcel in) {
-    this.data = new StructBoolWithArray();
+        this.data = new StructBoolWithArray();
         data.fieldBool = in.createBooleanArray();
     }
 

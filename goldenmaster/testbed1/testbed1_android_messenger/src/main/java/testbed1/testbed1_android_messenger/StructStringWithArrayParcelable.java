@@ -20,7 +20,7 @@ import java.util.Arrays;
     }
 
     protected StructStringWithArrayParcelable(Parcel in) {
-    this.data = new StructStringWithArray();
+        this.data = new StructStringWithArray();
         data.fieldString = in.createStringArray();
     }
 

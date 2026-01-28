@@ -21,7 +21,7 @@ import testbed1.testbed1_api.Enum0;
     }
 
     protected StructEnumWithArrayParcelable(Parcel in) {
-    this.data = new StructEnumWithArray();
+        this.data = new StructEnumWithArray();
         Enum0Parcelable[] l_parcelablefieldEnum = in.createTypedArray(Enum0Parcelable.CREATOR);
         data.fieldEnum = Enum0Parcelable.unwrapArray(l_parcelablefieldEnum);
     }
