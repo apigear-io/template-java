@@ -11,15 +11,21 @@ import java.util.Arrays;
     public Vector3D data;
 
     public Vector3DParcelable(Vector3D data) {
-        this.data = new Vector3D(data);
+        this.data = data != null ? new Vector3D(data) : null;
     }
 
     public Vector3D getVector3D()
     {
-        return new Vector3D(data);
+        return data != null ? new Vector3D(data) : null;
     }
 
     protected Vector3DParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            this.data = null;
+            return;
+        }
+
         this.data = new Vector3D();
         data.x = in.readFloat();
         data.y = in.readFloat();
@@ -40,6 +46,10 @@ import java.util.Arrays;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
         dest.writeFloat(data.x);
         dest.writeFloat(data.y);
         dest.writeFloat(data.z);

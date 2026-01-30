@@ -12,15 +12,21 @@ import testbed1.testbed1_api.Enum0;
     public StructEnum data;
 
     public StructEnumParcelable(StructEnum data) {
-        this.data = new StructEnum(data);
+        this.data = data != null ? new StructEnum(data) : null;
     }
 
     public StructEnum getStructEnum()
     {
-        return new StructEnum(data);
+        return data != null ? new StructEnum(data) : null;
     }
 
     protected StructEnumParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            this.data = null;
+            return;
+        }
+
         this.data = new StructEnum();
         Enum0Parcelable l_parcelablefieldEnum = in.readParcelable(Enum0Parcelable.class.getClassLoader(), Enum0Parcelable.class);
         data.fieldEnum = l_parcelablefieldEnum != null ? l_parcelablefieldEnum.data : null;
@@ -40,6 +46,10 @@ import testbed1.testbed1_api.Enum0;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
         dest.writeParcelable(new Enum0Parcelable(data.fieldEnum), flags);
 
 

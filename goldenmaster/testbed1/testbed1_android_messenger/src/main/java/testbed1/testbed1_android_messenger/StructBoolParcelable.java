@@ -11,15 +11,21 @@ import java.util.Arrays;
     public StructBool data;
 
     public StructBoolParcelable(StructBool data) {
-        this.data = new StructBool(data);
+        this.data = data != null ? new StructBool(data) : null;
     }
 
     public StructBool getStructBool()
     {
-        return new StructBool(data);
+        return data != null ? new StructBool(data) : null;
     }
 
     protected StructBoolParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            this.data = null;
+            return;
+        }
+
         this.data = new StructBool();
         data.fieldBool = in.readBoolean();
     }
@@ -38,6 +44,10 @@ import java.util.Arrays;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
         dest.writeBoolean(data.fieldBool);
 
 

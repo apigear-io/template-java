@@ -12,15 +12,21 @@ import testbed1.testbed1_api.StructStringWithArray;
     public StructStructWithArray data;
 
     public StructStructWithArrayParcelable(StructStructWithArray data) {
-        this.data = new StructStructWithArray(data);
+        this.data = data != null ? new StructStructWithArray(data) : null;
     }
 
     public StructStructWithArray getStructStructWithArray()
     {
-        return new StructStructWithArray(data);
+        return data != null ? new StructStructWithArray(data) : null;
     }
 
     protected StructStructWithArrayParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            this.data = null;
+            return;
+        }
+
         this.data = new StructStructWithArray();
         StructStringWithArrayParcelable[] l_parcelablefieldStruct = in.createTypedArray(StructStringWithArrayParcelable.CREATOR);
         data.fieldStruct = StructStringWithArrayParcelable.unwrapArray(l_parcelablefieldStruct);
@@ -40,6 +46,10 @@ import testbed1.testbed1_api.StructStringWithArray;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
         dest.writeTypedArray(StructStringWithArrayParcelable.wrapArray(data.fieldStruct), flags);
 
 
