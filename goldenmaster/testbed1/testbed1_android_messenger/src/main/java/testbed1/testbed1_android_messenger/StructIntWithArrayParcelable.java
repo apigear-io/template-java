@@ -11,15 +11,21 @@ import java.util.Arrays;
     public StructIntWithArray data;
 
     public StructIntWithArrayParcelable(StructIntWithArray data) {
-        this.data = new StructIntWithArray(data);
+        this.data = data != null ? new StructIntWithArray(data) : null;
     }
 
     public StructIntWithArray getStructIntWithArray()
     {
-        return new StructIntWithArray(data);
+        return data != null ? new StructIntWithArray(data) : null;
     }
 
     protected StructIntWithArrayParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            this.data = null;
+            return;
+        }
+
         this.data = new StructIntWithArray();
         data.fieldInt = in.createIntArray();
     }
@@ -38,6 +44,10 @@ import java.util.Arrays;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
         dest.writeIntArray(data.fieldInt);
 
 

@@ -13,15 +13,21 @@ import java.util.Arrays;
     public {{Camel .Struct.Name}} data;
 
     public {{Camel .Struct.Name}}Parcelable({{Camel .Struct.Name}} data) {
-        this.data = new {{Camel .Struct.Name}}(data);
+        this.data = data != null ? new {{Camel .Struct.Name}}(data) : null;
     }
 
     public {{Camel .Struct.Name}} get{{Camel .Struct.Name}}()
     {
-        return new {{Camel .Struct.Name}}(data);
+        return data != null ? new {{Camel .Struct.Name}}(data) : null;
     }
 
     protected {{Camel .Struct.Name}}Parcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            this.data = null;
+            return;
+        }
+
         this.data = new {{Camel .Struct.Name}}();
 {{- range .Struct.Fields }}
 {{- if .IsArray}}
@@ -57,6 +63,11 @@ import java.util.Arrays;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
+
     {{- range .Struct.Fields }}
 {{- if .IsArray}}
 {{- if .IsPrimitive }}
