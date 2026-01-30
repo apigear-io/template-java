@@ -11,15 +11,21 @@ import java.util.Arrays;
     public Struct2 data;
 
     public Struct2Parcelable(Struct2 data) {
-        this.data = new Struct2(data);
+        this.data = data != null ? new Struct2(data) : null;
     }
 
     public Struct2 getStruct2()
     {
-        return new Struct2(data);
+        return data != null ? new Struct2(data) : null;
     }
 
     protected Struct2Parcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            this.data = null;
+            return;
+        }
+
         this.data = new Struct2();
         data.field1 = in.readInt();
         data.field2 = in.readInt();
@@ -39,6 +45,10 @@ import java.util.Arrays;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
         dest.writeInt(data.field1);
         dest.writeInt(data.field2);
 

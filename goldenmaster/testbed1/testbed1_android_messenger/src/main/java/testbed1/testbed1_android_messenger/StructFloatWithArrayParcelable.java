@@ -11,15 +11,21 @@ import java.util.Arrays;
     public StructFloatWithArray data;
 
     public StructFloatWithArrayParcelable(StructFloatWithArray data) {
-        this.data = new StructFloatWithArray(data);
+        this.data = data != null ? new StructFloatWithArray(data) : null;
     }
 
     public StructFloatWithArray getStructFloatWithArray()
     {
-        return new StructFloatWithArray(data);
+        return data != null ? new StructFloatWithArray(data) : null;
     }
 
     protected StructFloatWithArrayParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            this.data = null;
+            return;
+        }
+
         this.data = new StructFloatWithArray();
         data.fieldFloat = in.createFloatArray();
     }
@@ -38,6 +44,10 @@ import java.util.Arrays;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
         dest.writeFloatArray(data.fieldFloat);
 
 
