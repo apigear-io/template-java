@@ -344,7 +344,6 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 	{{- end }}
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         {{javaAsyncReturn "" .Return}}  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -360,6 +359,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }

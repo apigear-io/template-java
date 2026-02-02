@@ -359,7 +359,6 @@ public class NoSignalsInterfaceClient extends AbstractNoSignalsInterface impleme
         data.putInt("callId",msgId);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Void>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -369,6 +368,7 @@ public class NoSignalsInterfaceClient extends AbstractNoSignalsInterface impleme
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -399,7 +399,6 @@ public class NoSignalsInterfaceClient extends AbstractNoSignalsInterface impleme
 		        data.putBoolean("paramBool", paramBool);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Boolean>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -411,6 +410,7 @@ public class NoSignalsInterfaceClient extends AbstractNoSignalsInterface impleme
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }    

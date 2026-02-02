@@ -869,7 +869,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 		        data.putBoolean("paramBool", paramBool);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Void>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -879,6 +878,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -907,7 +907,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
         data.putInt("callId",msgId);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Boolean>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -919,6 +918,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -949,7 +949,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 		        data.putBoolean("paramBool", paramBool);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Boolean>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -961,6 +960,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -991,7 +991,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 		        data.putInt("paramInt", paramInt);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Integer>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -1003,6 +1002,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -1033,7 +1033,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 		        data.putInt("paramInt32", paramInt32);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Integer>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -1045,6 +1044,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -1075,7 +1075,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 		        data.putLong("paramInt64", paramInt64);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Long>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -1087,6 +1086,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -1117,7 +1117,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 		        data.putFloat("paramFloat", paramFloat);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Float>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -1129,6 +1128,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -1159,7 +1159,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 		        data.putFloat("paramFloat32", paramFloat32);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Float>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -1171,6 +1170,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -1201,7 +1201,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 		        data.putDouble("paramFloat", paramFloat);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Double>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -1213,6 +1212,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -1243,7 +1243,6 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 		        data.putString("paramString", paramString);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<String>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -1255,6 +1254,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }    

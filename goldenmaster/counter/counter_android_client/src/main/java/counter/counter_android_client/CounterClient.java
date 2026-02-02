@@ -527,7 +527,6 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 		        data.putParcelable("vec", new externTypes.externTypes_android_messenger.MyVector3DParcelable(vec));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -539,6 +538,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -569,7 +569,6 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 		        data.putParcelableArray("vec", externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(vec));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -581,6 +580,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -611,7 +611,6 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 		        data.putParcelable("vec", new customTypes.customTypes_android_messenger.Vector3DParcelable(vec));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<customTypes.customTypes_api.Vector3D>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -623,6 +622,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -653,7 +653,6 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 		        data.putParcelableArray("vec", customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(vec));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<customTypes.customTypes_api.Vector3D[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -665,6 +664,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }    

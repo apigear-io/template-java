@@ -275,7 +275,6 @@ public class NoPropertiesInterfaceClient extends AbstractNoPropertiesInterface i
         data.putInt("callId",msgId);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Void>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -285,6 +284,7 @@ public class NoPropertiesInterfaceClient extends AbstractNoPropertiesInterface i
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -315,7 +315,6 @@ public class NoPropertiesInterfaceClient extends AbstractNoPropertiesInterface i
 		        data.putBoolean("paramBool", paramBool);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Boolean>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -327,6 +326,7 @@ public class NoPropertiesInterfaceClient extends AbstractNoPropertiesInterface i
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }    

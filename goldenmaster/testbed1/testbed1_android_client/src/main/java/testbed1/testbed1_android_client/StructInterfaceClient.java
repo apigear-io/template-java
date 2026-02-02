@@ -561,7 +561,6 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 		        data.putParcelable("paramBool", new StructBoolParcelable(paramBool));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<StructBool>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -573,6 +572,7 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -603,7 +603,6 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 		        data.putParcelable("paramInt", new StructIntParcelable(paramInt));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<StructInt>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -615,6 +614,7 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -645,7 +645,6 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 		        data.putParcelable("paramFloat", new StructFloatParcelable(paramFloat));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<StructFloat>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -657,6 +656,7 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -687,7 +687,6 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 		        data.putParcelable("paramString", new StructStringParcelable(paramString));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<StructString>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -699,6 +698,7 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }    

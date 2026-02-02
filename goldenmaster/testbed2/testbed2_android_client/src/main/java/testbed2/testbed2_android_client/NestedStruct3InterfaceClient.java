@@ -488,7 +488,6 @@ public class NestedStruct3InterfaceClient extends AbstractNestedStruct3Interface
 		        data.putParcelable("param1", new NestedStruct1Parcelable(param1));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<NestedStruct1>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -500,6 +499,7 @@ public class NestedStruct3InterfaceClient extends AbstractNestedStruct3Interface
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -532,7 +532,6 @@ public class NestedStruct3InterfaceClient extends AbstractNestedStruct3Interface
 		        data.putParcelable("param2", new NestedStruct2Parcelable(param2));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<NestedStruct1>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -544,6 +543,7 @@ public class NestedStruct3InterfaceClient extends AbstractNestedStruct3Interface
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -578,7 +578,6 @@ public class NestedStruct3InterfaceClient extends AbstractNestedStruct3Interface
 		        data.putParcelable("param3", new NestedStruct3Parcelable(param3));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<NestedStruct1>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -590,6 +589,7 @@ public class NestedStruct3InterfaceClient extends AbstractNestedStruct3Interface
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }    

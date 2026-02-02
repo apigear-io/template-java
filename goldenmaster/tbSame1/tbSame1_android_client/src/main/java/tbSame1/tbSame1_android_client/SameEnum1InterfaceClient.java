@@ -308,7 +308,6 @@ public class SameEnum1InterfaceClient extends AbstractSameEnum1Interface impleme
 		        data.putParcelable("param1", new Enum1Parcelable(param1));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Enum1>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -320,6 +319,7 @@ public class SameEnum1InterfaceClient extends AbstractSameEnum1Interface impleme
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }    
