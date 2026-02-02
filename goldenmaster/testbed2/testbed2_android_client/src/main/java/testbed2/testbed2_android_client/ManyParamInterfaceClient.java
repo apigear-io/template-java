@@ -542,7 +542,6 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 		        data.putInt("param1", param1);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Integer>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -554,6 +553,7 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -586,7 +586,6 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 		        data.putInt("param2", param2);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Integer>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -598,6 +597,7 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -632,7 +632,6 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 		        data.putInt("param3", param3);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Integer>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -644,6 +643,7 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -680,7 +680,6 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 		        data.putInt("param4", param4);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Integer>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -692,6 +691,7 @@ public class ManyParamInterfaceClient extends AbstractManyParamInterface impleme
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }    

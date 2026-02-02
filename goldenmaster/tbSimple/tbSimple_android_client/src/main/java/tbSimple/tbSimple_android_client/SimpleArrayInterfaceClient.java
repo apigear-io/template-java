@@ -884,7 +884,6 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 		        data.putBooleanArray("paramBool", paramBool);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<boolean[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -896,6 +895,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -926,7 +926,6 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 		        data.putIntArray("paramInt", paramInt);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<int[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -938,6 +937,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -968,7 +968,6 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 		        data.putIntArray("paramInt32", paramInt32);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<int[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -980,6 +979,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -1010,7 +1010,6 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 		        data.putLongArray("paramInt64", paramInt64);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<long[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -1022,6 +1021,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -1052,7 +1052,6 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 		        data.putFloatArray("paramFloat", paramFloat);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<float[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -1064,6 +1063,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -1094,7 +1094,6 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 		        data.putFloatArray("paramFloat32", paramFloat32);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<float[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -1106,6 +1105,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -1136,7 +1136,6 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 		        data.putDoubleArray("paramFloat", paramFloat);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<double[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -1148,6 +1147,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -1178,7 +1178,6 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 		        data.putStringArray("paramString", paramString);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<String[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -1190,6 +1189,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }    

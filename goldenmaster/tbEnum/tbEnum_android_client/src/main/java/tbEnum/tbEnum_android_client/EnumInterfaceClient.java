@@ -553,7 +553,6 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 		        data.putParcelable("param0", new Enum0Parcelable(param0));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Enum0>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -565,6 +564,7 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -595,7 +595,6 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 		        data.putParcelable("param1", new Enum1Parcelable(param1));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Enum1>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -607,6 +606,7 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -637,7 +637,6 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 		        data.putParcelable("param2", new Enum2Parcelable(param2));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Enum2>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -649,6 +648,7 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -679,7 +679,6 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 		        data.putParcelable("param3", new Enum3Parcelable(param3));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Enum3>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -691,6 +690,7 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }    

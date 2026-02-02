@@ -547,7 +547,6 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 		        data.putParcelable("param", new SimpleLocalIfParcelable(param));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<ISimpleLocalIf>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -559,6 +558,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -589,7 +589,6 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 		        data.putParcelableArray("param", SimpleLocalIfParcelable.wrapArray(param));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<ISimpleLocalIf[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -601,6 +600,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -631,7 +631,6 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 		        data.putParcelable("param", new tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable(param));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -643,6 +642,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -673,7 +673,6 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 		        data.putParcelableArray("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(param));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -685,6 +684,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }    
