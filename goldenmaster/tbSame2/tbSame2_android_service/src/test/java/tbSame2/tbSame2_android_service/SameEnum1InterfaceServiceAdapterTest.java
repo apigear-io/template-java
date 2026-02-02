@@ -15,6 +15,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import tbSame2.tbSame2_android_service.SameEnum1InterfaceServiceAdapter;
+import tbSame2.tbSame2_android_service.ISameEnum1InterfaceServiceProvider;
 
 //import message type and parcelabe types
 import tbSame2.tbSame2_api.Struct1;

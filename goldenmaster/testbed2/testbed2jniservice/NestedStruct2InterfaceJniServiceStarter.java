@@ -9,6 +9,7 @@ import testbed2.testbed2_api.INestedStruct2Interface;
 import testbed2.testbed2_android_service.NestedStruct2InterfaceServiceAdapter;
 import testbed2.testbed2jniservice.NestedStruct2InterfaceJniServiceProvider;
 import testbed2.testbed2_android_service.NestedStruct2InterfaceBaseServiceLifecycleController;
+import testbed2.testbed2_android_service.INestedStruct2InterfaceServiceProvider;
 
 
 // This class provides concrete implementation, for NestedStruct2InterfaceBaseServiceLifecycleController,

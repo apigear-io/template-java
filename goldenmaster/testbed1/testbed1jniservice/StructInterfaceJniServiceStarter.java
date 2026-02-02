@@ -9,6 +9,7 @@ import testbed1.testbed1_api.IStructInterface;
 import testbed1.testbed1_android_service.StructInterfaceServiceAdapter;
 import testbed1.testbed1jniservice.StructInterfaceJniServiceProvider;
 import testbed1.testbed1_android_service.StructInterfaceBaseServiceLifecycleController;
+import testbed1.testbed1_android_service.IStructInterfaceServiceProvider;
 
 
 // This class provides concrete implementation, for StructInterfaceBaseServiceLifecycleController,

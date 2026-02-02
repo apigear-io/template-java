@@ -9,6 +9,7 @@ import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfServiceAdapter;
 import tbRefIfaces.tbRefIfacesjniservice.SimpleLocalIfJniServiceProvider;
 import tbRefIfaces.tbRefIfaces_android_service.SimpleLocalIfBaseServiceLifecycleController;
+import tbRefIfaces.tbRefIfaces_android_service.ISimpleLocalIfServiceProvider;
 
 
 // This class provides concrete implementation, for SimpleLocalIfBaseServiceLifecycleController,

@@ -9,6 +9,7 @@ import counter.counter_api.ICounter;
 import counter.counter_android_service.CounterServiceAdapter;
 import counter.counterjniservice.CounterJniServiceProvider;
 import counter.counter_android_service.CounterBaseServiceLifecycleController;
+import counter.counter_android_service.ICounterServiceProvider;
 
 
 // This class provides concrete implementation, for CounterBaseServiceLifecycleController,

@@ -15,6 +15,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import tbEnum.tbEnum_android_service.EnumInterfaceServiceAdapter;
+import tbEnum.tbEnum_android_service.IEnumInterfaceServiceProvider;
 
 //import message type and parcelabe types
 import tbEnum.tbEnum_api.TbEnumTestHelper;
