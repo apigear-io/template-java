@@ -310,7 +310,6 @@ public class SameStruct1InterfaceClient extends AbstractSameStruct1Interface imp
 		        data.putParcelable("param1", new Struct1Parcelable(param1));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Struct1>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -322,6 +321,7 @@ public class SameStruct1InterfaceClient extends AbstractSameStruct1Interface imp
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }    

@@ -644,7 +644,6 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 		        data.putParcelable("paramBool", new StructBoolWithArrayParcelable(paramBool));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<StructBool[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -656,6 +655,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -686,7 +686,6 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 		        data.putParcelable("paramInt", new StructIntWithArrayParcelable(paramInt));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<StructInt[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -698,6 +697,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -728,7 +728,6 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 		        data.putParcelable("paramFloat", new StructFloatWithArrayParcelable(paramFloat));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<StructFloat[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -740,6 +739,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -770,7 +770,6 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 		        data.putParcelable("paramString", new StructStringWithArrayParcelable(paramString));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<StructString[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -782,6 +781,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -812,7 +812,6 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 		        data.putParcelable("paramEnum", new StructEnumWithArrayParcelable(paramEnum));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Enum0[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -824,6 +823,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }    

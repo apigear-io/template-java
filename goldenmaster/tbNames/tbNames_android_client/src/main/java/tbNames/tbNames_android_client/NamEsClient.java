@@ -483,7 +483,6 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
 		        data.putBoolean("SOME_PARAM", SOME_PARAM);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Void>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -493,6 +492,7 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }
@@ -524,7 +524,6 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
 		        data.putBoolean("Some_Param", Some_Param);
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
-		mClientHandler.sendToService(msg);
 
         CompletableFuture<Void>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
@@ -534,6 +533,7 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
 
         // Store the lambda function in the map
         mpendingCalls.put(msgId, resolver);
+		mClientHandler.sendToService(msg);
 
         return future;
     }    
