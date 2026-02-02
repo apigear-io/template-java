@@ -9,6 +9,7 @@ import tbSimple.tbSimple_api.INoOperationsInterface;
 import tbSimple.tbSimple_android_service.NoOperationsInterfaceServiceAdapter;
 import tbSimple.tbSimplejniservice.NoOperationsInterfaceJniServiceProvider;
 import tbSimple.tbSimple_android_service.NoOperationsInterfaceBaseServiceLifecycleController;
+import tbSimple.tbSimple_android_service.INoOperationsInterfaceServiceProvider;
 
 
 // This class provides concrete implementation, for NoOperationsInterfaceBaseServiceLifecycleController,

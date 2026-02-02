@@ -15,6 +15,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import tbSimple.tbSimple_android_service.VoidInterfaceServiceAdapter;
+import tbSimple.tbSimple_android_service.IVoidInterfaceServiceProvider;
 
 //import message type and parcelabe types
 import tbSimple.tbSimple_api.TbSimpleTestHelper;

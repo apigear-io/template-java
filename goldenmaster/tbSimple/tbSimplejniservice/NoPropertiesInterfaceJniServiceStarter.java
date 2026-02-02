@@ -9,6 +9,7 @@ import tbSimple.tbSimple_api.INoPropertiesInterface;
 import tbSimple.tbSimple_android_service.NoPropertiesInterfaceServiceAdapter;
 import tbSimple.tbSimplejniservice.NoPropertiesInterfaceJniServiceProvider;
 import tbSimple.tbSimple_android_service.NoPropertiesInterfaceBaseServiceLifecycleController;
+import tbSimple.tbSimple_android_service.INoPropertiesInterfaceServiceProvider;
 
 
 // This class provides concrete implementation, for NoPropertiesInterfaceBaseServiceLifecycleController,

@@ -15,6 +15,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import tbRefIfaces.tbRefIfaces_android_service.ParentIfServiceAdapter;
+import tbRefIfaces.tbRefIfaces_android_service.IParentIfServiceProvider;
 
 //import message type and parcelabe types
 import tbRefIfaces.tbRefIfaces_api.TbRefIfacesTestHelper;

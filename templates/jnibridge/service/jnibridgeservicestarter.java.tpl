@@ -9,6 +9,7 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Nam
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel .Interface.Name }}ServiceAdapter;
 import {{camel .Module.Name}}.{{camel .Module.Name}}jniservice.{{Camel .Interface.Name}}JniServiceProvider;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.{{Camel .Interface.Name }}BaseServiceLifecycleController;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.I{{Camel .Interface.Name }}ServiceProvider;
 
 
 // This class provides concrete implementation, for {{Camel .Interface.Name }}BaseServiceLifecycleController,

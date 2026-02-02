@@ -9,6 +9,7 @@ import tbNames.tbNames_api.INamEs;
 import tbNames.tbNames_android_service.NamEsServiceAdapter;
 import tbNames.tbNamesjniservice.NamEsJniServiceProvider;
 import tbNames.tbNames_android_service.NamEsBaseServiceLifecycleController;
+import tbNames.tbNames_android_service.INamEsServiceProvider;
 
 
 // This class provides concrete implementation, for NamEsBaseServiceLifecycleController,

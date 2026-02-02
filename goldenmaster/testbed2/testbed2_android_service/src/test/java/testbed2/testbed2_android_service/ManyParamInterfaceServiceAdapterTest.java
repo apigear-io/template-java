@@ -15,6 +15,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import testbed2.testbed2_android_service.ManyParamInterfaceServiceAdapter;
+import testbed2.testbed2_android_service.IManyParamInterfaceServiceProvider;
 
 //import message type and parcelabe types
 import testbed2.testbed2_api.Struct1;

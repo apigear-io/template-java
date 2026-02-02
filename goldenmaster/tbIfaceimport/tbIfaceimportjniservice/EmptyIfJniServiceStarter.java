@@ -9,6 +9,7 @@ import tbIfaceimport.tbIfaceimport_api.IEmptyIf;
 import tbIfaceimport.tbIfaceimport_android_service.EmptyIfServiceAdapter;
 import tbIfaceimport.tbIfaceimportjniservice.EmptyIfJniServiceProvider;
 import tbIfaceimport.tbIfaceimport_android_service.EmptyIfBaseServiceLifecycleController;
+import tbIfaceimport.tbIfaceimport_android_service.IEmptyIfServiceProvider;
 
 
 // This class provides concrete implementation, for EmptyIfBaseServiceLifecycleController,

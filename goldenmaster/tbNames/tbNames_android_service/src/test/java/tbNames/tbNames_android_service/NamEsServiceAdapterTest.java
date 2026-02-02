@@ -15,6 +15,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import tbNames.tbNames_android_service.NamEsServiceAdapter;
+import tbNames.tbNames_android_service.INamEsServiceProvider;
 
 //import message type and parcelabe types
 import tbNames.tbNames_api.TbNamesTestHelper;

@@ -9,6 +9,7 @@ import tbSimple.tbSimple_api.INoSignalsInterface;
 import tbSimple.tbSimple_android_service.NoSignalsInterfaceServiceAdapter;
 import tbSimple.tbSimplejniservice.NoSignalsInterfaceJniServiceProvider;
 import tbSimple.tbSimple_android_service.NoSignalsInterfaceBaseServiceLifecycleController;
+import tbSimple.tbSimple_android_service.INoSignalsInterfaceServiceProvider;
 
 
 // This class provides concrete implementation, for NoSignalsInterfaceBaseServiceLifecycleController,

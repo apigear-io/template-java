@@ -9,6 +9,7 @@ import tbEnum.tbEnum_api.IEnumInterface;
 import tbEnum.tbEnum_android_service.EnumInterfaceServiceAdapter;
 import tbEnum.tbEnumjniservice.EnumInterfaceJniServiceProvider;
 import tbEnum.tbEnum_android_service.EnumInterfaceBaseServiceLifecycleController;
+import tbEnum.tbEnum_android_service.IEnumInterfaceServiceProvider;
 
 
 // This class provides concrete implementation, for EnumInterfaceBaseServiceLifecycleController,

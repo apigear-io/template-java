@@ -15,6 +15,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import testbed1.testbed1_android_service.StructArray2InterfaceServiceAdapter;
+import testbed1.testbed1_android_service.IStructArray2InterfaceServiceProvider;
 
 //import message type and parcelabe types
 import testbed1.testbed1_api.StructBool;

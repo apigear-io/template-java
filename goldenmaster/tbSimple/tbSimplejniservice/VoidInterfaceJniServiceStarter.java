@@ -9,6 +9,7 @@ import tbSimple.tbSimple_api.IVoidInterface;
 import tbSimple.tbSimple_android_service.VoidInterfaceServiceAdapter;
 import tbSimple.tbSimplejniservice.VoidInterfaceJniServiceProvider;
 import tbSimple.tbSimple_android_service.VoidInterfaceBaseServiceLifecycleController;
+import tbSimple.tbSimple_android_service.IVoidInterfaceServiceProvider;
 
 
 // This class provides concrete implementation, for VoidInterfaceBaseServiceLifecycleController,
