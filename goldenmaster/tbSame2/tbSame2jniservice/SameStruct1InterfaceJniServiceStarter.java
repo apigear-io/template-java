@@ -9,6 +9,7 @@ import tbSame2.tbSame2_api.ISameStruct1Interface;
 import tbSame2.tbSame2_android_service.SameStruct1InterfaceServiceAdapter;
 import tbSame2.tbSame2jniservice.SameStruct1InterfaceJniServiceProvider;
 import tbSame2.tbSame2_android_service.SameStruct1InterfaceBaseServiceLifecycleController;
+import tbSame2.tbSame2_android_service.ISameStruct1InterfaceServiceProvider;
 
 
 // This class provides concrete implementation, for SameStruct1InterfaceBaseServiceLifecycleController,

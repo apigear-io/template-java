@@ -9,6 +9,7 @@ import testbed2.testbed2_api.IManyParamInterface;
 import testbed2.testbed2_android_service.ManyParamInterfaceServiceAdapter;
 import testbed2.testbed2jniservice.ManyParamInterfaceJniServiceProvider;
 import testbed2.testbed2_android_service.ManyParamInterfaceBaseServiceLifecycleController;
+import testbed2.testbed2_android_service.IManyParamInterfaceServiceProvider;
 
 
 // This class provides concrete implementation, for ManyParamInterfaceBaseServiceLifecycleController,

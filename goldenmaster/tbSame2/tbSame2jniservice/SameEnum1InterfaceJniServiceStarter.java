@@ -9,6 +9,7 @@ import tbSame2.tbSame2_api.ISameEnum1Interface;
 import tbSame2.tbSame2_android_service.SameEnum1InterfaceServiceAdapter;
 import tbSame2.tbSame2jniservice.SameEnum1InterfaceJniServiceProvider;
 import tbSame2.tbSame2_android_service.SameEnum1InterfaceBaseServiceLifecycleController;
+import tbSame2.tbSame2_android_service.ISameEnum1InterfaceServiceProvider;
 
 
 // This class provides concrete implementation, for SameEnum1InterfaceBaseServiceLifecycleController,

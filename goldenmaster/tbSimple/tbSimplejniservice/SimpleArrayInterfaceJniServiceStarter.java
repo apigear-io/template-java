@@ -9,6 +9,7 @@ import tbSimple.tbSimple_api.ISimpleArrayInterface;
 import tbSimple.tbSimple_android_service.SimpleArrayInterfaceServiceAdapter;
 import tbSimple.tbSimplejniservice.SimpleArrayInterfaceJniServiceProvider;
 import tbSimple.tbSimple_android_service.SimpleArrayInterfaceBaseServiceLifecycleController;
+import tbSimple.tbSimple_android_service.ISimpleArrayInterfaceServiceProvider;
 
 
 // This class provides concrete implementation, for SimpleArrayInterfaceBaseServiceLifecycleController,

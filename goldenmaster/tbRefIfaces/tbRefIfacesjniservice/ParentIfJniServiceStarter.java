@@ -9,6 +9,7 @@ import tbRefIfaces.tbRefIfaces_api.IParentIf;
 import tbRefIfaces.tbRefIfaces_android_service.ParentIfServiceAdapter;
 import tbRefIfaces.tbRefIfacesjniservice.ParentIfJniServiceProvider;
 import tbRefIfaces.tbRefIfaces_android_service.ParentIfBaseServiceLifecycleController;
+import tbRefIfaces.tbRefIfaces_android_service.IParentIfServiceProvider;
 
 
 // This class provides concrete implementation, for ParentIfBaseServiceLifecycleController,

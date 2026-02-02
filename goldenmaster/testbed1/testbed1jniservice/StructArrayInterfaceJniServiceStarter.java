@@ -9,6 +9,7 @@ import testbed1.testbed1_api.IStructArrayInterface;
 import testbed1.testbed1_android_service.StructArrayInterfaceServiceAdapter;
 import testbed1.testbed1jniservice.StructArrayInterfaceJniServiceProvider;
 import testbed1.testbed1_android_service.StructArrayInterfaceBaseServiceLifecycleController;
+import testbed1.testbed1_android_service.IStructArrayInterfaceServiceProvider;
 
 
 // This class provides concrete implementation, for StructArrayInterfaceBaseServiceLifecycleController,

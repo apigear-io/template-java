@@ -9,6 +9,7 @@ import tbSimple.tbSimple_api.ISimpleInterface;
 import tbSimple.tbSimple_android_service.SimpleInterfaceServiceAdapter;
 import tbSimple.tbSimplejniservice.SimpleInterfaceJniServiceProvider;
 import tbSimple.tbSimple_android_service.SimpleInterfaceBaseServiceLifecycleController;
+import tbSimple.tbSimple_android_service.ISimpleInterfaceServiceProvider;
 
 
 // This class provides concrete implementation, for SimpleInterfaceBaseServiceLifecycleController,

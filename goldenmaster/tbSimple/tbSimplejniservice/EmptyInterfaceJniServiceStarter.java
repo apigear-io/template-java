@@ -9,6 +9,7 @@ import tbSimple.tbSimple_api.IEmptyInterface;
 import tbSimple.tbSimple_android_service.EmptyInterfaceServiceAdapter;
 import tbSimple.tbSimplejniservice.EmptyInterfaceJniServiceProvider;
 import tbSimple.tbSimple_android_service.EmptyInterfaceBaseServiceLifecycleController;
+import tbSimple.tbSimple_android_service.IEmptyInterfaceServiceProvider;
 
 
 // This class provides concrete implementation, for EmptyInterfaceBaseServiceLifecycleController,

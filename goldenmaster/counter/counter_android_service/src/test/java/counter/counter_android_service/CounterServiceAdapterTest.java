@@ -15,6 +15,7 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 import counter.counter_android_service.CounterServiceAdapter;
+import counter.counter_android_service.ICounterServiceProvider;
 
 //import message type and parcelabe types
 import counter.counter_api.CounterTestHelper;
