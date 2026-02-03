@@ -9,17 +9,23 @@ import java.util.Arrays;
     public Vector3D data;
 
     public MyVector3DParcelable(Vector3D data) {
-        // WARNING Copy if not simple type
+        // WARNING Copy if not simple type. Remember about nulls.
         this.data = data;
     }
 
     public Vector3D getMyVector3D()
     {
-        // WARNING Copy if not simple type.
+        // WARNING Copy if not simple type. Remember about nulls.
         return data;
     }
 
     protected MyVector3DParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            this.data = null;
+            return;
+        }
+
         //WARNING Fill the data field by field with in.createTypedArray, in. read[dataType] or in.readParcelable, depending on type.
     }
 
@@ -37,6 +43,11 @@ import java.util.Arrays;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(this.data != null);
+        if (this.data == null) {
+            return;
+        }
+
     // WARNING Fill dest field by field with dest.write[TypedArray/Type/Parcelabe](data.field, flags);
     }
 
