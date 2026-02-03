@@ -11,17 +11,23 @@ import java.util.Arrays;
     public {{$externInfo.Name}} data;
 
     public {{Camel .Extern.Name}}Parcelable({{$externInfo.Name}} data) {
-        // WARNING Copy if not simple type
+        // WARNING Copy if not simple type. Remember about nulls.
         this.data = data;
     }
 
     public {{$externInfo.Name}} get{{Camel .Extern.Name}}()
     {
-        // WARNING Copy if not simple type.
+        // WARNING Copy if not simple type. Remember about nulls.
         return data;
     }
 
     protected {{Camel .Extern.Name}}Parcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            this.data = null;
+            return;
+        }
+
         //WARNING Fill the data field by field with in.createTypedArray, in. read[dataType] or in.readParcelable, depending on type.
     }
 
@@ -39,6 +45,11 @@ import java.util.Arrays;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(this.data != null);
+        if (this.data == null) {
+            return;
+        }
+
     // WARNING Fill dest field by field with dest.write[TypedArray/Type/Parcelabe](data.field, flags);
     }
 
