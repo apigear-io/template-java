@@ -22,6 +22,12 @@ import java.util.Arrays;
     }
 
     protected {{Camel .Interface.Name}}Parcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            data = null;
+            return;
+        }
+
 {{- range .Interface.Properties }}
 {{- if .IsArray}}
 {{- if .IsPrimitive }}
@@ -56,6 +62,11 @@ import java.util.Arrays;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
+
     {{- range .Interface.Properties }}
 {{- if .IsArray}}
 {{- if .IsPrimitive }}

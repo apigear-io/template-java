@@ -24,6 +24,11 @@ import tbEnum.tbEnum_api.Enum3;
     }
 
     protected EnumInterfaceParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            data = null;
+            return;
+        }
         Enum0Parcelable l_parcelableprop0 = in.readParcelable(Enum0Parcelable.class.getClassLoader(), Enum0Parcelable.class);
         data.setProp0(l_parcelableprop0 != null ? l_parcelableprop0.data : null);
         Enum1Parcelable l_parcelableprop1 = in.readParcelable(Enum1Parcelable.class.getClassLoader(), Enum1Parcelable.class);
@@ -48,6 +53,10 @@ import tbEnum.tbEnum_api.Enum3;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
         dest.writeParcelable(new Enum0Parcelable(data.getProp0()), flags);
         dest.writeParcelable(new Enum1Parcelable(data.getProp1()), flags);
         dest.writeParcelable(new Enum2Parcelable(data.getProp2()), flags);

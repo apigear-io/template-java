@@ -20,6 +20,11 @@ import java.util.Arrays;
     }
 
     protected VoidInterfaceParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            data = null;
+            return;
+        }
     }
 
     public static final Creator<VoidInterfaceParcelable> CREATOR = new Creator<VoidInterfaceParcelable>() {
@@ -36,6 +41,10 @@ import java.util.Arrays;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
 
 
     }
