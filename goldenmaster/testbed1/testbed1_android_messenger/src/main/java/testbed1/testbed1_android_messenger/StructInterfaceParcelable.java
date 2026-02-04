@@ -24,6 +24,11 @@ import testbed1.testbed1_api.StructString;
     }
 
     protected StructInterfaceParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            data = null;
+            return;
+        }
         StructBoolParcelable l_parcelablepropBool = in.readParcelable(StructBoolParcelable.class.getClassLoader(), StructBoolParcelable.class);
         data.setPropBool(l_parcelablepropBool != null ? l_parcelablepropBool.data : null);
         StructIntParcelable l_parcelablepropInt = in.readParcelable(StructIntParcelable.class.getClassLoader(), StructIntParcelable.class);
@@ -48,6 +53,10 @@ import testbed1.testbed1_api.StructString;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
         dest.writeParcelable(new StructBoolParcelable(data.getPropBool()), flags);
         dest.writeParcelable(new StructIntParcelable(data.getPropInt()), flags);
         dest.writeParcelable(new StructFloatParcelable(data.getPropFloat()), flags);

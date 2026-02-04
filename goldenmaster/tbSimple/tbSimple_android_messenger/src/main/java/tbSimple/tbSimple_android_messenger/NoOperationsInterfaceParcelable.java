@@ -20,6 +20,11 @@ import java.util.Arrays;
     }
 
     protected NoOperationsInterfaceParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            data = null;
+            return;
+        }
         data.setPropBool(in.readBoolean());
         data.setPropInt(in.readInt());
     }
@@ -38,6 +43,10 @@ import java.util.Arrays;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
         dest.writeBoolean(data.getPropBool());
         dest.writeInt(data.getPropInt());
 

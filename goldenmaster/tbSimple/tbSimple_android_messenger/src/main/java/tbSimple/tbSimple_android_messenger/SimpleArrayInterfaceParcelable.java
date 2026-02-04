@@ -20,6 +20,11 @@ import java.util.Arrays;
     }
 
     protected SimpleArrayInterfaceParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            data = null;
+            return;
+        }
         data.setPropBool(in.createBooleanArray());
         data.setPropInt(in.createIntArray());
         data.setPropInt32(in.createIntArray());
@@ -45,6 +50,10 @@ import java.util.Arrays;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
         dest.writeBooleanArray(data.getPropBool());
         dest.writeIntArray(data.getPropInt());
         dest.writeIntArray(data.getPropInt32());

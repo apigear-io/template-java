@@ -21,6 +21,11 @@ import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
     }
 
     protected ParentIfParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            data = null;
+            return;
+        }
         SimpleLocalIfParcelable l_parcelablelocalIf = in.readParcelable(SimpleLocalIfParcelable.class.getClassLoader(), SimpleLocalIfParcelable.class);
         data.setLocalIf(l_parcelablelocalIf != null ? l_parcelablelocalIf.data : null);
         SimpleLocalIfParcelable[] l_parcelablelocalIfList = in.createTypedArray(SimpleLocalIfParcelable.CREATOR);
@@ -45,6 +50,10 @@ import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
         dest.writeParcelable(new SimpleLocalIfParcelable(data.getLocalIf()), flags);
         dest.writeTypedArray(SimpleLocalIfParcelable.wrapArray(data.getLocalIfList()), flags);
         dest.writeParcelable(new tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable(data.getImportedIf()), flags);

@@ -20,6 +20,11 @@ import java.util.Arrays;
     }
 
     protected CounterParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            data = null;
+            return;
+        }
         customTypes.customTypes_android_messenger.Vector3DParcelable l_parcelablevector = in.readParcelable(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader(), customTypes.customTypes_android_messenger.Vector3DParcelable.class);
         data.setVector(l_parcelablevector != null ? l_parcelablevector.data : null);
         externTypes.externTypes_android_messenger.MyVector3DParcelable l_parcelableexternVector = in.readParcelable(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader(), externTypes.externTypes_android_messenger.MyVector3DParcelable.class);
@@ -44,6 +49,10 @@ import java.util.Arrays;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
         dest.writeParcelable(new customTypes.customTypes_android_messenger.Vector3DParcelable(data.getVector()), flags);
         dest.writeParcelable(new externTypes.externTypes_android_messenger.MyVector3DParcelable(data.getExternVector()), flags);
         dest.writeTypedArray(customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(data.getVectorArray()), flags);

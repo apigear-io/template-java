@@ -20,6 +20,11 @@ import java.util.Arrays;
     }
 
     protected ManyParamInterfaceParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            data = null;
+            return;
+        }
         data.setProp1(in.readInt());
         data.setProp2(in.readInt());
         data.setProp3(in.readInt());
@@ -40,6 +45,10 @@ import java.util.Arrays;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
         dest.writeInt(data.getProp1());
         dest.writeInt(data.getProp2());
         dest.writeInt(data.getProp3());
