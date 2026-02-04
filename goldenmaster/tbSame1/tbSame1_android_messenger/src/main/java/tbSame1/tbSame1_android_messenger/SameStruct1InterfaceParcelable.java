@@ -21,6 +21,11 @@ import tbSame1.tbSame1_api.Struct1;
     }
 
     protected SameStruct1InterfaceParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            data = null;
+            return;
+        }
         Struct1Parcelable l_parcelableprop1 = in.readParcelable(Struct1Parcelable.class.getClassLoader(), Struct1Parcelable.class);
         data.setProp1(l_parcelableprop1 != null ? l_parcelableprop1.data : null);
     }
@@ -39,6 +44,10 @@ import tbSame1.tbSame1_api.Struct1;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
         dest.writeParcelable(new Struct1Parcelable(data.getProp1()), flags);
 
 

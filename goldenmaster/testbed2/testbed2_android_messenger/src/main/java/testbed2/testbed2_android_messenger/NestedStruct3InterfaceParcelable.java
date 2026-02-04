@@ -23,6 +23,11 @@ import testbed2.testbed2_api.NestedStruct3;
     }
 
     protected NestedStruct3InterfaceParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            data = null;
+            return;
+        }
         NestedStruct1Parcelable l_parcelableprop1 = in.readParcelable(NestedStruct1Parcelable.class.getClassLoader(), NestedStruct1Parcelable.class);
         data.setProp1(l_parcelableprop1 != null ? l_parcelableprop1.data : null);
         NestedStruct2Parcelable l_parcelableprop2 = in.readParcelable(NestedStruct2Parcelable.class.getClassLoader(), NestedStruct2Parcelable.class);
@@ -45,6 +50,10 @@ import testbed2.testbed2_api.NestedStruct3;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
         dest.writeParcelable(new NestedStruct1Parcelable(data.getProp1()), flags);
         dest.writeParcelable(new NestedStruct2Parcelable(data.getProp2()), flags);
         dest.writeParcelable(new NestedStruct3Parcelable(data.getProp3()), flags);

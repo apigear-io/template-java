@@ -21,6 +21,11 @@ import tbNames.tbNames_api.EnumWithUnderScores;
     }
 
     protected NamEsParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            data = null;
+            return;
+        }
         data.setSwitch(in.readBoolean());
         data.setSomeProperty(in.readInt());
         data.setSomePoperty2(in.readInt());
@@ -42,6 +47,10 @@ import tbNames.tbNames_api.EnumWithUnderScores;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
         dest.writeBoolean(data.getSwitch());
         dest.writeInt(data.getSomeProperty());
         dest.writeInt(data.getSomePoperty2());

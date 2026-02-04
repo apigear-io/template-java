@@ -21,6 +21,11 @@ import tbSame2.tbSame2_api.Enum1;
     }
 
     protected SameEnum1InterfaceParcelable(Parcel in) {
+        boolean dataIsValid = in.readBoolean();
+        if (!dataIsValid) {
+            data = null;
+            return;
+        }
         Enum1Parcelable l_parcelableprop1 = in.readParcelable(Enum1Parcelable.class.getClassLoader(), Enum1Parcelable.class);
         data.setProp1(l_parcelableprop1 != null ? l_parcelableprop1.data : null);
     }
@@ -39,6 +44,10 @@ import tbSame2.tbSame2_api.Enum1;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
+            return;
+        }
         dest.writeParcelable(new Enum1Parcelable(data.getProp1()), flags);
 
 
