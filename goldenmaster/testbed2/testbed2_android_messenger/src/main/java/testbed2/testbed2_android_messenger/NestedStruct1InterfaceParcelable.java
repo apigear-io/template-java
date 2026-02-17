@@ -3,11 +3,14 @@ package testbed2.testbed2_android_messenger;
 import testbed2.testbed2_api.INestedStruct1Interface;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Arrays;
 import testbed2.testbed2_api.NestedStruct1;
 
   public  class NestedStruct1InterfaceParcelable implements Parcelable {
+
+    private static final String TAG = "NestedStruct1InterfaceParcelable";
 
     public INestedStruct1Interface data;
 
@@ -26,8 +29,9 @@ import testbed2.testbed2_api.NestedStruct1;
             data = null;
             return;
         }
-        NestedStruct1Parcelable l_parcelableprop1 = in.readParcelable(NestedStruct1Parcelable.class.getClassLoader(), NestedStruct1Parcelable.class);
-        data.setProp1(l_parcelableprop1 != null ? l_parcelableprop1.data : null);
+
+        Log.w(TAG, "Unwrapping interfaces from parcel is currently not supported");
+        return;
     }
 
     public static final Creator<NestedStruct1InterfaceParcelable> CREATOR = new Creator<NestedStruct1InterfaceParcelable>() {

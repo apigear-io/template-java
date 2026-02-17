@@ -3,12 +3,15 @@ package tbSame1.tbSame1_android_messenger;
 import tbSame1.tbSame1_api.ISameStruct2Interface;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Arrays;
 import tbSame1.tbSame1_api.Struct1;
 import tbSame1.tbSame1_api.Struct2;
 
   public  class SameStruct2InterfaceParcelable implements Parcelable {
+
+    private static final String TAG = "SameStruct2InterfaceParcelable";
 
     public ISameStruct2Interface data;
 
@@ -27,10 +30,9 @@ import tbSame1.tbSame1_api.Struct2;
             data = null;
             return;
         }
-        Struct2Parcelable l_parcelableprop1 = in.readParcelable(Struct2Parcelable.class.getClassLoader(), Struct2Parcelable.class);
-        data.setProp1(l_parcelableprop1 != null ? l_parcelableprop1.data : null);
-        Struct2Parcelable l_parcelableprop2 = in.readParcelable(Struct2Parcelable.class.getClassLoader(), Struct2Parcelable.class);
-        data.setProp2(l_parcelableprop2 != null ? l_parcelableprop2.data : null);
+
+        Log.w(TAG, "Unwrapping interfaces from parcel is currently not supported");
+        return;
     }
 
     public static final Creator<SameStruct2InterfaceParcelable> CREATOR = new Creator<SameStruct2InterfaceParcelable>() {

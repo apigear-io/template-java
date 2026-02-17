@@ -3,10 +3,13 @@ package counter.counter_android_messenger;
 import counter.counter_api.ICounter;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Arrays;
 
   public  class CounterParcelable implements Parcelable {
+
+    private static final String TAG = "CounterParcelable";
 
     public ICounter data;
 
@@ -25,14 +28,9 @@ import java.util.Arrays;
             data = null;
             return;
         }
-        customTypes.customTypes_android_messenger.Vector3DParcelable l_parcelablevector = in.readParcelable(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader(), customTypes.customTypes_android_messenger.Vector3DParcelable.class);
-        data.setVector(l_parcelablevector != null ? l_parcelablevector.data : null);
-        externTypes.externTypes_android_messenger.MyVector3DParcelable l_parcelableexternVector = in.readParcelable(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader(), externTypes.externTypes_android_messenger.MyVector3DParcelable.class);
-        data.setExternVector(l_parcelableexternVector != null ? l_parcelableexternVector.data : null);
-        customTypes.customTypes_android_messenger.Vector3DParcelable[] l_parcelablevectorArray = in.createTypedArray(customTypes.customTypes_android_messenger.Vector3DParcelable.CREATOR);
-        data.setVectorArray(customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray(l_parcelablevectorArray));
-        externTypes.externTypes_android_messenger.MyVector3DParcelable[] l_parcelableexternVectorArray = in.createTypedArray(externTypes.externTypes_android_messenger.MyVector3DParcelable.CREATOR);
-        data.setExternVectorArray(externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray(l_parcelableexternVectorArray));
+
+        Log.w(TAG, "Unwrapping interfaces from parcel is currently not supported");
+        return;
     }
 
     public static final Creator<CounterParcelable> CREATOR = new Creator<CounterParcelable>() {

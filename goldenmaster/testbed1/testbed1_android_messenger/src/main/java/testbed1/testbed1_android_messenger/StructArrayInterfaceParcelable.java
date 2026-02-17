@@ -3,6 +3,7 @@ package testbed1.testbed1_android_messenger;
 import testbed1.testbed1_api.IStructArrayInterface;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Arrays;
 import testbed1.testbed1_api.Enum0;
@@ -12,6 +13,8 @@ import testbed1.testbed1_api.StructInt;
 import testbed1.testbed1_api.StructString;
 
   public  class StructArrayInterfaceParcelable implements Parcelable {
+
+    private static final String TAG = "StructArrayInterfaceParcelable";
 
     public IStructArrayInterface data;
 
@@ -30,16 +33,9 @@ import testbed1.testbed1_api.StructString;
             data = null;
             return;
         }
-        StructBoolParcelable[] l_parcelablepropBool = in.createTypedArray(StructBoolParcelable.CREATOR);
-        data.setPropBool(StructBoolParcelable.unwrapArray(l_parcelablepropBool));
-        StructIntParcelable[] l_parcelablepropInt = in.createTypedArray(StructIntParcelable.CREATOR);
-        data.setPropInt(StructIntParcelable.unwrapArray(l_parcelablepropInt));
-        StructFloatParcelable[] l_parcelablepropFloat = in.createTypedArray(StructFloatParcelable.CREATOR);
-        data.setPropFloat(StructFloatParcelable.unwrapArray(l_parcelablepropFloat));
-        StructStringParcelable[] l_parcelablepropString = in.createTypedArray(StructStringParcelable.CREATOR);
-        data.setPropString(StructStringParcelable.unwrapArray(l_parcelablepropString));
-        Enum0Parcelable[] l_parcelablepropEnum = in.createTypedArray(Enum0Parcelable.CREATOR);
-        data.setPropEnum(Enum0Parcelable.unwrapArray(l_parcelablepropEnum));
+
+        Log.w(TAG, "Unwrapping interfaces from parcel is currently not supported");
+        return;
     }
 
     public static final Creator<StructArrayInterfaceParcelable> CREATOR = new Creator<StructArrayInterfaceParcelable>() {

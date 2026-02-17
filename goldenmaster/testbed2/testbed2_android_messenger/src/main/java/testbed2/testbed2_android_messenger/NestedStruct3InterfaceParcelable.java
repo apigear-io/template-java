@@ -3,6 +3,7 @@ package testbed2.testbed2_android_messenger;
 import testbed2.testbed2_api.INestedStruct3Interface;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Arrays;
 import testbed2.testbed2_api.NestedStruct1;
@@ -10,6 +11,8 @@ import testbed2.testbed2_api.NestedStruct2;
 import testbed2.testbed2_api.NestedStruct3;
 
   public  class NestedStruct3InterfaceParcelable implements Parcelable {
+
+    private static final String TAG = "NestedStruct3InterfaceParcelable";
 
     public INestedStruct3Interface data;
 
@@ -28,12 +31,9 @@ import testbed2.testbed2_api.NestedStruct3;
             data = null;
             return;
         }
-        NestedStruct1Parcelable l_parcelableprop1 = in.readParcelable(NestedStruct1Parcelable.class.getClassLoader(), NestedStruct1Parcelable.class);
-        data.setProp1(l_parcelableprop1 != null ? l_parcelableprop1.data : null);
-        NestedStruct2Parcelable l_parcelableprop2 = in.readParcelable(NestedStruct2Parcelable.class.getClassLoader(), NestedStruct2Parcelable.class);
-        data.setProp2(l_parcelableprop2 != null ? l_parcelableprop2.data : null);
-        NestedStruct3Parcelable l_parcelableprop3 = in.readParcelable(NestedStruct3Parcelable.class.getClassLoader(), NestedStruct3Parcelable.class);
-        data.setProp3(l_parcelableprop3 != null ? l_parcelableprop3.data : null);
+
+        Log.w(TAG, "Unwrapping interfaces from parcel is currently not supported");
+        return;
     }
 
     public static final Creator<NestedStruct3InterfaceParcelable> CREATOR = new Creator<NestedStruct3InterfaceParcelable>() {

@@ -3,10 +3,13 @@ package tbRefIfaces.tbRefIfaces_android_messenger;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Arrays;
 
   public  class SimpleLocalIfParcelable implements Parcelable {
+
+    private static final String TAG = "SimpleLocalIfParcelable";
 
     public ISimpleLocalIf data;
 
@@ -25,7 +28,9 @@ import java.util.Arrays;
             data = null;
             return;
         }
-        data.setIntProperty(in.readInt());
+
+        Log.w(TAG, "Unwrapping interfaces from parcel is currently not supported");
+        return;
     }
 
     public static final Creator<SimpleLocalIfParcelable> CREATOR = new Creator<SimpleLocalIfParcelable>() {
