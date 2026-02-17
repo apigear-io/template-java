@@ -14,9 +14,9 @@ import testbed2.testbed2_api.Enum2;
 import testbed2.testbed2_api.Enum3;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractNestedStruct3Interface implements INestedStruct3Interface {
-    private Collection<INestedStruct3InterfaceEventListener> listeners = new HashSet<>();
+    private Collection<INestedStruct3InterfaceEventListener> listeners = ConcurrentHashMap.newKeySet();
 
     @Override
     public void addEventListener(INestedStruct3InterfaceEventListener listener) {

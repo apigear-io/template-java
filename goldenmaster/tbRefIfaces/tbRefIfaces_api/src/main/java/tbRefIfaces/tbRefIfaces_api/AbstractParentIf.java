@@ -4,9 +4,9 @@ import tbRefIfaces.tbRefIfaces_api.IParentIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.IParentIf;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractParentIf implements IParentIf {
-    private Collection<IParentIfEventListener> listeners = new HashSet<>();
+    private Collection<IParentIfEventListener> listeners = ConcurrentHashMap.newKeySet();
 
     @Override
     public void addEventListener(IParentIfEventListener listener) {

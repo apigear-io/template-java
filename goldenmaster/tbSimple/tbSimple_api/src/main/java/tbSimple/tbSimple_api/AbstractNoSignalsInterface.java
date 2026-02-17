@@ -4,9 +4,9 @@ import tbSimple.tbSimple_api.INoSignalsInterfaceEventListener;
 import tbSimple.tbSimple_api.INoSignalsInterface;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractNoSignalsInterface implements INoSignalsInterface {
-    private Collection<INoSignalsInterfaceEventListener> listeners = new HashSet<>();
+    private Collection<INoSignalsInterfaceEventListener> listeners = ConcurrentHashMap.newKeySet();
 
     @Override
     public void addEventListener(INoSignalsInterfaceEventListener listener) {

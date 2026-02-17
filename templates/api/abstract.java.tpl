@@ -11,11 +11,11 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
 {{- end }}
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 {{- $interfaceName := printf "I%s" (Camel .Interface.Name) }}
   public abstract class Abstract{{Camel .Interface.Name}} implements {{$interfaceName}} {
-    private Collection<{{$interfaceName}}EventListener> listeners = new HashSet<>();
+    private Collection<{{$interfaceName}}EventListener> listeners = ConcurrentHashMap.newKeySet();
 
     @Override
     public void addEventListener({{$interfaceName}}EventListener listener) {

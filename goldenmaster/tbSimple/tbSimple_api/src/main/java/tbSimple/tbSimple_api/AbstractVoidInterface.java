@@ -4,9 +4,9 @@ import tbSimple.tbSimple_api.IVoidInterfaceEventListener;
 import tbSimple.tbSimple_api.IVoidInterface;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractVoidInterface implements IVoidInterface {
-    private Collection<IVoidInterfaceEventListener> listeners = new HashSet<>();
+    private Collection<IVoidInterfaceEventListener> listeners = ConcurrentHashMap.newKeySet();
 
     @Override
     public void addEventListener(IVoidInterfaceEventListener listener) {

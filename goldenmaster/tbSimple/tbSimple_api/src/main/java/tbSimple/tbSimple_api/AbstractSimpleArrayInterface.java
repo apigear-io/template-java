@@ -4,9 +4,9 @@ import tbSimple.tbSimple_api.ISimpleArrayInterfaceEventListener;
 import tbSimple.tbSimple_api.ISimpleArrayInterface;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractSimpleArrayInterface implements ISimpleArrayInterface {
-    private Collection<ISimpleArrayInterfaceEventListener> listeners = new HashSet<>();
+    private Collection<ISimpleArrayInterfaceEventListener> listeners = ConcurrentHashMap.newKeySet();
 
     @Override
     public void addEventListener(ISimpleArrayInterfaceEventListener listener) {
