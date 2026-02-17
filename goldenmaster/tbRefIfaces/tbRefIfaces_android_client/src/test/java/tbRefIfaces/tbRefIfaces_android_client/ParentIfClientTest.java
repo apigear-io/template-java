@@ -385,7 +385,7 @@ public class ParentIfClientTest
 
 }
 
-
+    @Test
     public void onlocalIfMethodRequest() throws RemoteException {
 
         // Execute method
@@ -431,7 +431,7 @@ public class ParentIfClientTest
 
     }
 
-
+    @Test
     public void onlocalIfMethodListRequest() throws RemoteException {
 
         // Execute method
@@ -479,7 +479,7 @@ public class ParentIfClientTest
 
     }
 
-
+    @Test
     public void onimportedIfMethodRequest() throws RemoteException {
 
         // Execute method
@@ -525,7 +525,7 @@ public class ParentIfClientTest
 
     }
 
-
+    @Test
     public void onimportedIfMethodListRequest() throws RemoteException {
 
         // Execute method

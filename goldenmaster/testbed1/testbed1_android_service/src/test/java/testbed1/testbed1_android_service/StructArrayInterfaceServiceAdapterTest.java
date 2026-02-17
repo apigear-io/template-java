@@ -550,7 +550,7 @@ public class StructArrayInterfaceServiceAdapterTest
         assertEquals(receivedparamEnum, testparamEnum);
 }
 
-
+    @Test
     public void onfuncBoolRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, StructArrayInterfaceMessageType.RPC_FuncBoolReq.getValue());
@@ -586,7 +586,7 @@ public class StructArrayInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfuncIntRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, StructArrayInterfaceMessageType.RPC_FuncIntReq.getValue());
@@ -622,7 +622,7 @@ public class StructArrayInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfuncFloatRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, StructArrayInterfaceMessageType.RPC_FuncFloatReq.getValue());
@@ -658,7 +658,7 @@ public class StructArrayInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfuncStringRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, StructArrayInterfaceMessageType.RPC_FuncStringReq.getValue());
@@ -694,7 +694,7 @@ public class StructArrayInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfuncEnumRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, StructArrayInterfaceMessageType.RPC_FuncEnumReq.getValue());

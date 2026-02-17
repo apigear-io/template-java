@@ -470,7 +470,7 @@ public class StructInterfaceServiceAdapterTest
         assertEquals(receivedparamString, testparamString);
 }
 
-
+    @Test
     public void onfuncBoolRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, StructInterfaceMessageType.RPC_FuncBoolReq.getValue());
@@ -504,7 +504,7 @@ public class StructInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfuncIntRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, StructInterfaceMessageType.RPC_FuncIntReq.getValue());
@@ -538,7 +538,7 @@ public class StructInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfuncFloatRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, StructInterfaceMessageType.RPC_FuncFloatReq.getValue());
@@ -572,7 +572,7 @@ public class StructInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfuncStringRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, StructInterfaceMessageType.RPC_FuncStringReq.getValue());

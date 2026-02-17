@@ -423,7 +423,7 @@ public class NestedStruct3InterfaceServiceAdapterTest
         assertEquals(receivedparam3, testparam3);
 }
 
-
+    @Test
     public void onfunc1Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, NestedStruct3InterfaceMessageType.RPC_Func1Req.getValue());
@@ -457,7 +457,7 @@ public class NestedStruct3InterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfunc2Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, NestedStruct3InterfaceMessageType.RPC_Func2Req.getValue());
@@ -493,7 +493,7 @@ public class NestedStruct3InterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfunc3Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, NestedStruct3InterfaceMessageType.RPC_Func3Req.getValue());

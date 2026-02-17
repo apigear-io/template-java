@@ -272,7 +272,7 @@ public class SameEnum1InterfaceServiceAdapterTest
         assertEquals(receivedparam1, testparam1);
 }
 
-
+    @Test
     public void onfunc1Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, SameEnum1InterfaceMessageType.RPC_Func1Req.getValue());

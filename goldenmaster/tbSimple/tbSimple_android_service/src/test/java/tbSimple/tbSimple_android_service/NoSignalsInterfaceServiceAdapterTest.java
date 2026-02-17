@@ -293,7 +293,7 @@ public class NoSignalsInterfaceServiceAdapterTest
         assertEquals(receivedpropInt, testpropInt);
     }
 
-
+    @Test
     public void onfuncVoidRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, NoSignalsInterfaceMessageType.RPC_FuncVoidReq.getValue());
@@ -317,7 +317,7 @@ public class NoSignalsInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfuncBoolRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, NoSignalsInterfaceMessageType.RPC_FuncBoolReq.getValue());

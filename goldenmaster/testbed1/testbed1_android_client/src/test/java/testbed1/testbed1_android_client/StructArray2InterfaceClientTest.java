@@ -417,7 +417,7 @@ public class StructArray2InterfaceClientTest
 
 }
 
-
+    @Test
     public void onfuncBoolRequest() throws RemoteException {
 
         // Execute method
@@ -464,7 +464,7 @@ public class StructArray2InterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncIntRequest() throws RemoteException {
 
         // Execute method
@@ -511,7 +511,7 @@ public class StructArray2InterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncFloatRequest() throws RemoteException {
 
         // Execute method
@@ -558,7 +558,7 @@ public class StructArray2InterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncStringRequest() throws RemoteException {
 
         // Execute method
@@ -605,7 +605,7 @@ public class StructArray2InterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncEnumRequest() throws RemoteException {
 
         // Execute method

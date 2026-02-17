@@ -251,7 +251,7 @@ public class {{Camel .Interface.Name }}ClientTest
 
 {{- range .Interface.Operations }}
 
-
+    @Test
     public void on{{.Name}}Request() throws RemoteException {
 
         // Execute method
