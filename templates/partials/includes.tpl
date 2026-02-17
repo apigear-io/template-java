@@ -6,7 +6,7 @@
     {{- if and (not .Schema.Import)  (not .IsPrimitive)  }}
 {{- $type :=  Camel .Type }}
         {{- if eq .KindType "interface" }}
-{{- $interfacesToImport = (appendList $typesToImport $type) }}
+{{- $interfacesToImport = (appendList $interfacesToImport $type) }}
         {{- else }}
 {{- $typesToImport = (appendList $typesToImport $type) }}
         {{- end }}
@@ -17,7 +17,7 @@
     {{- if and (not .Schema.Import)  (not .IsPrimitive)  }}
 {{- $type :=  Camel .Type }}
         {{- if eq .KindType "interface" }}
-{{- $interfacesToImport = (appendList $typesToImport $type) }}
+{{- $interfacesToImport = (appendList $interfacesToImport $type) }}
         {{- else }}
 {{- $typesToImport = (appendList $typesToImport $type) }}
         {{- end }}
@@ -26,7 +26,7 @@
     {{- if and (and (not .Return.Schema.Import)  (not .Return.IsPrimitive))  (not .Return.IsVoid) }}
 {{- $type :=  Camel .Return.Type }}
         {{- if eq .Return.KindType "interface" }}
-{{- $interfacesToImport = (appendList $typesToImport $type) }}
+{{- $interfacesToImport = (appendList $interfacesToImport $type) }}
         {{- else }}
 {{- $typesToImport = (appendList $typesToImport $type) }}
         {{- end }}
@@ -37,7 +37,7 @@
     {{- if and (not .Schema.Import)  (not .IsPrimitive)  }}
 {{- $type :=  Camel .Type }}
         {{- if eq .KindType "interface" }}
-{{- $interfacesToImport = (appendList $typesToImport $type) }}
+{{- $interfacesToImport = (appendList $interfacesToImport $type) }}
         {{- else }}
 {{- $typesToImport = (appendList $typesToImport $type) }}
         {{- end }}
@@ -62,7 +62,7 @@ import {{$module}}.{{$module}}_api.I{{.}};
     {{- if and (not .Schema.Import)  (not .IsPrimitive)  }}
 {{- $type :=  Camel .Type }}
         {{- if eq .KindType "interface" }}
-{{- $interfacesToImport = (appendList $typesToImport $type) }}
+{{- $interfacesToImport = (appendList $interfacesToImport $type) }}
         {{- else }}
 {{- $typesToImport = (appendList $typesToImport $type) }}
         {{- end }}
@@ -73,7 +73,7 @@ import {{$module}}.{{$module}}_api.I{{.}};
     {{- if and (not .Schema.Import)  (not .IsPrimitive)  }}
 {{- $type :=  Camel .Type }}
         {{- if eq .KindType "interface" }}
-{{- $interfacesToImport = (appendList $typesToImport $type) }}
+{{- $interfacesToImport = (appendList $interfacesToImport $type) }}
         {{- else }}
 {{- $typesToImport = (appendList $typesToImport $type) }}
         {{- end }}
@@ -82,7 +82,7 @@ import {{$module}}.{{$module}}_api.I{{.}};
     {{- if and (and (not .Return.Schema.Import)  (not .Return.IsPrimitive))  (not .Return.IsVoid) }}
 {{- $type :=  Camel .Return.Type }}
         {{- if eq .Return.KindType "interface" }}
-{{- $interfacesToImport = (appendList $typesToImport $type) }}
+{{- $interfacesToImport = (appendList $interfacesToImport $type) }}
         {{- else }}
 {{- $typesToImport = (appendList $typesToImport $type) }}
         {{- end }}
@@ -93,7 +93,7 @@ import {{$module}}.{{$module}}_api.I{{.}};
     {{- if and (not .Schema.Import)  (not .IsPrimitive)  }}
 {{- $type :=  Camel .Type }}
         {{- if eq .KindType "interface" }}
-{{- $interfacesToImport = (appendList $typesToImport $type) }}
+{{- $interfacesToImport = (appendList $interfacesToImport $type) }}
         {{- else }}
 {{- $typesToImport = (appendList $typesToImport $type) }}
         {{- end }}
@@ -120,7 +120,7 @@ import {{$module}}.{{$module}}_android_messenger.{{.}}Parcelable;
     {{- if and (not .Schema.Import)  (not .IsPrimitive)  }}
 {{- $type :=  Camel .Type }}
         {{- if eq .KindType "interface" }}
-{{- $interfacesToImport = (appendList $typesToImport $type) }}
+{{- $interfacesToImport = (appendList $interfacesToImport $type) }}
         {{- else }}
 {{- $typesToImport = (appendList $typesToImport $type) }}
         {{- end }}
@@ -131,7 +131,7 @@ import {{$module}}.{{$module}}_android_messenger.{{.}}Parcelable;
     {{- if and (not .Schema.Import)  (not .IsPrimitive)  }}
 {{- $type :=  Camel .Type }}
         {{- if eq .KindType "interface" }}
-{{- $interfacesToImport = (appendList $typesToImport $type) }}
+{{- $interfacesToImport = (appendList $interfacesToImport $type) }}
         {{- else }}
 {{- $typesToImport = (appendList $typesToImport $type) }}
         {{- end }}
@@ -140,7 +140,7 @@ import {{$module}}.{{$module}}_android_messenger.{{.}}Parcelable;
     {{- if and (and (not .Return.Schema.Import)  (not .Return.IsPrimitive))  (not .Return.IsVoid) }}
 {{- $type :=  Camel .Return.Type }}
         {{- if eq .Return.KindType "interface" }}
-{{- $interfacesToImport = (appendList $typesToImport $type) }}
+{{- $interfacesToImport = (appendList $interfacesToImport $type) }}
         {{- else }}
 {{- $typesToImport = (appendList $typesToImport $type) }}
         {{- end }}
@@ -151,7 +151,7 @@ import {{$module}}.{{$module}}_android_messenger.{{.}}Parcelable;
     {{- if and (not .Schema.Import)  (not .IsPrimitive)  }}
 {{- $type :=  Camel .Type }}
         {{- if eq .KindType "interface" }}
-{{- $interfacesToImport = (appendList $typesToImport $type) }}
+{{- $interfacesToImport = (appendList $interfacesToImport $type) }}
         {{- else }}
 {{- $typesToImport = (appendList $typesToImport $type) }}
         {{- end }}
@@ -177,7 +177,7 @@ import {{$module}}.{{$module}}_impl.{{.}}Service;
 {{- if and (not .Schema.Import)  (not .IsPrimitive) }}
 {{- $type :=  Camel .Type }}
 {{- if eq .KindType "interface" }}
-{{- $interfacesToImport = (appendList $typesToImport $type) }}
+{{- $interfacesToImport = (appendList $interfacesToImport $type) }}
 {{- else }}
 {{- $typesToImport = (appendList $typesToImport $type) }}
 {{- end }}
