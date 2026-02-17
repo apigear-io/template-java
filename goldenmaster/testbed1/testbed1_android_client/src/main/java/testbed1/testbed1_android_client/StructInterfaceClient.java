@@ -162,6 +162,12 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
             mIsBoundToService = false;
             fire_readyStatusChanged(false);
         }
+
+        for (Consumer<Bundle> bundleConsumer : mpendingCalls.values())
+        {
+            bundleConsumer.accept(null);
+        }
+        mpendingCalls.clear();
     }
 
 
@@ -564,6 +570,12 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 
         CompletableFuture<StructBool>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcBool with null");
+                return;
+            }
             
 		    StructBool result = bundle.getParcelable("result", StructBoolParcelable.class).getStructBool();
             Log.v(TAG, "resolve funcBool" + result);
@@ -606,6 +618,12 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 
         CompletableFuture<StructInt>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcInt with null");
+                return;
+            }
             
 		    StructInt result = bundle.getParcelable("result", StructIntParcelable.class).getStructInt();
             Log.v(TAG, "resolve funcInt" + result);
@@ -648,6 +666,12 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 
         CompletableFuture<StructFloat>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcFloat with null");
+                return;
+            }
             
 		    StructFloat result = bundle.getParcelable("result", StructFloatParcelable.class).getStructFloat();
             Log.v(TAG, "resolve funcFloat" + result);
@@ -690,6 +714,12 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 
         CompletableFuture<StructString>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcString with null");
+                return;
+            }
             
 		    StructString result = bundle.getParcelable("result", StructStringParcelable.class).getStructString();
             Log.v(TAG, "resolve funcString" + result);

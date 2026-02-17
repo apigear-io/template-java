@@ -158,6 +158,12 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
             mIsBoundToService = false;
             fire_readyStatusChanged(false);
         }
+
+        for (Consumer<Bundle> bundleConsumer : mpendingCalls.values())
+        {
+            bundleConsumer.accept(null);
+        }
+        mpendingCalls.clear();
     }
 
 
@@ -910,6 +916,12 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         CompletableFuture<Boolean>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcNoParams with null");
+                return;
+            }
             
 		    boolean result = bundle.getBoolean("result", false);
             Log.v(TAG, "resolve funcNoParams" + result);
@@ -952,6 +964,12 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         CompletableFuture<Boolean>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcBool with null");
+                return;
+            }
             
 		    boolean result = bundle.getBoolean("result", false);
             Log.v(TAG, "resolve funcBool" + result);
@@ -994,6 +1012,12 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         CompletableFuture<Integer>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcInt with null");
+                return;
+            }
             
 		    int result = bundle.getInt("result", 0);
             Log.v(TAG, "resolve funcInt" + result);
@@ -1036,6 +1060,12 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         CompletableFuture<Integer>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcInt32 with null");
+                return;
+            }
             
 		    int result = bundle.getInt("result", 0);
             Log.v(TAG, "resolve funcInt32" + result);
@@ -1078,6 +1108,12 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         CompletableFuture<Long>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcInt64 with null");
+                return;
+            }
             
 		    long result = bundle.getLong("result", 0L);
             Log.v(TAG, "resolve funcInt64" + result);
@@ -1120,6 +1156,12 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         CompletableFuture<Float>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcFloat with null");
+                return;
+            }
             
 		    float result = bundle.getFloat("result", 0.0f);
             Log.v(TAG, "resolve funcFloat" + result);
@@ -1162,6 +1204,12 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         CompletableFuture<Float>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcFloat32 with null");
+                return;
+            }
             
 		    float result = bundle.getFloat("result", 0.0f);
             Log.v(TAG, "resolve funcFloat32" + result);
@@ -1204,6 +1252,12 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         CompletableFuture<Double>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcFloat64 with null");
+                return;
+            }
             
 		    double result = bundle.getDouble("result", 0.0);
             Log.v(TAG, "resolve funcFloat64" + result);
@@ -1246,6 +1300,12 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 
         CompletableFuture<String>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcString with null");
+                return;
+            }
             
 		    String result = bundle.getString("result", new String());
             Log.v(TAG, "resolve funcString" + result);

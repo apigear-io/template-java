@@ -156,6 +156,12 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
             mIsBoundToService = false;
             fire_readyStatusChanged(false);
         }
+
+        for (Consumer<Bundle> bundleConsumer : mpendingCalls.values())
+        {
+            bundleConsumer.accept(null);
+        }
+        mpendingCalls.clear();
     }
 
 
@@ -550,6 +556,12 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 
         CompletableFuture<ISimpleLocalIf>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving localIfMethod with null");
+                return;
+            }
             
 		    ISimpleLocalIf result = bundle.getParcelable("result", SimpleLocalIfParcelable.class).getSimpleLocalIf();
             Log.v(TAG, "resolve localIfMethod" + result);
@@ -592,6 +604,12 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 
         CompletableFuture<ISimpleLocalIf[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving localIfMethodList with null");
+                return;
+            }
             
             ISimpleLocalIf[] result =  SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])bundle.getParcelableArray("result", SimpleLocalIfParcelable.class));
             Log.v(TAG, "resolve localIfMethodList" + result);
@@ -634,6 +652,12 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 
         CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving importedIfMethod with null");
+                return;
+            }
             
 		    tbIfaceimport.tbIfaceimport_api.IEmptyIf result = bundle.getParcelable("result", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class).getEmptyIf();
             Log.v(TAG, "resolve importedIfMethod" + result);
@@ -676,6 +700,12 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 
         CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving importedIfMethodList with null");
+                return;
+            }
             
             tbIfaceimport.tbIfaceimport_api.IEmptyIf[] result =  tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])bundle.getParcelableArray("result", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class));
             Log.v(TAG, "resolve importedIfMethodList" + result);
