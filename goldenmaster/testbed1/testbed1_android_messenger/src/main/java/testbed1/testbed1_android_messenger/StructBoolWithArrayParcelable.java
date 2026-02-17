@@ -48,6 +48,7 @@ import java.util.Arrays;
         if (data == null) {
             return;
         }
+
         dest.writeBooleanArray(data.fieldBool);
 
 

@@ -24,7 +24,12 @@ import java.util.Arrays;
 
     protected Enum3Parcelable(Parcel in) {
         boolean dataIsValid = in.readBoolean();
-        this.data = dataIsValid ? Enum3.fromValue(in.readInt()) : null;
+        if (!dataIsValid) {
+            this.data = null;
+            return;
+        }
+
+        this.data = Enum3.fromValue(in.readInt());
     }
 
     public static final Creator<Enum3Parcelable> CREATOR = new Creator<Enum3Parcelable>() {
@@ -43,9 +48,11 @@ import java.util.Arrays;
     public void writeToParcel(Parcel dest, int flags) {
 
         dest.writeBoolean(data != null);
-        if (data != null) {
-            dest.writeInt(data.getValue());
+        if (data == null) {
+            return;
         }
+
+        dest.writeInt(data.getValue());
     }
 
     public static Enum3Parcelable[] wrapArray(Enum3[] enums) {

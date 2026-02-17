@@ -50,6 +50,7 @@ import java.util.Arrays;
         if (data == null) {
             return;
         }
+
         dest.writeFloat(data.x);
         dest.writeFloat(data.y);
         dest.writeFloat(data.z);
