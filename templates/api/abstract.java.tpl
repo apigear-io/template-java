@@ -15,7 +15,7 @@ import java.util.HashSet;
 
 {{- $interfaceName := printf "I%s" (Camel .Interface.Name) }}
   public abstract class Abstract{{Camel .Interface.Name}} implements {{$interfaceName}} {
-    public Collection<{{$interfaceName}}EventListener> listeners = new HashSet<>();
+    private Collection<{{$interfaceName}}EventListener> listeners = new HashSet<>();
 
     @Override
     public void addEventListener({{$interfaceName}}EventListener listener) {

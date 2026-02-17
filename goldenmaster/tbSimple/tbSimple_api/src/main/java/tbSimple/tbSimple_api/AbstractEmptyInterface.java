@@ -6,7 +6,7 @@ import tbSimple.tbSimple_api.IEmptyInterface;
 import java.util.Collection;
 import java.util.HashSet;
   public abstract class AbstractEmptyInterface implements IEmptyInterface {
-    public Collection<IEmptyInterfaceEventListener> listeners = new HashSet<>();
+    private Collection<IEmptyInterfaceEventListener> listeners = new HashSet<>();
 
     @Override
     public void addEventListener(IEmptyInterfaceEventListener listener) {

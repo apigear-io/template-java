@@ -7,7 +7,7 @@ import tbNames.tbNames_api.EnumWithUnderScores;
 import java.util.Collection;
 import java.util.HashSet;
   public abstract class AbstractNamEs implements INamEs {
-    public Collection<INamEsEventListener> listeners = new HashSet<>();
+    private Collection<INamEsEventListener> listeners = new HashSet<>();
 
     @Override
     public void addEventListener(INamEsEventListener listener) {

@@ -6,7 +6,7 @@ import counter.counter_api.ICounter;
 import java.util.Collection;
 import java.util.HashSet;
   public abstract class AbstractCounter implements ICounter {
-    public Collection<ICounterEventListener> listeners = new HashSet<>();
+    private Collection<ICounterEventListener> listeners = new HashSet<>();
 
     @Override
     public void addEventListener(ICounterEventListener listener) {

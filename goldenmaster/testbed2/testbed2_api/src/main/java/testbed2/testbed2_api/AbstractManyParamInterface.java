@@ -16,7 +16,7 @@ import testbed2.testbed2_api.Enum3;
 import java.util.Collection;
 import java.util.HashSet;
   public abstract class AbstractManyParamInterface implements IManyParamInterface {
-    public Collection<IManyParamInterfaceEventListener> listeners = new HashSet<>();
+    private Collection<IManyParamInterfaceEventListener> listeners = new HashSet<>();
 
     @Override
     public void addEventListener(IManyParamInterfaceEventListener listener) {

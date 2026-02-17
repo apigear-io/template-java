@@ -6,7 +6,7 @@ import tbSimple.tbSimple_api.ISimpleInterface;
 import java.util.Collection;
 import java.util.HashSet;
   public abstract class AbstractSimpleInterface implements ISimpleInterface {
-    public Collection<ISimpleInterfaceEventListener> listeners = new HashSet<>();
+    private Collection<ISimpleInterfaceEventListener> listeners = new HashSet<>();
 
     @Override
     public void addEventListener(ISimpleInterfaceEventListener listener) {

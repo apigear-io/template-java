@@ -10,7 +10,7 @@ import tbEnum.tbEnum_api.Enum3;
 import java.util.Collection;
 import java.util.HashSet;
   public abstract class AbstractEnumInterface implements IEnumInterface {
-    public Collection<IEnumInterfaceEventListener> listeners = new HashSet<>();
+    private Collection<IEnumInterfaceEventListener> listeners = new HashSet<>();
 
     @Override
     public void addEventListener(IEnumInterfaceEventListener listener) {

@@ -6,7 +6,7 @@ import tbSimple.tbSimple_api.INoOperationsInterface;
 import java.util.Collection;
 import java.util.HashSet;
   public abstract class AbstractNoOperationsInterface implements INoOperationsInterface {
-    public Collection<INoOperationsInterfaceEventListener> listeners = new HashSet<>();
+    private Collection<INoOperationsInterfaceEventListener> listeners = new HashSet<>();
 
     @Override
     public void addEventListener(INoOperationsInterfaceEventListener listener) {
