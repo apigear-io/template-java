@@ -20,7 +20,9 @@ public  class StructFloatWithArray {
 
     public StructFloatWithArray(StructFloatWithArray other)
     {
-        this.fieldFloat = java.util.Arrays.copyOf(other.fieldFloat, other.fieldFloat.length);
+        this.fieldFloat = other.fieldFloat != null
+            ? java.util.Arrays.copyOf(other.fieldFloat, other.fieldFloat.length)
+            : null;
     }
 
     @Override

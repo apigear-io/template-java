@@ -20,7 +20,9 @@ public  class StructIntWithArray {
 
     public StructIntWithArray(StructIntWithArray other)
     {
-        this.fieldInt = java.util.Arrays.copyOf(other.fieldInt, other.fieldInt.length);
+        this.fieldInt = other.fieldInt != null
+            ? java.util.Arrays.copyOf(other.fieldInt, other.fieldInt.length)
+            : null;
     }
 
     @Override

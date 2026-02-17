@@ -38,19 +38,30 @@ public  class {{Camel .Struct.Name}} {
 {{- range .Struct.Fields }}
 {{- if .IsArray}}
 {{- if or .IsPrimitive ((eq .KindType "enum"))}}
-        this.{{camel .Name}} = java.util.Arrays.copyOf(other.{{camel .Name}}, other.{{camel .Name}}.length);
+        this.{{camel .Name}} = other.{{camel .Name}} != null
+            ? java.util.Arrays.copyOf(other.{{camel .Name}}, other.{{camel .Name}}.length)
+            : null;
 {{- else }}
-        this.{{camel .Name}} = new {{javaElementType "" . }}[other.{{camel .Name}}.length];
-        for (int i = 0; i < other.{{camel .Name}}.length; i++)
+        if (other.{{camel .Name}} != null)
         {
-            this.{{camel .Name}}[i] = new {{javaElementType "" . }}(other.{{camel .Name}}[i]);
+            this.{{camel .Name}} = new {{javaElementType "" . }}[other.{{camel .Name}}.length];
+            for (int i = 0; i < other.{{camel .Name}}.length; i++)
+            {
+                this.{{camel .Name}}[i] = new {{javaElementType "" . }}(other.{{camel .Name}}[i]);
+            }
+        }
+        else
+        {
+            this.{{camel .Name}} = null;
         }
 {{- end }}
 {{- else }}
 {{- if or .IsPrimitive ((eq .KindType "enum"))}}
         this.{{camel .Name}} = other.{{camel .Name}};
 {{- else }}
-        this.{{camel .Name}} = new {{javaType "" . }}(other.{{camel .Name}});
+        this.{{camel .Name}} = other.{{camel .Name}} != null
+            ? new {{javaType "" . }}(other.{{camel .Name}})
+            : null;
 {{- end }}
 {{- end }}
 {{- end }}
