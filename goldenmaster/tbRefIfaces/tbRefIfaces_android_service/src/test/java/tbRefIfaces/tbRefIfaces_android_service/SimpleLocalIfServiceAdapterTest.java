@@ -256,7 +256,7 @@ public class SimpleLocalIfServiceAdapterTest
         assertEquals(receivedparam, testparam);
 }
 
-
+    @Test
     public void onintMethodRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, SimpleLocalIfMessageType.RPC_IntMethodReq.getValue());

@@ -321,7 +321,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
 
 {{- range .Interface.Operations }}
 
-
+    @Test
     public void on{{.Name}}Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, {{$InterfaceName}}MessageType.RPC_{{Camel .Name}}Req.getValue());

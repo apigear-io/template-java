@@ -339,7 +339,7 @@ public class SameEnum2InterfaceServiceAdapterTest
         assertEquals(receivedparam2, testparam2);
 }
 
-
+    @Test
     public void onfunc1Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, SameEnum2InterfaceMessageType.RPC_Func1Req.getValue());
@@ -373,7 +373,7 @@ public class SameEnum2InterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfunc2Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, SameEnum2InterfaceMessageType.RPC_Func2Req.getValue());

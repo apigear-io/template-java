@@ -328,7 +328,7 @@ public class CounterClientTest
 
 }
 
-
+    @Test
     public void onincrementRequest() throws RemoteException {
 
         // Execute method
@@ -374,7 +374,7 @@ public class CounterClientTest
 
     }
 
-
+    @Test
     public void onincrementArrayRequest() throws RemoteException {
 
         // Execute method
@@ -422,7 +422,7 @@ public class CounterClientTest
 
     }
 
-
+    @Test
     public void ondecrementRequest() throws RemoteException {
 
         // Execute method
@@ -468,7 +468,7 @@ public class CounterClientTest
 
     }
 
-
+    @Test
     public void ondecrementArrayRequest() throws RemoteException {
 
         // Execute method

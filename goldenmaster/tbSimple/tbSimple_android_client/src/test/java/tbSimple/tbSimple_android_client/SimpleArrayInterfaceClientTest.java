@@ -612,7 +612,7 @@ public class SimpleArrayInterfaceClientTest
 
 }
 
-
+    @Test
     public void onfuncBoolRequest() throws RemoteException {
 
         // Execute method
@@ -659,7 +659,7 @@ public class SimpleArrayInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncIntRequest() throws RemoteException {
 
         // Execute method
@@ -706,7 +706,7 @@ public class SimpleArrayInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncInt32Request() throws RemoteException {
 
         // Execute method
@@ -753,7 +753,7 @@ public class SimpleArrayInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncInt64Request() throws RemoteException {
 
         // Execute method
@@ -800,7 +800,7 @@ public class SimpleArrayInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncFloatRequest() throws RemoteException {
 
         // Execute method
@@ -847,7 +847,7 @@ public class SimpleArrayInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncFloat32Request() throws RemoteException {
 
         // Execute method
@@ -894,7 +894,7 @@ public class SimpleArrayInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncFloat64Request() throws RemoteException {
 
         // Execute method
@@ -941,7 +941,7 @@ public class SimpleArrayInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncStringRequest() throws RemoteException {
 
         // Execute method

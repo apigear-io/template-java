@@ -317,7 +317,7 @@ public class NamEsClientTest
 
 }
 
-
+    @Test
     public void onSOME_FUNCTIONRequest() throws RemoteException {
 
         // Execute method
@@ -359,7 +359,7 @@ public class NamEsClientTest
 
     }
 
-
+    @Test
     public void onSome_Function2Request() throws RemoteException {
 
         // Execute method

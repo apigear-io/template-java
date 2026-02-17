@@ -226,7 +226,7 @@ public class NestedStruct1InterfaceClientTest
 
 }
 
-
+    @Test
     public void onfuncNoReturnValueRequest() throws RemoteException {
 
         // Execute method
@@ -269,7 +269,7 @@ public class NestedStruct1InterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncNoParamsRequest() throws RemoteException {
 
         // Execute method
@@ -310,7 +310,7 @@ public class NestedStruct1InterfaceClientTest
 
     }
 
-
+    @Test
     public void onfunc1Request() throws RemoteException {
 
         // Execute method

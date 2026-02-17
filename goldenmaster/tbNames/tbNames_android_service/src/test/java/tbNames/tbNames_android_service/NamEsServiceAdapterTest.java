@@ -394,7 +394,7 @@ public class NamEsServiceAdapterTest
         assertEquals(receivedSome_Param, testSome_Param);
 }
 
-
+    @Test
     public void onSOME_FUNCTIONRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, NamEsMessageType.RPC_SomeFunctionReq.getValue());
@@ -420,7 +420,7 @@ public class NamEsServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onSome_Function2Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, NamEsMessageType.RPC_SomeFunction2Req.getValue());

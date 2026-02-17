@@ -382,7 +382,7 @@ public class StructInterfaceClientTest
 
 }
 
-
+    @Test
     public void onfuncBoolRequest() throws RemoteException {
 
         // Execute method
@@ -428,7 +428,7 @@ public class StructInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncIntRequest() throws RemoteException {
 
         // Execute method
@@ -474,7 +474,7 @@ public class StructInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncFloatRequest() throws RemoteException {
 
         // Execute method
@@ -520,7 +520,7 @@ public class StructInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncStringRequest() throws RemoteException {
 
         // Execute method

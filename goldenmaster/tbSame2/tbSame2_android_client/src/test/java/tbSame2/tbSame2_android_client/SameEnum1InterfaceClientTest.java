@@ -214,7 +214,7 @@ public class SameEnum1InterfaceClientTest
 
 }
 
-
+    @Test
     public void onfunc1Request() throws RemoteException {
 
         // Execute method

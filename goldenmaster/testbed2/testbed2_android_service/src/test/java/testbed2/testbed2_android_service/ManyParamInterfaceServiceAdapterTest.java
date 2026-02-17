@@ -480,7 +480,7 @@ public class ManyParamInterfaceServiceAdapterTest
         assertEquals(receivedparam4, testparam4);
 }
 
-
+    @Test
     public void onfunc1Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, ManyParamInterfaceMessageType.RPC_Func1Req.getValue());
@@ -513,7 +513,7 @@ public class ManyParamInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfunc2Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, ManyParamInterfaceMessageType.RPC_Func2Req.getValue());
@@ -548,7 +548,7 @@ public class ManyParamInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfunc3Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, ManyParamInterfaceMessageType.RPC_Func3Req.getValue());
@@ -585,7 +585,7 @@ public class ManyParamInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfunc4Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, ManyParamInterfaceMessageType.RPC_Func4Req.getValue());

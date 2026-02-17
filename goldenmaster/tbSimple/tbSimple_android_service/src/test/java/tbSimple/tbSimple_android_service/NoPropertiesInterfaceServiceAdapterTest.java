@@ -245,7 +245,7 @@ public class NoPropertiesInterfaceServiceAdapterTest
         assertEquals(receivedparamBool, testparamBool);
 }
 
-
+    @Test
     public void onfuncVoidRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, NoPropertiesInterfaceMessageType.RPC_FuncVoidReq.getValue());
@@ -269,7 +269,7 @@ public class NoPropertiesInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfuncBoolRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, NoPropertiesInterfaceMessageType.RPC_FuncBoolReq.getValue());

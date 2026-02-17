@@ -194,7 +194,7 @@ public class NoPropertiesInterfaceClientTest
 
 }
 
-
+    @Test
     public void onfuncVoidRequest() throws RemoteException {
 
         // Execute method
@@ -232,7 +232,7 @@ public class NoPropertiesInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncBoolRequest() throws RemoteException {
 
         // Execute method

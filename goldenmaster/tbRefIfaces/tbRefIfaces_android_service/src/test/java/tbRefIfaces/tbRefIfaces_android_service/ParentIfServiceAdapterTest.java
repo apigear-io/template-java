@@ -449,7 +449,7 @@ public class ParentIfServiceAdapterTest
         assertEquals(receivedparam, testparam);
 }
 
-
+    @Test
     public void onlocalIfMethodRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, ParentIfMessageType.RPC_LocalIfMethodReq.getValue());
@@ -483,7 +483,7 @@ public class ParentIfServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onlocalIfMethodListRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, ParentIfMessageType.RPC_LocalIfMethodListReq.getValue());
@@ -519,7 +519,7 @@ public class ParentIfServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onimportedIfMethodRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, ParentIfMessageType.RPC_ImportedIfMethodReq.getValue());
@@ -553,7 +553,7 @@ public class ParentIfServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onimportedIfMethodListRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, ParentIfMessageType.RPC_ImportedIfMethodListReq.getValue());

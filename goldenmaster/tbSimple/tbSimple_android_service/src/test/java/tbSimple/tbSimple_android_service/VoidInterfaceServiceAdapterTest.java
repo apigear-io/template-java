@@ -227,7 +227,7 @@ public class VoidInterfaceServiceAdapterTest
         
 }
 
-
+    @Test
     public void onfuncVoidRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, VoidInterfaceMessageType.RPC_FuncVoidReq.getValue());

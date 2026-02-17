@@ -199,7 +199,7 @@ public class SimpleLocalIfClientTest
 
 }
 
-
+    @Test
     public void onintMethodRequest() throws RemoteException {
 
         // Execute method
