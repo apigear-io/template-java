@@ -224,13 +224,6 @@ public class EmptyInterfaceServiceAdapter extends Service
 				}
 		}
 
-		@Override
-		protected void finalize() throws Throwable
-		{
-			super.finalize();
-			Log.i(TAG, "LIFECYCLE: IncomingHandler(finalize)");
-		}
-
 		private void addClientActivity(Messenger serviceReply, String connectionID)
 		{
 			if (serviceReply != null)
