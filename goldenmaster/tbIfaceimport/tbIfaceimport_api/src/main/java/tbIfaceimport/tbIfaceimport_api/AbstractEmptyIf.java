@@ -4,9 +4,9 @@ import tbIfaceimport.tbIfaceimport_api.IEmptyIfEventListener;
 import tbIfaceimport.tbIfaceimport_api.IEmptyIf;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractEmptyIf implements IEmptyIf {
-    private Collection<IEmptyIfEventListener> listeners = new HashSet<>();
+    private Collection<IEmptyIfEventListener> listeners = ConcurrentHashMap.newKeySet();
 
     @Override
     public void addEventListener(IEmptyIfEventListener listener) {

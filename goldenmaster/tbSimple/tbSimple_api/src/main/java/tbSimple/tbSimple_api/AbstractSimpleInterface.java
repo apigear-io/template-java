@@ -4,9 +4,9 @@ import tbSimple.tbSimple_api.ISimpleInterfaceEventListener;
 import tbSimple.tbSimple_api.ISimpleInterface;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractSimpleInterface implements ISimpleInterface {
-    private Collection<ISimpleInterfaceEventListener> listeners = new HashSet<>();
+    private Collection<ISimpleInterfaceEventListener> listeners = ConcurrentHashMap.newKeySet();
 
     @Override
     public void addEventListener(ISimpleInterfaceEventListener listener) {

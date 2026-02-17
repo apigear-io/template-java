@@ -4,9 +4,9 @@ import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractSimpleLocalIf implements ISimpleLocalIf {
-    private Collection<ISimpleLocalIfEventListener> listeners = new HashSet<>();
+    private Collection<ISimpleLocalIfEventListener> listeners = ConcurrentHashMap.newKeySet();
 
     @Override
     public void addEventListener(ISimpleLocalIfEventListener listener) {

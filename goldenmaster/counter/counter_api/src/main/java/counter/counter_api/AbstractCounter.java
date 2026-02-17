@@ -4,9 +4,9 @@ import counter.counter_api.ICounterEventListener;
 import counter.counter_api.ICounter;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractCounter implements ICounter {
-    private Collection<ICounterEventListener> listeners = new HashSet<>();
+    private Collection<ICounterEventListener> listeners = ConcurrentHashMap.newKeySet();
 
     @Override
     public void addEventListener(ICounterEventListener listener) {
