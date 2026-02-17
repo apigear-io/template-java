@@ -20,10 +20,17 @@ public  class StructStructWithArray {
 
     public StructStructWithArray(StructStructWithArray other)
     {
-        this.fieldStruct = new StructStringWithArray[other.fieldStruct.length];
-        for (int i = 0; i < other.fieldStruct.length; i++)
+        if (other.fieldStruct != null)
         {
-            this.fieldStruct[i] = new StructStringWithArray(other.fieldStruct[i]);
+            this.fieldStruct = new StructStringWithArray[other.fieldStruct.length];
+            for (int i = 0; i < other.fieldStruct.length; i++)
+            {
+                this.fieldStruct[i] = new StructStringWithArray(other.fieldStruct[i]);
+            }
+        }
+        else
+        {
+            this.fieldStruct = null;
         }
     }
 

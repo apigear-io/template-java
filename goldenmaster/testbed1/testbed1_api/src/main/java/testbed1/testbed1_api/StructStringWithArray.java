@@ -20,7 +20,9 @@ public  class StructStringWithArray {
 
     public StructStringWithArray(StructStringWithArray other)
     {
-        this.fieldString = java.util.Arrays.copyOf(other.fieldString, other.fieldString.length);
+        this.fieldString = other.fieldString != null
+            ? java.util.Arrays.copyOf(other.fieldString, other.fieldString.length)
+            : null;
     }
 
     @Override

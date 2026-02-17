@@ -20,7 +20,9 @@ public  class StructStruct {
 
     public StructStruct(StructStruct other)
     {
-        this.fieldString = new StructString(other.fieldString);
+        this.fieldString = other.fieldString != null
+            ? new StructString(other.fieldString)
+            : null;
     }
 
     @Override
