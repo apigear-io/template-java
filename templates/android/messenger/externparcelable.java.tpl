@@ -45,8 +45,8 @@ import java.util.Arrays;
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeBoolean(this.data != null);
-        if (this.data == null) {
+        dest.writeBoolean(data != null);
+        if (data == null) {
             return;
         }
 

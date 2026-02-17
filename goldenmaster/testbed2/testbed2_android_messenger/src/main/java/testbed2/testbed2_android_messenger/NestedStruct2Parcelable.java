@@ -53,6 +53,7 @@ import testbed2.testbed2_api.Struct2;
         if (data == null) {
             return;
         }
+
         dest.writeParcelable(new Struct1Parcelable(data.field1), flags);
         dest.writeParcelable(new Struct2Parcelable(data.field2), flags);
 

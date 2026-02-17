@@ -50,6 +50,7 @@ import testbed1.testbed1_api.Enum0;
         if (data == null) {
             return;
         }
+
         dest.writeTypedArray(Enum0Parcelable.wrapArray(data.fieldEnum), flags);
 
 

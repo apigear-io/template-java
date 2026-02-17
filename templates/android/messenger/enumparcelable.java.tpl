@@ -24,7 +24,12 @@ import java.util.Arrays;
 
     protected {{Camel .Enum.Name }}Parcelable(Parcel in) {
         boolean dataIsValid = in.readBoolean();
-        this.data = dataIsValid ? {{Camel .Enum.Name}}.fromValue(in.readInt()) : null;
+        if (!dataIsValid) {
+            this.data = null;
+            return;
+        }
+
+        this.data = {{Camel .Enum.Name}}.fromValue(in.readInt());
     }
 
     public static final Creator<{{Camel .Enum.Name }}Parcelable> CREATOR = new Creator<{{Camel .Enum.Name}}Parcelable>() {
@@ -43,9 +48,11 @@ import java.util.Arrays;
     public void writeToParcel(Parcel dest, int flags) {
 
         dest.writeBoolean(data != null);
-        if (data != null) {
-            dest.writeInt(data.getValue());
+        if (data == null) {
+            return;
         }
+
+        dest.writeInt(data.getValue());
     }
 
     public static {{Camel .Enum.Name }}Parcelable[] wrapArray({{Camel .Enum.Name }}[] enums) {

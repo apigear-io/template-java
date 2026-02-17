@@ -50,6 +50,7 @@ import testbed1.testbed1_api.StructString;
         if (data == null) {
             return;
         }
+
         dest.writeParcelable(new StructStringParcelable(data.fieldString), flags);
 
 

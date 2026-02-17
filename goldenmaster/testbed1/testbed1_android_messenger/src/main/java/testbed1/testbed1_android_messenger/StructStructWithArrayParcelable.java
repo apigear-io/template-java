@@ -50,6 +50,7 @@ import testbed1.testbed1_api.StructStringWithArray;
         if (data == null) {
             return;
         }
+
         dest.writeTypedArray(StructStringWithArrayParcelable.wrapArray(data.fieldStruct), flags);
 
 
