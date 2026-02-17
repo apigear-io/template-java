@@ -81,15 +81,15 @@ public abstract class NestedStruct1InterfaceBaseServiceLifecycleController
     void serviceConnectionStatusChanged(boolean status)
     {
         mIsBound.set(status);
-        if (status == false)
+        if (!status)
         {
-            if (mKeepServiceAlive.get() == true)
+            if (mKeepServiceAlive.get())
             {
                 Log.w(getTag(), "Service was killed");
                 onAndroidServiceConnectionStatusChanged(false);
             }
         }
-        if (status == true)
+        else
         {
             Log.i(getTag(), "Service successfully started.");
             onAndroidServiceConnectionStatusChanged(true);
