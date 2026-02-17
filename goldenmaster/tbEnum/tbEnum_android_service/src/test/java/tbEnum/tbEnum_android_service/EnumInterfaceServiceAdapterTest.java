@@ -442,7 +442,7 @@ public class EnumInterfaceServiceAdapterTest
         assertEquals(receivedparam3, testparam3);
 }
 
-
+    @Test
     public void onfunc0Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, EnumInterfaceMessageType.RPC_Func0Req.getValue());
@@ -476,7 +476,7 @@ public class EnumInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfunc1Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, EnumInterfaceMessageType.RPC_Func1Req.getValue());
@@ -510,7 +510,7 @@ public class EnumInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfunc2Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, EnumInterfaceMessageType.RPC_Func2Req.getValue());
@@ -544,7 +544,7 @@ public class EnumInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfunc3Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, EnumInterfaceMessageType.RPC_Func3Req.getValue());

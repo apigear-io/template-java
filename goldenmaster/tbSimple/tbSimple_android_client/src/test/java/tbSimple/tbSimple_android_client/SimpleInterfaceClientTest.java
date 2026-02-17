@@ -564,7 +564,7 @@ public class SimpleInterfaceClientTest
 
 }
 
-
+    @Test
     public void onfuncNoReturnValueRequest() throws RemoteException {
 
         // Execute method
@@ -606,7 +606,7 @@ public class SimpleInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncNoParamsRequest() throws RemoteException {
 
         // Execute method
@@ -647,7 +647,7 @@ public class SimpleInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncBoolRequest() throws RemoteException {
 
         // Execute method
@@ -692,7 +692,7 @@ public class SimpleInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncIntRequest() throws RemoteException {
 
         // Execute method
@@ -737,7 +737,7 @@ public class SimpleInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncInt32Request() throws RemoteException {
 
         // Execute method
@@ -782,7 +782,7 @@ public class SimpleInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncInt64Request() throws RemoteException {
 
         // Execute method
@@ -827,7 +827,7 @@ public class SimpleInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncFloatRequest() throws RemoteException {
 
         // Execute method
@@ -872,7 +872,7 @@ public class SimpleInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncFloat32Request() throws RemoteException {
 
         // Execute method
@@ -917,7 +917,7 @@ public class SimpleInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncFloat64Request() throws RemoteException {
 
         // Execute method
@@ -962,7 +962,7 @@ public class SimpleInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncStringRequest() throws RemoteException {
 
         // Execute method

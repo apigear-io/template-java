@@ -178,7 +178,7 @@ public class VoidInterfaceClientTest
 
 }
 
-
+    @Test
     public void onfuncVoidRequest() throws RemoteException {
 
         // Execute method

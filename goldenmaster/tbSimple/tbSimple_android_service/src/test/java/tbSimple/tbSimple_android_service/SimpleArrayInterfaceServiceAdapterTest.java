@@ -743,7 +743,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         assertEquals(receivedparamString, testparamString);
 }
 
-
+    @Test
     public void onfuncBoolRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.RPC_FuncBoolReq.getValue());
@@ -778,7 +778,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfuncIntRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.RPC_FuncIntReq.getValue());
@@ -813,7 +813,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfuncInt32Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.RPC_FuncInt32Req.getValue());
@@ -848,7 +848,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfuncInt64Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.RPC_FuncInt64Req.getValue());
@@ -883,7 +883,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfuncFloatRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.RPC_FuncFloatReq.getValue());
@@ -918,7 +918,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfuncFloat32Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.RPC_FuncFloat32Req.getValue());
@@ -953,7 +953,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfuncFloat64Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.RPC_FuncFloat64Req.getValue());
@@ -988,7 +988,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfuncStringRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.RPC_FuncStringReq.getValue());

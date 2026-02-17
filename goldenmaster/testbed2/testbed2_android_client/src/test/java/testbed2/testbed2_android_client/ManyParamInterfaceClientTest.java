@@ -387,7 +387,7 @@ public class ManyParamInterfaceClientTest
 
 }
 
-
+    @Test
     public void onfunc1Request() throws RemoteException {
 
         // Execute method
@@ -432,7 +432,7 @@ public class ManyParamInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfunc2Request() throws RemoteException {
 
         // Execute method
@@ -481,7 +481,7 @@ public class ManyParamInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfunc3Request() throws RemoteException {
 
         // Execute method
@@ -534,7 +534,7 @@ public class ManyParamInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfunc4Request() throws RemoteException {
 
         // Execute method

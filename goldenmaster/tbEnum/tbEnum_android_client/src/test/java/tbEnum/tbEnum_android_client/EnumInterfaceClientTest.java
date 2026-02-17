@@ -358,7 +358,7 @@ public class EnumInterfaceClientTest
 
 }
 
-
+    @Test
     public void onfunc0Request() throws RemoteException {
 
         // Execute method
@@ -404,7 +404,7 @@ public class EnumInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfunc1Request() throws RemoteException {
 
         // Execute method
@@ -450,7 +450,7 @@ public class EnumInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfunc2Request() throws RemoteException {
 
         // Execute method
@@ -496,7 +496,7 @@ public class EnumInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfunc3Request() throws RemoteException {
 
         // Execute method

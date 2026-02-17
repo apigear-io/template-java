@@ -285,7 +285,7 @@ public class NestedStruct1InterfaceServiceAdapterTest
         assertEquals(receivedparam1, testparam1);
 }
 
-
+    @Test
     public void onfuncNoReturnValueRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, NestedStruct1InterfaceMessageType.RPC_FuncNoReturnValueReq.getValue());
@@ -311,7 +311,7 @@ public class NestedStruct1InterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfuncNoParamsRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, NestedStruct1InterfaceMessageType.RPC_FuncNoParamsReq.getValue());
@@ -343,7 +343,7 @@ public class NestedStruct1InterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfunc1Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, NestedStruct1InterfaceMessageType.RPC_Func1Req.getValue());

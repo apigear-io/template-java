@@ -403,7 +403,7 @@ public class CounterServiceAdapterTest
         assertEquals(receivedextern_vectorArray, testextern_vectorArray);
 }
 
-
+    @Test
     public void onincrementRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, CounterMessageType.RPC_IncrementReq.getValue());
@@ -437,7 +437,7 @@ public class CounterServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onincrementArrayRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, CounterMessageType.RPC_IncrementArrayReq.getValue());
@@ -473,7 +473,7 @@ public class CounterServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void ondecrementRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, CounterMessageType.RPC_DecrementReq.getValue());
@@ -507,7 +507,7 @@ public class CounterServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void ondecrementArrayRequest() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, CounterMessageType.RPC_DecrementArrayReq.getValue());

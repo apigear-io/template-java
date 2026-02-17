@@ -353,7 +353,7 @@ public class NestedStruct2InterfaceServiceAdapterTest
         assertEquals(receivedparam2, testparam2);
 }
 
-
+    @Test
     public void onfunc1Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, NestedStruct2InterfaceMessageType.RPC_Func1Req.getValue());
@@ -387,7 +387,7 @@ public class NestedStruct2InterfaceServiceAdapterTest
         assertEquals(callId, resp_data.getInt("callId", -1));
     }
 
-
+    @Test
     public void onfunc2Request() throws RemoteException {
         // Create and send message
         Message msg = Message.obtain(null, NestedStruct2InterfaceMessageType.RPC_Func2Req.getValue());

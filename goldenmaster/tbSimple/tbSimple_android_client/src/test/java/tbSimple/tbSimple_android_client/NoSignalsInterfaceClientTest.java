@@ -232,7 +232,7 @@ public class NoSignalsInterfaceClientTest
     }
     
 
-
+    @Test
     public void onfuncVoidRequest() throws RemoteException {
 
         // Execute method
@@ -270,7 +270,7 @@ public class NoSignalsInterfaceClientTest
 
     }
 
-
+    @Test
     public void onfuncBoolRequest() throws RemoteException {
 
         // Execute method
