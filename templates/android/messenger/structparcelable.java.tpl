@@ -67,7 +67,7 @@ import java.util.Arrays;
         if (data == null) {
             return;
         }
-
+{{- nl }}
     {{- range .Struct.Fields }}
 {{- if .IsArray}}
 {{- if .IsPrimitive }}

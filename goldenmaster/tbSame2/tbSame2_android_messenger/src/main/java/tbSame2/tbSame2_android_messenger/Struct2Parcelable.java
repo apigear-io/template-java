@@ -50,6 +50,7 @@ import java.util.Arrays;
         if (data == null) {
             return;
         }
+
         dest.writeInt(data.field1);
         dest.writeInt(data.field2);
         dest.writeInt(data.field3);
