@@ -8,9 +8,9 @@ import tbSame2.tbSame2_api.Enum1;
 import tbSame2.tbSame2_api.Enum2;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractSameStruct1Interface implements ISameStruct1Interface {
-    private Collection<ISameStruct1InterfaceEventListener> listeners = new HashSet<>();
+    private Collection<ISameStruct1InterfaceEventListener> listeners = ConcurrentHashMap.newKeySet();
 
     @Override
     public void addEventListener(ISameStruct1InterfaceEventListener listener) {

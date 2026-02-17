@@ -5,9 +5,9 @@ import tbNames.tbNames_api.INamEs;
 import tbNames.tbNames_api.EnumWithUnderScores;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractNamEs implements INamEs {
-    private Collection<INamEsEventListener> listeners = new HashSet<>();
+    private Collection<INamEsEventListener> listeners = ConcurrentHashMap.newKeySet();
 
     @Override
     public void addEventListener(INamEsEventListener listener) {
