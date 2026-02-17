@@ -20,7 +20,9 @@ public  class StructBoolWithArray {
 
     public StructBoolWithArray(StructBoolWithArray other)
     {
-        this.fieldBool = java.util.Arrays.copyOf(other.fieldBool, other.fieldBool.length);
+        this.fieldBool = other.fieldBool != null
+            ? java.util.Arrays.copyOf(other.fieldBool, other.fieldBool.length)
+            : null;
     }
 
     @Override

@@ -20,7 +20,9 @@ public  class NestedStruct1 {
 
     public NestedStruct1(NestedStruct1 other)
     {
-        this.field1 = new Struct1(other.field1);
+        this.field1 = other.field1 != null
+            ? new Struct1(other.field1)
+            : null;
     }
 
     @Override

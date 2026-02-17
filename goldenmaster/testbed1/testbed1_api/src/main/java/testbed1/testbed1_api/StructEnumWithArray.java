@@ -20,7 +20,9 @@ public  class StructEnumWithArray {
 
     public StructEnumWithArray(StructEnumWithArray other)
     {
-        this.fieldEnum = java.util.Arrays.copyOf(other.fieldEnum, other.fieldEnum.length);
+        this.fieldEnum = other.fieldEnum != null
+            ? java.util.Arrays.copyOf(other.fieldEnum, other.fieldEnum.length)
+            : null;
     }
 
     @Override
