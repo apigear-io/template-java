@@ -3,6 +3,7 @@ package testbed1.testbed1_android_messenger;
 import testbed1.testbed1_api.IStructInterface;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Arrays;
 import testbed1.testbed1_api.StructBool;
@@ -11,6 +12,8 @@ import testbed1.testbed1_api.StructInt;
 import testbed1.testbed1_api.StructString;
 
   public  class StructInterfaceParcelable implements Parcelable {
+
+    private static final String TAG = "StructInterfaceParcelable";
 
     public IStructInterface data;
 
@@ -29,14 +32,9 @@ import testbed1.testbed1_api.StructString;
             data = null;
             return;
         }
-        StructBoolParcelable l_parcelablepropBool = in.readParcelable(StructBoolParcelable.class.getClassLoader(), StructBoolParcelable.class);
-        data.setPropBool(l_parcelablepropBool != null ? l_parcelablepropBool.data : null);
-        StructIntParcelable l_parcelablepropInt = in.readParcelable(StructIntParcelable.class.getClassLoader(), StructIntParcelable.class);
-        data.setPropInt(l_parcelablepropInt != null ? l_parcelablepropInt.data : null);
-        StructFloatParcelable l_parcelablepropFloat = in.readParcelable(StructFloatParcelable.class.getClassLoader(), StructFloatParcelable.class);
-        data.setPropFloat(l_parcelablepropFloat != null ? l_parcelablepropFloat.data : null);
-        StructStringParcelable l_parcelablepropString = in.readParcelable(StructStringParcelable.class.getClassLoader(), StructStringParcelable.class);
-        data.setPropString(l_parcelablepropString != null ? l_parcelablepropString.data : null);
+
+        Log.w(TAG, "Unwrapping interfaces from parcel is currently not supported");
+        return;
     }
 
     public static final Creator<StructInterfaceParcelable> CREATOR = new Creator<StructInterfaceParcelable>() {

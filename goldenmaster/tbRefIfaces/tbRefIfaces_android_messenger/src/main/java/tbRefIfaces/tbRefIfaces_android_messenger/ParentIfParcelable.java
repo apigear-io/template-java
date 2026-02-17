@@ -3,11 +3,14 @@ package tbRefIfaces.tbRefIfaces_android_messenger;
 import tbRefIfaces.tbRefIfaces_api.IParentIf;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Arrays;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 
   public  class ParentIfParcelable implements Parcelable {
+
+    private static final String TAG = "ParentIfParcelable";
 
     public IParentIf data;
 
@@ -26,14 +29,9 @@ import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
             data = null;
             return;
         }
-        SimpleLocalIfParcelable l_parcelablelocalIf = in.readParcelable(SimpleLocalIfParcelable.class.getClassLoader(), SimpleLocalIfParcelable.class);
-        data.setLocalIf(l_parcelablelocalIf != null ? l_parcelablelocalIf.data : null);
-        SimpleLocalIfParcelable[] l_parcelablelocalIfList = in.createTypedArray(SimpleLocalIfParcelable.CREATOR);
-        data.setLocalIfList(SimpleLocalIfParcelable.unwrapArray(l_parcelablelocalIfList));
-        tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable l_parcelableimportedIf = in.readParcelable(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader(), tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class);
-        data.setImportedIf(l_parcelableimportedIf != null ? l_parcelableimportedIf.data : null);
-        tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[] l_parcelableimportedIfList = in.createTypedArray(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.CREATOR);
-        data.setImportedIfList(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray(l_parcelableimportedIfList));
+
+        Log.w(TAG, "Unwrapping interfaces from parcel is currently not supported");
+        return;
     }
 
     public static final Creator<ParentIfParcelable> CREATOR = new Creator<ParentIfParcelable>() {

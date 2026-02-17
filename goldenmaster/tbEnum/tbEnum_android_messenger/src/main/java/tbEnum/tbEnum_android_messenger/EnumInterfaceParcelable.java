@@ -3,6 +3,7 @@ package tbEnum.tbEnum_android_messenger;
 import tbEnum.tbEnum_api.IEnumInterface;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Arrays;
 import tbEnum.tbEnum_api.Enum0;
@@ -11,6 +12,8 @@ import tbEnum.tbEnum_api.Enum2;
 import tbEnum.tbEnum_api.Enum3;
 
   public  class EnumInterfaceParcelable implements Parcelable {
+
+    private static final String TAG = "EnumInterfaceParcelable";
 
     public IEnumInterface data;
 
@@ -29,14 +32,9 @@ import tbEnum.tbEnum_api.Enum3;
             data = null;
             return;
         }
-        Enum0Parcelable l_parcelableprop0 = in.readParcelable(Enum0Parcelable.class.getClassLoader(), Enum0Parcelable.class);
-        data.setProp0(l_parcelableprop0 != null ? l_parcelableprop0.data : null);
-        Enum1Parcelable l_parcelableprop1 = in.readParcelable(Enum1Parcelable.class.getClassLoader(), Enum1Parcelable.class);
-        data.setProp1(l_parcelableprop1 != null ? l_parcelableprop1.data : null);
-        Enum2Parcelable l_parcelableprop2 = in.readParcelable(Enum2Parcelable.class.getClassLoader(), Enum2Parcelable.class);
-        data.setProp2(l_parcelableprop2 != null ? l_parcelableprop2.data : null);
-        Enum3Parcelable l_parcelableprop3 = in.readParcelable(Enum3Parcelable.class.getClassLoader(), Enum3Parcelable.class);
-        data.setProp3(l_parcelableprop3 != null ? l_parcelableprop3.data : null);
+
+        Log.w(TAG, "Unwrapping interfaces from parcel is currently not supported");
+        return;
     }
 
     public static final Creator<EnumInterfaceParcelable> CREATOR = new Creator<EnumInterfaceParcelable>() {

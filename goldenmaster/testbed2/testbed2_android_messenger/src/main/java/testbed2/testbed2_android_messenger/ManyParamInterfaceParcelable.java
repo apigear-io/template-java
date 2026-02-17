@@ -3,10 +3,13 @@ package testbed2.testbed2_android_messenger;
 import testbed2.testbed2_api.IManyParamInterface;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Arrays;
 
   public  class ManyParamInterfaceParcelable implements Parcelable {
+
+    private static final String TAG = "ManyParamInterfaceParcelable";
 
     public IManyParamInterface data;
 
@@ -25,10 +28,9 @@ import java.util.Arrays;
             data = null;
             return;
         }
-        data.setProp1(in.readInt());
-        data.setProp2(in.readInt());
-        data.setProp3(in.readInt());
-        data.setProp4(in.readInt());
+
+        Log.w(TAG, "Unwrapping interfaces from parcel is currently not supported");
+        return;
     }
 
     public static final Creator<ManyParamInterfaceParcelable> CREATOR = new Creator<ManyParamInterfaceParcelable>() {
