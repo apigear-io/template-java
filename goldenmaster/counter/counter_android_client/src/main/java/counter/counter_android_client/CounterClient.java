@@ -154,6 +154,12 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
             mIsBoundToService = false;
             fire_readyStatusChanged(false);
         }
+
+        for (Consumer<Bundle> bundleConsumer : mpendingCalls.values())
+        {
+            bundleConsumer.accept(null);
+        }
+        mpendingCalls.clear();
     }
 
 
@@ -530,6 +536,12 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 
         CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving increment with null");
+                return;
+            }
             
 		    org.apache.commons.math3.geometry.euclidean.threed.Vector3D result = bundle.getParcelable("result", externTypes.externTypes_android_messenger.MyVector3DParcelable.class).getMyVector3D();
             Log.v(TAG, "resolve increment" + result);
@@ -572,6 +584,12 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 
         CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving incrementArray with null");
+                return;
+            }
             
             org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] result =  externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])bundle.getParcelableArray("result", externTypes.externTypes_android_messenger.MyVector3DParcelable.class));
             Log.v(TAG, "resolve incrementArray" + result);
@@ -614,6 +632,12 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 
         CompletableFuture<customTypes.customTypes_api.Vector3D>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving decrement with null");
+                return;
+            }
             
 		    customTypes.customTypes_api.Vector3D result = bundle.getParcelable("result", customTypes.customTypes_android_messenger.Vector3DParcelable.class).getVector3D();
             Log.v(TAG, "resolve decrement" + result);
@@ -656,6 +680,12 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 
         CompletableFuture<customTypes.customTypes_api.Vector3D[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving decrementArray with null");
+                return;
+            }
             
             customTypes.customTypes_api.Vector3D[] result =  customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray((customTypes.customTypes_android_messenger.Vector3DParcelable[])bundle.getParcelableArray("result", customTypes.customTypes_android_messenger.Vector3DParcelable.class));
             Log.v(TAG, "resolve decrementArray" + result);

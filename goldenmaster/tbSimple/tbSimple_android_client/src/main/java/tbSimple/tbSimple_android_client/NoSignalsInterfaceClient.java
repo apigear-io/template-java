@@ -152,6 +152,12 @@ public class NoSignalsInterfaceClient extends AbstractNoSignalsInterface impleme
             mIsBoundToService = false;
             fire_readyStatusChanged(false);
         }
+
+        for (Consumer<Bundle> bundleConsumer : mpendingCalls.values())
+        {
+            bundleConsumer.accept(null);
+        }
+        mpendingCalls.clear();
     }
 
 
@@ -402,6 +408,12 @@ public class NoSignalsInterfaceClient extends AbstractNoSignalsInterface impleme
 
         CompletableFuture<Boolean>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcBool with null");
+                return;
+            }
             
 		    boolean result = bundle.getBoolean("result", false);
             Log.v(TAG, "resolve funcBool" + result);

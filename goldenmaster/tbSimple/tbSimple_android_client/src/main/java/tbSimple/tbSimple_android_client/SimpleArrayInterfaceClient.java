@@ -159,6 +159,12 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
             mIsBoundToService = false;
             fire_readyStatusChanged(false);
         }
+
+        for (Consumer<Bundle> bundleConsumer : mpendingCalls.values())
+        {
+            bundleConsumer.accept(null);
+        }
+        mpendingCalls.clear();
     }
 
 
@@ -887,6 +893,12 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 
         CompletableFuture<boolean[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcBool with null");
+                return;
+            }
             
 		    boolean[] result = bundle.getBooleanArray("result");
             Log.v(TAG, "resolve funcBool" + result);
@@ -929,6 +941,12 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 
         CompletableFuture<int[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcInt with null");
+                return;
+            }
             
 		    int[] result = bundle.getIntArray("result");
             Log.v(TAG, "resolve funcInt" + result);
@@ -971,6 +989,12 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 
         CompletableFuture<int[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcInt32 with null");
+                return;
+            }
             
 		    int[] result = bundle.getIntArray("result");
             Log.v(TAG, "resolve funcInt32" + result);
@@ -1013,6 +1037,12 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 
         CompletableFuture<long[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcInt64 with null");
+                return;
+            }
             
 		    long[] result = bundle.getLongArray("result");
             Log.v(TAG, "resolve funcInt64" + result);
@@ -1055,6 +1085,12 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 
         CompletableFuture<float[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcFloat with null");
+                return;
+            }
             
 		    float[] result = bundle.getFloatArray("result");
             Log.v(TAG, "resolve funcFloat" + result);
@@ -1097,6 +1133,12 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 
         CompletableFuture<float[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcFloat32 with null");
+                return;
+            }
             
 		    float[] result = bundle.getFloatArray("result");
             Log.v(TAG, "resolve funcFloat32" + result);
@@ -1139,6 +1181,12 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 
         CompletableFuture<double[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcFloat64 with null");
+                return;
+            }
             
 		    double[] result = bundle.getDoubleArray("result");
             Log.v(TAG, "resolve funcFloat64" + result);
@@ -1181,6 +1229,12 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 
         CompletableFuture<String[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcString with null");
+                return;
+            }
             
 		    String[] result = bundle.getStringArray("result");
             Log.v(TAG, "resolve funcString" + result);

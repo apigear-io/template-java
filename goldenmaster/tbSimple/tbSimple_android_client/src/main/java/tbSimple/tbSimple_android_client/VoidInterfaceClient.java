@@ -150,6 +150,12 @@ public class VoidInterfaceClient extends AbstractVoidInterface implements Servic
             mIsBoundToService = false;
             fire_readyStatusChanged(false);
         }
+
+        for (Consumer<Bundle> bundleConsumer : mpendingCalls.values())
+        {
+            bundleConsumer.accept(null);
+        }
+        mpendingCalls.clear();
     }
 
 
