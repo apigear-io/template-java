@@ -6,7 +6,7 @@ import tbIfaceimport.tbIfaceimport_api.IEmptyIf;
 import java.util.Collection;
 import java.util.HashSet;
   public abstract class AbstractEmptyIf implements IEmptyIf {
-    public Collection<IEmptyIfEventListener> listeners = new HashSet<>();
+    private Collection<IEmptyIfEventListener> listeners = new HashSet<>();
 
     @Override
     public void addEventListener(IEmptyIfEventListener listener) {

@@ -6,7 +6,7 @@ import tbRefIfaces.tbRefIfaces_api.IParentIf;
 import java.util.Collection;
 import java.util.HashSet;
   public abstract class AbstractParentIf implements IParentIf {
-    public Collection<IParentIfEventListener> listeners = new HashSet<>();
+    private Collection<IParentIfEventListener> listeners = new HashSet<>();
 
     @Override
     public void addEventListener(IParentIfEventListener listener) {

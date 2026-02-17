@@ -19,7 +19,7 @@ import testbed1.testbed1_api.Enum0;
 import java.util.Collection;
 import java.util.HashSet;
   public abstract class AbstractStructArray2Interface implements IStructArray2Interface {
-    public Collection<IStructArray2InterfaceEventListener> listeners = new HashSet<>();
+    private Collection<IStructArray2InterfaceEventListener> listeners = new HashSet<>();
 
     @Override
     public void addEventListener(IStructArray2InterfaceEventListener listener) {

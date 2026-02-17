@@ -6,7 +6,7 @@ import tbSimple.tbSimple_api.IVoidInterface;
 import java.util.Collection;
 import java.util.HashSet;
   public abstract class AbstractVoidInterface implements IVoidInterface {
-    public Collection<IVoidInterfaceEventListener> listeners = new HashSet<>();
+    private Collection<IVoidInterfaceEventListener> listeners = new HashSet<>();
 
     @Override
     public void addEventListener(IVoidInterfaceEventListener listener) {
