@@ -155,6 +155,12 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
             mIsBoundToService = false;
             fire_readyStatusChanged(false);
         }
+
+        for (Consumer<Bundle> bundleConsumer : mpendingCalls.values())
+        {
+            bundleConsumer.accept(null);
+        }
+        mpendingCalls.clear();
     }
 
 
@@ -351,6 +357,12 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
             future.complete(null);
             Log.v(TAG, "resolve {{.Name }}");
         {{- else }}
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving {{.Name}} with null");
+                return;
+            }
             {{template "getResultFromBundle" . }}
             Log.v(TAG, "resolve {{.Name }}" + result);
             future.complete(result);

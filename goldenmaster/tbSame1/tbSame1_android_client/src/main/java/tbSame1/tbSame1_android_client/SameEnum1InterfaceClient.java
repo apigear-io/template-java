@@ -153,6 +153,12 @@ public class SameEnum1InterfaceClient extends AbstractSameEnum1Interface impleme
             mIsBoundToService = false;
             fire_readyStatusChanged(false);
         }
+
+        for (Consumer<Bundle> bundleConsumer : mpendingCalls.values())
+        {
+            bundleConsumer.accept(null);
+        }
+        mpendingCalls.clear();
     }
 
 
@@ -311,6 +317,12 @@ public class SameEnum1InterfaceClient extends AbstractSameEnum1Interface impleme
 
         CompletableFuture<Enum1>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving func1 with null");
+                return;
+            }
             
 		    Enum1 result = bundle.getParcelable("result", Enum1Parcelable.class).getEnum1();
             Log.v(TAG, "resolve func1" + result);

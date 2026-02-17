@@ -162,6 +162,12 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
             mIsBoundToService = false;
             fire_readyStatusChanged(false);
         }
+
+        for (Consumer<Bundle> bundleConsumer : mpendingCalls.values())
+        {
+            bundleConsumer.accept(null);
+        }
+        mpendingCalls.clear();
     }
 
 
@@ -556,6 +562,12 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 
         CompletableFuture<Enum0>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving func0 with null");
+                return;
+            }
             
 		    Enum0 result = bundle.getParcelable("result", Enum0Parcelable.class).getEnum0();
             Log.v(TAG, "resolve func0" + result);
@@ -598,6 +610,12 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 
         CompletableFuture<Enum1>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving func1 with null");
+                return;
+            }
             
 		    Enum1 result = bundle.getParcelable("result", Enum1Parcelable.class).getEnum1();
             Log.v(TAG, "resolve func1" + result);
@@ -640,6 +658,12 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 
         CompletableFuture<Enum2>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving func2 with null");
+                return;
+            }
             
 		    Enum2 result = bundle.getParcelable("result", Enum2Parcelable.class).getEnum2();
             Log.v(TAG, "resolve func2" + result);
@@ -682,6 +706,12 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 
         CompletableFuture<Enum3>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving func3 with null");
+                return;
+            }
             
 		    Enum3 result = bundle.getParcelable("result", Enum3Parcelable.class).getEnum3();
             Log.v(TAG, "resolve func3" + result);

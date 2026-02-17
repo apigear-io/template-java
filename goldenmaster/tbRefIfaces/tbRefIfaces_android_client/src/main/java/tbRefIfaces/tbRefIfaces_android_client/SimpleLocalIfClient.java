@@ -151,6 +151,12 @@ public class SimpleLocalIfClient extends AbstractSimpleLocalIf implements Servic
             mIsBoundToService = false;
             fire_readyStatusChanged(false);
         }
+
+        for (Consumer<Bundle> bundleConsumer : mpendingCalls.values())
+        {
+            bundleConsumer.accept(null);
+        }
+        mpendingCalls.clear();
     }
 
 
@@ -305,6 +311,12 @@ public class SimpleLocalIfClient extends AbstractSimpleLocalIf implements Servic
 
         CompletableFuture<Integer>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving intMethod with null");
+                return;
+            }
             
 		    int result = bundle.getInt("result", 0);
             Log.v(TAG, "resolve intMethod" + result);

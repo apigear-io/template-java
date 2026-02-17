@@ -165,6 +165,12 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
             mIsBoundToService = false;
             fire_readyStatusChanged(false);
         }
+
+        for (Consumer<Bundle> bundleConsumer : mpendingCalls.values())
+        {
+            bundleConsumer.accept(null);
+        }
+        mpendingCalls.clear();
     }
 
 
@@ -637,6 +643,12 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
 
         CompletableFuture<StructBool[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcBool with null");
+                return;
+            }
             
             StructBool[] result =  StructBoolParcelable.unwrapArray((StructBoolParcelable[])bundle.getParcelableArray("result", StructBoolParcelable.class));
             Log.v(TAG, "resolve funcBool" + result);
@@ -679,6 +691,12 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
 
         CompletableFuture<StructInt[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcInt with null");
+                return;
+            }
             
             StructInt[] result =  StructIntParcelable.unwrapArray((StructIntParcelable[])bundle.getParcelableArray("result", StructIntParcelable.class));
             Log.v(TAG, "resolve funcInt" + result);
@@ -721,6 +739,12 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
 
         CompletableFuture<StructFloat[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcFloat with null");
+                return;
+            }
             
             StructFloat[] result =  StructFloatParcelable.unwrapArray((StructFloatParcelable[])bundle.getParcelableArray("result", StructFloatParcelable.class));
             Log.v(TAG, "resolve funcFloat" + result);
@@ -763,6 +787,12 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
 
         CompletableFuture<StructString[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcString with null");
+                return;
+            }
             
             StructString[] result =  StructStringParcelable.unwrapArray((StructStringParcelable[])bundle.getParcelableArray("result", StructStringParcelable.class));
             Log.v(TAG, "resolve funcString" + result);
@@ -805,6 +835,12 @@ public class StructArrayInterfaceClient extends AbstractStructArrayInterface imp
 
         CompletableFuture<Enum0[]>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcEnum with null");
+                return;
+            }
             
             Enum0[] result =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])bundle.getParcelableArray("result", Enum0Parcelable.class));
             Log.v(TAG, "resolve funcEnum" + result);

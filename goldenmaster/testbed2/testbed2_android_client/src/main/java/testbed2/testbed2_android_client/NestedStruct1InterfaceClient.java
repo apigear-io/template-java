@@ -153,6 +153,12 @@ public class NestedStruct1InterfaceClient extends AbstractNestedStruct1Interface
             mIsBoundToService = false;
             fire_readyStatusChanged(false);
         }
+
+        for (Consumer<Bundle> bundleConsumer : mpendingCalls.values())
+        {
+            bundleConsumer.accept(null);
+        }
+        mpendingCalls.clear();
     }
 
 
@@ -387,6 +393,12 @@ public class NestedStruct1InterfaceClient extends AbstractNestedStruct1Interface
 
         CompletableFuture<NestedStruct1>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving funcNoParams with null");
+                return;
+            }
             
 		    NestedStruct1 result = bundle.getParcelable("result", NestedStruct1Parcelable.class).getNestedStruct1();
             Log.v(TAG, "resolve funcNoParams" + result);
@@ -429,6 +441,12 @@ public class NestedStruct1InterfaceClient extends AbstractNestedStruct1Interface
 
         CompletableFuture<NestedStruct1>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                future.complete(null);
+                Log.v(TAG, "received null bundle, resolving func1 with null");
+                return;
+            }
             
 		    NestedStruct1 result = bundle.getParcelable("result", NestedStruct1Parcelable.class).getNestedStruct1();
             Log.v(TAG, "resolve func1" + result);
