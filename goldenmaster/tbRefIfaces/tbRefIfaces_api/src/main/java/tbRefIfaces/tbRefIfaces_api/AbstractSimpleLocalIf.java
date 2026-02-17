@@ -6,7 +6,7 @@ import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import java.util.Collection;
 import java.util.HashSet;
   public abstract class AbstractSimpleLocalIf implements ISimpleLocalIf {
-    public Collection<ISimpleLocalIfEventListener> listeners = new HashSet<>();
+    private Collection<ISimpleLocalIfEventListener> listeners = new HashSet<>();
 
     @Override
     public void addEventListener(ISimpleLocalIfEventListener listener) {

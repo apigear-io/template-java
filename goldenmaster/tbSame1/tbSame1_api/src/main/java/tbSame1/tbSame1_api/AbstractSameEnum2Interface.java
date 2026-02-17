@@ -10,7 +10,7 @@ import tbSame1.tbSame1_api.Enum2;
 import java.util.Collection;
 import java.util.HashSet;
   public abstract class AbstractSameEnum2Interface implements ISameEnum2Interface {
-    public Collection<ISameEnum2InterfaceEventListener> listeners = new HashSet<>();
+    private Collection<ISameEnum2InterfaceEventListener> listeners = new HashSet<>();
 
     @Override
     public void addEventListener(ISameEnum2InterfaceEventListener listener) {

@@ -16,7 +16,7 @@ import testbed2.testbed2_api.Enum3;
 import java.util.Collection;
 import java.util.HashSet;
   public abstract class AbstractNestedStruct1Interface implements INestedStruct1Interface {
-    public Collection<INestedStruct1InterfaceEventListener> listeners = new HashSet<>();
+    private Collection<INestedStruct1InterfaceEventListener> listeners = new HashSet<>();
 
     @Override
     public void addEventListener(INestedStruct1InterfaceEventListener listener) {
