@@ -3,10 +3,13 @@ package tbSimple.tbSimple_android_messenger;
 import tbSimple.tbSimple_api.IEmptyInterface;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Arrays;
 
   public  class EmptyInterfaceParcelable implements Parcelable {
+
+    private static final String TAG = "EmptyInterfaceParcelable";
 
     public IEmptyInterface data;
 
@@ -25,6 +28,9 @@ import java.util.Arrays;
             data = null;
             return;
         }
+
+        Log.w(TAG, "Unwrapping interfaces from parcel is currently not supported");
+        return;
     }
 
     public static final Creator<EmptyInterfaceParcelable> CREATOR = new Creator<EmptyInterfaceParcelable>() {

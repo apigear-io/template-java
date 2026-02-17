@@ -3,12 +3,15 @@ package {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name}};
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Arrays;
 
 {{- template "importApi" .}}
 
   public  class {{Camel .Interface.Name}}Parcelable implements Parcelable {
+
+    private static final String TAG = "{{Camel .Interface.Name}}Parcelable";
 
     public I{{Camel .Interface.Name}} data;
 
@@ -28,24 +31,8 @@ import java.util.Arrays;
             return;
         }
 
-{{- range .Interface.Properties }}
-{{- if .IsArray}}
-{{- if .IsPrimitive }}
-        data.set{{Camel .Name}}(in.create{{ ( Camel  (javaElementType "" .) ) }}Array());
-{{- else }}
-        {{template "getParcelable" .}}[] l_parcelable{{camel .Name}} = in.createTypedArray({{template "getParcelable" .}}.CREATOR);
-        data.set{{Camel .Name}}({{template "getParcelable" .}}.unwrapArray(l_parcelable{{camel .Name}}));
-{{- end }}
-{{- else }}
-{{- if .IsPrimitive }}
-        data.set{{Camel .Name}}(in.read{{ ( Camel  (javaType "" .) ) }}());
-{{- else }}
-        {{template "getParcelable" .}} l_parcelable{{camel .Name}} = in.readParcelable({{template "getParcelable" .}}.class.getClassLoader(), {{template "getParcelable" .}}.class);
-        data.set{{Camel .Name}}(l_parcelable{{camel .Name}} != null ? l_parcelable{{camel .Name}}.data : null);
-{{- end }}
-{{- end }}
-
-{{- end }}
+        Log.w(TAG, "Unwrapping interfaces from parcel is currently not supported");
+        return;
     }
 
     public static final Creator<{{Camel .Interface.Name}}Parcelable> CREATOR = new Creator<{{Camel .Interface.Name}}Parcelable>() {

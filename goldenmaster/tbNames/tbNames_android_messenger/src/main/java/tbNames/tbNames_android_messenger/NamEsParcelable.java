@@ -3,11 +3,14 @@ package tbNames.tbNames_android_messenger;
 import tbNames.tbNames_api.INamEs;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Arrays;
 import tbNames.tbNames_api.EnumWithUnderScores;
 
   public  class NamEsParcelable implements Parcelable {
+
+    private static final String TAG = "NamEsParcelable";
 
     public INamEs data;
 
@@ -26,11 +29,9 @@ import tbNames.tbNames_api.EnumWithUnderScores;
             data = null;
             return;
         }
-        data.setSwitch(in.readBoolean());
-        data.setSomeProperty(in.readInt());
-        data.setSomePoperty2(in.readInt());
-        EnumWithUnderScoresParcelable l_parcelableenumProperty = in.readParcelable(EnumWithUnderScoresParcelable.class.getClassLoader(), EnumWithUnderScoresParcelable.class);
-        data.setEnumProperty(l_parcelableenumProperty != null ? l_parcelableenumProperty.data : null);
+
+        Log.w(TAG, "Unwrapping interfaces from parcel is currently not supported");
+        return;
     }
 
     public static final Creator<NamEsParcelable> CREATOR = new Creator<NamEsParcelable>() {

@@ -3,11 +3,14 @@ package tbSame1.tbSame1_android_messenger;
 import tbSame1.tbSame1_api.ISameEnum1Interface;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Arrays;
 import tbSame1.tbSame1_api.Enum1;
 
   public  class SameEnum1InterfaceParcelable implements Parcelable {
+
+    private static final String TAG = "SameEnum1InterfaceParcelable";
 
     public ISameEnum1Interface data;
 
@@ -26,8 +29,9 @@ import tbSame1.tbSame1_api.Enum1;
             data = null;
             return;
         }
-        Enum1Parcelable l_parcelableprop1 = in.readParcelable(Enum1Parcelable.class.getClassLoader(), Enum1Parcelable.class);
-        data.setProp1(l_parcelableprop1 != null ? l_parcelableprop1.data : null);
+
+        Log.w(TAG, "Unwrapping interfaces from parcel is currently not supported");
+        return;
     }
 
     public static final Creator<SameEnum1InterfaceParcelable> CREATOR = new Creator<SameEnum1InterfaceParcelable>() {
