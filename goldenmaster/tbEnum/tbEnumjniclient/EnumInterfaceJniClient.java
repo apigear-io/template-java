@@ -35,7 +35,7 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
     @Override
     public boolean _isReady()
     {
-        return mMessengerClient._isReady();
+        return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
     @Override
     public void setProp0(Enum0 prop0)
@@ -96,13 +96,19 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
         return mMessengerClient.func0(param0);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFunc0Result with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void func0Async(String callId, Enum0 param0){
         Log.v(TAG, "non blocking call func0 ");
         mMessengerClient.func0Async(param0).thenAccept(i -> {
             nativeOnFunc0Result(i, callId);});
     }
 
-    //Should not be called directly, use func0Async(String callId, Enum0 param0)
     @Override
     public CompletableFuture<Enum0> func0Async(Enum0 param0)
     {
@@ -116,13 +122,19 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
         return mMessengerClient.func1(param1);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFunc1Result with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void func1Async(String callId, Enum1 param1){
         Log.v(TAG, "non blocking call func1 ");
         mMessengerClient.func1Async(param1).thenAccept(i -> {
             nativeOnFunc1Result(i, callId);});
     }
 
-    //Should not be called directly, use func1Async(String callId, Enum1 param1)
     @Override
     public CompletableFuture<Enum1> func1Async(Enum1 param1)
     {
@@ -136,13 +148,19 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
         return mMessengerClient.func2(param2);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFunc2Result with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void func2Async(String callId, Enum2 param2){
         Log.v(TAG, "non blocking call func2 ");
         mMessengerClient.func2Async(param2).thenAccept(i -> {
             nativeOnFunc2Result(i, callId);});
     }
 
-    //Should not be called directly, use func2Async(String callId, Enum2 param2)
     @Override
     public CompletableFuture<Enum2> func2Async(Enum2 param2)
     {
@@ -156,13 +174,19 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
         return mMessengerClient.func3(param3);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFunc3Result with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void func3Async(String callId, Enum3 param3){
         Log.v(TAG, "non blocking call func3 ");
         mMessengerClient.func3Async(param3).thenAccept(i -> {
             nativeOnFunc3Result(i, callId);});
     }
 
-    //Should not be called directly, use func3Async(String callId, Enum3 param3)
     @Override
     public CompletableFuture<Enum3> func3Async(Enum3 param3)
     {

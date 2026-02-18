@@ -27,7 +27,7 @@ public class NoOperationsInterfaceJniClient extends AbstractNoOperationsInterfac
     @Override
     public boolean _isReady()
     {
-        return mMessengerClient._isReady();
+        return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
     @Override
     public void setPropBool(boolean propBool)
