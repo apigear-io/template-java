@@ -10,7 +10,6 @@ import tbSimple.tbSimple_api.ISimpleInterfaceEventListener;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,7 +20,7 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
 
 
     private final static String TAG = "SimpleInterfaceJniService";
-    private static boolean isServiceReady = false;
+    private static volatile boolean isServiceReady = false;
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public SimpleInterfaceJniService()

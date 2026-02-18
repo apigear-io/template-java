@@ -29,7 +29,7 @@ public class SameEnum1InterfaceJniClient extends AbstractSameEnum1Interface impl
     @Override
     public boolean _isReady()
     {
-        return mMessengerClient._isReady();
+        return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
     @Override
     public void setProp1(Enum1 prop1)
@@ -51,13 +51,19 @@ public class SameEnum1InterfaceJniClient extends AbstractSameEnum1Interface impl
         return mMessengerClient.func1(param1);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFunc1Result with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void func1Async(String callId, Enum1 param1){
         Log.v(TAG, "non blocking call func1 ");
         mMessengerClient.func1Async(param1).thenAccept(i -> {
             nativeOnFunc1Result(i, callId);});
     }
 
-    //Should not be called directly, use func1Async(String callId, Enum1 param1)
     @Override
     public CompletableFuture<Enum1> func1Async(Enum1 param1)
     {

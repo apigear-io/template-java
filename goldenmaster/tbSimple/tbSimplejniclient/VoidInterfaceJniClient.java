@@ -27,7 +27,7 @@ public class VoidInterfaceJniClient extends AbstractVoidInterface implements IVo
     @Override
     public boolean _isReady()
     {
-        return mMessengerClient._isReady();
+        return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
      @Override
      public void funcVoid()
@@ -36,13 +36,19 @@ public class VoidInterfaceJniClient extends AbstractVoidInterface implements IVo
          mMessengerClient.funcVoid();
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFuncVoidResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void funcVoidAsync(String callId){
         Log.v(TAG, "non blocking call funcVoid ");
         mMessengerClient.funcVoidAsync().thenAccept(i -> {
             nativeOnFuncVoidResult(callId);});
     }
 
-    //Should not be called directly, use funcVoidAsync(String callId, )
     @Override
     public CompletableFuture<Void> funcVoidAsync()
     {

@@ -27,7 +27,7 @@ public class EmptyInterfaceJniClient extends AbstractEmptyInterface implements I
     @Override
     public boolean _isReady()
     {
-        return mMessengerClient._isReady();
+        return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
 
     public boolean bind(Context ctx, String packageName, String connectionID){

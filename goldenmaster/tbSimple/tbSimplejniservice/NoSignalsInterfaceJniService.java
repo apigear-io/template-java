@@ -10,7 +10,6 @@ import tbSimple.tbSimple_api.INoSignalsInterfaceEventListener;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,7 +20,7 @@ public class NoSignalsInterfaceJniService extends AbstractNoSignalsInterface {
 
 
     private final static String TAG = "NoSignalsInterfaceJniService";
-    private static boolean isServiceReady = false;
+    private static volatile boolean isServiceReady = false;
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public NoSignalsInterfaceJniService()

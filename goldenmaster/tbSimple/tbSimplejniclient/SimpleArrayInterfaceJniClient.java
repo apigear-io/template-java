@@ -27,7 +27,7 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     @Override
     public boolean _isReady()
     {
-        return mMessengerClient._isReady();
+        return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
     @Override
     public void setPropBool(boolean[] propBool)
@@ -153,13 +153,19 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
         return mMessengerClient.funcBool(paramBool);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFuncBoolResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void funcBoolAsync(String callId, boolean[] paramBool){
         Log.v(TAG, "non blocking call funcBool ");
         mMessengerClient.funcBoolAsync(paramBool).thenAccept(i -> {
             nativeOnFuncBoolResult(i, callId);});
     }
 
-    //Should not be called directly, use funcBoolAsync(String callId, boolean[] paramBool)
     @Override
     public CompletableFuture<boolean[]> funcBoolAsync(boolean[] paramBool)
     {
@@ -173,13 +179,19 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
         return mMessengerClient.funcInt(paramInt);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFuncIntResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void funcIntAsync(String callId, int[] paramInt){
         Log.v(TAG, "non blocking call funcInt ");
         mMessengerClient.funcIntAsync(paramInt).thenAccept(i -> {
             nativeOnFuncIntResult(i, callId);});
     }
 
-    //Should not be called directly, use funcIntAsync(String callId, int[] paramInt)
     @Override
     public CompletableFuture<int[]> funcIntAsync(int[] paramInt)
     {
@@ -193,13 +205,19 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
         return mMessengerClient.funcInt32(paramInt32);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFuncInt32Result with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void funcInt32Async(String callId, int[] paramInt32){
         Log.v(TAG, "non blocking call funcInt32 ");
         mMessengerClient.funcInt32Async(paramInt32).thenAccept(i -> {
             nativeOnFuncInt32Result(i, callId);});
     }
 
-    //Should not be called directly, use funcInt32Async(String callId, int[] paramInt32)
     @Override
     public CompletableFuture<int[]> funcInt32Async(int[] paramInt32)
     {
@@ -213,13 +231,19 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
         return mMessengerClient.funcInt64(paramInt64);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFuncInt64Result with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void funcInt64Async(String callId, long[] paramInt64){
         Log.v(TAG, "non blocking call funcInt64 ");
         mMessengerClient.funcInt64Async(paramInt64).thenAccept(i -> {
             nativeOnFuncInt64Result(i, callId);});
     }
 
-    //Should not be called directly, use funcInt64Async(String callId, long[] paramInt64)
     @Override
     public CompletableFuture<long[]> funcInt64Async(long[] paramInt64)
     {
@@ -233,13 +257,19 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
         return mMessengerClient.funcFloat(paramFloat);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFuncFloatResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void funcFloatAsync(String callId, float[] paramFloat){
         Log.v(TAG, "non blocking call funcFloat ");
         mMessengerClient.funcFloatAsync(paramFloat).thenAccept(i -> {
             nativeOnFuncFloatResult(i, callId);});
     }
 
-    //Should not be called directly, use funcFloatAsync(String callId, float[] paramFloat)
     @Override
     public CompletableFuture<float[]> funcFloatAsync(float[] paramFloat)
     {
@@ -253,13 +283,19 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
         return mMessengerClient.funcFloat32(paramFloat32);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFuncFloat32Result with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void funcFloat32Async(String callId, float[] paramFloat32){
         Log.v(TAG, "non blocking call funcFloat32 ");
         mMessengerClient.funcFloat32Async(paramFloat32).thenAccept(i -> {
             nativeOnFuncFloat32Result(i, callId);});
     }
 
-    //Should not be called directly, use funcFloat32Async(String callId, float[] paramFloat32)
     @Override
     public CompletableFuture<float[]> funcFloat32Async(float[] paramFloat32)
     {
@@ -273,13 +309,19 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
         return mMessengerClient.funcFloat64(paramFloat);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFuncFloat64Result with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void funcFloat64Async(String callId, double[] paramFloat){
         Log.v(TAG, "non blocking call funcFloat64 ");
         mMessengerClient.funcFloat64Async(paramFloat).thenAccept(i -> {
             nativeOnFuncFloat64Result(i, callId);});
     }
 
-    //Should not be called directly, use funcFloat64Async(String callId, double[] paramFloat)
     @Override
     public CompletableFuture<double[]> funcFloat64Async(double[] paramFloat)
     {
@@ -293,13 +335,19 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
         return mMessengerClient.funcString(paramString);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFuncStringResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void funcStringAsync(String callId, String[] paramString){
         Log.v(TAG, "non blocking call funcString ");
         mMessengerClient.funcStringAsync(paramString).thenAccept(i -> {
             nativeOnFuncStringResult(i, callId);});
     }
 
-    //Should not be called directly, use funcStringAsync(String callId, String[] paramString)
     @Override
     public CompletableFuture<String[]> funcStringAsync(String[] paramString)
     {

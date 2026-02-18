@@ -27,7 +27,7 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
     @Override
     public boolean _isReady()
     {
-        return mMessengerClient._isReady();
+        return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
     @Override
     public void setVector(customTypes.customTypes_api.Vector3D vector)
@@ -88,13 +88,19 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
         return mMessengerClient.increment(vec);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnIncrementResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void incrementAsync(String callId, org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec){
         Log.v(TAG, "non blocking call increment ");
         mMessengerClient.incrementAsync(vec).thenAccept(i -> {
             nativeOnIncrementResult(i, callId);});
     }
 
-    //Should not be called directly, use incrementAsync(String callId, org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec)
     @Override
     public CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> incrementAsync(org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec)
     {
@@ -108,13 +114,19 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
         return mMessengerClient.incrementArray(vec);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnIncrementArrayResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void incrementArrayAsync(String callId, org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec){
         Log.v(TAG, "non blocking call incrementArray ");
         mMessengerClient.incrementArrayAsync(vec).thenAccept(i -> {
             nativeOnIncrementArrayResult(i, callId);});
     }
 
-    //Should not be called directly, use incrementArrayAsync(String callId, org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec)
     @Override
     public CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]> incrementArrayAsync(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec)
     {
@@ -128,13 +140,19 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
         return mMessengerClient.decrement(vec);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnDecrementResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void decrementAsync(String callId, customTypes.customTypes_api.Vector3D vec){
         Log.v(TAG, "non blocking call decrement ");
         mMessengerClient.decrementAsync(vec).thenAccept(i -> {
             nativeOnDecrementResult(i, callId);});
     }
 
-    //Should not be called directly, use decrementAsync(String callId, customTypes.customTypes_api.Vector3D vec)
     @Override
     public CompletableFuture<customTypes.customTypes_api.Vector3D> decrementAsync(customTypes.customTypes_api.Vector3D vec)
     {
@@ -148,13 +166,19 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
         return mMessengerClient.decrementArray(vec);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnDecrementArrayResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void decrementArrayAsync(String callId, customTypes.customTypes_api.Vector3D[] vec){
         Log.v(TAG, "non blocking call decrementArray ");
         mMessengerClient.decrementArrayAsync(vec).thenAccept(i -> {
             nativeOnDecrementArrayResult(i, callId);});
     }
 
-    //Should not be called directly, use decrementArrayAsync(String callId, customTypes.customTypes_api.Vector3D[] vec)
     @Override
     public CompletableFuture<customTypes.customTypes_api.Vector3D[]> decrementArrayAsync(customTypes.customTypes_api.Vector3D[] vec)
     {

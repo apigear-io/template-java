@@ -29,7 +29,7 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
     @Override
     public boolean _isReady()
     {
-        return mMessengerClient._isReady();
+        return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
     @Override
     public void setSwitch(boolean Switch)
@@ -90,13 +90,19 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
          mMessengerClient.someFunction(SOME_PARAM);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnSomeFunctionResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void someFunctionAsync(String callId, boolean SOME_PARAM){
         Log.v(TAG, "non blocking call someFunction ");
         mMessengerClient.someFunctionAsync(SOME_PARAM).thenAccept(i -> {
             nativeOnSomeFunctionResult(callId);});
     }
 
-    //Should not be called directly, use someFunctionAsync(String callId, boolean SOME_PARAM)
     @Override
     public CompletableFuture<Void> someFunctionAsync(boolean SOME_PARAM)
     {
@@ -110,13 +116,19 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
          mMessengerClient.someFunction2(Some_Param);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnSomeFunction2Result with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void someFunction2Async(String callId, boolean Some_Param){
         Log.v(TAG, "non blocking call someFunction2 ");
         mMessengerClient.someFunction2Async(Some_Param).thenAccept(i -> {
             nativeOnSomeFunction2Result(callId);});
     }
 
-    //Should not be called directly, use someFunction2Async(String callId, boolean Some_Param)
     @Override
     public CompletableFuture<Void> someFunction2Async(boolean Some_Param)
     {

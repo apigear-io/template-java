@@ -14,7 +14,6 @@ import tbSame2.tbSame2_android_messenger.Enum2Parcelable;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -25,7 +24,7 @@ public class SameEnum2InterfaceJniService extends AbstractSameEnum2Interface {
 
 
     private final static String TAG = "SameEnum2InterfaceJniService";
-    private static boolean isServiceReady = false;
+    private static volatile boolean isServiceReady = false;
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public SameEnum2InterfaceJniService()

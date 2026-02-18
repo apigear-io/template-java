@@ -27,7 +27,7 @@ public class SimpleLocalIfJniClient extends AbstractSimpleLocalIf implements ISi
     @Override
     public boolean _isReady()
     {
-        return mMessengerClient._isReady();
+        return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
     @Override
     public void setIntProperty(int intProperty)
@@ -49,13 +49,19 @@ public class SimpleLocalIfJniClient extends AbstractSimpleLocalIf implements ISi
         return mMessengerClient.intMethod(param);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnIntMethodResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void intMethodAsync(String callId, int param){
         Log.v(TAG, "non blocking call intMethod ");
         mMessengerClient.intMethodAsync(param).thenAccept(i -> {
             nativeOnIntMethodResult(i, callId);});
     }
 
-    //Should not be called directly, use intMethodAsync(String callId, int param)
     @Override
     public CompletableFuture<Integer> intMethodAsync(int param)
     {
