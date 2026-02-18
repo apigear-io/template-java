@@ -29,7 +29,7 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
     @Override
     public boolean _isReady()
     {
-        return mMessengerClient._isReady();
+        return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
     @Override
     public void setLocalIf(ISimpleLocalIf localIf)
@@ -90,13 +90,19 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
         return mMessengerClient.localIfMethod(param);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnLocalIfMethodResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void localIfMethodAsync(String callId, ISimpleLocalIf param){
         Log.v(TAG, "non blocking call localIfMethod ");
         mMessengerClient.localIfMethodAsync(param).thenAccept(i -> {
             nativeOnLocalIfMethodResult(i, callId);});
     }
 
-    //Should not be called directly, use localIfMethodAsync(String callId, ISimpleLocalIf param)
     @Override
     public CompletableFuture<ISimpleLocalIf> localIfMethodAsync(ISimpleLocalIf param)
     {
@@ -110,13 +116,19 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
         return mMessengerClient.localIfMethodList(param);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnLocalIfMethodListResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void localIfMethodListAsync(String callId, ISimpleLocalIf[] param){
         Log.v(TAG, "non blocking call localIfMethodList ");
         mMessengerClient.localIfMethodListAsync(param).thenAccept(i -> {
             nativeOnLocalIfMethodListResult(i, callId);});
     }
 
-    //Should not be called directly, use localIfMethodListAsync(String callId, ISimpleLocalIf[] param)
     @Override
     public CompletableFuture<ISimpleLocalIf[]> localIfMethodListAsync(ISimpleLocalIf[] param)
     {
@@ -130,13 +142,19 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
         return mMessengerClient.importedIfMethod(param);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnImportedIfMethodResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void importedIfMethodAsync(String callId, tbIfaceimport.tbIfaceimport_api.IEmptyIf param){
         Log.v(TAG, "non blocking call importedIfMethod ");
         mMessengerClient.importedIfMethodAsync(param).thenAccept(i -> {
             nativeOnImportedIfMethodResult(i, callId);});
     }
 
-    //Should not be called directly, use importedIfMethodAsync(String callId, tbIfaceimport.tbIfaceimport_api.IEmptyIf param)
     @Override
     public CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf> importedIfMethodAsync(tbIfaceimport.tbIfaceimport_api.IEmptyIf param)
     {
@@ -150,13 +168,19 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
         return mMessengerClient.importedIfMethodList(param);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnImportedIfMethodListResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void importedIfMethodListAsync(String callId, tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param){
         Log.v(TAG, "non blocking call importedIfMethodList ");
         mMessengerClient.importedIfMethodListAsync(param).thenAccept(i -> {
             nativeOnImportedIfMethodListResult(i, callId);});
     }
 
-    //Should not be called directly, use importedIfMethodListAsync(String callId, tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param)
     @Override
     public CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf[]> importedIfMethodListAsync(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param)
     {

@@ -11,7 +11,6 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Nam
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -22,7 +21,7 @@ public class {{Camel .Interface.Name}}JniService extends Abstract{{Camel .Interf
 
 
     private final static String TAG = "{{Camel .Interface.Name}}JniService";
-    private static boolean isServiceReady = false;
+    private static volatile boolean isServiceReady = false;
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public {{Camel .Interface.Name}}JniService()

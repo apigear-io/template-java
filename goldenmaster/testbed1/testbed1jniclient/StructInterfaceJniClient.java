@@ -35,7 +35,7 @@ public class StructInterfaceJniClient extends AbstractStructInterface implements
     @Override
     public boolean _isReady()
     {
-        return mMessengerClient._isReady();
+        return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
     @Override
     public void setPropBool(StructBool propBool)
@@ -96,13 +96,19 @@ public class StructInterfaceJniClient extends AbstractStructInterface implements
         return mMessengerClient.funcBool(paramBool);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFuncBoolResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void funcBoolAsync(String callId, StructBool paramBool){
         Log.v(TAG, "non blocking call funcBool ");
         mMessengerClient.funcBoolAsync(paramBool).thenAccept(i -> {
             nativeOnFuncBoolResult(i, callId);});
     }
 
-    //Should not be called directly, use funcBoolAsync(String callId, StructBool paramBool)
     @Override
     public CompletableFuture<StructBool> funcBoolAsync(StructBool paramBool)
     {
@@ -116,13 +122,19 @@ public class StructInterfaceJniClient extends AbstractStructInterface implements
         return mMessengerClient.funcInt(paramInt);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFuncIntResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void funcIntAsync(String callId, StructInt paramInt){
         Log.v(TAG, "non blocking call funcInt ");
         mMessengerClient.funcIntAsync(paramInt).thenAccept(i -> {
             nativeOnFuncIntResult(i, callId);});
     }
 
-    //Should not be called directly, use funcIntAsync(String callId, StructInt paramInt)
     @Override
     public CompletableFuture<StructInt> funcIntAsync(StructInt paramInt)
     {
@@ -136,13 +148,19 @@ public class StructInterfaceJniClient extends AbstractStructInterface implements
         return mMessengerClient.funcFloat(paramFloat);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFuncFloatResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void funcFloatAsync(String callId, StructFloat paramFloat){
         Log.v(TAG, "non blocking call funcFloat ");
         mMessengerClient.funcFloatAsync(paramFloat).thenAccept(i -> {
             nativeOnFuncFloatResult(i, callId);});
     }
 
-    //Should not be called directly, use funcFloatAsync(String callId, StructFloat paramFloat)
     @Override
     public CompletableFuture<StructFloat> funcFloatAsync(StructFloat paramFloat)
     {
@@ -156,13 +174,19 @@ public class StructInterfaceJniClient extends AbstractStructInterface implements
         return mMessengerClient.funcString(paramString);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFuncStringResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void funcStringAsync(String callId, StructString paramString){
         Log.v(TAG, "non blocking call funcString ");
         mMessengerClient.funcStringAsync(paramString).thenAccept(i -> {
             nativeOnFuncStringResult(i, callId);});
     }
 
-    //Should not be called directly, use funcStringAsync(String callId, StructString paramString)
     @Override
     public CompletableFuture<StructString> funcStringAsync(StructString paramString)
     {

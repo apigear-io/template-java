@@ -14,7 +14,6 @@ import tbSame2.tbSame2_android_messenger.Struct2Parcelable;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -25,7 +24,7 @@ public class SameStruct2InterfaceJniService extends AbstractSameStruct2Interface
 
 
     private final static String TAG = "SameStruct2InterfaceJniService";
-    private static boolean isServiceReady = false;
+    private static volatile boolean isServiceReady = false;
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public SameStruct2InterfaceJniService()

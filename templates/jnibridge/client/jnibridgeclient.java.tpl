@@ -29,7 +29,7 @@ public class {{Camel .Interface.Name}}JniClient extends Abstract{{Camel .Interfa
     @Override
     public boolean _isReady()
     {
-        return mMessengerClient._isReady();
+        return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
 
     {{- range .Interface.Properties }}
@@ -55,13 +55,19 @@ public class {{Camel .Interface.Name}}JniClient extends Abstract{{Camel .Interfa
         {{if not .Return.IsVoid}}return{{ end }} mMessengerClient.{{camel .Name}}({{javaVars .Params}});
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOn{{Camel .Name}}Result with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void {{camel .Name}}Async(String callId{{if len .Params}}, {{javaParams "" .Params}}{{end}}){
         Log.v(TAG, "non blocking call {{camel .Name}} ");
         mMessengerClient.{{camel .Name}}Async({{javaVars .Params }}).thenAccept(i -> {
             nativeOn{{Camel .Name}}Result({{if not .Return.IsVoid}}i, {{end}}callId);});
     }
 
-    //Should not be called directly, use {{camel .Name}}Async(String callId, {{javaParams "" .Params}})
     @Override
     public {{javaAsyncReturn "" .Return}} {{camel .Name}}Async({{javaParams "" .Params}})
     {

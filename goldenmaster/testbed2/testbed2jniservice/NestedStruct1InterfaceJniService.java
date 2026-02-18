@@ -12,7 +12,6 @@ import testbed2.testbed2_android_messenger.NestedStruct1Parcelable;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -23,7 +22,7 @@ public class NestedStruct1InterfaceJniService extends AbstractNestedStruct1Inter
 
 
     private final static String TAG = "NestedStruct1InterfaceJniService";
-    private static boolean isServiceReady = false;
+    private static volatile boolean isServiceReady = false;
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public NestedStruct1InterfaceJniService()

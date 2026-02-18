@@ -47,7 +47,7 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
     @Override
     public boolean _isReady()
     {
-        return mMessengerClient._isReady();
+        return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
     @Override
     public void setPropBool(StructBoolWithArray propBool)
@@ -121,13 +121,19 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
         return mMessengerClient.funcBool(paramBool);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFuncBoolResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void funcBoolAsync(String callId, StructBoolWithArray paramBool){
         Log.v(TAG, "non blocking call funcBool ");
         mMessengerClient.funcBoolAsync(paramBool).thenAccept(i -> {
             nativeOnFuncBoolResult(i, callId);});
     }
 
-    //Should not be called directly, use funcBoolAsync(String callId, StructBoolWithArray paramBool)
     @Override
     public CompletableFuture<StructBool[]> funcBoolAsync(StructBoolWithArray paramBool)
     {
@@ -141,13 +147,19 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
         return mMessengerClient.funcInt(paramInt);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFuncIntResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void funcIntAsync(String callId, StructIntWithArray paramInt){
         Log.v(TAG, "non blocking call funcInt ");
         mMessengerClient.funcIntAsync(paramInt).thenAccept(i -> {
             nativeOnFuncIntResult(i, callId);});
     }
 
-    //Should not be called directly, use funcIntAsync(String callId, StructIntWithArray paramInt)
     @Override
     public CompletableFuture<StructInt[]> funcIntAsync(StructIntWithArray paramInt)
     {
@@ -161,13 +173,19 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
         return mMessengerClient.funcFloat(paramFloat);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFuncFloatResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void funcFloatAsync(String callId, StructFloatWithArray paramFloat){
         Log.v(TAG, "non blocking call funcFloat ");
         mMessengerClient.funcFloatAsync(paramFloat).thenAccept(i -> {
             nativeOnFuncFloatResult(i, callId);});
     }
 
-    //Should not be called directly, use funcFloatAsync(String callId, StructFloatWithArray paramFloat)
     @Override
     public CompletableFuture<StructFloat[]> funcFloatAsync(StructFloatWithArray paramFloat)
     {
@@ -181,13 +199,19 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
         return mMessengerClient.funcString(paramString);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFuncStringResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void funcStringAsync(String callId, StructStringWithArray paramString){
         Log.v(TAG, "non blocking call funcString ");
         mMessengerClient.funcStringAsync(paramString).thenAccept(i -> {
             nativeOnFuncStringResult(i, callId);});
     }
 
-    //Should not be called directly, use funcStringAsync(String callId, StructStringWithArray paramString)
     @Override
     public CompletableFuture<StructString[]> funcStringAsync(StructStringWithArray paramString)
     {
@@ -201,13 +225,19 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
         return mMessengerClient.funcEnum(paramEnum);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFuncEnumResult with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void funcEnumAsync(String callId, StructEnumWithArray paramEnum){
         Log.v(TAG, "non blocking call funcEnum ");
         mMessengerClient.funcEnumAsync(paramEnum).thenAccept(i -> {
             nativeOnFuncEnumResult(i, callId);});
     }
 
-    //Should not be called directly, use funcEnumAsync(String callId, StructEnumWithArray paramEnum)
     @Override
     public CompletableFuture<Enum0[]> funcEnumAsync(StructEnumWithArray paramEnum)
     {

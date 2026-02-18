@@ -33,7 +33,7 @@ public class NestedStruct3InterfaceJniClient extends AbstractNestedStruct3Interf
     @Override
     public boolean _isReady()
     {
-        return mMessengerClient._isReady();
+        return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
     @Override
     public void setProp1(NestedStruct1 prop1)
@@ -81,13 +81,19 @@ public class NestedStruct3InterfaceJniClient extends AbstractNestedStruct3Interf
         return mMessengerClient.func1(param1);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFunc1Result with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void func1Async(String callId, NestedStruct1 param1){
         Log.v(TAG, "non blocking call func1 ");
         mMessengerClient.func1Async(param1).thenAccept(i -> {
             nativeOnFunc1Result(i, callId);});
     }
 
-    //Should not be called directly, use func1Async(String callId, NestedStruct1 param1)
     @Override
     public CompletableFuture<NestedStruct1> func1Async(NestedStruct1 param1)
     {
@@ -101,13 +107,19 @@ public class NestedStruct3InterfaceJniClient extends AbstractNestedStruct3Interf
         return mMessengerClient.func2(param1, param2);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFunc2Result with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void func2Async(String callId, NestedStruct1 param1, NestedStruct2 param2){
         Log.v(TAG, "non blocking call func2 ");
         mMessengerClient.func2Async(param1, param2).thenAccept(i -> {
             nativeOnFunc2Result(i, callId);});
     }
 
-    //Should not be called directly, use func2Async(String callId, NestedStruct1 param1, NestedStruct2 param2)
     @Override
     public CompletableFuture<NestedStruct1> func2Async(NestedStruct1 param1, NestedStruct2 param2)
     {
@@ -121,13 +133,19 @@ public class NestedStruct3InterfaceJniClient extends AbstractNestedStruct3Interf
         return mMessengerClient.func3(param1, param2, param3);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFunc3Result with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void func3Async(String callId, NestedStruct1 param1, NestedStruct2 param2, NestedStruct3 param3){
         Log.v(TAG, "non blocking call func3 ");
         mMessengerClient.func3Async(param1, param2, param3).thenAccept(i -> {
             nativeOnFunc3Result(i, callId);});
     }
 
-    //Should not be called directly, use func3Async(String callId, NestedStruct1 param1, NestedStruct2 param2, NestedStruct3 param3)
     @Override
     public CompletableFuture<NestedStruct1> func3Async(NestedStruct1 param1, NestedStruct2 param2, NestedStruct3 param3)
     {

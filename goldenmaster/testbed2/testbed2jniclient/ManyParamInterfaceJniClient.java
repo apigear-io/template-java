@@ -27,7 +27,7 @@ public class ManyParamInterfaceJniClient extends AbstractManyParamInterface impl
     @Override
     public boolean _isReady()
     {
-        return mMessengerClient._isReady();
+        return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
     @Override
     public void setProp1(int prop1)
@@ -88,13 +88,19 @@ public class ManyParamInterfaceJniClient extends AbstractManyParamInterface impl
         return mMessengerClient.func1(param1);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFunc1Result with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void func1Async(String callId, int param1){
         Log.v(TAG, "non blocking call func1 ");
         mMessengerClient.func1Async(param1).thenAccept(i -> {
             nativeOnFunc1Result(i, callId);});
     }
 
-    //Should not be called directly, use func1Async(String callId, int param1)
     @Override
     public CompletableFuture<Integer> func1Async(int param1)
     {
@@ -108,13 +114,19 @@ public class ManyParamInterfaceJniClient extends AbstractManyParamInterface impl
         return mMessengerClient.func2(param1, param2);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFunc2Result with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void func2Async(String callId, int param1, int param2){
         Log.v(TAG, "non blocking call func2 ");
         mMessengerClient.func2Async(param1, param2).thenAccept(i -> {
             nativeOnFunc2Result(i, callId);});
     }
 
-    //Should not be called directly, use func2Async(String callId, int param1, int param2)
     @Override
     public CompletableFuture<Integer> func2Async(int param1, int param2)
     {
@@ -128,13 +140,19 @@ public class ManyParamInterfaceJniClient extends AbstractManyParamInterface impl
         return mMessengerClient.func3(param1, param2, param3);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFunc3Result with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void func3Async(String callId, int param1, int param2, int param3){
         Log.v(TAG, "non blocking call func3 ");
         mMessengerClient.func3Async(param1, param2, param3).thenAccept(i -> {
             nativeOnFunc3Result(i, callId);});
     }
 
-    //Should not be called directly, use func3Async(String callId, int param1, int param2, int param3)
     @Override
     public CompletableFuture<Integer> func3Async(int param1, int param2, int param3)
     {
@@ -148,13 +166,19 @@ public class ManyParamInterfaceJniClient extends AbstractManyParamInterface impl
         return mMessengerClient.func4(param1, param2, param3, param4);
     }
 
+    /**
+    * This is an async method to be called via JNI.
+    *
+    * It returns result via nativeOnFunc4Result with the same callId.
+    *
+    * @param callId async call identifier
+    */
     public void func4Async(String callId, int param1, int param2, int param3, int param4){
         Log.v(TAG, "non blocking call func4 ");
         mMessengerClient.func4Async(param1, param2, param3, param4).thenAccept(i -> {
             nativeOnFunc4Result(i, callId);});
     }
 
-    //Should not be called directly, use func4Async(String callId, int param1, int param2, int param3, int param4)
     @Override
     public CompletableFuture<Integer> func4Async(int param1, int param2, int param3, int param4)
     {
