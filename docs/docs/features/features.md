@@ -2,8 +2,8 @@
 sidebar_position: 2
 sidebar_label: "Features"
 title: "Java Template Features Overview"
-description: "Overview of ApiGear Java template features: API generation with interfaces, enums, structs, and abstract base classes."
-keywords: [java features, api generation, apigear]
+description: "Overview of ApiGear Java template features: API generation, stub implementations, Android service/client IPC, and JNI bridge."
+keywords: [java features, android features, api generation, apigear, android service, jni]
 ---
 
 import CodeBlock from '@theme/CodeBlock';
@@ -19,10 +19,10 @@ A feature is a part of the template that generates a specific aspect of the code
 
 ## Get started
 
-This template generates Java types from your API definitions. The generated code includes interfaces, abstract base classes, enums, and structs ready to use in any Java project.
+This template generates a Java and Android SDK from your API definitions. The generated code ranges from pure Java interfaces and data types to a full Android service/client architecture with Messenger-based IPC.
 
 :::note
-Basic Java knowledge is required. Familiarity with interfaces, abstract classes, and event listener patterns will help you get the most out of the generated code.
+Basic Java knowledge is required. For Android features, familiarity with Android Services, Messenger IPC, and Gradle multi-module projects will help.
 :::
 
 ### Code generation
@@ -43,21 +43,35 @@ The following code snippet contains the _API_ definition which is used throughou
     <CodeBlock language="yaml" showLineNumbers>{helloWorldModuleComponent}</CodeBlock>
 </details>
 
-## Features
+## Available Features
 
 ### Core Features
 
-Core features generate Java types from your API definition:
+Core features generate Java types and implementations from your API definition:
 
-- [api](#generated-code-structure) - generates interfaces, event listeners, abstract base classes, enums, and structs
-- `stubs` (planned) - adds basic stubs for the `api`, providing classes that can be instantiated with default behavior
-- `test` (planned) - generates unit test stubs for the API
-- `demo` (planned) - generates a demo application showcasing API usage
+- [api](api.md) - generates interfaces, event listeners, abstract base classes, enums, and structs as a Gradle multi-module project
+- [stubs](stubs.md) - generates ready-to-use implementation classes with default behavior, property change detection, and async support
+
+### Extended Features
+
+Extended features add Android IPC and native integration:
+
+- [android](android.md) - generates Android Messenger-based service/client architecture for cross-process and cross-app communication
+- [jnibridge](jnibridge.md) - generates JNI bridge classes for integrating with native C++ code, such as Unreal Engine
+
+### Test Features
+
+- `testserviceapp` - generates an Android test application for the service side, with UI controls for setting properties, emitting signals, and managing the service lifecycle
+- `testclientapp` - generates an Android test application for the client side, with UI controls for binding to a service, setting properties, and calling operations
+
+### Example Features
+
+- `example` - generates a standalone example application that instantiates all key classes to verify the SDK compiles and links correctly
 
 Each feature can be selected using the solution file or via the command line tool.
 
 :::note
-_Features are case sensitive, make sure to always **use lower-case.**_
+_Features are case-sensitive. Make sure to always **use lowercase.**_
 :::
 
 :::tip
@@ -65,42 +79,85 @@ The _meta_ feature `all` enables all specified features of the template. If you 
 Please note, `all` is part of the code generator and not explicitly used within templates.
 :::
 
-## Generated code structure
+## Architecture
 
-For the Hello World API, the `api` feature generates a single Java source file containing all types for the module:
+The features listed above compose into a layered runtime architecture:
 
-- **`When`** enum — maps to the `When` enum defined in the API
-- **`Message`** class — maps to the `Message` struct, fields are annotated with [Jackson](https://github.com/FasterXML/jackson) `@JsonProperty` for JSON serialization
-- **`IHello`** interface — the `Hello` interface with property getters/setters and operations
-- **`IHelloEventListener`** event listener — callback interface for property changes and signals
-- **`AbstractHello`** abstract class — base implementation managing listeners and property change notifications
+```mermaid
+graph TD
+    subgraph Application[" Your Application "]
+        App[Application Code]
+    end
 
-:::note
-The generated structs use [Jackson](https://github.com/FasterXML/jackson) annotations (`@JsonProperty`) for JSON serialization. If you use JSON serialization in your project, add the Jackson dependency:
-```xml
-<dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-databind</artifactId>
-    <version>2.17.0</version>
-</dependency>
+    subgraph API[" API Layer "]
+        Interface["Interfaces, Structs & Enums"]
+    end
+
+    subgraph Implementations[" Implementation Layer "]
+        Stubs["Stubs<br/>(Local)"]
+        Android["Android Service/Client<br/>(Remote IPC)"]
+        JNI["JNI Bridge<br/>(Native)"]
+    end
+
+    App -->|uses| Interface
+    Interface -->|implemented by| Stubs
+    Interface -->|implemented by| Android
+    Android -.->|backend| Stubs
+    Android -.->|backend| JNI
+    JNI -.->|native C++| Native["Native Code"]
 ```
-:::
+
+*Your application programs against the generated API interfaces. Stubs provide local implementations, Android service/client enables cross-process communication via Messenger IPC, and the JNI bridge connects to native C++ code.*
+
+**Key architectural points:**
+
+- Communication between apps uses the **Android Messenger** framework — a lightweight IPC mechanism built on `Handler` and `Binder`
+- Each API interface gets **its own dedicated service and client**. A module with multiple interfaces (e.g. `Hello` and `Goodbye`) generates separate, independent service/client pairs for each.
+- The client (`HelloClient`) implements the same `IHello` interface as the local stubs, so your application code works identically regardless of whether the backend is local or remote
 
 ## Folder structure
 
-The following diagram shows the folder structure generated for the `api` feature.
+This graph shows the folder structure generated for a module with all features enabled. Each API module becomes a Gradle composite build with multiple sub-modules.
 
 ```bash
-📂hello-world
- ┣ 📂apigear
- ┃ ┣ 📜helloworld.solution.yaml
- ┃ ┗ 📜helloworld.module.yaml
- ┣ 📂java_hello_world
- # highlight-next-line
- ┃ ┗ 📂io.world.api
- ┃   ┗ 📜IoWorld.java
+📂java_hello_world
+ ┣ 📜build.gradle
+ ┣ 📜settings.gradle
+ ┣ 📂ioWorld
+ ┃ ┣ 📜settings.gradle
+ ┃ ┣ 📂ioWorld_api                  # api feature
+ ┃ ┃ ┗ 📂src/main/java/ioWorld/ioWorld_api
+ ┃ ┃   ┣ 📜IHello.java
+ ┃ ┃   ┣ 📜IHelloEventListener.java
+ ┃ ┃   ┣ 📜AbstractHello.java
+ ┃ ┃   ┣ 📜Message.java
+ ┃ ┃   ┗ 📜When.java
+ ┃ ┣ 📂ioWorld_impl                 # stubs feature
+ ┃ ┃ ┗ 📂src/main/java/ioWorld/ioWorld_impl
+ ┃ ┃   ┗ 📜HelloService.java
+ ┃ ┣ 📂ioWorld_android_messenger    # android feature
+ ┃ ┃ ┗ 📂src/main/java/ioWorld/ioWorld_android_messenger
+ ┃ ┃   ┣ 📜HelloMessageType.java
+ ┃ ┃   ┣ 📜HelloParcelable.java
+ ┃ ┃   ┣ 📜MessageParcelable.java
+ ┃ ┃   ┗ 📜WhenParcelable.java
+ ┃ ┣ 📂ioWorld_android_service      # android feature
+ ┃ ┃ ┗ 📂src/main/java/ioWorld/ioWorld_android_service
+ ┃ ┃   ┣ 📜HelloServiceAdapter.java
+ ┃ ┃   ┣ 📜HelloServiceProvider.java
+ ┃ ┃   ┣ 📜HelloServiceStarter.java
+ ┃ ┃   ┣ 📜HelloBaseServiceLifecycleController.java
+ ┃ ┃   ┗ 📜IHelloServiceProvider.java
+ ┃ ┣ 📂ioWorld_android_client       # android feature
+ ┃ ┃ ┗ 📂src/main/java/ioWorld/ioWorld_android_client
+ ┃ ┃   ┗ 📜HelloClient.java
+ ┃ ┣ 📂ioWorldjniservice            # jnibridge feature
+ ┃ ┣ 📂ioWorldjniclient             # jnibridge feature
+ ┃ ┣ 📂ioWorldserviceexample         # testserviceapp feature
+ ┃ ┗ 📂ioWorld_client_example        # testclientapp feature
+ ┗ 📂javaHelloWorld_example          # example feature
 ```
 
 :::note
-The module name `io.world` is combined with the feature name to form the package directory `io.world.api`. The source file name `IoWorld.java` is derived from the module name in PascalCase.
+The module name `io.world` is converted to `ioWorld` for the Gradle project and package naming. Each feature generates one or more Gradle sub-modules within the composite build.
 :::
