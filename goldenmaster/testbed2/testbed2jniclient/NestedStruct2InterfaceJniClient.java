@@ -3,6 +3,7 @@ package testbed2.testbed2jniclient;
 import testbed2.testbed2_api.INestedStruct2Interface;
 import testbed2.testbed2_api.AbstractNestedStruct2Interface;
 import testbed2.testbed2_api.INestedStruct2InterfaceEventListener;
+import testbed2.testbed2_api.RemoteOperationException;
 
 import testbed2.testbed2_android_client.NestedStruct2InterfaceClient;
 import testbed2.testbed2_api.NestedStruct1;
@@ -69,14 +70,26 @@ public class NestedStruct2InterfaceJniClient extends AbstractNestedStruct2Interf
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFunc1Result with the same callId.
+    * On success, calls nativeOnFunc1Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void func1Async(String callId, NestedStruct1 param1){
         Log.v(TAG, "non blocking call func1 ");
-        mMessengerClient.func1Async(param1).thenAccept(i -> {
-            nativeOnFunc1Result(i, callId);});
+        mMessengerClient.func1Async(param1).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "func1 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFunc1Result(result, callId);
+            }
+        });
     }
 
     @Override
@@ -95,14 +108,26 @@ public class NestedStruct2InterfaceJniClient extends AbstractNestedStruct2Interf
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFunc2Result with the same callId.
+    * On success, calls nativeOnFunc2Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void func2Async(String callId, NestedStruct1 param1, NestedStruct2 param2){
         Log.v(TAG, "non blocking call func2 ");
-        mMessengerClient.func2Async(param1, param2).thenAccept(i -> {
-            nativeOnFunc2Result(i, callId);});
+        mMessengerClient.func2Async(param1, param2).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "func2 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFunc2Result(result, callId);
+            }
+        });
     }
 
     @Override
@@ -179,5 +204,6 @@ public class NestedStruct2InterfaceJniClient extends AbstractNestedStruct2Interf
     private native void nativeOnSig2(NestedStruct1 param1, NestedStruct2 param2);
     private native void nativeOnFunc1Result(NestedStruct1 result, String callId);
     private native void nativeOnFunc2Result(NestedStruct1 result, String callId);
+    private native void nativeAsyncOperationFailed(String callId, String errorMessage, int errorCode);
     private native void nativeIsReady(boolean isReady);
 }

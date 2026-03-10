@@ -3,6 +3,7 @@ package testbed1.testbed1jniclient;
 import testbed1.testbed1_api.IStructArray2Interface;
 import testbed1.testbed1_api.AbstractStructArray2Interface;
 import testbed1.testbed1_api.IStructArray2InterfaceEventListener;
+import testbed1.testbed1_api.RemoteOperationException;
 
 import testbed1.testbed1_android_client.StructArray2InterfaceClient;
 import testbed1.testbed1_api.Enum0;
@@ -124,14 +125,26 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFuncBoolResult with the same callId.
+    * On success, calls nativeOnFuncBoolResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void funcBoolAsync(String callId, StructBoolWithArray paramBool){
         Log.v(TAG, "non blocking call funcBool ");
-        mMessengerClient.funcBoolAsync(paramBool).thenAccept(i -> {
-            nativeOnFuncBoolResult(i, callId);});
+        mMessengerClient.funcBoolAsync(paramBool).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "funcBool async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFuncBoolResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -150,14 +163,26 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFuncIntResult with the same callId.
+    * On success, calls nativeOnFuncIntResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void funcIntAsync(String callId, StructIntWithArray paramInt){
         Log.v(TAG, "non blocking call funcInt ");
-        mMessengerClient.funcIntAsync(paramInt).thenAccept(i -> {
-            nativeOnFuncIntResult(i, callId);});
+        mMessengerClient.funcIntAsync(paramInt).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "funcInt async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFuncIntResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -176,14 +201,26 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFuncFloatResult with the same callId.
+    * On success, calls nativeOnFuncFloatResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void funcFloatAsync(String callId, StructFloatWithArray paramFloat){
         Log.v(TAG, "non blocking call funcFloat ");
-        mMessengerClient.funcFloatAsync(paramFloat).thenAccept(i -> {
-            nativeOnFuncFloatResult(i, callId);});
+        mMessengerClient.funcFloatAsync(paramFloat).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "funcFloat async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFuncFloatResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -202,14 +239,26 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFuncStringResult with the same callId.
+    * On success, calls nativeOnFuncStringResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void funcStringAsync(String callId, StructStringWithArray paramString){
         Log.v(TAG, "non blocking call funcString ");
-        mMessengerClient.funcStringAsync(paramString).thenAccept(i -> {
-            nativeOnFuncStringResult(i, callId);});
+        mMessengerClient.funcStringAsync(paramString).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "funcString async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFuncStringResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -228,14 +277,26 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFuncEnumResult with the same callId.
+    * On success, calls nativeOnFuncEnumResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void funcEnumAsync(String callId, StructEnumWithArray paramEnum){
         Log.v(TAG, "non blocking call funcEnum ");
-        mMessengerClient.funcEnumAsync(paramEnum).thenAccept(i -> {
-            nativeOnFuncEnumResult(i, callId);});
+        mMessengerClient.funcEnumAsync(paramEnum).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "funcEnum async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFuncEnumResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -350,5 +411,6 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
     private native void nativeOnFuncFloatResult(StructFloat[] result, String callId);
     private native void nativeOnFuncStringResult(StructString[] result, String callId);
     private native void nativeOnFuncEnumResult(Enum0[] result, String callId);
+    private native void nativeAsyncOperationFailed(String callId, String errorMessage, int errorCode);
     private native void nativeIsReady(boolean isReady);
 }

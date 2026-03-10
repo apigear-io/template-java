@@ -3,6 +3,7 @@ package tbNames.tbNamesjniclient;
 import tbNames.tbNames_api.INamEs;
 import tbNames.tbNames_api.AbstractNamEs;
 import tbNames.tbNames_api.INamEsEventListener;
+import tbNames.tbNames_api.RemoteOperationException;
 
 import tbNames.tbNames_android_client.NamEsClient;
 import tbNames.tbNames_api.EnumWithUnderScores;
@@ -93,14 +94,26 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnSomeFunctionResult with the same callId.
+    * On success, calls nativeOnSomeFunctionResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void someFunctionAsync(String callId, boolean SOME_PARAM){
         Log.v(TAG, "non blocking call someFunction ");
-        mMessengerClient.someFunctionAsync(SOME_PARAM).thenAccept(i -> {
-            nativeOnSomeFunctionResult(callId);});
+        mMessengerClient.someFunctionAsync(SOME_PARAM).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "SOME_FUNCTION async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnSomeFunctionResult(callId);
+            }
+        });
     }
 
     @Override
@@ -119,14 +132,26 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnSomeFunction2Result with the same callId.
+    * On success, calls nativeOnSomeFunction2Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void someFunction2Async(String callId, boolean Some_Param){
         Log.v(TAG, "non blocking call someFunction2 ");
-        mMessengerClient.someFunction2Async(Some_Param).thenAccept(i -> {
-            nativeOnSomeFunction2Result(callId);});
+        mMessengerClient.someFunction2Async(Some_Param).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "Some_Function2 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnSomeFunction2Result(callId);
+            }
+        });
     }
 
     @Override
@@ -217,5 +242,6 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
     private native void nativeOnSomeSignal2(boolean Some_Param);
     private native void nativeOnSomeFunctionResult(String callId);
     private native void nativeOnSomeFunction2Result(String callId);
+    private native void nativeAsyncOperationFailed(String callId, String errorMessage, int errorCode);
     private native void nativeIsReady(boolean isReady);
 }

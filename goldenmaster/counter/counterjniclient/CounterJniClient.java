@@ -3,6 +3,7 @@ package counter.counterjniclient;
 import counter.counter_api.ICounter;
 import counter.counter_api.AbstractCounter;
 import counter.counter_api.ICounterEventListener;
+import counter.counter_api.RemoteOperationException;
 
 import counter.counter_android_client.CounterClient;
 import android.content.Context;
@@ -91,14 +92,26 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnIncrementResult with the same callId.
+    * On success, calls nativeOnIncrementResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void incrementAsync(String callId, org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec){
         Log.v(TAG, "non blocking call increment ");
-        mMessengerClient.incrementAsync(vec).thenAccept(i -> {
-            nativeOnIncrementResult(i, callId);});
+        mMessengerClient.incrementAsync(vec).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "increment async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnIncrementResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -117,14 +130,26 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnIncrementArrayResult with the same callId.
+    * On success, calls nativeOnIncrementArrayResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void incrementArrayAsync(String callId, org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec){
         Log.v(TAG, "non blocking call incrementArray ");
-        mMessengerClient.incrementArrayAsync(vec).thenAccept(i -> {
-            nativeOnIncrementArrayResult(i, callId);});
+        mMessengerClient.incrementArrayAsync(vec).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "incrementArray async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnIncrementArrayResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -143,14 +168,26 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnDecrementResult with the same callId.
+    * On success, calls nativeOnDecrementResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void decrementAsync(String callId, customTypes.customTypes_api.Vector3D vec){
         Log.v(TAG, "non blocking call decrement ");
-        mMessengerClient.decrementAsync(vec).thenAccept(i -> {
-            nativeOnDecrementResult(i, callId);});
+        mMessengerClient.decrementAsync(vec).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "decrement async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnDecrementResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -169,14 +206,26 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnDecrementArrayResult with the same callId.
+    * On success, calls nativeOnDecrementArrayResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void decrementArrayAsync(String callId, customTypes.customTypes_api.Vector3D[] vec){
         Log.v(TAG, "non blocking call decrementArray ");
-        mMessengerClient.decrementArrayAsync(vec).thenAccept(i -> {
-            nativeOnDecrementArrayResult(i, callId);});
+        mMessengerClient.decrementArrayAsync(vec).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "decrementArray async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnDecrementArrayResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -262,5 +311,6 @@ public class CounterJniClient extends AbstractCounter implements ICounterEventLi
     private native void nativeOnIncrementArrayResult(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] result, String callId);
     private native void nativeOnDecrementResult(customTypes.customTypes_api.Vector3D result, String callId);
     private native void nativeOnDecrementArrayResult(customTypes.customTypes_api.Vector3D[] result, String callId);
+    private native void nativeAsyncOperationFailed(String callId, String errorMessage, int errorCode);
     private native void nativeIsReady(boolean isReady);
 }

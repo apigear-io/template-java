@@ -217,4 +217,9 @@ The [Unreal Engine template](https://github.com/apigear-io/template-unreal) gene
 | `nativeOnLastChanged(Message)` | Java → C++ | Forward property change to native |
 | `nativeOnJustSaid(Message)` | Java → C++ | Forward signal to native |
 | `nativeOnSayResult(int, String)` | Java → C++ | Forward RPC result to native |
+| `nativeAsyncOperationFailed(String callId, String errorMessage, int errorCode)` | Java → C++ | Forward RPC failure to native |
 | `nativeIsReady(boolean)` | Java → C++ | Forward ready state to native |
+
+:::note
+The `nativeOn{Op}Result` callbacks and `nativeAsyncOperationFailed` are only generated for interfaces that define at least one operation. Interfaces with only properties and signals will not include these callbacks or their associated imports.
+:::

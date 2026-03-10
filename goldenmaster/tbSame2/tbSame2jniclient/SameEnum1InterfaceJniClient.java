@@ -3,6 +3,7 @@ package tbSame2.tbSame2jniclient;
 import tbSame2.tbSame2_api.ISameEnum1Interface;
 import tbSame2.tbSame2_api.AbstractSameEnum1Interface;
 import tbSame2.tbSame2_api.ISameEnum1InterfaceEventListener;
+import tbSame2.tbSame2_api.RemoteOperationException;
 
 import tbSame2.tbSame2_android_client.SameEnum1InterfaceClient;
 import tbSame2.tbSame2_api.Enum1;
@@ -54,14 +55,26 @@ public class SameEnum1InterfaceJniClient extends AbstractSameEnum1Interface impl
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFunc1Result with the same callId.
+    * On success, calls nativeOnFunc1Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void func1Async(String callId, Enum1 param1){
         Log.v(TAG, "non blocking call func1 ");
-        mMessengerClient.func1Async(param1).thenAccept(i -> {
-            nativeOnFunc1Result(i, callId);});
+        mMessengerClient.func1Async(param1).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "func1 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFunc1Result(result, callId);
+            }
+        });
     }
 
     @Override
@@ -123,5 +136,6 @@ public class SameEnum1InterfaceJniClient extends AbstractSameEnum1Interface impl
      private native void nativeOnProp1Changed(Enum1 prop1);
     private native void nativeOnSig1(Enum1 param1);
     private native void nativeOnFunc1Result(Enum1 result, String callId);
+    private native void nativeAsyncOperationFailed(String callId, String errorMessage, int errorCode);
     private native void nativeIsReady(boolean isReady);
 }
