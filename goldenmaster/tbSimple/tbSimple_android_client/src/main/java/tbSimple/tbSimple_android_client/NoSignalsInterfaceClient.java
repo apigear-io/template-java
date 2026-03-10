@@ -21,6 +21,7 @@ import android.util.Log;
 import tbSimple.tbSimple_api.INoSignalsInterfaceEventListener;
 import tbSimple.tbSimple_api.INoSignalsInterface;
 import tbSimple.tbSimple_api.AbstractNoSignalsInterface;
+import tbSimple.tbSimple_api.RemoteOperationException;
 import tbSimple.tbSimple_android_messenger.NoSignalsInterfaceMessageType;
 
 import java.util.Map;
@@ -348,8 +349,13 @@ public class NoSignalsInterfaceClient extends AbstractNoSignalsInterface impleme
             resFuture.get();
             return;
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(cause);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }
@@ -368,6 +374,20 @@ public class NoSignalsInterfaceClient extends AbstractNoSignalsInterface impleme
 
         CompletableFuture<Void>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                Log.w(TAG, "funcVoid: received null bundle (service disconnected?)");
+                future.completeExceptionally(new RemoteOperationException("service disconnected", RemoteOperationException.ERROR_SERVICE_DISCONNECTED));
+                return;
+            }
+            if (bundle.getBoolean("error", false))
+            {
+                String errorMessage = bundle.getString("errorMessage", "unknown error");
+                int errorCode = bundle.getInt("errorCode", RemoteOperationException.ERROR_UNKNOWN);
+                Log.w(TAG, "funcVoid failed: " + errorMessage);
+                future.completeExceptionally(new RemoteOperationException(errorMessage, errorCode));
+                return;
+            }
             future.complete(null);
             Log.v(TAG, "resolve funcVoid");
         };
@@ -386,8 +406,13 @@ public class NoSignalsInterfaceClient extends AbstractNoSignalsInterface impleme
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(cause);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }
@@ -410,8 +435,16 @@ public class NoSignalsInterfaceClient extends AbstractNoSignalsInterface impleme
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
-                future.complete(null);
-                Log.v(TAG, "received null bundle, resolving funcBool with null");
+                Log.w(TAG, "funcBool: received null bundle (service disconnected?)");
+                future.completeExceptionally(new RemoteOperationException("service disconnected", RemoteOperationException.ERROR_SERVICE_DISCONNECTED));
+                return;
+            }
+            if (bundle.getBoolean("error", false))
+            {
+                String errorMessage = bundle.getString("errorMessage", "unknown error");
+                int errorCode = bundle.getInt("errorCode", RemoteOperationException.ERROR_UNKNOWN);
+                Log.w(TAG, "funcBool failed: " + errorMessage);
+                future.completeExceptionally(new RemoteOperationException(errorMessage, errorCode));
                 return;
             }
             
