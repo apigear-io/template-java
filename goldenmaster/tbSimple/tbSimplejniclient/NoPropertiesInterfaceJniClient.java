@@ -3,6 +3,7 @@ package tbSimple.tbSimplejniclient;
 import tbSimple.tbSimple_api.INoPropertiesInterface;
 import tbSimple.tbSimple_api.AbstractNoPropertiesInterface;
 import tbSimple.tbSimple_api.INoPropertiesInterfaceEventListener;
+import tbSimple.tbSimple_api.RemoteOperationException;
 
 import tbSimple.tbSimple_android_client.NoPropertiesInterfaceClient;
 import android.content.Context;
@@ -39,14 +40,26 @@ public class NoPropertiesInterfaceJniClient extends AbstractNoPropertiesInterfac
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFuncVoidResult with the same callId.
+    * On success, calls nativeOnFuncVoidResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void funcVoidAsync(String callId){
         Log.v(TAG, "non blocking call funcVoid ");
-        mMessengerClient.funcVoidAsync().thenAccept(i -> {
-            nativeOnFuncVoidResult(callId);});
+        mMessengerClient.funcVoidAsync().whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "funcVoid async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFuncVoidResult(callId);
+            }
+        });
     }
 
     @Override
@@ -65,14 +78,26 @@ public class NoPropertiesInterfaceJniClient extends AbstractNoPropertiesInterfac
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFuncBoolResult with the same callId.
+    * On success, calls nativeOnFuncBoolResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void funcBoolAsync(String callId, boolean paramBool){
         Log.v(TAG, "non blocking call funcBool ");
-        mMessengerClient.funcBoolAsync(paramBool).thenAccept(i -> {
-            nativeOnFuncBoolResult(i, callId);});
+        mMessengerClient.funcBoolAsync(paramBool).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "funcBool async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFuncBoolResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -135,5 +160,6 @@ public class NoPropertiesInterfaceJniClient extends AbstractNoPropertiesInterfac
     private native void nativeOnSigBool(boolean paramBool);
     private native void nativeOnFuncVoidResult(String callId);
     private native void nativeOnFuncBoolResult(boolean result, String callId);
+    private native void nativeAsyncOperationFailed(String callId, String errorMessage, int errorCode);
     private native void nativeIsReady(boolean isReady);
 }

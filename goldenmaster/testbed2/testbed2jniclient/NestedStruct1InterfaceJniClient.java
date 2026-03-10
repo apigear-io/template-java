@@ -3,6 +3,7 @@ package testbed2.testbed2jniclient;
 import testbed2.testbed2_api.INestedStruct1Interface;
 import testbed2.testbed2_api.AbstractNestedStruct1Interface;
 import testbed2.testbed2_api.INestedStruct1InterfaceEventListener;
+import testbed2.testbed2_api.RemoteOperationException;
 
 import testbed2.testbed2_android_client.NestedStruct1InterfaceClient;
 import testbed2.testbed2_api.NestedStruct1;
@@ -54,14 +55,26 @@ public class NestedStruct1InterfaceJniClient extends AbstractNestedStruct1Interf
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFuncNoReturnValueResult with the same callId.
+    * On success, calls nativeOnFuncNoReturnValueResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void funcNoReturnValueAsync(String callId, NestedStruct1 param1){
         Log.v(TAG, "non blocking call funcNoReturnValue ");
-        mMessengerClient.funcNoReturnValueAsync(param1).thenAccept(i -> {
-            nativeOnFuncNoReturnValueResult(callId);});
+        mMessengerClient.funcNoReturnValueAsync(param1).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "funcNoReturnValue async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFuncNoReturnValueResult(callId);
+            }
+        });
     }
 
     @Override
@@ -80,14 +93,26 @@ public class NestedStruct1InterfaceJniClient extends AbstractNestedStruct1Interf
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFuncNoParamsResult with the same callId.
+    * On success, calls nativeOnFuncNoParamsResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void funcNoParamsAsync(String callId){
         Log.v(TAG, "non blocking call funcNoParams ");
-        mMessengerClient.funcNoParamsAsync().thenAccept(i -> {
-            nativeOnFuncNoParamsResult(i, callId);});
+        mMessengerClient.funcNoParamsAsync().whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "funcNoParams async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFuncNoParamsResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -106,14 +131,26 @@ public class NestedStruct1InterfaceJniClient extends AbstractNestedStruct1Interf
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFunc1Result with the same callId.
+    * On success, calls nativeOnFunc1Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void func1Async(String callId, NestedStruct1 param1){
         Log.v(TAG, "non blocking call func1 ");
-        mMessengerClient.func1Async(param1).thenAccept(i -> {
-            nativeOnFunc1Result(i, callId);});
+        mMessengerClient.func1Async(param1).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "func1 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFunc1Result(result, callId);
+            }
+        });
     }
 
     @Override
@@ -177,5 +214,6 @@ public class NestedStruct1InterfaceJniClient extends AbstractNestedStruct1Interf
     private native void nativeOnFuncNoReturnValueResult(String callId);
     private native void nativeOnFuncNoParamsResult(NestedStruct1 result, String callId);
     private native void nativeOnFunc1Result(NestedStruct1 result, String callId);
+    private native void nativeAsyncOperationFailed(String callId, String errorMessage, int errorCode);
     private native void nativeIsReady(boolean isReady);
 }

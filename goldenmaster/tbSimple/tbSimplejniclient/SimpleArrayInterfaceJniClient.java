@@ -3,6 +3,7 @@ package tbSimple.tbSimplejniclient;
 import tbSimple.tbSimple_api.ISimpleArrayInterface;
 import tbSimple.tbSimple_api.AbstractSimpleArrayInterface;
 import tbSimple.tbSimple_api.ISimpleArrayInterfaceEventListener;
+import tbSimple.tbSimple_api.RemoteOperationException;
 
 import tbSimple.tbSimple_android_client.SimpleArrayInterfaceClient;
 import android.content.Context;
@@ -156,14 +157,26 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFuncBoolResult with the same callId.
+    * On success, calls nativeOnFuncBoolResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void funcBoolAsync(String callId, boolean[] paramBool){
         Log.v(TAG, "non blocking call funcBool ");
-        mMessengerClient.funcBoolAsync(paramBool).thenAccept(i -> {
-            nativeOnFuncBoolResult(i, callId);});
+        mMessengerClient.funcBoolAsync(paramBool).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "funcBool async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFuncBoolResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -182,14 +195,26 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFuncIntResult with the same callId.
+    * On success, calls nativeOnFuncIntResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void funcIntAsync(String callId, int[] paramInt){
         Log.v(TAG, "non blocking call funcInt ");
-        mMessengerClient.funcIntAsync(paramInt).thenAccept(i -> {
-            nativeOnFuncIntResult(i, callId);});
+        mMessengerClient.funcIntAsync(paramInt).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "funcInt async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFuncIntResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -208,14 +233,26 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFuncInt32Result with the same callId.
+    * On success, calls nativeOnFuncInt32Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void funcInt32Async(String callId, int[] paramInt32){
         Log.v(TAG, "non blocking call funcInt32 ");
-        mMessengerClient.funcInt32Async(paramInt32).thenAccept(i -> {
-            nativeOnFuncInt32Result(i, callId);});
+        mMessengerClient.funcInt32Async(paramInt32).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "funcInt32 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFuncInt32Result(result, callId);
+            }
+        });
     }
 
     @Override
@@ -234,14 +271,26 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFuncInt64Result with the same callId.
+    * On success, calls nativeOnFuncInt64Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void funcInt64Async(String callId, long[] paramInt64){
         Log.v(TAG, "non blocking call funcInt64 ");
-        mMessengerClient.funcInt64Async(paramInt64).thenAccept(i -> {
-            nativeOnFuncInt64Result(i, callId);});
+        mMessengerClient.funcInt64Async(paramInt64).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "funcInt64 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFuncInt64Result(result, callId);
+            }
+        });
     }
 
     @Override
@@ -260,14 +309,26 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFuncFloatResult with the same callId.
+    * On success, calls nativeOnFuncFloatResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void funcFloatAsync(String callId, float[] paramFloat){
         Log.v(TAG, "non blocking call funcFloat ");
-        mMessengerClient.funcFloatAsync(paramFloat).thenAccept(i -> {
-            nativeOnFuncFloatResult(i, callId);});
+        mMessengerClient.funcFloatAsync(paramFloat).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "funcFloat async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFuncFloatResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -286,14 +347,26 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFuncFloat32Result with the same callId.
+    * On success, calls nativeOnFuncFloat32Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void funcFloat32Async(String callId, float[] paramFloat32){
         Log.v(TAG, "non blocking call funcFloat32 ");
-        mMessengerClient.funcFloat32Async(paramFloat32).thenAccept(i -> {
-            nativeOnFuncFloat32Result(i, callId);});
+        mMessengerClient.funcFloat32Async(paramFloat32).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "funcFloat32 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFuncFloat32Result(result, callId);
+            }
+        });
     }
 
     @Override
@@ -312,14 +385,26 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFuncFloat64Result with the same callId.
+    * On success, calls nativeOnFuncFloat64Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void funcFloat64Async(String callId, double[] paramFloat){
         Log.v(TAG, "non blocking call funcFloat64 ");
-        mMessengerClient.funcFloat64Async(paramFloat).thenAccept(i -> {
-            nativeOnFuncFloat64Result(i, callId);});
+        mMessengerClient.funcFloat64Async(paramFloat).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "funcFloat64 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFuncFloat64Result(result, callId);
+            }
+        });
     }
 
     @Override
@@ -338,14 +423,26 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFuncStringResult with the same callId.
+    * On success, calls nativeOnFuncStringResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void funcStringAsync(String callId, String[] paramString){
         Log.v(TAG, "non blocking call funcString ");
-        mMessengerClient.funcStringAsync(paramString).thenAccept(i -> {
-            nativeOnFuncStringResult(i, callId);});
+        mMessengerClient.funcStringAsync(paramString).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "funcString async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFuncStringResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -519,5 +616,6 @@ public class SimpleArrayInterfaceJniClient extends AbstractSimpleArrayInterface 
     private native void nativeOnFuncFloat32Result(float[] result, String callId);
     private native void nativeOnFuncFloat64Result(double[] result, String callId);
     private native void nativeOnFuncStringResult(String[] result, String callId);
+    private native void nativeAsyncOperationFailed(String callId, String errorMessage, int errorCode);
     private native void nativeIsReady(boolean isReady);
 }

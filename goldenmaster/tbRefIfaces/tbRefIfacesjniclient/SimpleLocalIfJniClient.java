@@ -3,6 +3,7 @@ package tbRefIfaces.tbRefIfacesjniclient;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_api.AbstractSimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIfEventListener;
+import tbRefIfaces.tbRefIfaces_api.RemoteOperationException;
 
 import tbRefIfaces.tbRefIfaces_android_client.SimpleLocalIfClient;
 import android.content.Context;
@@ -52,14 +53,26 @@ public class SimpleLocalIfJniClient extends AbstractSimpleLocalIf implements ISi
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnIntMethodResult with the same callId.
+    * On success, calls nativeOnIntMethodResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void intMethodAsync(String callId, int param){
         Log.v(TAG, "non blocking call intMethod ");
-        mMessengerClient.intMethodAsync(param).thenAccept(i -> {
-            nativeOnIntMethodResult(i, callId);});
+        mMessengerClient.intMethodAsync(param).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "intMethod async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnIntMethodResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -121,5 +134,6 @@ public class SimpleLocalIfJniClient extends AbstractSimpleLocalIf implements ISi
      private native void nativeOnIntPropertyChanged(int intProperty);
     private native void nativeOnIntSignal(int param);
     private native void nativeOnIntMethodResult(int result, String callId);
+    private native void nativeAsyncOperationFailed(String callId, String errorMessage, int errorCode);
     private native void nativeIsReady(boolean isReady);
 }
