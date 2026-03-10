@@ -202,16 +202,20 @@ public class NamEsServiceAdapter extends Service
 			{
 				backend = NamEsServiceAdapter.mBackendService;
 			}
+			NamEsMessageType msgType =
+				NamEsMessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if (NamEsMessageType.fromInteger(msg.what) != NamEsMessageType.REGISTER_CLIENT
-					&& NamEsMessageType.fromInteger(msg.what) != NamEsMessageType.UNREGISTER_CLIENT)
+				if (msgType != NamEsMessageType.REGISTER_CLIENT
+					&& msgType != NamEsMessageType.UNREGISTER_CLIENT
+					&& msgType != NamEsMessageType.RPC_SomeFunctionReq
+					&& msgType != NamEsMessageType.RPC_SomeFunction2Req)
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: NamEsMessageType" + NamEsMessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: NamEsMessageType" + msgType );
 					return;
 				}
 			}
-			switch (NamEsMessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
@@ -269,6 +273,10 @@ public class NamEsServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						 backend.someFunction(SOME_PARAM);
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
@@ -319,6 +327,10 @@ public class NamEsServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						 backend.someFunction2(Some_Param);
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();

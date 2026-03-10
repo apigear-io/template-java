@@ -200,16 +200,28 @@ public class SimpleInterfaceServiceAdapter extends Service
 			{
 				backend = SimpleInterfaceServiceAdapter.mBackendService;
 			}
+			SimpleInterfaceMessageType msgType =
+				SimpleInterfaceMessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if (SimpleInterfaceMessageType.fromInteger(msg.what) != SimpleInterfaceMessageType.REGISTER_CLIENT
-					&& SimpleInterfaceMessageType.fromInteger(msg.what) != SimpleInterfaceMessageType.UNREGISTER_CLIENT)
+				if (msgType != SimpleInterfaceMessageType.REGISTER_CLIENT
+					&& msgType != SimpleInterfaceMessageType.UNREGISTER_CLIENT
+					&& msgType != SimpleInterfaceMessageType.RPC_FuncNoReturnValueReq
+					&& msgType != SimpleInterfaceMessageType.RPC_FuncNoParamsReq
+					&& msgType != SimpleInterfaceMessageType.RPC_FuncBoolReq
+					&& msgType != SimpleInterfaceMessageType.RPC_FuncIntReq
+					&& msgType != SimpleInterfaceMessageType.RPC_FuncInt32Req
+					&& msgType != SimpleInterfaceMessageType.RPC_FuncInt64Req
+					&& msgType != SimpleInterfaceMessageType.RPC_FuncFloatReq
+					&& msgType != SimpleInterfaceMessageType.RPC_FuncFloat32Req
+					&& msgType != SimpleInterfaceMessageType.RPC_FuncFloat64Req
+					&& msgType != SimpleInterfaceMessageType.RPC_FuncStringReq)
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: SimpleInterfaceMessageType" + SimpleInterfaceMessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: SimpleInterfaceMessageType" + msgType );
 					return;
 				}
 			}
-			switch (SimpleInterfaceMessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
@@ -298,6 +310,10 @@ public class SimpleInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						 backend.funcNoReturnValue(paramBool);
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
@@ -346,6 +362,10 @@ public class SimpleInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						boolean result =  backend.funcNoParams();
 						
 		        resp_data.putBoolean("result", result);
@@ -398,6 +418,10 @@ public class SimpleInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						boolean result =  backend.funcBool(paramBool);
 						
 		        resp_data.putBoolean("result", result);
@@ -450,6 +474,10 @@ public class SimpleInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						int result =  backend.funcInt(paramInt);
 						
 		        resp_data.putInt("result", result);
@@ -502,6 +530,10 @@ public class SimpleInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						int result =  backend.funcInt32(paramInt32);
 						
 		        resp_data.putInt("result", result);
@@ -554,6 +586,10 @@ public class SimpleInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						long result =  backend.funcInt64(paramInt64);
 						
 		        resp_data.putLong("result", result);
@@ -606,6 +642,10 @@ public class SimpleInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						float result =  backend.funcFloat(paramFloat);
 						
 		        resp_data.putFloat("result", result);
@@ -658,6 +698,10 @@ public class SimpleInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						float result =  backend.funcFloat32(paramFloat32);
 						
 		        resp_data.putFloat("result", result);
@@ -710,6 +754,10 @@ public class SimpleInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						double result =  backend.funcFloat64(paramFloat);
 						
 		        resp_data.putDouble("result", result);
@@ -762,6 +810,10 @@ public class SimpleInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						String result =  backend.funcString(paramString);
 						
 		        resp_data.putString("result", result);

@@ -200,16 +200,22 @@ public class CounterServiceAdapter extends Service
 			{
 				backend = CounterServiceAdapter.mBackendService;
 			}
+			CounterMessageType msgType =
+				CounterMessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if (CounterMessageType.fromInteger(msg.what) != CounterMessageType.REGISTER_CLIENT
-					&& CounterMessageType.fromInteger(msg.what) != CounterMessageType.UNREGISTER_CLIENT)
+				if (msgType != CounterMessageType.REGISTER_CLIENT
+					&& msgType != CounterMessageType.UNREGISTER_CLIENT
+					&& msgType != CounterMessageType.RPC_IncrementReq
+					&& msgType != CounterMessageType.RPC_IncrementArrayReq
+					&& msgType != CounterMessageType.RPC_DecrementReq
+					&& msgType != CounterMessageType.RPC_DecrementArrayReq)
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: CounterMessageType" + CounterMessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: CounterMessageType" + msgType );
 					return;
 				}
 			}
-			switch (CounterMessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
@@ -271,6 +277,10 @@ public class CounterServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						org.apache.commons.math3.geometry.euclidean.threed.Vector3D result =  backend.increment(vec);
 						
 		        resp_data.putParcelable("result", new externTypes.externTypes_android_messenger.MyVector3DParcelable(result));
@@ -324,6 +334,10 @@ public class CounterServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] result =  backend.incrementArray(vec);
 						
 		        resp_data.putParcelableArray("result",externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(result));
@@ -377,6 +391,10 @@ public class CounterServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						customTypes.customTypes_api.Vector3D result =  backend.decrement(vec);
 						
 		        resp_data.putParcelable("result", new customTypes.customTypes_android_messenger.Vector3DParcelable(result));
@@ -430,6 +448,10 @@ public class CounterServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						customTypes.customTypes_api.Vector3D[] result =  backend.decrementArray(vec);
 						
 		        resp_data.putParcelableArray("result",customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(result));

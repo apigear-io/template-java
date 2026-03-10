@@ -208,16 +208,22 @@ public class StructInterfaceServiceAdapter extends Service
 			{
 				backend = StructInterfaceServiceAdapter.mBackendService;
 			}
+			StructInterfaceMessageType msgType =
+				StructInterfaceMessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if (StructInterfaceMessageType.fromInteger(msg.what) != StructInterfaceMessageType.REGISTER_CLIENT
-					&& StructInterfaceMessageType.fromInteger(msg.what) != StructInterfaceMessageType.UNREGISTER_CLIENT)
+				if (msgType != StructInterfaceMessageType.REGISTER_CLIENT
+					&& msgType != StructInterfaceMessageType.UNREGISTER_CLIENT
+					&& msgType != StructInterfaceMessageType.RPC_FuncBoolReq
+					&& msgType != StructInterfaceMessageType.RPC_FuncIntReq
+					&& msgType != StructInterfaceMessageType.RPC_FuncFloatReq
+					&& msgType != StructInterfaceMessageType.RPC_FuncStringReq)
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: StructInterfaceMessageType" + StructInterfaceMessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: StructInterfaceMessageType" + msgType );
 					return;
 				}
 			}
-			switch (StructInterfaceMessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
@@ -279,6 +285,10 @@ public class StructInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						StructBool result =  backend.funcBool(paramBool);
 						
 		        resp_data.putParcelable("result", new StructBoolParcelable(result));
@@ -332,6 +342,10 @@ public class StructInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						StructInt result =  backend.funcInt(paramInt);
 						
 		        resp_data.putParcelable("result", new StructIntParcelable(result));
@@ -385,6 +399,10 @@ public class StructInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						StructFloat result =  backend.funcFloat(paramFloat);
 						
 		        resp_data.putParcelable("result", new StructFloatParcelable(result));
@@ -438,6 +456,10 @@ public class StructInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						StructString result =  backend.funcString(paramString);
 						
 		        resp_data.putParcelable("result", new StructStringParcelable(result));

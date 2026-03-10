@@ -199,16 +199,18 @@ public class EmptyInterfaceServiceAdapter extends Service
 			{
 				backend = EmptyInterfaceServiceAdapter.mBackendService;
 			}
+			EmptyInterfaceMessageType msgType =
+				EmptyInterfaceMessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if (EmptyInterfaceMessageType.fromInteger(msg.what) != EmptyInterfaceMessageType.REGISTER_CLIENT
-					&& EmptyInterfaceMessageType.fromInteger(msg.what) != EmptyInterfaceMessageType.UNREGISTER_CLIENT)
+				if (msgType != EmptyInterfaceMessageType.REGISTER_CLIENT
+					&& msgType != EmptyInterfaceMessageType.UNREGISTER_CLIENT)
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: EmptyInterfaceMessageType" + EmptyInterfaceMessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: EmptyInterfaceMessageType" + msgType );
 					return;
 				}
 			}
-			switch (EmptyInterfaceMessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));

@@ -19,7 +19,7 @@ package tbRefIfaces.tbRefIfaces_api;
  * <ul>
  *   <li>{@code ERROR_UNKNOWN (0)} -- generic/unclassified error</li>
  *   <li>{@code ERROR_SERVICE_DISCONNECTED (1)} -- binder connection lost</li>
- *   <li>{@code ERROR_SERVICE_NOT_READY (2)} -- backend not ready (reserved)</li>
+ *   <li>{@code ERROR_SERVICE_NOT_READY (2)} -- backend not ready</li>
  *   <li>{@code ERROR_INVALID_ARGUMENT (3)} -- bad input ({@code IllegalArgumentException})</li>
  *   <li>{@code ERROR_NOT_IMPLEMENTED (4)} -- operation not supported ({@code UnsupportedOperationException})</li>
  *   <li>{@code ERROR_INTERNAL (5)} -- unexpected backend exception (default for unrecognized exceptions)</li>
