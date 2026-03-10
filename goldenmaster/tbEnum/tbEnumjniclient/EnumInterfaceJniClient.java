@@ -3,6 +3,7 @@ package tbEnum.tbEnumjniclient;
 import tbEnum.tbEnum_api.IEnumInterface;
 import tbEnum.tbEnum_api.AbstractEnumInterface;
 import tbEnum.tbEnum_api.IEnumInterfaceEventListener;
+import tbEnum.tbEnum_api.RemoteOperationException;
 
 import tbEnum.tbEnum_android_client.EnumInterfaceClient;
 import tbEnum.tbEnum_api.Enum0;
@@ -99,14 +100,26 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFunc0Result with the same callId.
+    * On success, calls nativeOnFunc0Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void func0Async(String callId, Enum0 param0){
         Log.v(TAG, "non blocking call func0 ");
-        mMessengerClient.func0Async(param0).thenAccept(i -> {
-            nativeOnFunc0Result(i, callId);});
+        mMessengerClient.func0Async(param0).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "func0 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFunc0Result(result, callId);
+            }
+        });
     }
 
     @Override
@@ -125,14 +138,26 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFunc1Result with the same callId.
+    * On success, calls nativeOnFunc1Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void func1Async(String callId, Enum1 param1){
         Log.v(TAG, "non blocking call func1 ");
-        mMessengerClient.func1Async(param1).thenAccept(i -> {
-            nativeOnFunc1Result(i, callId);});
+        mMessengerClient.func1Async(param1).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "func1 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFunc1Result(result, callId);
+            }
+        });
     }
 
     @Override
@@ -151,14 +176,26 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFunc2Result with the same callId.
+    * On success, calls nativeOnFunc2Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void func2Async(String callId, Enum2 param2){
         Log.v(TAG, "non blocking call func2 ");
-        mMessengerClient.func2Async(param2).thenAccept(i -> {
-            nativeOnFunc2Result(i, callId);});
+        mMessengerClient.func2Async(param2).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "func2 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFunc2Result(result, callId);
+            }
+        });
     }
 
     @Override
@@ -177,14 +214,26 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFunc3Result with the same callId.
+    * On success, calls nativeOnFunc3Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void func3Async(String callId, Enum3 param3){
         Log.v(TAG, "non blocking call func3 ");
-        mMessengerClient.func3Async(param3).thenAccept(i -> {
-            nativeOnFunc3Result(i, callId);});
+        mMessengerClient.func3Async(param3).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "func3 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFunc3Result(result, callId);
+            }
+        });
     }
 
     @Override
@@ -291,5 +340,6 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
     private native void nativeOnFunc1Result(Enum1 result, String callId);
     private native void nativeOnFunc2Result(Enum2 result, String callId);
     private native void nativeOnFunc3Result(Enum3 result, String callId);
+    private native void nativeAsyncOperationFailed(String callId, String errorMessage, int errorCode);
     private native void nativeIsReady(boolean isReady);
 }

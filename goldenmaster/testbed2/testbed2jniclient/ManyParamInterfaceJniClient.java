@@ -3,6 +3,7 @@ package testbed2.testbed2jniclient;
 import testbed2.testbed2_api.IManyParamInterface;
 import testbed2.testbed2_api.AbstractManyParamInterface;
 import testbed2.testbed2_api.IManyParamInterfaceEventListener;
+import testbed2.testbed2_api.RemoteOperationException;
 
 import testbed2.testbed2_android_client.ManyParamInterfaceClient;
 import android.content.Context;
@@ -91,14 +92,26 @@ public class ManyParamInterfaceJniClient extends AbstractManyParamInterface impl
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFunc1Result with the same callId.
+    * On success, calls nativeOnFunc1Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void func1Async(String callId, int param1){
         Log.v(TAG, "non blocking call func1 ");
-        mMessengerClient.func1Async(param1).thenAccept(i -> {
-            nativeOnFunc1Result(i, callId);});
+        mMessengerClient.func1Async(param1).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "func1 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFunc1Result(result, callId);
+            }
+        });
     }
 
     @Override
@@ -117,14 +130,26 @@ public class ManyParamInterfaceJniClient extends AbstractManyParamInterface impl
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFunc2Result with the same callId.
+    * On success, calls nativeOnFunc2Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void func2Async(String callId, int param1, int param2){
         Log.v(TAG, "non blocking call func2 ");
-        mMessengerClient.func2Async(param1, param2).thenAccept(i -> {
-            nativeOnFunc2Result(i, callId);});
+        mMessengerClient.func2Async(param1, param2).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "func2 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFunc2Result(result, callId);
+            }
+        });
     }
 
     @Override
@@ -143,14 +168,26 @@ public class ManyParamInterfaceJniClient extends AbstractManyParamInterface impl
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFunc3Result with the same callId.
+    * On success, calls nativeOnFunc3Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void func3Async(String callId, int param1, int param2, int param3){
         Log.v(TAG, "non blocking call func3 ");
-        mMessengerClient.func3Async(param1, param2, param3).thenAccept(i -> {
-            nativeOnFunc3Result(i, callId);});
+        mMessengerClient.func3Async(param1, param2, param3).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "func3 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFunc3Result(result, callId);
+            }
+        });
     }
 
     @Override
@@ -169,14 +206,26 @@ public class ManyParamInterfaceJniClient extends AbstractManyParamInterface impl
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFunc4Result with the same callId.
+    * On success, calls nativeOnFunc4Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void func4Async(String callId, int param1, int param2, int param3, int param4){
         Log.v(TAG, "non blocking call func4 ");
-        mMessengerClient.func4Async(param1, param2, param3, param4).thenAccept(i -> {
-            nativeOnFunc4Result(i, callId);});
+        mMessengerClient.func4Async(param1, param2, param3, param4).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "func4 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFunc4Result(result, callId);
+            }
+        });
     }
 
     @Override
@@ -283,5 +332,6 @@ public class ManyParamInterfaceJniClient extends AbstractManyParamInterface impl
     private native void nativeOnFunc2Result(int result, String callId);
     private native void nativeOnFunc3Result(int result, String callId);
     private native void nativeOnFunc4Result(int result, String callId);
+    private native void nativeAsyncOperationFailed(String callId, String errorMessage, int errorCode);
     private native void nativeIsReady(boolean isReady);
 }
