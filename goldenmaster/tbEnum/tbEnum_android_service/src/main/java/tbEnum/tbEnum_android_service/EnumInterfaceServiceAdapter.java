@@ -208,16 +208,22 @@ public class EnumInterfaceServiceAdapter extends Service
 			{
 				backend = EnumInterfaceServiceAdapter.mBackendService;
 			}
+			EnumInterfaceMessageType msgType =
+				EnumInterfaceMessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if (EnumInterfaceMessageType.fromInteger(msg.what) != EnumInterfaceMessageType.REGISTER_CLIENT
-					&& EnumInterfaceMessageType.fromInteger(msg.what) != EnumInterfaceMessageType.UNREGISTER_CLIENT)
+				if (msgType != EnumInterfaceMessageType.REGISTER_CLIENT
+					&& msgType != EnumInterfaceMessageType.UNREGISTER_CLIENT
+					&& msgType != EnumInterfaceMessageType.RPC_Func0Req
+					&& msgType != EnumInterfaceMessageType.RPC_Func1Req
+					&& msgType != EnumInterfaceMessageType.RPC_Func2Req
+					&& msgType != EnumInterfaceMessageType.RPC_Func3Req)
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: EnumInterfaceMessageType" + EnumInterfaceMessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: EnumInterfaceMessageType" + msgType );
 					return;
 				}
 			}
-			switch (EnumInterfaceMessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
@@ -279,6 +285,10 @@ public class EnumInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						Enum0 result =  backend.func0(param0);
 						
 		        resp_data.putParcelable("result", new Enum0Parcelable(result));
@@ -332,6 +342,10 @@ public class EnumInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						Enum1 result =  backend.func1(param1);
 						
 		        resp_data.putParcelable("result", new Enum1Parcelable(result));
@@ -385,6 +399,10 @@ public class EnumInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						Enum2 result =  backend.func2(param2);
 						
 		        resp_data.putParcelable("result", new Enum2Parcelable(result));
@@ -438,6 +456,10 @@ public class EnumInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						Enum3 result =  backend.func3(param3);
 						
 		        resp_data.putParcelable("result", new Enum3Parcelable(result));

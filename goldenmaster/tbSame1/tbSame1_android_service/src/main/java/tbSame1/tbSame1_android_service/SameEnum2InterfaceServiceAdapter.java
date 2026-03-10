@@ -204,16 +204,20 @@ public class SameEnum2InterfaceServiceAdapter extends Service
 			{
 				backend = SameEnum2InterfaceServiceAdapter.mBackendService;
 			}
+			SameEnum2InterfaceMessageType msgType =
+				SameEnum2InterfaceMessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if (SameEnum2InterfaceMessageType.fromInteger(msg.what) != SameEnum2InterfaceMessageType.REGISTER_CLIENT
-					&& SameEnum2InterfaceMessageType.fromInteger(msg.what) != SameEnum2InterfaceMessageType.UNREGISTER_CLIENT)
+				if (msgType != SameEnum2InterfaceMessageType.REGISTER_CLIENT
+					&& msgType != SameEnum2InterfaceMessageType.UNREGISTER_CLIENT
+					&& msgType != SameEnum2InterfaceMessageType.RPC_Func1Req
+					&& msgType != SameEnum2InterfaceMessageType.RPC_Func2Req)
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: SameEnum2InterfaceMessageType" + SameEnum2InterfaceMessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: SameEnum2InterfaceMessageType" + msgType );
 					return;
 				}
 			}
-			switch (SameEnum2InterfaceMessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
@@ -257,6 +261,10 @@ public class SameEnum2InterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						Enum1 result =  backend.func1(param1);
 						
 		        resp_data.putParcelable("result", new Enum1Parcelable(result));
@@ -314,6 +322,10 @@ public class SameEnum2InterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						Enum1 result =  backend.func2(param1, param2);
 						
 		        resp_data.putParcelable("result", new Enum1Parcelable(result));

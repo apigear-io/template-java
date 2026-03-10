@@ -202,16 +202,22 @@ public class ParentIfServiceAdapter extends Service
 			{
 				backend = ParentIfServiceAdapter.mBackendService;
 			}
+			ParentIfMessageType msgType =
+				ParentIfMessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if (ParentIfMessageType.fromInteger(msg.what) != ParentIfMessageType.REGISTER_CLIENT
-					&& ParentIfMessageType.fromInteger(msg.what) != ParentIfMessageType.UNREGISTER_CLIENT)
+				if (msgType != ParentIfMessageType.REGISTER_CLIENT
+					&& msgType != ParentIfMessageType.UNREGISTER_CLIENT
+					&& msgType != ParentIfMessageType.RPC_LocalIfMethodReq
+					&& msgType != ParentIfMessageType.RPC_LocalIfMethodListReq
+					&& msgType != ParentIfMessageType.RPC_ImportedIfMethodReq
+					&& msgType != ParentIfMessageType.RPC_ImportedIfMethodListReq)
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: ParentIfMessageType" + ParentIfMessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: ParentIfMessageType" + msgType );
 					return;
 				}
 			}
-			switch (ParentIfMessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
@@ -273,6 +279,10 @@ public class ParentIfServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						ISimpleLocalIf result =  backend.localIfMethod(param);
 						
 		        resp_data.putParcelable("result", new SimpleLocalIfParcelable(result));
@@ -326,6 +336,10 @@ public class ParentIfServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						ISimpleLocalIf[] result =  backend.localIfMethodList(param);
 						
 		        resp_data.putParcelableArray("result",SimpleLocalIfParcelable.wrapArray(result));
@@ -379,6 +393,10 @@ public class ParentIfServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						tbIfaceimport.tbIfaceimport_api.IEmptyIf result =  backend.importedIfMethod(param);
 						
 		        resp_data.putParcelable("result", new tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable(result));
@@ -432,6 +450,10 @@ public class ParentIfServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						tbIfaceimport.tbIfaceimport_api.IEmptyIf[] result =  backend.importedIfMethodList(param);
 						
 		        resp_data.putParcelableArray("result",tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(result));

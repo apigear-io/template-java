@@ -206,16 +206,21 @@ public class NestedStruct3InterfaceServiceAdapter extends Service
 			{
 				backend = NestedStruct3InterfaceServiceAdapter.mBackendService;
 			}
+			NestedStruct3InterfaceMessageType msgType =
+				NestedStruct3InterfaceMessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if (NestedStruct3InterfaceMessageType.fromInteger(msg.what) != NestedStruct3InterfaceMessageType.REGISTER_CLIENT
-					&& NestedStruct3InterfaceMessageType.fromInteger(msg.what) != NestedStruct3InterfaceMessageType.UNREGISTER_CLIENT)
+				if (msgType != NestedStruct3InterfaceMessageType.REGISTER_CLIENT
+					&& msgType != NestedStruct3InterfaceMessageType.UNREGISTER_CLIENT
+					&& msgType != NestedStruct3InterfaceMessageType.RPC_Func1Req
+					&& msgType != NestedStruct3InterfaceMessageType.RPC_Func2Req
+					&& msgType != NestedStruct3InterfaceMessageType.RPC_Func3Req)
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: NestedStruct3InterfaceMessageType" + NestedStruct3InterfaceMessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: NestedStruct3InterfaceMessageType" + msgType );
 					return;
 				}
 			}
-			switch (NestedStruct3InterfaceMessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
@@ -268,6 +273,10 @@ public class NestedStruct3InterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						NestedStruct1 result =  backend.func1(param1);
 						
 		        resp_data.putParcelable("result", new NestedStruct1Parcelable(result));
@@ -325,6 +334,10 @@ public class NestedStruct3InterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						NestedStruct1 result =  backend.func2(param1, param2);
 						
 		        resp_data.putParcelable("result", new NestedStruct1Parcelable(result));
@@ -384,6 +397,10 @@ public class NestedStruct3InterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						NestedStruct1 result =  backend.func3(param1, param2, param3);
 						
 		        resp_data.putParcelable("result", new NestedStruct1Parcelable(result));
