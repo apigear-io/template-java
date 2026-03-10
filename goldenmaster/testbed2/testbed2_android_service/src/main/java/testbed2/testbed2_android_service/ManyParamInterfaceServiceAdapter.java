@@ -19,6 +19,7 @@ import testbed2.testbed2_api.IManyParamInterfaceEventListener;
 import testbed2.testbed2_android_service.IManyParamInterfaceServiceProvider;
 import testbed2.testbed2_api.IManyParamInterface;
 import testbed2.testbed2_api.AbstractManyParamInterface;
+import testbed2.testbed2_api.RemoteOperationException;
 import testbed2.testbed2_android_messenger.ManyParamInterfaceMessageType;
 
 import java.util.Map;
@@ -259,20 +260,44 @@ public class ManyParamInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        int param1 = data.getInt("param1", 0);
-					int result =  backend.func1(param1);
-
 					Message respMsg = new Message();
 					respMsg.what = ManyParamInterfaceMessageType.RPC_Func1Resp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putInt("result", result);
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						int result =  backend.func1(param1);
+						
+		        resp_data.putInt("result", result);
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "func1 failed: " + errorMessage);
+						Log.d(TAG, "func1 exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send func1 response: " + e);
+						}
+					} else {
+						Log.w(TAG, "func1: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -289,20 +314,44 @@ public class ManyParamInterfaceServiceAdapter extends Service
 			        int param1 = data.getInt("param1", 0);
 					
 			        int param2 = data.getInt("param2", 0);
-					int result =  backend.func2(param1, param2);
-
 					Message respMsg = new Message();
 					respMsg.what = ManyParamInterfaceMessageType.RPC_Func2Resp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putInt("result", result);
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						int result =  backend.func2(param1, param2);
+						
+		        resp_data.putInt("result", result);
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "func2 failed: " + errorMessage);
+						Log.d(TAG, "func2 exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send func2 response: " + e);
+						}
+					} else {
+						Log.w(TAG, "func2: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -321,20 +370,44 @@ public class ManyParamInterfaceServiceAdapter extends Service
 			        int param2 = data.getInt("param2", 0);
 					
 			        int param3 = data.getInt("param3", 0);
-					int result =  backend.func3(param1, param2, param3);
-
 					Message respMsg = new Message();
 					respMsg.what = ManyParamInterfaceMessageType.RPC_Func3Resp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putInt("result", result);
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						int result =  backend.func3(param1, param2, param3);
+						
+		        resp_data.putInt("result", result);
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "func3 failed: " + errorMessage);
+						Log.d(TAG, "func3 exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send func3 response: " + e);
+						}
+					} else {
+						Log.w(TAG, "func3: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -355,20 +428,44 @@ public class ManyParamInterfaceServiceAdapter extends Service
 			        int param3 = data.getInt("param3", 0);
 					
 			        int param4 = data.getInt("param4", 0);
-					int result =  backend.func4(param1, param2, param3, param4);
-
 					Message respMsg = new Message();
 					respMsg.what = ManyParamInterfaceMessageType.RPC_Func4Resp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putInt("result", result);
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						int result =  backend.func4(param1, param2, param3, param4);
+						
+		        resp_data.putInt("result", result);
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "func4 failed: " + errorMessage);
+						Log.d(TAG, "func4 exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send func4 response: " + e);
+						}
+					} else {
+						Log.w(TAG, "func4: replyTo is null, cannot send response");
 					}
 					break;
 

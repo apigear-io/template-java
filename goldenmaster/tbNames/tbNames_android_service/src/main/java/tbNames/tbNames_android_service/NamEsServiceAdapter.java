@@ -21,6 +21,7 @@ import tbNames.tbNames_api.INamEsEventListener;
 import tbNames.tbNames_android_service.INamEsServiceProvider;
 import tbNames.tbNames_api.INamEs;
 import tbNames.tbNames_api.AbstractNamEs;
+import tbNames.tbNames_api.RemoteOperationException;
 import tbNames.tbNames_android_messenger.NamEsMessageType;
 
 import java.util.Map;
@@ -262,18 +263,42 @@ public class NamEsServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        boolean SOME_PARAM = data.getBoolean("SOME_PARAM", false);
-					 backend.someFunction(SOME_PARAM);
-
 					Message respMsg = new Message();
 					respMsg.what = NamEsMessageType.RPC_SomeFunctionResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						 backend.someFunction(SOME_PARAM);
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "SOME_FUNCTION failed: " + errorMessage);
+						Log.d(TAG, "SOME_FUNCTION exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send SOME_FUNCTION response: " + e);
+						}
+					} else {
+						Log.w(TAG, "SOME_FUNCTION: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -288,18 +313,42 @@ public class NamEsServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        boolean Some_Param = data.getBoolean("Some_Param", false);
-					 backend.someFunction2(Some_Param);
-
 					Message respMsg = new Message();
 					respMsg.what = NamEsMessageType.RPC_SomeFunction2Resp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						 backend.someFunction2(Some_Param);
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "Some_Function2 failed: " + errorMessage);
+						Log.d(TAG, "Some_Function2 exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send Some_Function2 response: " + e);
+						}
+					} else {
+						Log.w(TAG, "Some_Function2: replyTo is null, cannot send response");
 					}
 					break;
 

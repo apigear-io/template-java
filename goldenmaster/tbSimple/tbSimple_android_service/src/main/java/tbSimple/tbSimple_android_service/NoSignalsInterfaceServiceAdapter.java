@@ -19,6 +19,7 @@ import tbSimple.tbSimple_api.INoSignalsInterfaceEventListener;
 import tbSimple.tbSimple_android_service.INoSignalsInterfaceServiceProvider;
 import tbSimple.tbSimple_api.INoSignalsInterface;
 import tbSimple.tbSimple_api.AbstractNoSignalsInterface;
+import tbSimple.tbSimple_api.RemoteOperationException;
 import tbSimple.tbSimple_android_messenger.NoSignalsInterfaceMessageType;
 
 import java.util.Map;
@@ -241,18 +242,42 @@ public class NoSignalsInterfaceServiceAdapter extends Service
 					Bundle data = msg.getData();
 					
 					int callId = data.getInt("callId");
-					 backend.funcVoid();
-
 					Message respMsg = new Message();
 					respMsg.what = NoSignalsInterfaceMessageType.RPC_FuncVoidResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						 backend.funcVoid();
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "funcVoid failed: " + errorMessage);
+						Log.d(TAG, "funcVoid exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send funcVoid response: " + e);
+						}
+					} else {
+						Log.w(TAG, "funcVoid: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -267,20 +292,44 @@ public class NoSignalsInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        boolean paramBool = data.getBoolean("paramBool", false);
-					boolean result =  backend.funcBool(paramBool);
-
 					Message respMsg = new Message();
 					respMsg.what = NoSignalsInterfaceMessageType.RPC_FuncBoolResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putBoolean("result", result);
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						boolean result =  backend.funcBool(paramBool);
+						
+		        resp_data.putBoolean("result", result);
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "funcBool failed: " + errorMessage);
+						Log.d(TAG, "funcBool exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send funcBool response: " + e);
+						}
+					} else {
+						Log.w(TAG, "funcBool: replyTo is null, cannot send response");
 					}
 					break;
 

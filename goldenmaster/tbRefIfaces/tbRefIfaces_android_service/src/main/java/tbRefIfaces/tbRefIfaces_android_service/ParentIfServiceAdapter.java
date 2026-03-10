@@ -21,6 +21,7 @@ import tbRefIfaces.tbRefIfaces_api.IParentIfEventListener;
 import tbRefIfaces.tbRefIfaces_android_service.IParentIfServiceProvider;
 import tbRefIfaces.tbRefIfaces_api.IParentIf;
 import tbRefIfaces.tbRefIfaces_api.AbstractParentIf;
+import tbRefIfaces.tbRefIfaces_api.RemoteOperationException;
 import tbRefIfaces.tbRefIfaces_android_messenger.ParentIfMessageType;
 
 import java.util.Map;
@@ -266,20 +267,44 @@ public class ParentIfServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        ISimpleLocalIf param = data.getParcelable("param", SimpleLocalIfParcelable.class).getSimpleLocalIf();
-					ISimpleLocalIf result =  backend.localIfMethod(param);
-
 					Message respMsg = new Message();
 					respMsg.what = ParentIfMessageType.RPC_LocalIfMethodResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putParcelable("result", new SimpleLocalIfParcelable(result));
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						ISimpleLocalIf result =  backend.localIfMethod(param);
+						
+		        resp_data.putParcelable("result", new SimpleLocalIfParcelable(result));
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "localIfMethod failed: " + errorMessage);
+						Log.d(TAG, "localIfMethod exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send localIfMethod response: " + e);
+						}
+					} else {
+						Log.w(TAG, "localIfMethod: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -295,20 +320,44 @@ public class ParentIfServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
                     ISimpleLocalIf[] param =  SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("param", SimpleLocalIfParcelable.class));
-					ISimpleLocalIf[] result =  backend.localIfMethodList(param);
-
 					Message respMsg = new Message();
 					respMsg.what = ParentIfMessageType.RPC_LocalIfMethodListResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putParcelableArray("result",SimpleLocalIfParcelable.wrapArray(result));
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						ISimpleLocalIf[] result =  backend.localIfMethodList(param);
+						
+		        resp_data.putParcelableArray("result",SimpleLocalIfParcelable.wrapArray(result));
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "localIfMethodList failed: " + errorMessage);
+						Log.d(TAG, "localIfMethodList exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send localIfMethodList response: " + e);
+						}
+					} else {
+						Log.w(TAG, "localIfMethodList: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -324,20 +373,44 @@ public class ParentIfServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        tbIfaceimport.tbIfaceimport_api.IEmptyIf param = data.getParcelable("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class).getEmptyIf();
-					tbIfaceimport.tbIfaceimport_api.IEmptyIf result =  backend.importedIfMethod(param);
-
 					Message respMsg = new Message();
 					respMsg.what = ParentIfMessageType.RPC_ImportedIfMethodResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putParcelable("result", new tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable(result));
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						tbIfaceimport.tbIfaceimport_api.IEmptyIf result =  backend.importedIfMethod(param);
+						
+		        resp_data.putParcelable("result", new tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable(result));
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "importedIfMethod failed: " + errorMessage);
+						Log.d(TAG, "importedIfMethod exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send importedIfMethod response: " + e);
+						}
+					} else {
+						Log.w(TAG, "importedIfMethod: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -353,20 +426,44 @@ public class ParentIfServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
                     tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param =  tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class));
-					tbIfaceimport.tbIfaceimport_api.IEmptyIf[] result =  backend.importedIfMethodList(param);
-
 					Message respMsg = new Message();
 					respMsg.what = ParentIfMessageType.RPC_ImportedIfMethodListResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putParcelableArray("result",tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(result));
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						tbIfaceimport.tbIfaceimport_api.IEmptyIf[] result =  backend.importedIfMethodList(param);
+						
+		        resp_data.putParcelableArray("result",tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(result));
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "importedIfMethodList failed: " + errorMessage);
+						Log.d(TAG, "importedIfMethodList exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send importedIfMethodList response: " + e);
+						}
+					} else {
+						Log.w(TAG, "importedIfMethodList: replyTo is null, cannot send response");
 					}
 					break;
 
