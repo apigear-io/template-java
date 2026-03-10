@@ -21,6 +21,7 @@ import android.util.Log;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_api.AbstractSimpleLocalIf;
+import tbRefIfaces.tbRefIfaces_api.RemoteOperationException;
 import tbRefIfaces.tbRefIfaces_android_messenger.SimpleLocalIfMessageType;
 
 import java.util.Map;
@@ -289,8 +290,13 @@ public class SimpleLocalIfClient extends AbstractSimpleLocalIf implements Servic
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(cause);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }
@@ -313,8 +319,16 @@ public class SimpleLocalIfClient extends AbstractSimpleLocalIf implements Servic
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
-                future.complete(null);
-                Log.v(TAG, "received null bundle, resolving intMethod with null");
+                Log.w(TAG, "intMethod: received null bundle (service disconnected?)");
+                future.completeExceptionally(new RemoteOperationException("service disconnected", RemoteOperationException.ERROR_SERVICE_DISCONNECTED));
+                return;
+            }
+            if (bundle.getBoolean("error", false))
+            {
+                String errorMessage = bundle.getString("errorMessage", "unknown error");
+                int errorCode = bundle.getInt("errorCode", RemoteOperationException.ERROR_UNKNOWN);
+                Log.w(TAG, "intMethod failed: " + errorMessage);
+                future.completeExceptionally(new RemoteOperationException(errorMessage, errorCode));
                 return;
             }
             

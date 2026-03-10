@@ -23,6 +23,7 @@ import testbed2.testbed2_android_messenger.NestedStruct1Parcelable;
 import testbed2.testbed2_api.INestedStruct1InterfaceEventListener;
 import testbed2.testbed2_api.INestedStruct1Interface;
 import testbed2.testbed2_api.AbstractNestedStruct1Interface;
+import testbed2.testbed2_api.RemoteOperationException;
 import testbed2.testbed2_android_messenger.NestedStruct1InterfaceMessageType;
 
 import java.util.Map;
@@ -333,8 +334,13 @@ public class NestedStruct1InterfaceClient extends AbstractNestedStruct1Interface
             resFuture.get();
             return;
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(cause);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }
@@ -355,6 +361,20 @@ public class NestedStruct1InterfaceClient extends AbstractNestedStruct1Interface
 
         CompletableFuture<Void>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                Log.w(TAG, "funcNoReturnValue: received null bundle (service disconnected?)");
+                future.completeExceptionally(new RemoteOperationException("service disconnected", RemoteOperationException.ERROR_SERVICE_DISCONNECTED));
+                return;
+            }
+            if (bundle.getBoolean("error", false))
+            {
+                String errorMessage = bundle.getString("errorMessage", "unknown error");
+                int errorCode = bundle.getInt("errorCode", RemoteOperationException.ERROR_UNKNOWN);
+                Log.w(TAG, "funcNoReturnValue failed: " + errorMessage);
+                future.completeExceptionally(new RemoteOperationException(errorMessage, errorCode));
+                return;
+            }
             future.complete(null);
             Log.v(TAG, "resolve funcNoReturnValue");
         };
@@ -373,8 +393,13 @@ public class NestedStruct1InterfaceClient extends AbstractNestedStruct1Interface
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(cause);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }
@@ -395,8 +420,16 @@ public class NestedStruct1InterfaceClient extends AbstractNestedStruct1Interface
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
-                future.complete(null);
-                Log.v(TAG, "received null bundle, resolving funcNoParams with null");
+                Log.w(TAG, "funcNoParams: received null bundle (service disconnected?)");
+                future.completeExceptionally(new RemoteOperationException("service disconnected", RemoteOperationException.ERROR_SERVICE_DISCONNECTED));
+                return;
+            }
+            if (bundle.getBoolean("error", false))
+            {
+                String errorMessage = bundle.getString("errorMessage", "unknown error");
+                int errorCode = bundle.getInt("errorCode", RemoteOperationException.ERROR_UNKNOWN);
+                Log.w(TAG, "funcNoParams failed: " + errorMessage);
+                future.completeExceptionally(new RemoteOperationException(errorMessage, errorCode));
                 return;
             }
             
@@ -419,8 +452,13 @@ public class NestedStruct1InterfaceClient extends AbstractNestedStruct1Interface
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(cause);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }
@@ -443,8 +481,16 @@ public class NestedStruct1InterfaceClient extends AbstractNestedStruct1Interface
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
-                future.complete(null);
-                Log.v(TAG, "received null bundle, resolving func1 with null");
+                Log.w(TAG, "func1: received null bundle (service disconnected?)");
+                future.completeExceptionally(new RemoteOperationException("service disconnected", RemoteOperationException.ERROR_SERVICE_DISCONNECTED));
+                return;
+            }
+            if (bundle.getBoolean("error", false))
+            {
+                String errorMessage = bundle.getString("errorMessage", "unknown error");
+                int errorCode = bundle.getInt("errorCode", RemoteOperationException.ERROR_UNKNOWN);
+                Log.w(TAG, "func1 failed: " + errorMessage);
+                future.completeExceptionally(new RemoteOperationException(errorMessage, errorCode));
                 return;
             }
             

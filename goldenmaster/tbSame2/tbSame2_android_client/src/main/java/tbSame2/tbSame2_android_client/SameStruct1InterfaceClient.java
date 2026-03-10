@@ -23,6 +23,7 @@ import tbSame2.tbSame2_android_messenger.Struct1Parcelable;
 import tbSame2.tbSame2_api.ISameStruct1InterfaceEventListener;
 import tbSame2.tbSame2_api.ISameStruct1Interface;
 import tbSame2.tbSame2_api.AbstractSameStruct1Interface;
+import tbSame2.tbSame2_api.RemoteOperationException;
 import tbSame2.tbSame2_android_messenger.SameStruct1InterfaceMessageType;
 
 import java.util.Map;
@@ -297,8 +298,13 @@ public class SameStruct1InterfaceClient extends AbstractSameStruct1Interface imp
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(cause);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }
@@ -321,8 +327,16 @@ public class SameStruct1InterfaceClient extends AbstractSameStruct1Interface imp
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
-                future.complete(null);
-                Log.v(TAG, "received null bundle, resolving func1 with null");
+                Log.w(TAG, "func1: received null bundle (service disconnected?)");
+                future.completeExceptionally(new RemoteOperationException("service disconnected", RemoteOperationException.ERROR_SERVICE_DISCONNECTED));
+                return;
+            }
+            if (bundle.getBoolean("error", false))
+            {
+                String errorMessage = bundle.getString("errorMessage", "unknown error");
+                int errorCode = bundle.getInt("errorCode", RemoteOperationException.ERROR_UNKNOWN);
+                Log.w(TAG, "func1 failed: " + errorMessage);
+                future.completeExceptionally(new RemoteOperationException(errorMessage, errorCode));
                 return;
             }
             
