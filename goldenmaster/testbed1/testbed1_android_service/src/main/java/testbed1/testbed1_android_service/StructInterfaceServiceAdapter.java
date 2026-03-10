@@ -27,6 +27,7 @@ import testbed1.testbed1_api.IStructInterfaceEventListener;
 import testbed1.testbed1_android_service.IStructInterfaceServiceProvider;
 import testbed1.testbed1_api.IStructInterface;
 import testbed1.testbed1_api.AbstractStructInterface;
+import testbed1.testbed1_api.RemoteOperationException;
 import testbed1.testbed1_android_messenger.StructInterfaceMessageType;
 
 import java.util.Map;
@@ -272,20 +273,44 @@ public class StructInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        StructBool paramBool = data.getParcelable("paramBool", StructBoolParcelable.class).getStructBool();
-					StructBool result =  backend.funcBool(paramBool);
-
 					Message respMsg = new Message();
 					respMsg.what = StructInterfaceMessageType.RPC_FuncBoolResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putParcelable("result", new StructBoolParcelable(result));
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						StructBool result =  backend.funcBool(paramBool);
+						
+		        resp_data.putParcelable("result", new StructBoolParcelable(result));
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "funcBool failed: " + errorMessage);
+						Log.d(TAG, "funcBool exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send funcBool response: " + e);
+						}
+					} else {
+						Log.w(TAG, "funcBool: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -301,20 +326,44 @@ public class StructInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        StructInt paramInt = data.getParcelable("paramInt", StructIntParcelable.class).getStructInt();
-					StructInt result =  backend.funcInt(paramInt);
-
 					Message respMsg = new Message();
 					respMsg.what = StructInterfaceMessageType.RPC_FuncIntResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putParcelable("result", new StructIntParcelable(result));
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						StructInt result =  backend.funcInt(paramInt);
+						
+		        resp_data.putParcelable("result", new StructIntParcelable(result));
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "funcInt failed: " + errorMessage);
+						Log.d(TAG, "funcInt exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send funcInt response: " + e);
+						}
+					} else {
+						Log.w(TAG, "funcInt: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -330,20 +379,44 @@ public class StructInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        StructFloat paramFloat = data.getParcelable("paramFloat", StructFloatParcelable.class).getStructFloat();
-					StructFloat result =  backend.funcFloat(paramFloat);
-
 					Message respMsg = new Message();
 					respMsg.what = StructInterfaceMessageType.RPC_FuncFloatResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putParcelable("result", new StructFloatParcelable(result));
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						StructFloat result =  backend.funcFloat(paramFloat);
+						
+		        resp_data.putParcelable("result", new StructFloatParcelable(result));
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "funcFloat failed: " + errorMessage);
+						Log.d(TAG, "funcFloat exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send funcFloat response: " + e);
+						}
+					} else {
+						Log.w(TAG, "funcFloat: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -359,20 +432,44 @@ public class StructInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        StructString paramString = data.getParcelable("paramString", StructStringParcelable.class).getStructString();
-					StructString result =  backend.funcString(paramString);
-
 					Message respMsg = new Message();
 					respMsg.what = StructInterfaceMessageType.RPC_FuncStringResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putParcelable("result", new StructStringParcelable(result));
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						StructString result =  backend.funcString(paramString);
+						
+		        resp_data.putParcelable("result", new StructStringParcelable(result));
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "funcString failed: " + errorMessage);
+						Log.d(TAG, "funcString exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send funcString response: " + e);
+						}
+					} else {
+						Log.w(TAG, "funcString: replyTo is null, cannot send response");
 					}
 					break;
 
