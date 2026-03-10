@@ -3,6 +3,7 @@ package tbSame1.tbSame1jniclient;
 import tbSame1.tbSame1_api.ISameStruct2Interface;
 import tbSame1.tbSame1_api.AbstractSameStruct2Interface;
 import tbSame1.tbSame1_api.ISameStruct2InterfaceEventListener;
+import tbSame1.tbSame1_api.RemoteOperationException;
 
 import tbSame1.tbSame1_android_client.SameStruct2InterfaceClient;
 import tbSame1.tbSame1_api.Struct1;
@@ -69,14 +70,26 @@ public class SameStruct2InterfaceJniClient extends AbstractSameStruct2Interface 
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFunc1Result with the same callId.
+    * On success, calls nativeOnFunc1Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void func1Async(String callId, Struct1 param1){
         Log.v(TAG, "non blocking call func1 ");
-        mMessengerClient.func1Async(param1).thenAccept(i -> {
-            nativeOnFunc1Result(i, callId);});
+        mMessengerClient.func1Async(param1).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "func1 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFunc1Result(result, callId);
+            }
+        });
     }
 
     @Override
@@ -95,14 +108,26 @@ public class SameStruct2InterfaceJniClient extends AbstractSameStruct2Interface 
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnFunc2Result with the same callId.
+    * On success, calls nativeOnFunc2Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void func2Async(String callId, Struct1 param1, Struct2 param2){
         Log.v(TAG, "non blocking call func2 ");
-        mMessengerClient.func2Async(param1, param2).thenAccept(i -> {
-            nativeOnFunc2Result(i, callId);});
+        mMessengerClient.func2Async(param1, param2).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "func2 async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnFunc2Result(result, callId);
+            }
+        });
     }
 
     @Override
@@ -179,5 +204,6 @@ public class SameStruct2InterfaceJniClient extends AbstractSameStruct2Interface 
     private native void nativeOnSig2(Struct1 param1, Struct2 param2);
     private native void nativeOnFunc1Result(Struct1 result, String callId);
     private native void nativeOnFunc2Result(Struct1 result, String callId);
+    private native void nativeAsyncOperationFailed(String callId, String errorMessage, int errorCode);
     private native void nativeIsReady(boolean isReady);
 }

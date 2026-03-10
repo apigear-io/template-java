@@ -3,6 +3,7 @@ package tbRefIfaces.tbRefIfacesjniclient;
 import tbRefIfaces.tbRefIfaces_api.IParentIf;
 import tbRefIfaces.tbRefIfaces_api.AbstractParentIf;
 import tbRefIfaces.tbRefIfaces_api.IParentIfEventListener;
+import tbRefIfaces.tbRefIfaces_api.RemoteOperationException;
 
 import tbRefIfaces.tbRefIfaces_android_client.ParentIfClient;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
@@ -93,14 +94,26 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnLocalIfMethodResult with the same callId.
+    * On success, calls nativeOnLocalIfMethodResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void localIfMethodAsync(String callId, ISimpleLocalIf param){
         Log.v(TAG, "non blocking call localIfMethod ");
-        mMessengerClient.localIfMethodAsync(param).thenAccept(i -> {
-            nativeOnLocalIfMethodResult(i, callId);});
+        mMessengerClient.localIfMethodAsync(param).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "localIfMethod async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnLocalIfMethodResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -119,14 +132,26 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnLocalIfMethodListResult with the same callId.
+    * On success, calls nativeOnLocalIfMethodListResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void localIfMethodListAsync(String callId, ISimpleLocalIf[] param){
         Log.v(TAG, "non blocking call localIfMethodList ");
-        mMessengerClient.localIfMethodListAsync(param).thenAccept(i -> {
-            nativeOnLocalIfMethodListResult(i, callId);});
+        mMessengerClient.localIfMethodListAsync(param).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "localIfMethodList async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnLocalIfMethodListResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -145,14 +170,26 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnImportedIfMethodResult with the same callId.
+    * On success, calls nativeOnImportedIfMethodResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void importedIfMethodAsync(String callId, tbIfaceimport.tbIfaceimport_api.IEmptyIf param){
         Log.v(TAG, "non blocking call importedIfMethod ");
-        mMessengerClient.importedIfMethodAsync(param).thenAccept(i -> {
-            nativeOnImportedIfMethodResult(i, callId);});
+        mMessengerClient.importedIfMethodAsync(param).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "importedIfMethod async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnImportedIfMethodResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -171,14 +208,26 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOnImportedIfMethodListResult with the same callId.
+    * On success, calls nativeOnImportedIfMethodListResult with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void importedIfMethodListAsync(String callId, tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param){
         Log.v(TAG, "non blocking call importedIfMethodList ");
-        mMessengerClient.importedIfMethodListAsync(param).thenAccept(i -> {
-            nativeOnImportedIfMethodListResult(i, callId);});
+        mMessengerClient.importedIfMethodListAsync(param).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "importedIfMethodList async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOnImportedIfMethodListResult(result, callId);
+            }
+        });
     }
 
     @Override
@@ -285,5 +334,6 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
     private native void nativeOnLocalIfMethodListResult(ISimpleLocalIf[] result, String callId);
     private native void nativeOnImportedIfMethodResult(tbIfaceimport.tbIfaceimport_api.IEmptyIf result, String callId);
     private native void nativeOnImportedIfMethodListResult(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] result, String callId);
+    private native void nativeAsyncOperationFailed(String callId, String errorMessage, int errorCode);
     private native void nativeIsReady(boolean isReady);
 }

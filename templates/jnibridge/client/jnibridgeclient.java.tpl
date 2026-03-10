@@ -3,6 +3,9 @@ package {{camel .Module.Name}}.{{camel .Module.Name}}jniclient;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.Abstract{{Camel .Interface.Name}};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
+{{- if .Interface.Operations }}
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.RemoteOperationException;
+{{- end }}
 
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_client.{{Camel .Interface.Name }}Client;
 
@@ -58,14 +61,26 @@ public class {{Camel .Interface.Name}}JniClient extends Abstract{{Camel .Interfa
     /**
     * This is an async method to be called via JNI.
     *
-    * It returns result via nativeOn{{Camel .Name}}Result with the same callId.
+    * On success, calls nativeOn{{Camel .Name}}Result with the same callId.
+    * On failure, calls nativeAsyncOperationFailed with the callId and error message.
+    * Exactly one of the two callbacks is guaranteed per invocation.
     *
     * @param callId async call identifier
     */
     public void {{camel .Name}}Async(String callId{{if len .Params}}, {{javaParams "" .Params}}{{end}}){
         Log.v(TAG, "non blocking call {{camel .Name}} ");
-        mMessengerClient.{{camel .Name}}Async({{javaVars .Params }}).thenAccept(i -> {
-            nativeOn{{Camel .Name}}Result({{if not .Return.IsVoid}}i, {{end}}callId);});
+        mMessengerClient.{{camel .Name}}Async({{javaVars .Params }}).whenComplete((result, throwable) -> {
+            if (throwable != null) {
+                String errorMessage = throwable.getMessage() != null
+                    ? throwable.getMessage() : throwable.getClass().getName();
+                int errorCode = (throwable instanceof RemoteOperationException)
+                    ? ((RemoteOperationException) throwable).getErrorCode() : 0;
+                Log.w(TAG, "{{.Name}} async failed: " + errorMessage);
+                nativeAsyncOperationFailed(callId, errorMessage, errorCode);
+            } else {
+                nativeOn{{Camel .Name}}Result({{if not .Return.IsVoid}}result, {{end}}callId);
+            }
+        });
     }
 
     @Override
@@ -141,6 +156,9 @@ public class {{Camel .Interface.Name}}JniClient extends Abstract{{Camel .Interfa
     {{- end }}
     {{- range .Interface.Operations }}
     private native void nativeOn{{Camel .Name}}Result({{if not .Return.IsVoid}}{{javaReturn "" .Return}} result, {{end}}String callId);
+    {{- end }}
+    {{- if .Interface.Operations }}
+    private native void nativeAsyncOperationFailed(String callId, String errorMessage, int errorCode);
     {{- end }}
     private native void nativeIsReady(boolean isReady);
 }
