@@ -27,6 +27,7 @@ import tbEnum.tbEnum_api.IEnumInterfaceEventListener;
 import tbEnum.tbEnum_android_service.IEnumInterfaceServiceProvider;
 import tbEnum.tbEnum_api.IEnumInterface;
 import tbEnum.tbEnum_api.AbstractEnumInterface;
+import tbEnum.tbEnum_api.RemoteOperationException;
 import tbEnum.tbEnum_android_messenger.EnumInterfaceMessageType;
 
 import java.util.Map;
@@ -272,20 +273,44 @@ public class EnumInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        Enum0 param0 = data.getParcelable("param0", Enum0Parcelable.class).getEnum0();
-					Enum0 result =  backend.func0(param0);
-
 					Message respMsg = new Message();
 					respMsg.what = EnumInterfaceMessageType.RPC_Func0Resp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putParcelable("result", new Enum0Parcelable(result));
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						Enum0 result =  backend.func0(param0);
+						
+		        resp_data.putParcelable("result", new Enum0Parcelable(result));
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "func0 failed: " + errorMessage);
+						Log.d(TAG, "func0 exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send func0 response: " + e);
+						}
+					} else {
+						Log.w(TAG, "func0: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -301,20 +326,44 @@ public class EnumInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        Enum1 param1 = data.getParcelable("param1", Enum1Parcelable.class).getEnum1();
-					Enum1 result =  backend.func1(param1);
-
 					Message respMsg = new Message();
 					respMsg.what = EnumInterfaceMessageType.RPC_Func1Resp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putParcelable("result", new Enum1Parcelable(result));
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						Enum1 result =  backend.func1(param1);
+						
+		        resp_data.putParcelable("result", new Enum1Parcelable(result));
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "func1 failed: " + errorMessage);
+						Log.d(TAG, "func1 exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send func1 response: " + e);
+						}
+					} else {
+						Log.w(TAG, "func1: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -330,20 +379,44 @@ public class EnumInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        Enum2 param2 = data.getParcelable("param2", Enum2Parcelable.class).getEnum2();
-					Enum2 result =  backend.func2(param2);
-
 					Message respMsg = new Message();
 					respMsg.what = EnumInterfaceMessageType.RPC_Func2Resp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putParcelable("result", new Enum2Parcelable(result));
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						Enum2 result =  backend.func2(param2);
+						
+		        resp_data.putParcelable("result", new Enum2Parcelable(result));
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "func2 failed: " + errorMessage);
+						Log.d(TAG, "func2 exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send func2 response: " + e);
+						}
+					} else {
+						Log.w(TAG, "func2: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -359,20 +432,44 @@ public class EnumInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        Enum3 param3 = data.getParcelable("param3", Enum3Parcelable.class).getEnum3();
-					Enum3 result =  backend.func3(param3);
-
 					Message respMsg = new Message();
 					respMsg.what = EnumInterfaceMessageType.RPC_Func3Resp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putParcelable("result", new Enum3Parcelable(result));
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						Enum3 result =  backend.func3(param3);
+						
+		        resp_data.putParcelable("result", new Enum3Parcelable(result));
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "func3 failed: " + errorMessage);
+						Log.d(TAG, "func3 exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send func3 response: " + e);
+						}
+					} else {
+						Log.w(TAG, "func3: replyTo is null, cannot send response");
 					}
 					break;
 
