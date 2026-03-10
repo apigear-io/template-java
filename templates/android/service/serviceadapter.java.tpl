@@ -21,6 +21,9 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Nam
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_service.I{{Camel .Interface.Name}}ServiceProvider;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.Abstract{{Camel .Interface.Name}};
+{{- if .Interface.Operations }}
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.RemoteOperationException;
+{{- end }}
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Interface.Name}}MessageType;
 
 import java.util.Map;
@@ -245,21 +248,45 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 					{{- range .Params }}
 					{{template "getDataFromBundle" . }}
 					{{- end }}
-					{{ if not .Return.IsVoid }}{{javaReturn "" .Return}} result = {{ end}} backend.{{camel .Name}}({{javaVars .Params}});
-
 					Message respMsg = new Message();
 					respMsg.what = {{$InterfaceName}}MessageType.RPC_{{Camel .Name}}Resp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					{{- if not .Return.IsVoid }}
-					{{ template "putResultIntoBundle" . }}
-					{{- end }}
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						{{ if not .Return.IsVoid }}{{javaReturn "" .Return}} result = {{ end}} backend.{{camel .Name}}({{javaVars .Params}});
+						{{- if not .Return.IsVoid }}
+						{{ template "putResultIntoBundle" . }}
+						{{- end }}
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "{{.Name}} failed: " + errorMessage);
+						Log.d(TAG, "{{.Name}} exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send {{.Name}} response: " + e);
+						}
+					} else {
+						Log.w(TAG, "{{.Name}}: replyTo is null, cannot send response");
 					}
 					break;
 

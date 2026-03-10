@@ -19,6 +19,7 @@ import tbSimple.tbSimple_api.ISimpleArrayInterfaceEventListener;
 import tbSimple.tbSimple_android_service.ISimpleArrayInterfaceServiceProvider;
 import tbSimple.tbSimple_api.ISimpleArrayInterface;
 import tbSimple.tbSimple_api.AbstractSimpleArrayInterface;
+import tbSimple.tbSimple_api.RemoteOperationException;
 import tbSimple.tbSimple_android_messenger.SimpleArrayInterfaceMessageType;
 
 import java.util.Map;
@@ -299,20 +300,44 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        boolean[] paramBool = data.getBooleanArray("paramBool");
-					boolean[] result =  backend.funcBool(paramBool);
-
 					Message respMsg = new Message();
 					respMsg.what = SimpleArrayInterfaceMessageType.RPC_FuncBoolResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putBooleanArray("result", result);
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						boolean[] result =  backend.funcBool(paramBool);
+						
+		        resp_data.putBooleanArray("result", result);
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "funcBool failed: " + errorMessage);
+						Log.d(TAG, "funcBool exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send funcBool response: " + e);
+						}
+					} else {
+						Log.w(TAG, "funcBool: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -327,20 +352,44 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        int[] paramInt = data.getIntArray("paramInt");
-					int[] result =  backend.funcInt(paramInt);
-
 					Message respMsg = new Message();
 					respMsg.what = SimpleArrayInterfaceMessageType.RPC_FuncIntResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putIntArray("result", result);
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						int[] result =  backend.funcInt(paramInt);
+						
+		        resp_data.putIntArray("result", result);
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "funcInt failed: " + errorMessage);
+						Log.d(TAG, "funcInt exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send funcInt response: " + e);
+						}
+					} else {
+						Log.w(TAG, "funcInt: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -355,20 +404,44 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        int[] paramInt32 = data.getIntArray("paramInt32");
-					int[] result =  backend.funcInt32(paramInt32);
-
 					Message respMsg = new Message();
 					respMsg.what = SimpleArrayInterfaceMessageType.RPC_FuncInt32Resp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putIntArray("result", result);
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						int[] result =  backend.funcInt32(paramInt32);
+						
+		        resp_data.putIntArray("result", result);
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "funcInt32 failed: " + errorMessage);
+						Log.d(TAG, "funcInt32 exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send funcInt32 response: " + e);
+						}
+					} else {
+						Log.w(TAG, "funcInt32: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -383,20 +456,44 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        long[] paramInt64 = data.getLongArray("paramInt64");
-					long[] result =  backend.funcInt64(paramInt64);
-
 					Message respMsg = new Message();
 					respMsg.what = SimpleArrayInterfaceMessageType.RPC_FuncInt64Resp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putLongArray("result", result);
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						long[] result =  backend.funcInt64(paramInt64);
+						
+		        resp_data.putLongArray("result", result);
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "funcInt64 failed: " + errorMessage);
+						Log.d(TAG, "funcInt64 exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send funcInt64 response: " + e);
+						}
+					} else {
+						Log.w(TAG, "funcInt64: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -411,20 +508,44 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        float[] paramFloat = data.getFloatArray("paramFloat");
-					float[] result =  backend.funcFloat(paramFloat);
-
 					Message respMsg = new Message();
 					respMsg.what = SimpleArrayInterfaceMessageType.RPC_FuncFloatResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putFloatArray("result", result);
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						float[] result =  backend.funcFloat(paramFloat);
+						
+		        resp_data.putFloatArray("result", result);
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "funcFloat failed: " + errorMessage);
+						Log.d(TAG, "funcFloat exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send funcFloat response: " + e);
+						}
+					} else {
+						Log.w(TAG, "funcFloat: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -439,20 +560,44 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        float[] paramFloat32 = data.getFloatArray("paramFloat32");
-					float[] result =  backend.funcFloat32(paramFloat32);
-
 					Message respMsg = new Message();
 					respMsg.what = SimpleArrayInterfaceMessageType.RPC_FuncFloat32Resp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putFloatArray("result", result);
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						float[] result =  backend.funcFloat32(paramFloat32);
+						
+		        resp_data.putFloatArray("result", result);
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "funcFloat32 failed: " + errorMessage);
+						Log.d(TAG, "funcFloat32 exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send funcFloat32 response: " + e);
+						}
+					} else {
+						Log.w(TAG, "funcFloat32: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -467,20 +612,44 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        double[] paramFloat = data.getDoubleArray("paramFloat");
-					double[] result =  backend.funcFloat64(paramFloat);
-
 					Message respMsg = new Message();
 					respMsg.what = SimpleArrayInterfaceMessageType.RPC_FuncFloat64Resp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putDoubleArray("result", result);
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						double[] result =  backend.funcFloat64(paramFloat);
+						
+		        resp_data.putDoubleArray("result", result);
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "funcFloat64 failed: " + errorMessage);
+						Log.d(TAG, "funcFloat64 exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send funcFloat64 response: " + e);
+						}
+					} else {
+						Log.w(TAG, "funcFloat64: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -495,20 +664,44 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        String[] paramString = data.getStringArray("paramString");
-					String[] result =  backend.funcString(paramString);
-
 					Message respMsg = new Message();
 					respMsg.what = SimpleArrayInterfaceMessageType.RPC_FuncStringResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putStringArray("result", result);
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						String[] result =  backend.funcString(paramString);
+						
+		        resp_data.putStringArray("result", result);
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "funcString failed: " + errorMessage);
+						Log.d(TAG, "funcString exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send funcString response: " + e);
+						}
+					} else {
+						Log.w(TAG, "funcString: replyTo is null, cannot send response");
 					}
 					break;
 

@@ -21,6 +21,7 @@ import testbed2.testbed2_api.INestedStruct1InterfaceEventListener;
 import testbed2.testbed2_android_service.INestedStruct1InterfaceServiceProvider;
 import testbed2.testbed2_api.INestedStruct1Interface;
 import testbed2.testbed2_api.AbstractNestedStruct1Interface;
+import testbed2.testbed2_api.RemoteOperationException;
 import testbed2.testbed2_android_messenger.NestedStruct1InterfaceMessageType;
 
 import java.util.Map;
@@ -239,18 +240,42 @@ public class NestedStruct1InterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        NestedStruct1 param1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
-					 backend.funcNoReturnValue(param1);
-
 					Message respMsg = new Message();
 					respMsg.what = NestedStruct1InterfaceMessageType.RPC_FuncNoReturnValueResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						 backend.funcNoReturnValue(param1);
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "funcNoReturnValue failed: " + errorMessage);
+						Log.d(TAG, "funcNoReturnValue exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send funcNoReturnValue response: " + e);
+						}
+					} else {
+						Log.w(TAG, "funcNoReturnValue: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -263,20 +288,44 @@ public class NestedStruct1InterfaceServiceAdapter extends Service
 					Bundle data = msg.getData();
 					
 					int callId = data.getInt("callId");
-					NestedStruct1 result =  backend.funcNoParams();
-
 					Message respMsg = new Message();
 					respMsg.what = NestedStruct1InterfaceMessageType.RPC_FuncNoParamsResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putParcelable("result", new NestedStruct1Parcelable(result));
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						NestedStruct1 result =  backend.funcNoParams();
+						
+		        resp_data.putParcelable("result", new NestedStruct1Parcelable(result));
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "funcNoParams failed: " + errorMessage);
+						Log.d(TAG, "funcNoParams exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send funcNoParams response: " + e);
+						}
+					} else {
+						Log.w(TAG, "funcNoParams: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -292,20 +341,44 @@ public class NestedStruct1InterfaceServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        NestedStruct1 param1 = data.getParcelable("param1", NestedStruct1Parcelable.class).getNestedStruct1();
-					NestedStruct1 result =  backend.func1(param1);
-
 					Message respMsg = new Message();
 					respMsg.what = NestedStruct1InterfaceMessageType.RPC_Func1Resp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putParcelable("result", new NestedStruct1Parcelable(result));
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						NestedStruct1 result =  backend.func1(param1);
+						
+		        resp_data.putParcelable("result", new NestedStruct1Parcelable(result));
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "func1 failed: " + errorMessage);
+						Log.d(TAG, "func1 exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send func1 response: " + e);
+						}
+					} else {
+						Log.w(TAG, "func1: replyTo is null, cannot send response");
 					}
 					break;
 

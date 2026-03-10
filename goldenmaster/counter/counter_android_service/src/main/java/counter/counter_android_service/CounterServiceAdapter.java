@@ -19,6 +19,7 @@ import counter.counter_api.ICounterEventListener;
 import counter.counter_android_service.ICounterServiceProvider;
 import counter.counter_api.ICounter;
 import counter.counter_api.AbstractCounter;
+import counter.counter_api.RemoteOperationException;
 import counter.counter_android_messenger.CounterMessageType;
 
 import java.util.Map;
@@ -264,20 +265,44 @@ public class CounterServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec = data.getParcelable("vec", externTypes.externTypes_android_messenger.MyVector3DParcelable.class).getMyVector3D();
-					org.apache.commons.math3.geometry.euclidean.threed.Vector3D result =  backend.increment(vec);
-
 					Message respMsg = new Message();
 					respMsg.what = CounterMessageType.RPC_IncrementResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putParcelable("result", new externTypes.externTypes_android_messenger.MyVector3DParcelable(result));
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						org.apache.commons.math3.geometry.euclidean.threed.Vector3D result =  backend.increment(vec);
+						
+		        resp_data.putParcelable("result", new externTypes.externTypes_android_messenger.MyVector3DParcelable(result));
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "increment failed: " + errorMessage);
+						Log.d(TAG, "increment exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send increment response: " + e);
+						}
+					} else {
+						Log.w(TAG, "increment: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -293,20 +318,44 @@ public class CounterServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
                     org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec =  externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])data.getParcelableArray("vec", externTypes.externTypes_android_messenger.MyVector3DParcelable.class));
-					org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] result =  backend.incrementArray(vec);
-
 					Message respMsg = new Message();
 					respMsg.what = CounterMessageType.RPC_IncrementArrayResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putParcelableArray("result",externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(result));
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] result =  backend.incrementArray(vec);
+						
+		        resp_data.putParcelableArray("result",externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(result));
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "incrementArray failed: " + errorMessage);
+						Log.d(TAG, "incrementArray exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send incrementArray response: " + e);
+						}
+					} else {
+						Log.w(TAG, "incrementArray: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -322,20 +371,44 @@ public class CounterServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
 			        customTypes.customTypes_api.Vector3D vec = data.getParcelable("vec", customTypes.customTypes_android_messenger.Vector3DParcelable.class).getVector3D();
-					customTypes.customTypes_api.Vector3D result =  backend.decrement(vec);
-
 					Message respMsg = new Message();
 					respMsg.what = CounterMessageType.RPC_DecrementResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putParcelable("result", new customTypes.customTypes_android_messenger.Vector3DParcelable(result));
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						customTypes.customTypes_api.Vector3D result =  backend.decrement(vec);
+						
+		        resp_data.putParcelable("result", new customTypes.customTypes_android_messenger.Vector3DParcelable(result));
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "decrement failed: " + errorMessage);
+						Log.d(TAG, "decrement exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send decrement response: " + e);
+						}
+					} else {
+						Log.w(TAG, "decrement: replyTo is null, cannot send response");
 					}
 					break;
 
@@ -351,20 +424,44 @@ public class CounterServiceAdapter extends Service
 					int callId = data.getInt("callId");
 					
                     customTypes.customTypes_api.Vector3D[] vec =  customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray((customTypes.customTypes_android_messenger.Vector3DParcelable[])data.getParcelableArray("vec", customTypes.customTypes_android_messenger.Vector3DParcelable.class));
-					customTypes.customTypes_api.Vector3D[] result =  backend.decrementArray(vec);
-
 					Message respMsg = new Message();
 					respMsg.what = CounterMessageType.RPC_DecrementArrayResp.getValue();
 					Bundle resp_data = new Bundle();
 					resp_data.putInt("callId", callId);
-					
-		        resp_data.putParcelableArray("result",customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(result));
-					respMsg.setData(resp_data);
 
 					try {
-						msg.replyTo.send(respMsg);
-					} catch (RemoteException e) {
-						throw new RuntimeException(e);
+						customTypes.customTypes_api.Vector3D[] result =  backend.decrementArray(vec);
+						
+		        resp_data.putParcelableArray("result",customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(result));
+					} catch (Exception e) {
+						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
+						Log.w(TAG, "decrementArray failed: " + errorMessage);
+						Log.d(TAG, "decrementArray exception details", e);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", errorMessage);
+						int errorCode;
+						if (e instanceof RemoteOperationException) {
+							errorCode = ((RemoteOperationException) e).getErrorCode();
+						} else if (e instanceof IllegalArgumentException) {
+							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+						} else if (e instanceof UnsupportedOperationException) {
+							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						} else {
+							errorCode = RemoteOperationException.ERROR_INTERNAL;
+						}
+						resp_data.putInt("errorCode", errorCode);
+					}
+
+					respMsg.setData(resp_data);
+
+					if (msg.replyTo != null) {
+						try {
+							msg.replyTo.send(respMsg);
+						} catch (RemoteException e) {
+							Log.e(TAG, "failed to send decrementArray response: " + e);
+						}
+					} else {
+						Log.w(TAG, "decrementArray: replyTo is null, cannot send response");
 					}
 					break;
 
