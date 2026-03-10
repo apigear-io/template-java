@@ -200,16 +200,22 @@ public class ManyParamInterfaceServiceAdapter extends Service
 			{
 				backend = ManyParamInterfaceServiceAdapter.mBackendService;
 			}
+			ManyParamInterfaceMessageType msgType =
+				ManyParamInterfaceMessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if (ManyParamInterfaceMessageType.fromInteger(msg.what) != ManyParamInterfaceMessageType.REGISTER_CLIENT
-					&& ManyParamInterfaceMessageType.fromInteger(msg.what) != ManyParamInterfaceMessageType.UNREGISTER_CLIENT)
+				if (msgType != ManyParamInterfaceMessageType.REGISTER_CLIENT
+					&& msgType != ManyParamInterfaceMessageType.UNREGISTER_CLIENT
+					&& msgType != ManyParamInterfaceMessageType.RPC_Func1Req
+					&& msgType != ManyParamInterfaceMessageType.RPC_Func2Req
+					&& msgType != ManyParamInterfaceMessageType.RPC_Func3Req
+					&& msgType != ManyParamInterfaceMessageType.RPC_Func4Req)
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: ManyParamInterfaceMessageType" + ManyParamInterfaceMessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: ManyParamInterfaceMessageType" + msgType );
 					return;
 				}
 			}
-			switch (ManyParamInterfaceMessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
@@ -266,6 +272,10 @@ public class ManyParamInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						int result =  backend.func1(param1);
 						
 		        resp_data.putInt("result", result);
@@ -320,6 +330,10 @@ public class ManyParamInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						int result =  backend.func2(param1, param2);
 						
 		        resp_data.putInt("result", result);
@@ -376,6 +390,10 @@ public class ManyParamInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						int result =  backend.func3(param1, param2, param3);
 						
 		        resp_data.putInt("result", result);
@@ -434,6 +452,10 @@ public class ManyParamInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						int result =  backend.func4(param1, param2, param3, param4);
 						
 		        resp_data.putInt("result", result);

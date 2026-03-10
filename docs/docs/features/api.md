@@ -295,7 +295,7 @@ public class RemoteOperationException extends RuntimeException {
 |------|----------|---------|--------|
 | 0 | `ERROR_UNKNOWN` | Generic/unclassified error | Default when no code is provided |
 | 1 | `ERROR_SERVICE_DISCONNECTED` | Binder connection lost | Client detects disconnect |
-| 2 | `ERROR_SERVICE_NOT_READY` | Backend not ready | Reserved for future use |
+| 2 | `ERROR_SERVICE_NOT_READY` | Backend not ready | Service exists but backend not ready |
 | 3 | `ERROR_INVALID_ARGUMENT` | Bad input from caller | `IllegalArgumentException` on service side |
 | 4 | `ERROR_NOT_IMPLEMENTED` | Operation not supported | `UnsupportedOperationException` on service side |
 | 5 | `ERROR_INTERNAL` | Unexpected backend exception | Default for all other caught exceptions |

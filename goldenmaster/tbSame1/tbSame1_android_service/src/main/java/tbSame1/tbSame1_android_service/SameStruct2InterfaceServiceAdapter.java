@@ -204,16 +204,20 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 			{
 				backend = SameStruct2InterfaceServiceAdapter.mBackendService;
 			}
+			SameStruct2InterfaceMessageType msgType =
+				SameStruct2InterfaceMessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if (SameStruct2InterfaceMessageType.fromInteger(msg.what) != SameStruct2InterfaceMessageType.REGISTER_CLIENT
-					&& SameStruct2InterfaceMessageType.fromInteger(msg.what) != SameStruct2InterfaceMessageType.UNREGISTER_CLIENT)
+				if (msgType != SameStruct2InterfaceMessageType.REGISTER_CLIENT
+					&& msgType != SameStruct2InterfaceMessageType.UNREGISTER_CLIENT
+					&& msgType != SameStruct2InterfaceMessageType.RPC_Func1Req
+					&& msgType != SameStruct2InterfaceMessageType.RPC_Func2Req)
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: SameStruct2InterfaceMessageType" + SameStruct2InterfaceMessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: SameStruct2InterfaceMessageType" + msgType );
 					return;
 				}
 			}
-			switch (SameStruct2InterfaceMessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
@@ -257,6 +261,10 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						Struct1 result =  backend.func1(param1);
 						
 		        resp_data.putParcelable("result", new Struct1Parcelable(result));
@@ -314,6 +322,10 @@ public class SameStruct2InterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						Struct1 result =  backend.func2(param1, param2);
 						
 		        resp_data.putParcelable("result", new Struct1Parcelable(result));

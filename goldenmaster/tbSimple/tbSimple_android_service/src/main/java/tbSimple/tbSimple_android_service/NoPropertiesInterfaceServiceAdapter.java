@@ -200,16 +200,20 @@ public class NoPropertiesInterfaceServiceAdapter extends Service
 			{
 				backend = NoPropertiesInterfaceServiceAdapter.mBackendService;
 			}
+			NoPropertiesInterfaceMessageType msgType =
+				NoPropertiesInterfaceMessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if (NoPropertiesInterfaceMessageType.fromInteger(msg.what) != NoPropertiesInterfaceMessageType.REGISTER_CLIENT
-					&& NoPropertiesInterfaceMessageType.fromInteger(msg.what) != NoPropertiesInterfaceMessageType.UNREGISTER_CLIENT)
+				if (msgType != NoPropertiesInterfaceMessageType.REGISTER_CLIENT
+					&& msgType != NoPropertiesInterfaceMessageType.UNREGISTER_CLIENT
+					&& msgType != NoPropertiesInterfaceMessageType.RPC_FuncVoidReq
+					&& msgType != NoPropertiesInterfaceMessageType.RPC_FuncBoolReq)
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: NoPropertiesInterfaceMessageType" + NoPropertiesInterfaceMessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: NoPropertiesInterfaceMessageType" + msgType );
 					return;
 				}
 			}
-			switch (NoPropertiesInterfaceMessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
@@ -232,6 +236,10 @@ public class NoPropertiesInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						 backend.funcVoid();
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
@@ -282,6 +290,10 @@ public class NoPropertiesInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						boolean result =  backend.funcBool(paramBool);
 						
 		        resp_data.putBoolean("result", result);

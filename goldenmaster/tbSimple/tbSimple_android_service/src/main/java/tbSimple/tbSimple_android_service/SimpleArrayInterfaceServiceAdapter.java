@@ -200,16 +200,26 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 			{
 				backend = SimpleArrayInterfaceServiceAdapter.mBackendService;
 			}
+			SimpleArrayInterfaceMessageType msgType =
+				SimpleArrayInterfaceMessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if (SimpleArrayInterfaceMessageType.fromInteger(msg.what) != SimpleArrayInterfaceMessageType.REGISTER_CLIENT
-					&& SimpleArrayInterfaceMessageType.fromInteger(msg.what) != SimpleArrayInterfaceMessageType.UNREGISTER_CLIENT)
+				if (msgType != SimpleArrayInterfaceMessageType.REGISTER_CLIENT
+					&& msgType != SimpleArrayInterfaceMessageType.UNREGISTER_CLIENT
+					&& msgType != SimpleArrayInterfaceMessageType.RPC_FuncBoolReq
+					&& msgType != SimpleArrayInterfaceMessageType.RPC_FuncIntReq
+					&& msgType != SimpleArrayInterfaceMessageType.RPC_FuncInt32Req
+					&& msgType != SimpleArrayInterfaceMessageType.RPC_FuncInt64Req
+					&& msgType != SimpleArrayInterfaceMessageType.RPC_FuncFloatReq
+					&& msgType != SimpleArrayInterfaceMessageType.RPC_FuncFloat32Req
+					&& msgType != SimpleArrayInterfaceMessageType.RPC_FuncFloat64Req
+					&& msgType != SimpleArrayInterfaceMessageType.RPC_FuncStringReq)
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: SimpleArrayInterfaceMessageType" + SimpleArrayInterfaceMessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: SimpleArrayInterfaceMessageType" + msgType );
 					return;
 				}
 			}
-			switch (SimpleArrayInterfaceMessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
@@ -306,6 +316,10 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						boolean[] result =  backend.funcBool(paramBool);
 						
 		        resp_data.putBooleanArray("result", result);
@@ -358,6 +372,10 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						int[] result =  backend.funcInt(paramInt);
 						
 		        resp_data.putIntArray("result", result);
@@ -410,6 +428,10 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						int[] result =  backend.funcInt32(paramInt32);
 						
 		        resp_data.putIntArray("result", result);
@@ -462,6 +484,10 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						long[] result =  backend.funcInt64(paramInt64);
 						
 		        resp_data.putLongArray("result", result);
@@ -514,6 +540,10 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						float[] result =  backend.funcFloat(paramFloat);
 						
 		        resp_data.putFloatArray("result", result);
@@ -566,6 +596,10 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						float[] result =  backend.funcFloat32(paramFloat32);
 						
 		        resp_data.putFloatArray("result", result);
@@ -618,6 +652,10 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						double[] result =  backend.funcFloat64(paramFloat);
 						
 		        resp_data.putDoubleArray("result", result);
@@ -670,6 +708,10 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						String[] result =  backend.funcString(paramString);
 						
 		        resp_data.putStringArray("result", result);

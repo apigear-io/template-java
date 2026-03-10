@@ -200,16 +200,19 @@ public class VoidInterfaceServiceAdapter extends Service
 			{
 				backend = VoidInterfaceServiceAdapter.mBackendService;
 			}
+			VoidInterfaceMessageType msgType =
+				VoidInterfaceMessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if (VoidInterfaceMessageType.fromInteger(msg.what) != VoidInterfaceMessageType.REGISTER_CLIENT
-					&& VoidInterfaceMessageType.fromInteger(msg.what) != VoidInterfaceMessageType.UNREGISTER_CLIENT)
+				if (msgType != VoidInterfaceMessageType.REGISTER_CLIENT
+					&& msgType != VoidInterfaceMessageType.UNREGISTER_CLIENT
+					&& msgType != VoidInterfaceMessageType.RPC_FuncVoidReq)
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: VoidInterfaceMessageType" + VoidInterfaceMessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: VoidInterfaceMessageType" + msgType );
 					return;
 				}
 			}
-			switch (VoidInterfaceMessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
@@ -232,6 +235,10 @@ public class VoidInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						 backend.funcVoid();
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
