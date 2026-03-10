@@ -22,6 +22,9 @@ import android.util.Log;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }}EventListener;
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Name }};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.Abstract{{Camel .Interface.Name}};
+{{- if .Interface.Operations }}
+import {{camel .Module.Name}}.{{camel .Module.Name}}_api.RemoteOperationException;
+{{- end }}
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Interface.Name}}MessageType;
 
 import java.util.Map;
@@ -329,8 +332,13 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
             return resFuture.get();
             {{- end }}
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(cause);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }
@@ -353,16 +361,24 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 
         {{javaAsyncReturn "" .Return}}  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                Log.w(TAG, "{{.Name}}: received null bundle (service disconnected?)");
+                future.completeExceptionally(new RemoteOperationException("service disconnected", RemoteOperationException.ERROR_SERVICE_DISCONNECTED));
+                return;
+            }
+            if (bundle.getBoolean("error", false))
+            {
+                String errorMessage = bundle.getString("errorMessage", "unknown error");
+                int errorCode = bundle.getInt("errorCode", RemoteOperationException.ERROR_UNKNOWN);
+                Log.w(TAG, "{{.Name}} failed: " + errorMessage);
+                future.completeExceptionally(new RemoteOperationException(errorMessage, errorCode));
+                return;
+            }
         {{- if .Return.IsVoid }}
             future.complete(null);
             Log.v(TAG, "resolve {{.Name }}");
         {{- else }}
-            if (bundle == null)
-            {
-                future.complete(null);
-                Log.v(TAG, "received null bundle, resolving {{.Name}} with null");
-                return;
-            }
             {{template "getResultFromBundle" . }}
             Log.v(TAG, "resolve {{.Name }}" + result);
             future.complete(result);
