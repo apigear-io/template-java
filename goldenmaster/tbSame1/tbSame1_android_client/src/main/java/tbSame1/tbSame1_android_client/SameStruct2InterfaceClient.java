@@ -25,6 +25,7 @@ import tbSame1.tbSame1_android_messenger.Struct2Parcelable;
 import tbSame1.tbSame1_api.ISameStruct2InterfaceEventListener;
 import tbSame1.tbSame1_api.ISameStruct2Interface;
 import tbSame1.tbSame1_api.AbstractSameStruct2Interface;
+import tbSame1.tbSame1_api.RemoteOperationException;
 import tbSame1.tbSame1_android_messenger.SameStruct2InterfaceMessageType;
 
 import java.util.Map;
@@ -386,8 +387,13 @@ public class SameStruct2InterfaceClient extends AbstractSameStruct2Interface imp
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(cause);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }
@@ -410,8 +416,16 @@ public class SameStruct2InterfaceClient extends AbstractSameStruct2Interface imp
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
-                future.complete(null);
-                Log.v(TAG, "received null bundle, resolving func1 with null");
+                Log.w(TAG, "func1: received null bundle (service disconnected?)");
+                future.completeExceptionally(new RemoteOperationException("service disconnected", RemoteOperationException.ERROR_SERVICE_DISCONNECTED));
+                return;
+            }
+            if (bundle.getBoolean("error", false))
+            {
+                String errorMessage = bundle.getString("errorMessage", "unknown error");
+                int errorCode = bundle.getInt("errorCode", RemoteOperationException.ERROR_UNKNOWN);
+                Log.w(TAG, "func1 failed: " + errorMessage);
+                future.completeExceptionally(new RemoteOperationException(errorMessage, errorCode));
                 return;
             }
             
@@ -434,8 +448,13 @@ public class SameStruct2InterfaceClient extends AbstractSameStruct2Interface imp
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(cause);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }
@@ -460,8 +479,16 @@ public class SameStruct2InterfaceClient extends AbstractSameStruct2Interface imp
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
-                future.complete(null);
-                Log.v(TAG, "received null bundle, resolving func2 with null");
+                Log.w(TAG, "func2: received null bundle (service disconnected?)");
+                future.completeExceptionally(new RemoteOperationException("service disconnected", RemoteOperationException.ERROR_SERVICE_DISCONNECTED));
+                return;
+            }
+            if (bundle.getBoolean("error", false))
+            {
+                String errorMessage = bundle.getString("errorMessage", "unknown error");
+                int errorCode = bundle.getInt("errorCode", RemoteOperationException.ERROR_UNKNOWN);
+                Log.w(TAG, "func2 failed: " + errorMessage);
+                future.completeExceptionally(new RemoteOperationException(errorMessage, errorCode));
                 return;
             }
             

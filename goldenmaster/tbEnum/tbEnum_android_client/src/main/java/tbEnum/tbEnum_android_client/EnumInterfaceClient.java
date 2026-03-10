@@ -29,6 +29,7 @@ import tbEnum.tbEnum_android_messenger.Enum3Parcelable;
 import tbEnum.tbEnum_api.IEnumInterfaceEventListener;
 import tbEnum.tbEnum_api.IEnumInterface;
 import tbEnum.tbEnum_api.AbstractEnumInterface;
+import tbEnum.tbEnum_api.RemoteOperationException;
 import tbEnum.tbEnum_android_messenger.EnumInterfaceMessageType;
 
 import java.util.Map;
@@ -540,8 +541,13 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(cause);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }
@@ -564,8 +570,16 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
-                future.complete(null);
-                Log.v(TAG, "received null bundle, resolving func0 with null");
+                Log.w(TAG, "func0: received null bundle (service disconnected?)");
+                future.completeExceptionally(new RemoteOperationException("service disconnected", RemoteOperationException.ERROR_SERVICE_DISCONNECTED));
+                return;
+            }
+            if (bundle.getBoolean("error", false))
+            {
+                String errorMessage = bundle.getString("errorMessage", "unknown error");
+                int errorCode = bundle.getInt("errorCode", RemoteOperationException.ERROR_UNKNOWN);
+                Log.w(TAG, "func0 failed: " + errorMessage);
+                future.completeExceptionally(new RemoteOperationException(errorMessage, errorCode));
                 return;
             }
             
@@ -588,8 +602,13 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(cause);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }
@@ -612,8 +631,16 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
-                future.complete(null);
-                Log.v(TAG, "received null bundle, resolving func1 with null");
+                Log.w(TAG, "func1: received null bundle (service disconnected?)");
+                future.completeExceptionally(new RemoteOperationException("service disconnected", RemoteOperationException.ERROR_SERVICE_DISCONNECTED));
+                return;
+            }
+            if (bundle.getBoolean("error", false))
+            {
+                String errorMessage = bundle.getString("errorMessage", "unknown error");
+                int errorCode = bundle.getInt("errorCode", RemoteOperationException.ERROR_UNKNOWN);
+                Log.w(TAG, "func1 failed: " + errorMessage);
+                future.completeExceptionally(new RemoteOperationException(errorMessage, errorCode));
                 return;
             }
             
@@ -636,8 +663,13 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(cause);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }
@@ -660,8 +692,16 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
-                future.complete(null);
-                Log.v(TAG, "received null bundle, resolving func2 with null");
+                Log.w(TAG, "func2: received null bundle (service disconnected?)");
+                future.completeExceptionally(new RemoteOperationException("service disconnected", RemoteOperationException.ERROR_SERVICE_DISCONNECTED));
+                return;
+            }
+            if (bundle.getBoolean("error", false))
+            {
+                String errorMessage = bundle.getString("errorMessage", "unknown error");
+                int errorCode = bundle.getInt("errorCode", RemoteOperationException.ERROR_UNKNOWN);
+                Log.w(TAG, "func2 failed: " + errorMessage);
+                future.completeExceptionally(new RemoteOperationException(errorMessage, errorCode));
                 return;
             }
             
@@ -684,8 +724,13 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(cause);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }
@@ -708,8 +753,16 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
-                future.complete(null);
-                Log.v(TAG, "received null bundle, resolving func3 with null");
+                Log.w(TAG, "func3: received null bundle (service disconnected?)");
+                future.completeExceptionally(new RemoteOperationException("service disconnected", RemoteOperationException.ERROR_SERVICE_DISCONNECTED));
+                return;
+            }
+            if (bundle.getBoolean("error", false))
+            {
+                String errorMessage = bundle.getString("errorMessage", "unknown error");
+                int errorCode = bundle.getInt("errorCode", RemoteOperationException.ERROR_UNKNOWN);
+                Log.w(TAG, "func3 failed: " + errorMessage);
+                future.completeExceptionally(new RemoteOperationException(errorMessage, errorCode));
                 return;
             }
             

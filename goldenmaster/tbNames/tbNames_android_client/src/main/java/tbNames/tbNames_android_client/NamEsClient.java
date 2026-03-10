@@ -23,6 +23,7 @@ import tbNames.tbNames_android_messenger.EnumWithUnderScoresParcelable;
 import tbNames.tbNames_api.INamEsEventListener;
 import tbNames.tbNames_api.INamEs;
 import tbNames.tbNames_api.AbstractNamEs;
+import tbNames.tbNames_api.RemoteOperationException;
 import tbNames.tbNames_android_messenger.NamEsMessageType;
 
 import java.util.Map;
@@ -470,8 +471,13 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
             resFuture.get();
             return;
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(cause);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }
@@ -492,6 +498,20 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
 
         CompletableFuture<Void>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                Log.w(TAG, "SOME_FUNCTION: received null bundle (service disconnected?)");
+                future.completeExceptionally(new RemoteOperationException("service disconnected", RemoteOperationException.ERROR_SERVICE_DISCONNECTED));
+                return;
+            }
+            if (bundle.getBoolean("error", false))
+            {
+                String errorMessage = bundle.getString("errorMessage", "unknown error");
+                int errorCode = bundle.getInt("errorCode", RemoteOperationException.ERROR_UNKNOWN);
+                Log.w(TAG, "SOME_FUNCTION failed: " + errorMessage);
+                future.completeExceptionally(new RemoteOperationException(errorMessage, errorCode));
+                return;
+            }
             future.complete(null);
             Log.v(TAG, "resolve SOME_FUNCTION");
         };
@@ -511,8 +531,13 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
             resFuture.get();
             return;
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            Throwable cause = e.getCause();
+            if (cause instanceof RuntimeException) {
+                throw (RuntimeException) cause;
+            }
+            throw new RuntimeException(cause);
         } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e);
         }
     }
@@ -533,6 +558,20 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
 
         CompletableFuture<Void>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
+            if (bundle == null)
+            {
+                Log.w(TAG, "Some_Function2: received null bundle (service disconnected?)");
+                future.completeExceptionally(new RemoteOperationException("service disconnected", RemoteOperationException.ERROR_SERVICE_DISCONNECTED));
+                return;
+            }
+            if (bundle.getBoolean("error", false))
+            {
+                String errorMessage = bundle.getString("errorMessage", "unknown error");
+                int errorCode = bundle.getInt("errorCode", RemoteOperationException.ERROR_UNKNOWN);
+                Log.w(TAG, "Some_Function2 failed: " + errorMessage);
+                future.completeExceptionally(new RemoteOperationException(errorMessage, errorCode));
+                return;
+            }
             future.complete(null);
             Log.v(TAG, "resolve Some_Function2");
         };
