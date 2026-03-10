@@ -200,16 +200,19 @@ public class SimpleLocalIfServiceAdapter extends Service
 			{
 				backend = SimpleLocalIfServiceAdapter.mBackendService;
 			}
+			SimpleLocalIfMessageType msgType =
+				SimpleLocalIfMessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if (SimpleLocalIfMessageType.fromInteger(msg.what) != SimpleLocalIfMessageType.REGISTER_CLIENT
-					&& SimpleLocalIfMessageType.fromInteger(msg.what) != SimpleLocalIfMessageType.UNREGISTER_CLIENT)
+				if (msgType != SimpleLocalIfMessageType.REGISTER_CLIENT
+					&& msgType != SimpleLocalIfMessageType.UNREGISTER_CLIENT
+					&& msgType != SimpleLocalIfMessageType.RPC_IntMethodReq)
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: SimpleLocalIfMessageType" + SimpleLocalIfMessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: SimpleLocalIfMessageType" + msgType );
 					return;
 				}
 			}
-			switch (SimpleLocalIfMessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
@@ -242,6 +245,10 @@ public class SimpleLocalIfServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						int result =  backend.intMethod(param);
 						
 		        resp_data.putInt("result", result);

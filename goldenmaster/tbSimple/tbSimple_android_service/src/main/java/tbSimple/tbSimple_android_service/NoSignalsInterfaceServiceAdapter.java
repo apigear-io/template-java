@@ -200,16 +200,20 @@ public class NoSignalsInterfaceServiceAdapter extends Service
 			{
 				backend = NoSignalsInterfaceServiceAdapter.mBackendService;
 			}
+			NoSignalsInterfaceMessageType msgType =
+				NoSignalsInterfaceMessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if (NoSignalsInterfaceMessageType.fromInteger(msg.what) != NoSignalsInterfaceMessageType.REGISTER_CLIENT
-					&& NoSignalsInterfaceMessageType.fromInteger(msg.what) != NoSignalsInterfaceMessageType.UNREGISTER_CLIENT)
+				if (msgType != NoSignalsInterfaceMessageType.REGISTER_CLIENT
+					&& msgType != NoSignalsInterfaceMessageType.UNREGISTER_CLIENT
+					&& msgType != NoSignalsInterfaceMessageType.RPC_FuncVoidReq
+					&& msgType != NoSignalsInterfaceMessageType.RPC_FuncBoolReq)
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: NoSignalsInterfaceMessageType" + NoSignalsInterfaceMessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: NoSignalsInterfaceMessageType" + msgType );
 					return;
 				}
 			}
-			switch (NoSignalsInterfaceMessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
@@ -248,6 +252,10 @@ public class NoSignalsInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						 backend.funcVoid();
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
@@ -298,6 +306,10 @@ public class NoSignalsInterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						boolean result =  backend.funcBool(paramBool);
 						
 		        resp_data.putBoolean("result", result);

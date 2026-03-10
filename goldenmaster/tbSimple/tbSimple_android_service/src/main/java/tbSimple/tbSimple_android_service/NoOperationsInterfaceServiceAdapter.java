@@ -199,16 +199,18 @@ public class NoOperationsInterfaceServiceAdapter extends Service
 			{
 				backend = NoOperationsInterfaceServiceAdapter.mBackendService;
 			}
+			NoOperationsInterfaceMessageType msgType =
+				NoOperationsInterfaceMessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if (NoOperationsInterfaceMessageType.fromInteger(msg.what) != NoOperationsInterfaceMessageType.REGISTER_CLIENT
-					&& NoOperationsInterfaceMessageType.fromInteger(msg.what) != NoOperationsInterfaceMessageType.UNREGISTER_CLIENT)
+				if (msgType != NoOperationsInterfaceMessageType.REGISTER_CLIENT
+					&& msgType != NoOperationsInterfaceMessageType.UNREGISTER_CLIENT)
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: NoOperationsInterfaceMessageType" + NoOperationsInterfaceMessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: NoOperationsInterfaceMessageType" + msgType );
 					return;
 				}
 			}
-			switch (NoOperationsInterfaceMessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));

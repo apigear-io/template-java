@@ -202,16 +202,19 @@ public class SameEnum1InterfaceServiceAdapter extends Service
 			{
 				backend = SameEnum1InterfaceServiceAdapter.mBackendService;
 			}
+			SameEnum1InterfaceMessageType msgType =
+				SameEnum1InterfaceMessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if (SameEnum1InterfaceMessageType.fromInteger(msg.what) != SameEnum1InterfaceMessageType.REGISTER_CLIENT
-					&& SameEnum1InterfaceMessageType.fromInteger(msg.what) != SameEnum1InterfaceMessageType.UNREGISTER_CLIENT)
+				if (msgType != SameEnum1InterfaceMessageType.REGISTER_CLIENT
+					&& msgType != SameEnum1InterfaceMessageType.UNREGISTER_CLIENT
+					&& msgType != SameEnum1InterfaceMessageType.RPC_Func1Req)
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: SameEnum1InterfaceMessageType" + SameEnum1InterfaceMessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: SameEnum1InterfaceMessageType" + msgType );
 					return;
 				}
 			}
-			switch (SameEnum1InterfaceMessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
@@ -246,6 +249,10 @@ public class SameEnum1InterfaceServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						Enum1 result =  backend.func1(param1);
 						
 		        resp_data.putParcelable("result", new Enum1Parcelable(result));

@@ -205,16 +205,21 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 			{
 				backend = {{Camel .Interface.Name }}ServiceAdapter.mBackendService;
 			}
+			{{Camel .Interface.Name}}MessageType msgType =
+				{{Camel .Interface.Name}}MessageType.fromInteger(msg.what);
 			if (backend == null || !backend._isReady())
 			{
-				if ({{Camel .Interface.Name}}MessageType.fromInteger(msg.what) != {{Camel .Interface.Name}}MessageType.REGISTER_CLIENT
-					&& {{Camel .Interface.Name}}MessageType.fromInteger(msg.what) != {{Camel .Interface.Name}}MessageType.UNREGISTER_CLIENT)
+				if (msgType != {{Camel .Interface.Name}}MessageType.REGISTER_CLIENT
+					&& msgType != {{Camel .Interface.Name}}MessageType.UNREGISTER_CLIENT
+					{{- range .Interface.Operations }}
+					&& msgType != {{$InterfaceName}}MessageType.RPC_{{Camel .Name}}Req
+					{{- end }})
 				{
-					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: {{Camel .Interface.Name}}MessageType" + {{Camel .Interface.Name}}MessageType.fromInteger(msg.what) );
+					Log.w(TAG, "Check if server is ready, messsage will be dropped. MsgType: {{Camel .Interface.Name}}MessageType" + msgType );
 					return;
 				}
 			}
-			switch ({{Camel .Interface.Name}}MessageType.fromInteger(msg.what))
+			switch (msgType)
 			{
 				case REGISTER_CLIENT:
 					addClientActivity(msg.replyTo, msg.getData().getString("connectionID", ""));
@@ -254,6 +259,10 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 					resp_data.putInt("callId", callId);
 
 					try {
+						if (backend == null || !backend._isReady()) {
+							throw new RemoteOperationException("service not ready",
+								RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						}
 						{{ if not .Return.IsVoid }}{{javaReturn "" .Return}} result = {{ end}} backend.{{camel .Name}}({{javaVars .Params}});
 						{{- if not .Return.IsVoid }}
 						{{ template "putResultIntoBundle" . }}
