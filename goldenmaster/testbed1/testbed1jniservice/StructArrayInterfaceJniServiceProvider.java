@@ -82,6 +82,10 @@ public class StructArrayInterfaceJniServiceProvider extends HandlerThread implem
 
 	public synchronized void clear()
 	{
+		if (jniService != null)
+		{
+			jniService.cancelAllPending();
+		}
 		jniService = null;
 	}
 }

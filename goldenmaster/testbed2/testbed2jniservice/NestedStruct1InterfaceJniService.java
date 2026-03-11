@@ -1,6 +1,5 @@
 package testbed2.testbed2jniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import testbed2.testbed2_api.INestedStruct1Interface;
@@ -9,13 +8,11 @@ import testbed2.testbed2_api.INestedStruct1InterfaceEventListener;
 import testbed2.testbed2_api.NestedStruct1;
 import testbed2.testbed2_android_messenger.NestedStruct1Parcelable;
 
-import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 public class NestedStruct1InterfaceJniService extends AbstractNestedStruct1Interface {
@@ -23,7 +20,8 @@ public class NestedStruct1InterfaceJniService extends AbstractNestedStruct1Inter
 
     private final static String TAG = "NestedStruct1InterfaceJniService";
     private static volatile boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ConcurrentHashMap<String, CompletableFuture<?>> pendingFutures
+        = new ConcurrentHashMap<>();
 
     public NestedStruct1InterfaceJniService()
     {
@@ -48,42 +46,85 @@ public class NestedStruct1InterfaceJniService extends AbstractNestedStruct1Inter
 
     @Override
     public void funcNoReturnValue(NestedStruct1 param1) {
-        Log.i(TAG, "request method funcNoReturnValue called, will call native");
-         nativeFuncNoReturnValue(param1);
+        Log.i(TAG, "request method funcNoReturnValue called");
+        try {
+            funcNoReturnValueAsync(param1).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "funcNoReturnValue sync call timed out");
+        } catch (Exception e) {
+            Log.w(TAG, "funcNoReturnValue sync call failed: " + e.getMessage());
+        }
     }
 
     @Override
-    public  CompletableFuture<Void> funcNoReturnValueAsync(NestedStruct1 param1) {
-        return CompletableFuture.runAsync(
-                () -> { funcNoReturnValue(param1); },
-                executor);
+    public CompletableFuture<Void> funcNoReturnValueAsync(NestedStruct1 param1) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeFuncNoReturnValueAsync(callId, param1);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for funcNoReturnValue"));
+        }
+        return future;
     }
 
     @Override
     public NestedStruct1 funcNoParams() {
-        Log.i(TAG, "request method funcNoParams called, will call native");
-        return nativeFuncNoParams();
+        Log.i(TAG, "request method funcNoParams called");
+        try {
+            return funcNoParamsAsync().get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "funcNoParams sync call timed out");
+            return new NestedStruct1();
+        } catch (Exception e) {
+            Log.w(TAG, "funcNoParams sync call failed: " + e.getMessage());
+            return new NestedStruct1();
+        }
     }
 
     @Override
-    public  CompletableFuture<NestedStruct1> funcNoParamsAsync() {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcNoParams(); },
-                executor);
+    public CompletableFuture<NestedStruct1> funcNoParamsAsync() {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeFuncNoParamsAsync(callId);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for funcNoParams"));
+        }
+        return future;
     }
 
     @Override
     public NestedStruct1 func1(NestedStruct1 param1) {
-        Log.i(TAG, "request method func1 called, will call native");
-        return nativeFunc1(param1);
+        Log.i(TAG, "request method func1 called");
+        try {
+            return func1Async(param1).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "func1 sync call timed out");
+            return new NestedStruct1();
+        } catch (Exception e) {
+            Log.w(TAG, "func1 sync call failed: " + e.getMessage());
+            return new NestedStruct1();
+        }
     }
 
     @Override
-    public  CompletableFuture<NestedStruct1> func1Async(NestedStruct1 param1) {
-        return CompletableFuture.supplyAsync(
-                () -> {return func1(param1); },
-                executor);
-    }    
+    public CompletableFuture<NestedStruct1> func1Async(NestedStruct1 param1) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeFunc1Async(callId, param1);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for func1"));
+        }
+        return future;
+    }
 
     @Override
     public boolean _isReady() {
@@ -94,14 +135,53 @@ public class NestedStruct1InterfaceJniService extends AbstractNestedStruct1Inter
     private native void nativeSetProp1(NestedStruct1 prop1);
     private native NestedStruct1 nativeGetProp1();
   
-    // methods
-    private native void nativeFuncNoReturnValue(NestedStruct1 param1);
-    private native NestedStruct1 nativeFuncNoParams();
-    private native NestedStruct1 nativeFunc1(NestedStruct1 param1);
+    // methods (async, returns false if native service unavailable)
+    private native boolean nativeFuncNoReturnValueAsync(String callId, NestedStruct1 param1);
+    private native boolean nativeFuncNoParamsAsync(String callId);
+    private native boolean nativeFunc1Async(String callId, NestedStruct1 param1);
 
     // Called by Native Impl Service
     public void nativeServiceReady(boolean value) {
         isServiceReady = value;
+        if (!value) {
+            cancelAllPending();
+        }
+    }
+
+    public void cancelAllPending() {
+        for (String callId : pendingFutures.keySet()) {
+            CompletableFuture<?> future = pendingFutures.remove(callId);
+            if (future != null) {
+                future.completeExceptionally(
+                    new IllegalStateException("Service disconnected"));
+            }
+        }
+    }
+
+    // Operation result callbacks (called by native C++ continuations)
+    public void onFuncNoReturnValueResult(String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Void> typedFuture = (CompletableFuture<Void>) future;
+            typedFuture.complete(null);
+        }
+    }
+    public void onFuncNoParamsResult(NestedStruct1 result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
+    }
+    public void onFunc1Result(NestedStruct1 result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
     }
 
     //In theory event listener interface

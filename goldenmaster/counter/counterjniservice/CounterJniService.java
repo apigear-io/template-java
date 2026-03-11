@@ -1,19 +1,16 @@
 package counter.counterjniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import counter.counter_api.ICounter;
 import counter.counter_api.AbstractCounter;
 import counter.counter_api.ICounterEventListener;
 
-import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 public class CounterJniService extends AbstractCounter {
@@ -21,7 +18,8 @@ public class CounterJniService extends AbstractCounter {
 
     private final static String TAG = "CounterJniService";
     private static volatile boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ConcurrentHashMap<String, CompletableFuture<?>> pendingFutures
+        = new ConcurrentHashMap<>();
 
     public CounterJniService()
     {
@@ -91,55 +89,115 @@ public class CounterJniService extends AbstractCounter {
 
     @Override
     public org.apache.commons.math3.geometry.euclidean.threed.Vector3D increment(org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec) {
-        Log.i(TAG, "request method increment called, will call native");
-        return nativeIncrement(vec);
+        Log.i(TAG, "request method increment called");
+        try {
+            return incrementAsync(vec).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "increment sync call timed out");
+            return new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0);
+        } catch (Exception e) {
+            Log.w(TAG, "increment sync call failed: " + e.getMessage());
+            return new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0);
+        }
     }
 
     @Override
-    public  CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> incrementAsync(org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec) {
-        return CompletableFuture.supplyAsync(
-                () -> {return increment(vec); },
-                executor);
+    public CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> incrementAsync(org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeIncrementAsync(callId, vec);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for increment"));
+        }
+        return future;
     }
 
     @Override
     public org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] incrementArray(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec) {
-        Log.i(TAG, "request method incrementArray called, will call native");
-        return nativeIncrementArray(vec);
+        Log.i(TAG, "request method incrementArray called");
+        try {
+            return incrementArrayAsync(vec).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "incrementArray sync call timed out");
+            return new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]{};
+        } catch (Exception e) {
+            Log.w(TAG, "incrementArray sync call failed: " + e.getMessage());
+            return new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]{};
+        }
     }
 
     @Override
-    public  CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]> incrementArrayAsync(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec) {
-        return CompletableFuture.supplyAsync(
-                () -> {return incrementArray(vec); },
-                executor);
+    public CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]> incrementArrayAsync(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeIncrementArrayAsync(callId, vec);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for incrementArray"));
+        }
+        return future;
     }
 
     @Override
     public customTypes.customTypes_api.Vector3D decrement(customTypes.customTypes_api.Vector3D vec) {
-        Log.i(TAG, "request method decrement called, will call native");
-        return nativeDecrement(vec);
+        Log.i(TAG, "request method decrement called");
+        try {
+            return decrementAsync(vec).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "decrement sync call timed out");
+            return new customTypes.customTypes_api.Vector3D();
+        } catch (Exception e) {
+            Log.w(TAG, "decrement sync call failed: " + e.getMessage());
+            return new customTypes.customTypes_api.Vector3D();
+        }
     }
 
     @Override
-    public  CompletableFuture<customTypes.customTypes_api.Vector3D> decrementAsync(customTypes.customTypes_api.Vector3D vec) {
-        return CompletableFuture.supplyAsync(
-                () -> {return decrement(vec); },
-                executor);
+    public CompletableFuture<customTypes.customTypes_api.Vector3D> decrementAsync(customTypes.customTypes_api.Vector3D vec) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeDecrementAsync(callId, vec);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for decrement"));
+        }
+        return future;
     }
 
     @Override
     public customTypes.customTypes_api.Vector3D[] decrementArray(customTypes.customTypes_api.Vector3D[] vec) {
-        Log.i(TAG, "request method decrementArray called, will call native");
-        return nativeDecrementArray(vec);
+        Log.i(TAG, "request method decrementArray called");
+        try {
+            return decrementArrayAsync(vec).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "decrementArray sync call timed out");
+            return new customTypes.customTypes_api.Vector3D[]{};
+        } catch (Exception e) {
+            Log.w(TAG, "decrementArray sync call failed: " + e.getMessage());
+            return new customTypes.customTypes_api.Vector3D[]{};
+        }
     }
 
     @Override
-    public  CompletableFuture<customTypes.customTypes_api.Vector3D[]> decrementArrayAsync(customTypes.customTypes_api.Vector3D[] vec) {
-        return CompletableFuture.supplyAsync(
-                () -> {return decrementArray(vec); },
-                executor);
-    }    
+    public CompletableFuture<customTypes.customTypes_api.Vector3D[]> decrementArrayAsync(customTypes.customTypes_api.Vector3D[] vec) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeDecrementArrayAsync(callId, vec);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for decrementArray"));
+        }
+        return future;
+    }
 
     @Override
     public boolean _isReady() {
@@ -159,15 +217,62 @@ public class CounterJniService extends AbstractCounter {
     private native void nativeSetExternVectorArray(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] extern_vectorArray);
     private native org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] nativeGetExternVectorArray();
   
-    // methods
-    private native org.apache.commons.math3.geometry.euclidean.threed.Vector3D nativeIncrement(org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec);
-    private native org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] nativeIncrementArray(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec);
-    private native customTypes.customTypes_api.Vector3D nativeDecrement(customTypes.customTypes_api.Vector3D vec);
-    private native customTypes.customTypes_api.Vector3D[] nativeDecrementArray(customTypes.customTypes_api.Vector3D[] vec);
+    // methods (async, returns false if native service unavailable)
+    private native boolean nativeIncrementAsync(String callId, org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec);
+    private native boolean nativeIncrementArrayAsync(String callId, org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec);
+    private native boolean nativeDecrementAsync(String callId, customTypes.customTypes_api.Vector3D vec);
+    private native boolean nativeDecrementArrayAsync(String callId, customTypes.customTypes_api.Vector3D[] vec);
 
     // Called by Native Impl Service
     public void nativeServiceReady(boolean value) {
         isServiceReady = value;
+        if (!value) {
+            cancelAllPending();
+        }
+    }
+
+    public void cancelAllPending() {
+        for (String callId : pendingFutures.keySet()) {
+            CompletableFuture<?> future = pendingFutures.remove(callId);
+            if (future != null) {
+                future.completeExceptionally(
+                    new IllegalStateException("Service disconnected"));
+            }
+        }
+    }
+
+    // Operation result callbacks (called by native C++ continuations)
+    public void onIncrementResult(org.apache.commons.math3.geometry.euclidean.threed.Vector3D result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
+    }
+    public void onIncrementArrayResult(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
+    }
+    public void onDecrementResult(customTypes.customTypes_api.Vector3D result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
+    }
+    public void onDecrementArrayResult(customTypes.customTypes_api.Vector3D[] result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
     }
 
     //In theory event listener interface

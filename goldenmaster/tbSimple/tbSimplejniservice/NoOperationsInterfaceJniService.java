@@ -1,19 +1,16 @@
 package tbSimple.tbSimplejniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import tbSimple.tbSimple_api.INoOperationsInterface;
 import tbSimple.tbSimple_api.AbstractNoOperationsInterface;
 import tbSimple.tbSimple_api.INoOperationsInterfaceEventListener;
 
-import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 public class NoOperationsInterfaceJniService extends AbstractNoOperationsInterface {
@@ -21,7 +18,8 @@ public class NoOperationsInterfaceJniService extends AbstractNoOperationsInterfa
 
     private final static String TAG = "NoOperationsInterfaceJniService";
     private static volatile boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ConcurrentHashMap<String, CompletableFuture<?>> pendingFutures
+        = new ConcurrentHashMap<>();
 
     public NoOperationsInterfaceJniService()
     {
@@ -57,7 +55,7 @@ public class NoOperationsInterfaceJniService extends AbstractNoOperationsInterfa
     }
 
   
-    // methods    
+    // methods
 
     @Override
     public boolean _isReady() {
@@ -71,12 +69,27 @@ public class NoOperationsInterfaceJniService extends AbstractNoOperationsInterfa
     private native void nativeSetPropInt(int propInt);
     private native int nativeGetPropInt();
   
-    // methods
+    // methods (async, returns false if native service unavailable)
 
     // Called by Native Impl Service
     public void nativeServiceReady(boolean value) {
         isServiceReady = value;
+        if (!value) {
+            cancelAllPending();
+        }
     }
+
+    public void cancelAllPending() {
+        for (String callId : pendingFutures.keySet()) {
+            CompletableFuture<?> future = pendingFutures.remove(callId);
+            if (future != null) {
+                future.completeExceptionally(
+                    new IllegalStateException("Service disconnected"));
+            }
+        }
+    }
+
+    // Operation result callbacks (called by native C++ continuations)
 
     //In theory event listener interface
     public void onPropBoolChanged(boolean newValue)

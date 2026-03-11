@@ -1,19 +1,16 @@
 package tbSimple.tbSimplejniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import tbSimple.tbSimple_api.INoPropertiesInterface;
 import tbSimple.tbSimple_api.AbstractNoPropertiesInterface;
 import tbSimple.tbSimple_api.INoPropertiesInterfaceEventListener;
 
-import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 public class NoPropertiesInterfaceJniService extends AbstractNoPropertiesInterface {
@@ -21,7 +18,8 @@ public class NoPropertiesInterfaceJniService extends AbstractNoPropertiesInterfa
 
     private final static String TAG = "NoPropertiesInterfaceJniService";
     private static volatile boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ConcurrentHashMap<String, CompletableFuture<?>> pendingFutures
+        = new ConcurrentHashMap<>();
 
     public NoPropertiesInterfaceJniService()
     {
@@ -31,29 +29,57 @@ public class NoPropertiesInterfaceJniService extends AbstractNoPropertiesInterfa
 
     @Override
     public void funcVoid() {
-        Log.i(TAG, "request method funcVoid called, will call native");
-         nativeFuncVoid();
+        Log.i(TAG, "request method funcVoid called");
+        try {
+            funcVoidAsync().get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "funcVoid sync call timed out");
+        } catch (Exception e) {
+            Log.w(TAG, "funcVoid sync call failed: " + e.getMessage());
+        }
     }
 
     @Override
-    public  CompletableFuture<Void> funcVoidAsync() {
-        return CompletableFuture.runAsync(
-                () -> { funcVoid(); },
-                executor);
+    public CompletableFuture<Void> funcVoidAsync() {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Void> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeFuncVoidAsync(callId);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for funcVoid"));
+        }
+        return future;
     }
 
     @Override
     public boolean funcBool(boolean paramBool) {
-        Log.i(TAG, "request method funcBool called, will call native");
-        return nativeFuncBool(paramBool);
+        Log.i(TAG, "request method funcBool called");
+        try {
+            return funcBoolAsync(paramBool).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "funcBool sync call timed out");
+            return false;
+        } catch (Exception e) {
+            Log.w(TAG, "funcBool sync call failed: " + e.getMessage());
+            return false;
+        }
     }
 
     @Override
-    public  CompletableFuture<Boolean> funcBoolAsync(boolean paramBool) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcBool(paramBool); },
-                executor);
-    }    
+    public CompletableFuture<Boolean> funcBoolAsync(boolean paramBool) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeFuncBoolAsync(callId, paramBool);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for funcBool"));
+        }
+        return future;
+    }
 
     @Override
     public boolean _isReady() {
@@ -61,13 +87,44 @@ public class NoPropertiesInterfaceJniService extends AbstractNoPropertiesInterfa
     }
 
     // Called on Native Impl Service
-    // methods
-    private native void nativeFuncVoid();
-    private native boolean nativeFuncBool(boolean paramBool);
+    // methods (async, returns false if native service unavailable)
+    private native boolean nativeFuncVoidAsync(String callId);
+    private native boolean nativeFuncBoolAsync(String callId, boolean paramBool);
 
     // Called by Native Impl Service
     public void nativeServiceReady(boolean value) {
         isServiceReady = value;
+        if (!value) {
+            cancelAllPending();
+        }
+    }
+
+    public void cancelAllPending() {
+        for (String callId : pendingFutures.keySet()) {
+            CompletableFuture<?> future = pendingFutures.remove(callId);
+            if (future != null) {
+                future.completeExceptionally(
+                    new IllegalStateException("Service disconnected"));
+            }
+        }
+    }
+
+    // Operation result callbacks (called by native C++ continuations)
+    public void onFuncVoidResult(String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Void> typedFuture = (CompletableFuture<Void>) future;
+            typedFuture.complete(null);
+        }
+    }
+    public void onFuncBoolResult(boolean result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
     }
 
     //In theory event listener interface

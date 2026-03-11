@@ -1,19 +1,16 @@
 package testbed2.testbed2jniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import testbed2.testbed2_api.IManyParamInterface;
 import testbed2.testbed2_api.AbstractManyParamInterface;
 import testbed2.testbed2_api.IManyParamInterfaceEventListener;
 
-import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 public class ManyParamInterfaceJniService extends AbstractManyParamInterface {
@@ -21,7 +18,8 @@ public class ManyParamInterfaceJniService extends AbstractManyParamInterface {
 
     private final static String TAG = "ManyParamInterfaceJniService";
     private static volatile boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ConcurrentHashMap<String, CompletableFuture<?>> pendingFutures
+        = new ConcurrentHashMap<>();
 
     public ManyParamInterfaceJniService()
     {
@@ -91,55 +89,115 @@ public class ManyParamInterfaceJniService extends AbstractManyParamInterface {
 
     @Override
     public int func1(int param1) {
-        Log.i(TAG, "request method func1 called, will call native");
-        return nativeFunc1(param1);
+        Log.i(TAG, "request method func1 called");
+        try {
+            return func1Async(param1).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "func1 sync call timed out");
+            return 0;
+        } catch (Exception e) {
+            Log.w(TAG, "func1 sync call failed: " + e.getMessage());
+            return 0;
+        }
     }
 
     @Override
-    public  CompletableFuture<Integer> func1Async(int param1) {
-        return CompletableFuture.supplyAsync(
-                () -> {return func1(param1); },
-                executor);
+    public CompletableFuture<Integer> func1Async(int param1) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeFunc1Async(callId, param1);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for func1"));
+        }
+        return future;
     }
 
     @Override
     public int func2(int param1, int param2) {
-        Log.i(TAG, "request method func2 called, will call native");
-        return nativeFunc2(param1, param2);
+        Log.i(TAG, "request method func2 called");
+        try {
+            return func2Async(param1, param2).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "func2 sync call timed out");
+            return 0;
+        } catch (Exception e) {
+            Log.w(TAG, "func2 sync call failed: " + e.getMessage());
+            return 0;
+        }
     }
 
     @Override
-    public  CompletableFuture<Integer> func2Async(int param1, int param2) {
-        return CompletableFuture.supplyAsync(
-                () -> {return func2(param1, param2); },
-                executor);
+    public CompletableFuture<Integer> func2Async(int param1, int param2) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeFunc2Async(callId, param1, param2);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for func2"));
+        }
+        return future;
     }
 
     @Override
     public int func3(int param1, int param2, int param3) {
-        Log.i(TAG, "request method func3 called, will call native");
-        return nativeFunc3(param1, param2, param3);
+        Log.i(TAG, "request method func3 called");
+        try {
+            return func3Async(param1, param2, param3).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "func3 sync call timed out");
+            return 0;
+        } catch (Exception e) {
+            Log.w(TAG, "func3 sync call failed: " + e.getMessage());
+            return 0;
+        }
     }
 
     @Override
-    public  CompletableFuture<Integer> func3Async(int param1, int param2, int param3) {
-        return CompletableFuture.supplyAsync(
-                () -> {return func3(param1, param2, param3); },
-                executor);
+    public CompletableFuture<Integer> func3Async(int param1, int param2, int param3) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeFunc3Async(callId, param1, param2, param3);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for func3"));
+        }
+        return future;
     }
 
     @Override
     public int func4(int param1, int param2, int param3, int param4) {
-        Log.i(TAG, "request method func4 called, will call native");
-        return nativeFunc4(param1, param2, param3, param4);
+        Log.i(TAG, "request method func4 called");
+        try {
+            return func4Async(param1, param2, param3, param4).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "func4 sync call timed out");
+            return 0;
+        } catch (Exception e) {
+            Log.w(TAG, "func4 sync call failed: " + e.getMessage());
+            return 0;
+        }
     }
 
     @Override
-    public  CompletableFuture<Integer> func4Async(int param1, int param2, int param3, int param4) {
-        return CompletableFuture.supplyAsync(
-                () -> {return func4(param1, param2, param3, param4); },
-                executor);
-    }    
+    public CompletableFuture<Integer> func4Async(int param1, int param2, int param3, int param4) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeFunc4Async(callId, param1, param2, param3, param4);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for func4"));
+        }
+        return future;
+    }
 
     @Override
     public boolean _isReady() {
@@ -159,15 +217,62 @@ public class ManyParamInterfaceJniService extends AbstractManyParamInterface {
     private native void nativeSetProp4(int prop4);
     private native int nativeGetProp4();
   
-    // methods
-    private native int nativeFunc1(int param1);
-    private native int nativeFunc2(int param1, int param2);
-    private native int nativeFunc3(int param1, int param2, int param3);
-    private native int nativeFunc4(int param1, int param2, int param3, int param4);
+    // methods (async, returns false if native service unavailable)
+    private native boolean nativeFunc1Async(String callId, int param1);
+    private native boolean nativeFunc2Async(String callId, int param1, int param2);
+    private native boolean nativeFunc3Async(String callId, int param1, int param2, int param3);
+    private native boolean nativeFunc4Async(String callId, int param1, int param2, int param3, int param4);
 
     // Called by Native Impl Service
     public void nativeServiceReady(boolean value) {
         isServiceReady = value;
+        if (!value) {
+            cancelAllPending();
+        }
+    }
+
+    public void cancelAllPending() {
+        for (String callId : pendingFutures.keySet()) {
+            CompletableFuture<?> future = pendingFutures.remove(callId);
+            if (future != null) {
+                future.completeExceptionally(
+                    new IllegalStateException("Service disconnected"));
+            }
+        }
+    }
+
+    // Operation result callbacks (called by native C++ continuations)
+    public void onFunc1Result(int result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
+    }
+    public void onFunc2Result(int result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
+    }
+    public void onFunc3Result(int result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
+    }
+    public void onFunc4Result(int result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
     }
 
     //In theory event listener interface

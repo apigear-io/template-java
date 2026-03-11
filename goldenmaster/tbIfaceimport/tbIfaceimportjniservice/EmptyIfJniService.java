@@ -1,19 +1,16 @@
 package tbIfaceimport.tbIfaceimportjniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import tbIfaceimport.tbIfaceimport_api.IEmptyIf;
 import tbIfaceimport.tbIfaceimport_api.AbstractEmptyIf;
 import tbIfaceimport.tbIfaceimport_api.IEmptyIfEventListener;
 
-import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 public class EmptyIfJniService extends AbstractEmptyIf {
@@ -21,13 +18,14 @@ public class EmptyIfJniService extends AbstractEmptyIf {
 
     private final static String TAG = "EmptyIfJniService";
     private static volatile boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ConcurrentHashMap<String, CompletableFuture<?>> pendingFutures
+        = new ConcurrentHashMap<>();
 
     public EmptyIfJniService()
     {
         fire_readyStatusChanged(true);
     }
-    // methods    
+    // methods
 
     @Override
     public boolean _isReady() {
@@ -35,12 +33,27 @@ public class EmptyIfJniService extends AbstractEmptyIf {
     }
 
     // Called on Native Impl Service
-    // methods
+    // methods (async, returns false if native service unavailable)
 
     // Called by Native Impl Service
     public void nativeServiceReady(boolean value) {
         isServiceReady = value;
+        if (!value) {
+            cancelAllPending();
+        }
     }
+
+    public void cancelAllPending() {
+        for (String callId : pendingFutures.keySet()) {
+            CompletableFuture<?> future = pendingFutures.remove(callId);
+            if (future != null) {
+                future.completeExceptionally(
+                    new IllegalStateException("Service disconnected"));
+            }
+        }
+    }
+
+    // Operation result callbacks (called by native C++ continuations)
 
     //In theory event listener interface
 

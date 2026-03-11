@@ -82,6 +82,10 @@ public class SimpleLocalIfJniServiceProvider extends HandlerThread implements IS
 
 	public synchronized void clear()
 	{
+		if (jniService != null)
+		{
+			jniService.cancelAllPending();
+		}
 		jniService = null;
 	}
 }

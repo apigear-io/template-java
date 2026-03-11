@@ -82,6 +82,10 @@ public class NoSignalsInterfaceJniServiceProvider extends HandlerThread implemen
 
 	public synchronized void clear()
 	{
+		if (jniService != null)
+		{
+			jniService.cancelAllPending();
+		}
 		jniService = null;
 	}
 }

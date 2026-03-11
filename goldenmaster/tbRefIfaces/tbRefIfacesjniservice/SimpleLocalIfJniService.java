@@ -1,19 +1,16 @@
 package tbRefIfaces.tbRefIfacesjniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_api.AbstractSimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIfEventListener;
 
-import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 public class SimpleLocalIfJniService extends AbstractSimpleLocalIf {
@@ -21,7 +18,8 @@ public class SimpleLocalIfJniService extends AbstractSimpleLocalIf {
 
     private final static String TAG = "SimpleLocalIfJniService";
     private static volatile boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ConcurrentHashMap<String, CompletableFuture<?>> pendingFutures
+        = new ConcurrentHashMap<>();
 
     public SimpleLocalIfJniService()
     {
@@ -46,16 +44,31 @@ public class SimpleLocalIfJniService extends AbstractSimpleLocalIf {
 
     @Override
     public int intMethod(int param) {
-        Log.i(TAG, "request method intMethod called, will call native");
-        return nativeIntMethod(param);
+        Log.i(TAG, "request method intMethod called");
+        try {
+            return intMethodAsync(param).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "intMethod sync call timed out");
+            return 0;
+        } catch (Exception e) {
+            Log.w(TAG, "intMethod sync call failed: " + e.getMessage());
+            return 0;
+        }
     }
 
     @Override
-    public  CompletableFuture<Integer> intMethodAsync(int param) {
-        return CompletableFuture.supplyAsync(
-                () -> {return intMethod(param); },
-                executor);
-    }    
+    public CompletableFuture<Integer> intMethodAsync(int param) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeIntMethodAsync(callId, param);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for intMethod"));
+        }
+        return future;
+    }
 
     @Override
     public boolean _isReady() {
@@ -66,12 +79,35 @@ public class SimpleLocalIfJniService extends AbstractSimpleLocalIf {
     private native void nativeSetIntProperty(int intProperty);
     private native int nativeGetIntProperty();
   
-    // methods
-    private native int nativeIntMethod(int param);
+    // methods (async, returns false if native service unavailable)
+    private native boolean nativeIntMethodAsync(String callId, int param);
 
     // Called by Native Impl Service
     public void nativeServiceReady(boolean value) {
         isServiceReady = value;
+        if (!value) {
+            cancelAllPending();
+        }
+    }
+
+    public void cancelAllPending() {
+        for (String callId : pendingFutures.keySet()) {
+            CompletableFuture<?> future = pendingFutures.remove(callId);
+            if (future != null) {
+                future.completeExceptionally(
+                    new IllegalStateException("Service disconnected"));
+            }
+        }
+    }
+
+    // Operation result callbacks (called by native C++ continuations)
+    public void onIntMethodResult(int result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
     }
 
     //In theory event listener interface

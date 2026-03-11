@@ -1,6 +1,5 @@
 package tbRefIfaces.tbRefIfacesjniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import tbRefIfaces.tbRefIfaces_api.IParentIf;
@@ -9,13 +8,11 @@ import tbRefIfaces.tbRefIfaces_api.IParentIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_android_messenger.SimpleLocalIfParcelable;
 
-import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 public class ParentIfJniService extends AbstractParentIf {
@@ -23,7 +20,8 @@ public class ParentIfJniService extends AbstractParentIf {
 
     private final static String TAG = "ParentIfJniService";
     private static volatile boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ConcurrentHashMap<String, CompletableFuture<?>> pendingFutures
+        = new ConcurrentHashMap<>();
 
     public ParentIfJniService()
     {
@@ -93,55 +91,115 @@ public class ParentIfJniService extends AbstractParentIf {
 
     @Override
     public ISimpleLocalIf localIfMethod(ISimpleLocalIf param) {
-        Log.i(TAG, "request method localIfMethod called, will call native");
-        return nativeLocalIfMethod(param);
+        Log.i(TAG, "request method localIfMethod called");
+        try {
+            return localIfMethodAsync(param).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "localIfMethod sync call timed out");
+            return null;
+        } catch (Exception e) {
+            Log.w(TAG, "localIfMethod sync call failed: " + e.getMessage());
+            return null;
+        }
     }
 
     @Override
-    public  CompletableFuture<ISimpleLocalIf> localIfMethodAsync(ISimpleLocalIf param) {
-        return CompletableFuture.supplyAsync(
-                () -> {return localIfMethod(param); },
-                executor);
+    public CompletableFuture<ISimpleLocalIf> localIfMethodAsync(ISimpleLocalIf param) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeLocalIfMethodAsync(callId, param);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for localIfMethod"));
+        }
+        return future;
     }
 
     @Override
     public ISimpleLocalIf[] localIfMethodList(ISimpleLocalIf[] param) {
-        Log.i(TAG, "request method localIfMethodList called, will call native");
-        return nativeLocalIfMethodList(param);
+        Log.i(TAG, "request method localIfMethodList called");
+        try {
+            return localIfMethodListAsync(param).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "localIfMethodList sync call timed out");
+            return new ISimpleLocalIf[]{};
+        } catch (Exception e) {
+            Log.w(TAG, "localIfMethodList sync call failed: " + e.getMessage());
+            return new ISimpleLocalIf[]{};
+        }
     }
 
     @Override
-    public  CompletableFuture<ISimpleLocalIf[]> localIfMethodListAsync(ISimpleLocalIf[] param) {
-        return CompletableFuture.supplyAsync(
-                () -> {return localIfMethodList(param); },
-                executor);
+    public CompletableFuture<ISimpleLocalIf[]> localIfMethodListAsync(ISimpleLocalIf[] param) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeLocalIfMethodListAsync(callId, param);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for localIfMethodList"));
+        }
+        return future;
     }
 
     @Override
     public tbIfaceimport.tbIfaceimport_api.IEmptyIf importedIfMethod(tbIfaceimport.tbIfaceimport_api.IEmptyIf param) {
-        Log.i(TAG, "request method importedIfMethod called, will call native");
-        return nativeImportedIfMethod(param);
+        Log.i(TAG, "request method importedIfMethod called");
+        try {
+            return importedIfMethodAsync(param).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "importedIfMethod sync call timed out");
+            return null;
+        } catch (Exception e) {
+            Log.w(TAG, "importedIfMethod sync call failed: " + e.getMessage());
+            return null;
+        }
     }
 
     @Override
-    public  CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf> importedIfMethodAsync(tbIfaceimport.tbIfaceimport_api.IEmptyIf param) {
-        return CompletableFuture.supplyAsync(
-                () -> {return importedIfMethod(param); },
-                executor);
+    public CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf> importedIfMethodAsync(tbIfaceimport.tbIfaceimport_api.IEmptyIf param) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeImportedIfMethodAsync(callId, param);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for importedIfMethod"));
+        }
+        return future;
     }
 
     @Override
     public tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfMethodList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param) {
-        Log.i(TAG, "request method importedIfMethodList called, will call native");
-        return nativeImportedIfMethodList(param);
+        Log.i(TAG, "request method importedIfMethodList called");
+        try {
+            return importedIfMethodListAsync(param).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "importedIfMethodList sync call timed out");
+            return new tbIfaceimport.tbIfaceimport_api.IEmptyIf[]{};
+        } catch (Exception e) {
+            Log.w(TAG, "importedIfMethodList sync call failed: " + e.getMessage());
+            return new tbIfaceimport.tbIfaceimport_api.IEmptyIf[]{};
+        }
     }
 
     @Override
-    public  CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf[]> importedIfMethodListAsync(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param) {
-        return CompletableFuture.supplyAsync(
-                () -> {return importedIfMethodList(param); },
-                executor);
-    }    
+    public CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf[]> importedIfMethodListAsync(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeImportedIfMethodListAsync(callId, param);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for importedIfMethodList"));
+        }
+        return future;
+    }
 
     @Override
     public boolean _isReady() {
@@ -161,15 +219,62 @@ public class ParentIfJniService extends AbstractParentIf {
     private native void nativeSetImportedIfList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfList);
     private native tbIfaceimport.tbIfaceimport_api.IEmptyIf[] nativeGetImportedIfList();
   
-    // methods
-    private native ISimpleLocalIf nativeLocalIfMethod(ISimpleLocalIf param);
-    private native ISimpleLocalIf[] nativeLocalIfMethodList(ISimpleLocalIf[] param);
-    private native tbIfaceimport.tbIfaceimport_api.IEmptyIf nativeImportedIfMethod(tbIfaceimport.tbIfaceimport_api.IEmptyIf param);
-    private native tbIfaceimport.tbIfaceimport_api.IEmptyIf[] nativeImportedIfMethodList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param);
+    // methods (async, returns false if native service unavailable)
+    private native boolean nativeLocalIfMethodAsync(String callId, ISimpleLocalIf param);
+    private native boolean nativeLocalIfMethodListAsync(String callId, ISimpleLocalIf[] param);
+    private native boolean nativeImportedIfMethodAsync(String callId, tbIfaceimport.tbIfaceimport_api.IEmptyIf param);
+    private native boolean nativeImportedIfMethodListAsync(String callId, tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param);
 
     // Called by Native Impl Service
     public void nativeServiceReady(boolean value) {
         isServiceReady = value;
+        if (!value) {
+            cancelAllPending();
+        }
+    }
+
+    public void cancelAllPending() {
+        for (String callId : pendingFutures.keySet()) {
+            CompletableFuture<?> future = pendingFutures.remove(callId);
+            if (future != null) {
+                future.completeExceptionally(
+                    new IllegalStateException("Service disconnected"));
+            }
+        }
+    }
+
+    // Operation result callbacks (called by native C++ continuations)
+    public void onLocalIfMethodResult(ISimpleLocalIf result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
+    }
+    public void onLocalIfMethodListResult(ISimpleLocalIf[] result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
+    }
+    public void onImportedIfMethodResult(tbIfaceimport.tbIfaceimport_api.IEmptyIf result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
+    }
+    public void onImportedIfMethodListResult(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
     }
 
     //In theory event listener interface

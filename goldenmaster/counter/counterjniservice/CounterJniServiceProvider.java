@@ -82,6 +82,10 @@ public class CounterJniServiceProvider extends HandlerThread implements ICounter
 
 	public synchronized void clear()
 	{
+		if (jniService != null)
+		{
+			jniService.cancelAllPending();
+		}
 		jniService = null;
 	}
 }

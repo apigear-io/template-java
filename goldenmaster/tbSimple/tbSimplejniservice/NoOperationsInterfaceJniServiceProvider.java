@@ -82,6 +82,10 @@ public class NoOperationsInterfaceJniServiceProvider extends HandlerThread imple
 
 	public synchronized void clear()
 	{
+		if (jniService != null)
+		{
+			jniService.cancelAllPending();
+		}
 		jniService = null;
 	}
 }

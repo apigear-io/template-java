@@ -82,6 +82,10 @@ public class ParentIfJniServiceProvider extends HandlerThread implements IParent
 
 	public synchronized void clear()
 	{
+		if (jniService != null)
+		{
+			jniService.cancelAllPending();
+		}
 		jniService = null;
 	}
 }

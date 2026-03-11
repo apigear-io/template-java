@@ -82,6 +82,10 @@ public class EmptyIfJniServiceProvider extends HandlerThread implements IEmptyIf
 
 	public synchronized void clear()
 	{
+		if (jniService != null)
+		{
+			jniService.cancelAllPending();
+		}
 		jniService = null;
 	}
 }

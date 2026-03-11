@@ -82,6 +82,10 @@ public class {{Camel .Interface.Name}}JniServiceProvider extends HandlerThread i
 
 	public synchronized void clear()
 	{
+		if (jniService != null)
+		{
+			jniService.cancelAllPending();
+		}
 		jniService = null;
 	}
 }

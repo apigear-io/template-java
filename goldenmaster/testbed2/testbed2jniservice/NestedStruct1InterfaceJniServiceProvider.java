@@ -82,6 +82,10 @@ public class NestedStruct1InterfaceJniServiceProvider extends HandlerThread impl
 
 	public synchronized void clear()
 	{
+		if (jniService != null)
+		{
+			jniService.cancelAllPending();
+		}
 		jniService = null;
 	}
 }

@@ -82,6 +82,10 @@ public class EnumInterfaceJniServiceProvider extends HandlerThread implements IE
 
 	public synchronized void clear()
 	{
+		if (jniService != null)
+		{
+			jniService.cancelAllPending();
+		}
 		jniService = null;
 	}
 }

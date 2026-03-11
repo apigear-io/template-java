@@ -1,6 +1,5 @@
 package testbed1.testbed1jniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import testbed1.testbed1_api.IStructInterface;
@@ -15,13 +14,11 @@ import testbed1.testbed1_android_messenger.StructIntParcelable;
 import testbed1.testbed1_api.StructString;
 import testbed1.testbed1_android_messenger.StructStringParcelable;
 
-import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 public class StructInterfaceJniService extends AbstractStructInterface {
@@ -29,7 +26,8 @@ public class StructInterfaceJniService extends AbstractStructInterface {
 
     private final static String TAG = "StructInterfaceJniService";
     private static volatile boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ConcurrentHashMap<String, CompletableFuture<?>> pendingFutures
+        = new ConcurrentHashMap<>();
 
     public StructInterfaceJniService()
     {
@@ -99,55 +97,115 @@ public class StructInterfaceJniService extends AbstractStructInterface {
 
     @Override
     public StructBool funcBool(StructBool paramBool) {
-        Log.i(TAG, "request method funcBool called, will call native");
-        return nativeFuncBool(paramBool);
+        Log.i(TAG, "request method funcBool called");
+        try {
+            return funcBoolAsync(paramBool).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "funcBool sync call timed out");
+            return new StructBool();
+        } catch (Exception e) {
+            Log.w(TAG, "funcBool sync call failed: " + e.getMessage());
+            return new StructBool();
+        }
     }
 
     @Override
-    public  CompletableFuture<StructBool> funcBoolAsync(StructBool paramBool) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcBool(paramBool); },
-                executor);
+    public CompletableFuture<StructBool> funcBoolAsync(StructBool paramBool) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeFuncBoolAsync(callId, paramBool);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for funcBool"));
+        }
+        return future;
     }
 
     @Override
     public StructInt funcInt(StructInt paramInt) {
-        Log.i(TAG, "request method funcInt called, will call native");
-        return nativeFuncInt(paramInt);
+        Log.i(TAG, "request method funcInt called");
+        try {
+            return funcIntAsync(paramInt).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "funcInt sync call timed out");
+            return new StructInt();
+        } catch (Exception e) {
+            Log.w(TAG, "funcInt sync call failed: " + e.getMessage());
+            return new StructInt();
+        }
     }
 
     @Override
-    public  CompletableFuture<StructInt> funcIntAsync(StructInt paramInt) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcInt(paramInt); },
-                executor);
+    public CompletableFuture<StructInt> funcIntAsync(StructInt paramInt) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeFuncIntAsync(callId, paramInt);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for funcInt"));
+        }
+        return future;
     }
 
     @Override
     public StructFloat funcFloat(StructFloat paramFloat) {
-        Log.i(TAG, "request method funcFloat called, will call native");
-        return nativeFuncFloat(paramFloat);
+        Log.i(TAG, "request method funcFloat called");
+        try {
+            return funcFloatAsync(paramFloat).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "funcFloat sync call timed out");
+            return new StructFloat();
+        } catch (Exception e) {
+            Log.w(TAG, "funcFloat sync call failed: " + e.getMessage());
+            return new StructFloat();
+        }
     }
 
     @Override
-    public  CompletableFuture<StructFloat> funcFloatAsync(StructFloat paramFloat) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcFloat(paramFloat); },
-                executor);
+    public CompletableFuture<StructFloat> funcFloatAsync(StructFloat paramFloat) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeFuncFloatAsync(callId, paramFloat);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for funcFloat"));
+        }
+        return future;
     }
 
     @Override
     public StructString funcString(StructString paramString) {
-        Log.i(TAG, "request method funcString called, will call native");
-        return nativeFuncString(paramString);
+        Log.i(TAG, "request method funcString called");
+        try {
+            return funcStringAsync(paramString).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "funcString sync call timed out");
+            return new StructString();
+        } catch (Exception e) {
+            Log.w(TAG, "funcString sync call failed: " + e.getMessage());
+            return new StructString();
+        }
     }
 
     @Override
-    public  CompletableFuture<StructString> funcStringAsync(StructString paramString) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcString(paramString); },
-                executor);
-    }    
+    public CompletableFuture<StructString> funcStringAsync(StructString paramString) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeFuncStringAsync(callId, paramString);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for funcString"));
+        }
+        return future;
+    }
 
     @Override
     public boolean _isReady() {
@@ -167,15 +225,62 @@ public class StructInterfaceJniService extends AbstractStructInterface {
     private native void nativeSetPropString(StructString propString);
     private native StructString nativeGetPropString();
   
-    // methods
-    private native StructBool nativeFuncBool(StructBool paramBool);
-    private native StructInt nativeFuncInt(StructInt paramInt);
-    private native StructFloat nativeFuncFloat(StructFloat paramFloat);
-    private native StructString nativeFuncString(StructString paramString);
+    // methods (async, returns false if native service unavailable)
+    private native boolean nativeFuncBoolAsync(String callId, StructBool paramBool);
+    private native boolean nativeFuncIntAsync(String callId, StructInt paramInt);
+    private native boolean nativeFuncFloatAsync(String callId, StructFloat paramFloat);
+    private native boolean nativeFuncStringAsync(String callId, StructString paramString);
 
     // Called by Native Impl Service
     public void nativeServiceReady(boolean value) {
         isServiceReady = value;
+        if (!value) {
+            cancelAllPending();
+        }
+    }
+
+    public void cancelAllPending() {
+        for (String callId : pendingFutures.keySet()) {
+            CompletableFuture<?> future = pendingFutures.remove(callId);
+            if (future != null) {
+                future.completeExceptionally(
+                    new IllegalStateException("Service disconnected"));
+            }
+        }
+    }
+
+    // Operation result callbacks (called by native C++ continuations)
+    public void onFuncBoolResult(StructBool result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
+    }
+    public void onFuncIntResult(StructInt result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
+    }
+    public void onFuncFloatResult(StructFloat result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
+    }
+    public void onFuncStringResult(StructString result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
     }
 
     //In theory event listener interface

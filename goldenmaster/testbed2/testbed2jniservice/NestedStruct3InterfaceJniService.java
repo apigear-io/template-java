@@ -1,6 +1,5 @@
 package testbed2.testbed2jniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import testbed2.testbed2_api.INestedStruct3Interface;
@@ -13,13 +12,11 @@ import testbed2.testbed2_android_messenger.NestedStruct2Parcelable;
 import testbed2.testbed2_api.NestedStruct3;
 import testbed2.testbed2_android_messenger.NestedStruct3Parcelable;
 
-import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 public class NestedStruct3InterfaceJniService extends AbstractNestedStruct3Interface {
@@ -27,7 +24,8 @@ public class NestedStruct3InterfaceJniService extends AbstractNestedStruct3Inter
 
     private final static String TAG = "NestedStruct3InterfaceJniService";
     private static volatile boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ConcurrentHashMap<String, CompletableFuture<?>> pendingFutures
+        = new ConcurrentHashMap<>();
 
     public NestedStruct3InterfaceJniService()
     {
@@ -82,42 +80,87 @@ public class NestedStruct3InterfaceJniService extends AbstractNestedStruct3Inter
 
     @Override
     public NestedStruct1 func1(NestedStruct1 param1) {
-        Log.i(TAG, "request method func1 called, will call native");
-        return nativeFunc1(param1);
+        Log.i(TAG, "request method func1 called");
+        try {
+            return func1Async(param1).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "func1 sync call timed out");
+            return new NestedStruct1();
+        } catch (Exception e) {
+            Log.w(TAG, "func1 sync call failed: " + e.getMessage());
+            return new NestedStruct1();
+        }
     }
 
     @Override
-    public  CompletableFuture<NestedStruct1> func1Async(NestedStruct1 param1) {
-        return CompletableFuture.supplyAsync(
-                () -> {return func1(param1); },
-                executor);
+    public CompletableFuture<NestedStruct1> func1Async(NestedStruct1 param1) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeFunc1Async(callId, param1);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for func1"));
+        }
+        return future;
     }
 
     @Override
     public NestedStruct1 func2(NestedStruct1 param1, NestedStruct2 param2) {
-        Log.i(TAG, "request method func2 called, will call native");
-        return nativeFunc2(param1, param2);
+        Log.i(TAG, "request method func2 called");
+        try {
+            return func2Async(param1, param2).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "func2 sync call timed out");
+            return new NestedStruct1();
+        } catch (Exception e) {
+            Log.w(TAG, "func2 sync call failed: " + e.getMessage());
+            return new NestedStruct1();
+        }
     }
 
     @Override
-    public  CompletableFuture<NestedStruct1> func2Async(NestedStruct1 param1, NestedStruct2 param2) {
-        return CompletableFuture.supplyAsync(
-                () -> {return func2(param1, param2); },
-                executor);
+    public CompletableFuture<NestedStruct1> func2Async(NestedStruct1 param1, NestedStruct2 param2) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeFunc2Async(callId, param1, param2);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for func2"));
+        }
+        return future;
     }
 
     @Override
     public NestedStruct1 func3(NestedStruct1 param1, NestedStruct2 param2, NestedStruct3 param3) {
-        Log.i(TAG, "request method func3 called, will call native");
-        return nativeFunc3(param1, param2, param3);
+        Log.i(TAG, "request method func3 called");
+        try {
+            return func3Async(param1, param2, param3).get(5, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            Log.e(TAG, "func3 sync call timed out");
+            return new NestedStruct1();
+        } catch (Exception e) {
+            Log.w(TAG, "func3 sync call failed: " + e.getMessage());
+            return new NestedStruct1();
+        }
     }
 
     @Override
-    public  CompletableFuture<NestedStruct1> func3Async(NestedStruct1 param1, NestedStruct2 param2, NestedStruct3 param3) {
-        return CompletableFuture.supplyAsync(
-                () -> {return func3(param1, param2, param3); },
-                executor);
-    }    
+    public CompletableFuture<NestedStruct1> func3Async(NestedStruct1 param1, NestedStruct2 param2, NestedStruct3 param3) {
+        String callId = UUID.randomUUID().toString().replace("-", "");
+        CompletableFuture<Object> future = new CompletableFuture<>();
+        pendingFutures.put(callId, future);
+        boolean enqueued = nativeFunc3Async(callId, param1, param2, param3);
+        if (!enqueued) {
+            pendingFutures.remove(callId);
+            future.completeExceptionally(
+                new IllegalStateException("Native service unavailable for func3"));
+        }
+        return future;
+    }
 
     @Override
     public boolean _isReady() {
@@ -134,14 +177,53 @@ public class NestedStruct3InterfaceJniService extends AbstractNestedStruct3Inter
     private native void nativeSetProp3(NestedStruct3 prop3);
     private native NestedStruct3 nativeGetProp3();
   
-    // methods
-    private native NestedStruct1 nativeFunc1(NestedStruct1 param1);
-    private native NestedStruct1 nativeFunc2(NestedStruct1 param1, NestedStruct2 param2);
-    private native NestedStruct1 nativeFunc3(NestedStruct1 param1, NestedStruct2 param2, NestedStruct3 param3);
+    // methods (async, returns false if native service unavailable)
+    private native boolean nativeFunc1Async(String callId, NestedStruct1 param1);
+    private native boolean nativeFunc2Async(String callId, NestedStruct1 param1, NestedStruct2 param2);
+    private native boolean nativeFunc3Async(String callId, NestedStruct1 param1, NestedStruct2 param2, NestedStruct3 param3);
 
     // Called by Native Impl Service
     public void nativeServiceReady(boolean value) {
         isServiceReady = value;
+        if (!value) {
+            cancelAllPending();
+        }
+    }
+
+    public void cancelAllPending() {
+        for (String callId : pendingFutures.keySet()) {
+            CompletableFuture<?> future = pendingFutures.remove(callId);
+            if (future != null) {
+                future.completeExceptionally(
+                    new IllegalStateException("Service disconnected"));
+            }
+        }
+    }
+
+    // Operation result callbacks (called by native C++ continuations)
+    public void onFunc1Result(NestedStruct1 result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
+    }
+    public void onFunc2Result(NestedStruct1 result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
+    }
+    public void onFunc3Result(NestedStruct1 result, String callId) {
+        CompletableFuture<?> future = pendingFutures.remove(callId);
+        if (future != null) {
+            @SuppressWarnings("unchecked")
+            CompletableFuture<Object> typedFuture = (CompletableFuture<Object>) future;
+            typedFuture.complete(result);
+        }
     }
 
     //In theory event listener interface
