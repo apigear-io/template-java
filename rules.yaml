@@ -153,6 +153,8 @@ features:
         documents:
           - source: "jnibridge/client/jnibridgeclient.java.tpl"
             target: "{{Camel .Interface.Name}}JniClient.java"
+  - name: asyncoperations
+    scopes: []
   - name: testclientapp
     requires:
       - api

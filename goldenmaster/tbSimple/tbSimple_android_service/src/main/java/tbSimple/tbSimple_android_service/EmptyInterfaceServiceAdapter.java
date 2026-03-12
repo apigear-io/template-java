@@ -22,6 +22,7 @@ import tbSimple.tbSimple_api.AbstractEmptyInterface;
 import tbSimple.tbSimple_android_messenger.EmptyInterfaceMessageType;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 public class EmptyInterfaceServiceAdapter extends Service
 {

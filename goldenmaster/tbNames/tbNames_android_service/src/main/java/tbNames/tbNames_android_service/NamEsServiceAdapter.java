@@ -25,6 +25,7 @@ import tbNames.tbNames_api.RemoteOperationException;
 import tbNames.tbNames_android_messenger.NamEsMessageType;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 public class NamEsServiceAdapter extends Service
 {
@@ -257,113 +258,149 @@ public class NamEsServiceAdapter extends Service
 						backend.setEnumProperty(enum_property);
 						break;
 					}
-			// TODO params may be different structs from different modules, there should be a custom class loader 
-			// with a list of class loaders required for this message
-			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 				case RPC_SomeFunctionReq: {
-
 					Bundle data = msg.getData();
 					
-					int callId = data.getInt("callId");
+					final int callId = data.getInt("callId");
+					final Messenger replyTo = msg.replyTo;
 					
 			        boolean SOME_PARAM = data.getBoolean("SOME_PARAM", false);
-					Message respMsg = new Message();
-					respMsg.what = NamEsMessageType.RPC_SomeFunctionResp.getValue();
-					Bundle resp_data = new Bundle();
-					resp_data.putInt("callId", callId);
 
-					try {
-						if (backend == null || !backend._isReady()) {
-							throw new RemoteOperationException("service not ready",
-								RemoteOperationException.ERROR_SERVICE_NOT_READY);
-						}
-						 backend.someFunction(SOME_PARAM);
-					} catch (Exception e) {
-						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
-						Log.w(TAG, "SOME_FUNCTION failed: " + errorMessage);
-						Log.d(TAG, "SOME_FUNCTION exception details", e);
+					// Pre-flight: backend not ready — respond synchronously with error
+					if (backend == null || !backend._isReady()) {
+						Message respMsg = new Message();
+						respMsg.what = NamEsMessageType.RPC_SomeFunctionResp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
 						resp_data.putBoolean("error", true);
-						resp_data.putString("errorMessage", errorMessage);
-						int errorCode;
-						if (e instanceof RemoteOperationException) {
-							errorCode = ((RemoteOperationException) e).getErrorCode();
-						} else if (e instanceof IllegalArgumentException) {
-							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
-						} else if (e instanceof UnsupportedOperationException) {
-							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						resp_data.putString("errorMessage", "service not ready");
+						resp_data.putInt("errorCode", RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						respMsg.setData(resp_data);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send SOME_FUNCTION not-ready response: " + e);
+							}
+						}
+						break;
+					}
+
+					// Async dispatch — returns immediately, looper is free
+					backend.someFunctionAsync(SOME_PARAM).whenComplete((Void unused, Throwable error) -> {
+						Message respMsg = new Message();
+						respMsg.what = NamEsMessageType.RPC_SomeFunctionResp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
+
+						if (error != null) {
+							Throwable cause = error;
+							if (error instanceof java.util.concurrent.CompletionException && error.getCause() != null) {
+								cause = error.getCause();
+							}
+							String errorMessage = cause.getMessage() != null ? cause.getMessage() : cause.getClass().getName();
+							Log.w(TAG, "SOME_FUNCTION failed: " + errorMessage);
+							Log.d(TAG, "SOME_FUNCTION exception details", cause);
+							resp_data.putBoolean("error", true);
+							resp_data.putString("errorMessage", errorMessage);
+							int errorCode;
+							if (cause instanceof RemoteOperationException) {
+								errorCode = ((RemoteOperationException) cause).getErrorCode();
+							} else if (cause instanceof IllegalArgumentException) {
+								errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+							} else if (cause instanceof UnsupportedOperationException) {
+								errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+							} else {
+								errorCode = RemoteOperationException.ERROR_INTERNAL;
+							}
+							resp_data.putInt("errorCode", errorCode);
+						}
+
+						respMsg.setData(resp_data);
+
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send SOME_FUNCTION response: " + e);
+							}
 						} else {
-							errorCode = RemoteOperationException.ERROR_INTERNAL;
+							Log.w(TAG, "SOME_FUNCTION: replyTo is null, cannot send response");
 						}
-						resp_data.putInt("errorCode", errorCode);
-					}
-
-					respMsg.setData(resp_data);
-
-					if (msg.replyTo != null) {
-						try {
-							msg.replyTo.send(respMsg);
-						} catch (RemoteException e) {
-							Log.e(TAG, "failed to send SOME_FUNCTION response: " + e);
-						}
-					} else {
-						Log.w(TAG, "SOME_FUNCTION: replyTo is null, cannot send response");
-					}
+					});
 					break;
-
 				}
-			// TODO params may be different structs from different modules, there should be a custom class loader 
-			// with a list of class loaders required for this message
-			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 				case RPC_SomeFunction2Req: {
-
 					Bundle data = msg.getData();
 					
-					int callId = data.getInt("callId");
+					final int callId = data.getInt("callId");
+					final Messenger replyTo = msg.replyTo;
 					
 			        boolean Some_Param = data.getBoolean("Some_Param", false);
-					Message respMsg = new Message();
-					respMsg.what = NamEsMessageType.RPC_SomeFunction2Resp.getValue();
-					Bundle resp_data = new Bundle();
-					resp_data.putInt("callId", callId);
 
-					try {
-						if (backend == null || !backend._isReady()) {
-							throw new RemoteOperationException("service not ready",
-								RemoteOperationException.ERROR_SERVICE_NOT_READY);
-						}
-						 backend.someFunction2(Some_Param);
-					} catch (Exception e) {
-						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
-						Log.w(TAG, "Some_Function2 failed: " + errorMessage);
-						Log.d(TAG, "Some_Function2 exception details", e);
+					// Pre-flight: backend not ready — respond synchronously with error
+					if (backend == null || !backend._isReady()) {
+						Message respMsg = new Message();
+						respMsg.what = NamEsMessageType.RPC_SomeFunction2Resp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
 						resp_data.putBoolean("error", true);
-						resp_data.putString("errorMessage", errorMessage);
-						int errorCode;
-						if (e instanceof RemoteOperationException) {
-							errorCode = ((RemoteOperationException) e).getErrorCode();
-						} else if (e instanceof IllegalArgumentException) {
-							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
-						} else if (e instanceof UnsupportedOperationException) {
-							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						resp_data.putString("errorMessage", "service not ready");
+						resp_data.putInt("errorCode", RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						respMsg.setData(resp_data);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send Some_Function2 not-ready response: " + e);
+							}
+						}
+						break;
+					}
+
+					// Async dispatch — returns immediately, looper is free
+					backend.someFunction2Async(Some_Param).whenComplete((Void unused, Throwable error) -> {
+						Message respMsg = new Message();
+						respMsg.what = NamEsMessageType.RPC_SomeFunction2Resp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
+
+						if (error != null) {
+							Throwable cause = error;
+							if (error instanceof java.util.concurrent.CompletionException && error.getCause() != null) {
+								cause = error.getCause();
+							}
+							String errorMessage = cause.getMessage() != null ? cause.getMessage() : cause.getClass().getName();
+							Log.w(TAG, "Some_Function2 failed: " + errorMessage);
+							Log.d(TAG, "Some_Function2 exception details", cause);
+							resp_data.putBoolean("error", true);
+							resp_data.putString("errorMessage", errorMessage);
+							int errorCode;
+							if (cause instanceof RemoteOperationException) {
+								errorCode = ((RemoteOperationException) cause).getErrorCode();
+							} else if (cause instanceof IllegalArgumentException) {
+								errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+							} else if (cause instanceof UnsupportedOperationException) {
+								errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+							} else {
+								errorCode = RemoteOperationException.ERROR_INTERNAL;
+							}
+							resp_data.putInt("errorCode", errorCode);
+						}
+
+						respMsg.setData(resp_data);
+
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send Some_Function2 response: " + e);
+							}
 						} else {
-							errorCode = RemoteOperationException.ERROR_INTERNAL;
+							Log.w(TAG, "Some_Function2: replyTo is null, cannot send response");
 						}
-						resp_data.putInt("errorCode", errorCode);
-					}
-
-					respMsg.setData(resp_data);
-
-					if (msg.replyTo != null) {
-						try {
-							msg.replyTo.send(respMsg);
-						} catch (RemoteException e) {
-							Log.e(TAG, "failed to send Some_Function2 response: " + e);
-						}
-					} else {
-						Log.w(TAG, "Some_Function2: replyTo is null, cannot send response");
-					}
+					});
 					break;
-
 				}
 				default:
 					Log.e(TAG, "Receive Unsupported message: " + msg.what);

@@ -22,6 +22,7 @@ import tbIfaceimport.tbIfaceimport_api.AbstractEmptyIf;
 import tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfMessageType;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 public class EmptyIfServiceAdapter extends Service
 {

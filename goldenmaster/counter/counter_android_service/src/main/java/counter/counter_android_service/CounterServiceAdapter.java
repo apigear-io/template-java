@@ -23,6 +23,7 @@ import counter.counter_api.RemoteOperationException;
 import counter.counter_android_messenger.CounterMessageType;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 public class CounterServiceAdapter extends Service
 {
@@ -260,233 +261,313 @@ public class CounterServiceAdapter extends Service
 						backend.setExternVectorArray(extern_vectorArray);
 						break;
 					}
-			// TODO params may be different structs from different modules, there should be a custom class loader 
-			// with a list of class loaders required for this message
-			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 				case RPC_IncrementReq: {
-
 					Bundle data = msg.getData();
 					
         data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
-					int callId = data.getInt("callId");
+					final int callId = data.getInt("callId");
+					final Messenger replyTo = msg.replyTo;
 					
 			        org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec = data.getParcelable("vec", externTypes.externTypes_android_messenger.MyVector3DParcelable.class).getMyVector3D();
-					Message respMsg = new Message();
-					respMsg.what = CounterMessageType.RPC_IncrementResp.getValue();
-					Bundle resp_data = new Bundle();
-					resp_data.putInt("callId", callId);
 
-					try {
-						if (backend == null || !backend._isReady()) {
-							throw new RemoteOperationException("service not ready",
-								RemoteOperationException.ERROR_SERVICE_NOT_READY);
-						}
-						org.apache.commons.math3.geometry.euclidean.threed.Vector3D result =  backend.increment(vec);
-						
-		        resp_data.putParcelable("result", new externTypes.externTypes_android_messenger.MyVector3DParcelable(result));
-					} catch (Exception e) {
-						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
-						Log.w(TAG, "increment failed: " + errorMessage);
-						Log.d(TAG, "increment exception details", e);
+					// Pre-flight: backend not ready — respond synchronously with error
+					if (backend == null || !backend._isReady()) {
+						Message respMsg = new Message();
+						respMsg.what = CounterMessageType.RPC_IncrementResp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
 						resp_data.putBoolean("error", true);
-						resp_data.putString("errorMessage", errorMessage);
-						int errorCode;
-						if (e instanceof RemoteOperationException) {
-							errorCode = ((RemoteOperationException) e).getErrorCode();
-						} else if (e instanceof IllegalArgumentException) {
-							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
-						} else if (e instanceof UnsupportedOperationException) {
-							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						resp_data.putString("errorMessage", "service not ready");
+						resp_data.putInt("errorCode", RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						respMsg.setData(resp_data);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send increment not-ready response: " + e);
+							}
+						}
+						break;
+					}
+
+					// Async dispatch — returns immediately, looper is free
+					backend.incrementAsync(vec).whenComplete((Object rawResult, Throwable error) -> {
+						Message respMsg = new Message();
+						respMsg.what = CounterMessageType.RPC_IncrementResp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
+
+						if (error != null) {
+							Throwable cause = error;
+							if (error instanceof java.util.concurrent.CompletionException && error.getCause() != null) {
+								cause = error.getCause();
+							}
+							String errorMessage = cause.getMessage() != null ? cause.getMessage() : cause.getClass().getName();
+							Log.w(TAG, "increment failed: " + errorMessage);
+							Log.d(TAG, "increment exception details", cause);
+							resp_data.putBoolean("error", true);
+							resp_data.putString("errorMessage", errorMessage);
+							int errorCode;
+							if (cause instanceof RemoteOperationException) {
+								errorCode = ((RemoteOperationException) cause).getErrorCode();
+							} else if (cause instanceof IllegalArgumentException) {
+								errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+							} else if (cause instanceof UnsupportedOperationException) {
+								errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+							} else {
+								errorCode = RemoteOperationException.ERROR_INTERNAL;
+							}
+							resp_data.putInt("errorCode", errorCode);
 						} else {
-							errorCode = RemoteOperationException.ERROR_INTERNAL;
+							org.apache.commons.math3.geometry.euclidean.threed.Vector3D result = (org.apache.commons.math3.geometry.euclidean.threed.Vector3D) rawResult;
+							
+		        resp_data.putParcelable("result", new externTypes.externTypes_android_messenger.MyVector3DParcelable(result));
 						}
-						resp_data.putInt("errorCode", errorCode);
-					}
 
-					respMsg.setData(resp_data);
+						respMsg.setData(resp_data);
 
-					if (msg.replyTo != null) {
-						try {
-							msg.replyTo.send(respMsg);
-						} catch (RemoteException e) {
-							Log.e(TAG, "failed to send increment response: " + e);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send increment response: " + e);
+							}
+						} else {
+							Log.w(TAG, "increment: replyTo is null, cannot send response");
 						}
-					} else {
-						Log.w(TAG, "increment: replyTo is null, cannot send response");
-					}
+					});
 					break;
-
 				}
-			// TODO params may be different structs from different modules, there should be a custom class loader 
-			// with a list of class loaders required for this message
-			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 				case RPC_IncrementArrayReq: {
-
 					Bundle data = msg.getData();
 					
         data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
-					int callId = data.getInt("callId");
+					final int callId = data.getInt("callId");
+					final Messenger replyTo = msg.replyTo;
 					
                     org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec =  externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])data.getParcelableArray("vec", externTypes.externTypes_android_messenger.MyVector3DParcelable.class));
-					Message respMsg = new Message();
-					respMsg.what = CounterMessageType.RPC_IncrementArrayResp.getValue();
-					Bundle resp_data = new Bundle();
-					resp_data.putInt("callId", callId);
 
-					try {
-						if (backend == null || !backend._isReady()) {
-							throw new RemoteOperationException("service not ready",
-								RemoteOperationException.ERROR_SERVICE_NOT_READY);
-						}
-						org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] result =  backend.incrementArray(vec);
-						
-		        resp_data.putParcelableArray("result",externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(result));
-					} catch (Exception e) {
-						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
-						Log.w(TAG, "incrementArray failed: " + errorMessage);
-						Log.d(TAG, "incrementArray exception details", e);
+					// Pre-flight: backend not ready — respond synchronously with error
+					if (backend == null || !backend._isReady()) {
+						Message respMsg = new Message();
+						respMsg.what = CounterMessageType.RPC_IncrementArrayResp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
 						resp_data.putBoolean("error", true);
-						resp_data.putString("errorMessage", errorMessage);
-						int errorCode;
-						if (e instanceof RemoteOperationException) {
-							errorCode = ((RemoteOperationException) e).getErrorCode();
-						} else if (e instanceof IllegalArgumentException) {
-							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
-						} else if (e instanceof UnsupportedOperationException) {
-							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						resp_data.putString("errorMessage", "service not ready");
+						resp_data.putInt("errorCode", RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						respMsg.setData(resp_data);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send incrementArray not-ready response: " + e);
+							}
+						}
+						break;
+					}
+
+					// Async dispatch — returns immediately, looper is free
+					backend.incrementArrayAsync(vec).whenComplete((Object rawResult, Throwable error) -> {
+						Message respMsg = new Message();
+						respMsg.what = CounterMessageType.RPC_IncrementArrayResp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
+
+						if (error != null) {
+							Throwable cause = error;
+							if (error instanceof java.util.concurrent.CompletionException && error.getCause() != null) {
+								cause = error.getCause();
+							}
+							String errorMessage = cause.getMessage() != null ? cause.getMessage() : cause.getClass().getName();
+							Log.w(TAG, "incrementArray failed: " + errorMessage);
+							Log.d(TAG, "incrementArray exception details", cause);
+							resp_data.putBoolean("error", true);
+							resp_data.putString("errorMessage", errorMessage);
+							int errorCode;
+							if (cause instanceof RemoteOperationException) {
+								errorCode = ((RemoteOperationException) cause).getErrorCode();
+							} else if (cause instanceof IllegalArgumentException) {
+								errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+							} else if (cause instanceof UnsupportedOperationException) {
+								errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+							} else {
+								errorCode = RemoteOperationException.ERROR_INTERNAL;
+							}
+							resp_data.putInt("errorCode", errorCode);
 						} else {
-							errorCode = RemoteOperationException.ERROR_INTERNAL;
+							org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] result = (org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]) rawResult;
+							
+		        resp_data.putParcelableArray("result",externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(result));
 						}
-						resp_data.putInt("errorCode", errorCode);
-					}
 
-					respMsg.setData(resp_data);
+						respMsg.setData(resp_data);
 
-					if (msg.replyTo != null) {
-						try {
-							msg.replyTo.send(respMsg);
-						} catch (RemoteException e) {
-							Log.e(TAG, "failed to send incrementArray response: " + e);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send incrementArray response: " + e);
+							}
+						} else {
+							Log.w(TAG, "incrementArray: replyTo is null, cannot send response");
 						}
-					} else {
-						Log.w(TAG, "incrementArray: replyTo is null, cannot send response");
-					}
+					});
 					break;
-
 				}
-			// TODO params may be different structs from different modules, there should be a custom class loader 
-			// with a list of class loaders required for this message
-			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 				case RPC_DecrementReq: {
-
 					Bundle data = msg.getData();
 					
         data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
-					int callId = data.getInt("callId");
+					final int callId = data.getInt("callId");
+					final Messenger replyTo = msg.replyTo;
 					
 			        customTypes.customTypes_api.Vector3D vec = data.getParcelable("vec", customTypes.customTypes_android_messenger.Vector3DParcelable.class).getVector3D();
-					Message respMsg = new Message();
-					respMsg.what = CounterMessageType.RPC_DecrementResp.getValue();
-					Bundle resp_data = new Bundle();
-					resp_data.putInt("callId", callId);
 
-					try {
-						if (backend == null || !backend._isReady()) {
-							throw new RemoteOperationException("service not ready",
-								RemoteOperationException.ERROR_SERVICE_NOT_READY);
-						}
-						customTypes.customTypes_api.Vector3D result =  backend.decrement(vec);
-						
-		        resp_data.putParcelable("result", new customTypes.customTypes_android_messenger.Vector3DParcelable(result));
-					} catch (Exception e) {
-						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
-						Log.w(TAG, "decrement failed: " + errorMessage);
-						Log.d(TAG, "decrement exception details", e);
+					// Pre-flight: backend not ready — respond synchronously with error
+					if (backend == null || !backend._isReady()) {
+						Message respMsg = new Message();
+						respMsg.what = CounterMessageType.RPC_DecrementResp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
 						resp_data.putBoolean("error", true);
-						resp_data.putString("errorMessage", errorMessage);
-						int errorCode;
-						if (e instanceof RemoteOperationException) {
-							errorCode = ((RemoteOperationException) e).getErrorCode();
-						} else if (e instanceof IllegalArgumentException) {
-							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
-						} else if (e instanceof UnsupportedOperationException) {
-							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						resp_data.putString("errorMessage", "service not ready");
+						resp_data.putInt("errorCode", RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						respMsg.setData(resp_data);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send decrement not-ready response: " + e);
+							}
+						}
+						break;
+					}
+
+					// Async dispatch — returns immediately, looper is free
+					backend.decrementAsync(vec).whenComplete((Object rawResult, Throwable error) -> {
+						Message respMsg = new Message();
+						respMsg.what = CounterMessageType.RPC_DecrementResp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
+
+						if (error != null) {
+							Throwable cause = error;
+							if (error instanceof java.util.concurrent.CompletionException && error.getCause() != null) {
+								cause = error.getCause();
+							}
+							String errorMessage = cause.getMessage() != null ? cause.getMessage() : cause.getClass().getName();
+							Log.w(TAG, "decrement failed: " + errorMessage);
+							Log.d(TAG, "decrement exception details", cause);
+							resp_data.putBoolean("error", true);
+							resp_data.putString("errorMessage", errorMessage);
+							int errorCode;
+							if (cause instanceof RemoteOperationException) {
+								errorCode = ((RemoteOperationException) cause).getErrorCode();
+							} else if (cause instanceof IllegalArgumentException) {
+								errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+							} else if (cause instanceof UnsupportedOperationException) {
+								errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+							} else {
+								errorCode = RemoteOperationException.ERROR_INTERNAL;
+							}
+							resp_data.putInt("errorCode", errorCode);
 						} else {
-							errorCode = RemoteOperationException.ERROR_INTERNAL;
+							customTypes.customTypes_api.Vector3D result = (customTypes.customTypes_api.Vector3D) rawResult;
+							
+		        resp_data.putParcelable("result", new customTypes.customTypes_android_messenger.Vector3DParcelable(result));
 						}
-						resp_data.putInt("errorCode", errorCode);
-					}
 
-					respMsg.setData(resp_data);
+						respMsg.setData(resp_data);
 
-					if (msg.replyTo != null) {
-						try {
-							msg.replyTo.send(respMsg);
-						} catch (RemoteException e) {
-							Log.e(TAG, "failed to send decrement response: " + e);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send decrement response: " + e);
+							}
+						} else {
+							Log.w(TAG, "decrement: replyTo is null, cannot send response");
 						}
-					} else {
-						Log.w(TAG, "decrement: replyTo is null, cannot send response");
-					}
+					});
 					break;
-
 				}
-			// TODO params may be different structs from different modules, there should be a custom class loader 
-			// with a list of class loaders required for this message
-			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 				case RPC_DecrementArrayReq: {
-
 					Bundle data = msg.getData();
 					
         data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
-					int callId = data.getInt("callId");
+					final int callId = data.getInt("callId");
+					final Messenger replyTo = msg.replyTo;
 					
                     customTypes.customTypes_api.Vector3D[] vec =  customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray((customTypes.customTypes_android_messenger.Vector3DParcelable[])data.getParcelableArray("vec", customTypes.customTypes_android_messenger.Vector3DParcelable.class));
-					Message respMsg = new Message();
-					respMsg.what = CounterMessageType.RPC_DecrementArrayResp.getValue();
-					Bundle resp_data = new Bundle();
-					resp_data.putInt("callId", callId);
 
-					try {
-						if (backend == null || !backend._isReady()) {
-							throw new RemoteOperationException("service not ready",
-								RemoteOperationException.ERROR_SERVICE_NOT_READY);
-						}
-						customTypes.customTypes_api.Vector3D[] result =  backend.decrementArray(vec);
-						
-		        resp_data.putParcelableArray("result",customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(result));
-					} catch (Exception e) {
-						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
-						Log.w(TAG, "decrementArray failed: " + errorMessage);
-						Log.d(TAG, "decrementArray exception details", e);
+					// Pre-flight: backend not ready — respond synchronously with error
+					if (backend == null || !backend._isReady()) {
+						Message respMsg = new Message();
+						respMsg.what = CounterMessageType.RPC_DecrementArrayResp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
 						resp_data.putBoolean("error", true);
-						resp_data.putString("errorMessage", errorMessage);
-						int errorCode;
-						if (e instanceof RemoteOperationException) {
-							errorCode = ((RemoteOperationException) e).getErrorCode();
-						} else if (e instanceof IllegalArgumentException) {
-							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
-						} else if (e instanceof UnsupportedOperationException) {
-							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						resp_data.putString("errorMessage", "service not ready");
+						resp_data.putInt("errorCode", RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						respMsg.setData(resp_data);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send decrementArray not-ready response: " + e);
+							}
+						}
+						break;
+					}
+
+					// Async dispatch — returns immediately, looper is free
+					backend.decrementArrayAsync(vec).whenComplete((Object rawResult, Throwable error) -> {
+						Message respMsg = new Message();
+						respMsg.what = CounterMessageType.RPC_DecrementArrayResp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
+
+						if (error != null) {
+							Throwable cause = error;
+							if (error instanceof java.util.concurrent.CompletionException && error.getCause() != null) {
+								cause = error.getCause();
+							}
+							String errorMessage = cause.getMessage() != null ? cause.getMessage() : cause.getClass().getName();
+							Log.w(TAG, "decrementArray failed: " + errorMessage);
+							Log.d(TAG, "decrementArray exception details", cause);
+							resp_data.putBoolean("error", true);
+							resp_data.putString("errorMessage", errorMessage);
+							int errorCode;
+							if (cause instanceof RemoteOperationException) {
+								errorCode = ((RemoteOperationException) cause).getErrorCode();
+							} else if (cause instanceof IllegalArgumentException) {
+								errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+							} else if (cause instanceof UnsupportedOperationException) {
+								errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+							} else {
+								errorCode = RemoteOperationException.ERROR_INTERNAL;
+							}
+							resp_data.putInt("errorCode", errorCode);
 						} else {
-							errorCode = RemoteOperationException.ERROR_INTERNAL;
+							customTypes.customTypes_api.Vector3D[] result = (customTypes.customTypes_api.Vector3D[]) rawResult;
+							
+		        resp_data.putParcelableArray("result",customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(result));
 						}
-						resp_data.putInt("errorCode", errorCode);
-					}
 
-					respMsg.setData(resp_data);
+						respMsg.setData(resp_data);
 
-					if (msg.replyTo != null) {
-						try {
-							msg.replyTo.send(respMsg);
-						} catch (RemoteException e) {
-							Log.e(TAG, "failed to send decrementArray response: " + e);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send decrementArray response: " + e);
+							}
+						} else {
+							Log.w(TAG, "decrementArray: replyTo is null, cannot send response");
 						}
-					} else {
-						Log.w(TAG, "decrementArray: replyTo is null, cannot send response");
-					}
+					});
 					break;
-
 				}
 				default:
 					Log.e(TAG, "Receive Unsupported message: " + msg.what);

@@ -27,6 +27,9 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.RemoteOperationExceptio
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Interface.Name}}MessageType;
 
 import java.util.Map;
+{{- if .Features.asyncoperations }}
+import java.util.concurrent.CompletableFuture;
+{{- end }}
 import java.util.concurrent.ConcurrentHashMap;
 public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 {
@@ -241,15 +244,89 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 					}
 			{{- end }}
 			{{- range .Interface.Operations }}
-			// TODO params may be different structs from different modules, there should be a custom class loader 
-			// with a list of class loaders required for this message
-			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 				case RPC_{{Camel .Name}}Req: {
-
 					Bundle data = msg.getData();
 					{{template "setClassLoaderIfNeeded" .Params}}
-					int callId = data.getInt("callId");
+				{{- if $.Features.asyncoperations }}
+					final int callId = data.getInt("callId");
+					final Messenger replyTo = msg.replyTo;
+					{{- range .Params }}
+					{{template "getDataFromBundle" . }}
+					{{- end }}
 
+					// Pre-flight: backend not ready — respond synchronously with error
+					if (backend == null || !backend._isReady()) {
+						Message respMsg = new Message();
+						respMsg.what = {{$InterfaceName}}MessageType.RPC_{{Camel .Name}}Resp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
+						resp_data.putBoolean("error", true);
+						resp_data.putString("errorMessage", "service not ready");
+						resp_data.putInt("errorCode", RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						respMsg.setData(resp_data);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send {{.Name}} not-ready response: " + e);
+							}
+						}
+						break;
+					}
+
+					// Async dispatch — returns immediately, looper is free
+					{{- if .Return.IsVoid }}
+					backend.{{camel .Name}}Async({{javaVars .Params}}).whenComplete((Void unused, Throwable error) -> {
+					{{- else }}
+					backend.{{camel .Name}}Async({{javaVars .Params}}).whenComplete((Object rawResult, Throwable error) -> {
+					{{- end }}
+						Message respMsg = new Message();
+						respMsg.what = {{$InterfaceName}}MessageType.RPC_{{Camel .Name}}Resp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
+
+						if (error != null) {
+							Throwable cause = error;
+							if (error instanceof java.util.concurrent.CompletionException && error.getCause() != null) {
+								cause = error.getCause();
+							}
+							String errorMessage = cause.getMessage() != null ? cause.getMessage() : cause.getClass().getName();
+							Log.w(TAG, "{{.Name}} failed: " + errorMessage);
+							Log.d(TAG, "{{.Name}} exception details", cause);
+							resp_data.putBoolean("error", true);
+							resp_data.putString("errorMessage", errorMessage);
+							int errorCode;
+							if (cause instanceof RemoteOperationException) {
+								errorCode = ((RemoteOperationException) cause).getErrorCode();
+							} else if (cause instanceof IllegalArgumentException) {
+								errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+							} else if (cause instanceof UnsupportedOperationException) {
+								errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+							} else {
+								errorCode = RemoteOperationException.ERROR_INTERNAL;
+							}
+							resp_data.putInt("errorCode", errorCode);
+						}
+						{{- if not .Return.IsVoid }} else {
+							{{javaReturn "" .Return}} result = ({{javaReturn "" .Return}}) rawResult;
+							{{ template "putResultIntoBundle" . }}
+						}
+						{{- end }}
+
+						respMsg.setData(resp_data);
+
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send {{.Name}} response: " + e);
+							}
+						} else {
+							Log.w(TAG, "{{.Name}}: replyTo is null, cannot send response");
+						}
+					});
+				{{- else }}
+					int callId = data.getInt("callId");
 					{{- range .Params }}
 					{{template "getDataFromBundle" . }}
 					{{- end }}
@@ -297,8 +374,8 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 					} else {
 						Log.w(TAG, "{{.Name}}: replyTo is null, cannot send response");
 					}
+				{{- end }}
 					break;
-
 				}
 			{{- end }}
 				default:

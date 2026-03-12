@@ -25,6 +25,7 @@ import tbRefIfaces.tbRefIfaces_api.RemoteOperationException;
 import tbRefIfaces.tbRefIfaces_android_messenger.ParentIfMessageType;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 public class ParentIfServiceAdapter extends Service
 {
@@ -262,233 +263,313 @@ public class ParentIfServiceAdapter extends Service
 						backend.setImportedIfList(importedIfList);
 						break;
 					}
-			// TODO params may be different structs from different modules, there should be a custom class loader 
-			// with a list of class loaders required for this message
-			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 				case RPC_LocalIfMethodReq: {
-
 					Bundle data = msg.getData();
 					
         data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
-					int callId = data.getInt("callId");
+					final int callId = data.getInt("callId");
+					final Messenger replyTo = msg.replyTo;
 					
 			        ISimpleLocalIf param = data.getParcelable("param", SimpleLocalIfParcelable.class).getSimpleLocalIf();
-					Message respMsg = new Message();
-					respMsg.what = ParentIfMessageType.RPC_LocalIfMethodResp.getValue();
-					Bundle resp_data = new Bundle();
-					resp_data.putInt("callId", callId);
 
-					try {
-						if (backend == null || !backend._isReady()) {
-							throw new RemoteOperationException("service not ready",
-								RemoteOperationException.ERROR_SERVICE_NOT_READY);
-						}
-						ISimpleLocalIf result =  backend.localIfMethod(param);
-						
-		        resp_data.putParcelable("result", new SimpleLocalIfParcelable(result));
-					} catch (Exception e) {
-						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
-						Log.w(TAG, "localIfMethod failed: " + errorMessage);
-						Log.d(TAG, "localIfMethod exception details", e);
+					// Pre-flight: backend not ready — respond synchronously with error
+					if (backend == null || !backend._isReady()) {
+						Message respMsg = new Message();
+						respMsg.what = ParentIfMessageType.RPC_LocalIfMethodResp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
 						resp_data.putBoolean("error", true);
-						resp_data.putString("errorMessage", errorMessage);
-						int errorCode;
-						if (e instanceof RemoteOperationException) {
-							errorCode = ((RemoteOperationException) e).getErrorCode();
-						} else if (e instanceof IllegalArgumentException) {
-							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
-						} else if (e instanceof UnsupportedOperationException) {
-							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						resp_data.putString("errorMessage", "service not ready");
+						resp_data.putInt("errorCode", RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						respMsg.setData(resp_data);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send localIfMethod not-ready response: " + e);
+							}
+						}
+						break;
+					}
+
+					// Async dispatch — returns immediately, looper is free
+					backend.localIfMethodAsync(param).whenComplete((Object rawResult, Throwable error) -> {
+						Message respMsg = new Message();
+						respMsg.what = ParentIfMessageType.RPC_LocalIfMethodResp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
+
+						if (error != null) {
+							Throwable cause = error;
+							if (error instanceof java.util.concurrent.CompletionException && error.getCause() != null) {
+								cause = error.getCause();
+							}
+							String errorMessage = cause.getMessage() != null ? cause.getMessage() : cause.getClass().getName();
+							Log.w(TAG, "localIfMethod failed: " + errorMessage);
+							Log.d(TAG, "localIfMethod exception details", cause);
+							resp_data.putBoolean("error", true);
+							resp_data.putString("errorMessage", errorMessage);
+							int errorCode;
+							if (cause instanceof RemoteOperationException) {
+								errorCode = ((RemoteOperationException) cause).getErrorCode();
+							} else if (cause instanceof IllegalArgumentException) {
+								errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+							} else if (cause instanceof UnsupportedOperationException) {
+								errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+							} else {
+								errorCode = RemoteOperationException.ERROR_INTERNAL;
+							}
+							resp_data.putInt("errorCode", errorCode);
 						} else {
-							errorCode = RemoteOperationException.ERROR_INTERNAL;
+							ISimpleLocalIf result = (ISimpleLocalIf) rawResult;
+							
+		        resp_data.putParcelable("result", new SimpleLocalIfParcelable(result));
 						}
-						resp_data.putInt("errorCode", errorCode);
-					}
 
-					respMsg.setData(resp_data);
+						respMsg.setData(resp_data);
 
-					if (msg.replyTo != null) {
-						try {
-							msg.replyTo.send(respMsg);
-						} catch (RemoteException e) {
-							Log.e(TAG, "failed to send localIfMethod response: " + e);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send localIfMethod response: " + e);
+							}
+						} else {
+							Log.w(TAG, "localIfMethod: replyTo is null, cannot send response");
 						}
-					} else {
-						Log.w(TAG, "localIfMethod: replyTo is null, cannot send response");
-					}
+					});
 					break;
-
 				}
-			// TODO params may be different structs from different modules, there should be a custom class loader 
-			// with a list of class loaders required for this message
-			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 				case RPC_LocalIfMethodListReq: {
-
 					Bundle data = msg.getData();
 					
         data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
-					int callId = data.getInt("callId");
+					final int callId = data.getInt("callId");
+					final Messenger replyTo = msg.replyTo;
 					
                     ISimpleLocalIf[] param =  SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("param", SimpleLocalIfParcelable.class));
-					Message respMsg = new Message();
-					respMsg.what = ParentIfMessageType.RPC_LocalIfMethodListResp.getValue();
-					Bundle resp_data = new Bundle();
-					resp_data.putInt("callId", callId);
 
-					try {
-						if (backend == null || !backend._isReady()) {
-							throw new RemoteOperationException("service not ready",
-								RemoteOperationException.ERROR_SERVICE_NOT_READY);
-						}
-						ISimpleLocalIf[] result =  backend.localIfMethodList(param);
-						
-		        resp_data.putParcelableArray("result",SimpleLocalIfParcelable.wrapArray(result));
-					} catch (Exception e) {
-						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
-						Log.w(TAG, "localIfMethodList failed: " + errorMessage);
-						Log.d(TAG, "localIfMethodList exception details", e);
+					// Pre-flight: backend not ready — respond synchronously with error
+					if (backend == null || !backend._isReady()) {
+						Message respMsg = new Message();
+						respMsg.what = ParentIfMessageType.RPC_LocalIfMethodListResp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
 						resp_data.putBoolean("error", true);
-						resp_data.putString("errorMessage", errorMessage);
-						int errorCode;
-						if (e instanceof RemoteOperationException) {
-							errorCode = ((RemoteOperationException) e).getErrorCode();
-						} else if (e instanceof IllegalArgumentException) {
-							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
-						} else if (e instanceof UnsupportedOperationException) {
-							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						resp_data.putString("errorMessage", "service not ready");
+						resp_data.putInt("errorCode", RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						respMsg.setData(resp_data);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send localIfMethodList not-ready response: " + e);
+							}
+						}
+						break;
+					}
+
+					// Async dispatch — returns immediately, looper is free
+					backend.localIfMethodListAsync(param).whenComplete((Object rawResult, Throwable error) -> {
+						Message respMsg = new Message();
+						respMsg.what = ParentIfMessageType.RPC_LocalIfMethodListResp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
+
+						if (error != null) {
+							Throwable cause = error;
+							if (error instanceof java.util.concurrent.CompletionException && error.getCause() != null) {
+								cause = error.getCause();
+							}
+							String errorMessage = cause.getMessage() != null ? cause.getMessage() : cause.getClass().getName();
+							Log.w(TAG, "localIfMethodList failed: " + errorMessage);
+							Log.d(TAG, "localIfMethodList exception details", cause);
+							resp_data.putBoolean("error", true);
+							resp_data.putString("errorMessage", errorMessage);
+							int errorCode;
+							if (cause instanceof RemoteOperationException) {
+								errorCode = ((RemoteOperationException) cause).getErrorCode();
+							} else if (cause instanceof IllegalArgumentException) {
+								errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+							} else if (cause instanceof UnsupportedOperationException) {
+								errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+							} else {
+								errorCode = RemoteOperationException.ERROR_INTERNAL;
+							}
+							resp_data.putInt("errorCode", errorCode);
 						} else {
-							errorCode = RemoteOperationException.ERROR_INTERNAL;
+							ISimpleLocalIf[] result = (ISimpleLocalIf[]) rawResult;
+							
+		        resp_data.putParcelableArray("result",SimpleLocalIfParcelable.wrapArray(result));
 						}
-						resp_data.putInt("errorCode", errorCode);
-					}
 
-					respMsg.setData(resp_data);
+						respMsg.setData(resp_data);
 
-					if (msg.replyTo != null) {
-						try {
-							msg.replyTo.send(respMsg);
-						} catch (RemoteException e) {
-							Log.e(TAG, "failed to send localIfMethodList response: " + e);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send localIfMethodList response: " + e);
+							}
+						} else {
+							Log.w(TAG, "localIfMethodList: replyTo is null, cannot send response");
 						}
-					} else {
-						Log.w(TAG, "localIfMethodList: replyTo is null, cannot send response");
-					}
+					});
 					break;
-
 				}
-			// TODO params may be different structs from different modules, there should be a custom class loader 
-			// with a list of class loaders required for this message
-			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 				case RPC_ImportedIfMethodReq: {
-
 					Bundle data = msg.getData();
 					
         data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
-					int callId = data.getInt("callId");
+					final int callId = data.getInt("callId");
+					final Messenger replyTo = msg.replyTo;
 					
 			        tbIfaceimport.tbIfaceimport_api.IEmptyIf param = data.getParcelable("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class).getEmptyIf();
-					Message respMsg = new Message();
-					respMsg.what = ParentIfMessageType.RPC_ImportedIfMethodResp.getValue();
-					Bundle resp_data = new Bundle();
-					resp_data.putInt("callId", callId);
 
-					try {
-						if (backend == null || !backend._isReady()) {
-							throw new RemoteOperationException("service not ready",
-								RemoteOperationException.ERROR_SERVICE_NOT_READY);
-						}
-						tbIfaceimport.tbIfaceimport_api.IEmptyIf result =  backend.importedIfMethod(param);
-						
-		        resp_data.putParcelable("result", new tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable(result));
-					} catch (Exception e) {
-						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
-						Log.w(TAG, "importedIfMethod failed: " + errorMessage);
-						Log.d(TAG, "importedIfMethod exception details", e);
+					// Pre-flight: backend not ready — respond synchronously with error
+					if (backend == null || !backend._isReady()) {
+						Message respMsg = new Message();
+						respMsg.what = ParentIfMessageType.RPC_ImportedIfMethodResp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
 						resp_data.putBoolean("error", true);
-						resp_data.putString("errorMessage", errorMessage);
-						int errorCode;
-						if (e instanceof RemoteOperationException) {
-							errorCode = ((RemoteOperationException) e).getErrorCode();
-						} else if (e instanceof IllegalArgumentException) {
-							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
-						} else if (e instanceof UnsupportedOperationException) {
-							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						resp_data.putString("errorMessage", "service not ready");
+						resp_data.putInt("errorCode", RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						respMsg.setData(resp_data);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send importedIfMethod not-ready response: " + e);
+							}
+						}
+						break;
+					}
+
+					// Async dispatch — returns immediately, looper is free
+					backend.importedIfMethodAsync(param).whenComplete((Object rawResult, Throwable error) -> {
+						Message respMsg = new Message();
+						respMsg.what = ParentIfMessageType.RPC_ImportedIfMethodResp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
+
+						if (error != null) {
+							Throwable cause = error;
+							if (error instanceof java.util.concurrent.CompletionException && error.getCause() != null) {
+								cause = error.getCause();
+							}
+							String errorMessage = cause.getMessage() != null ? cause.getMessage() : cause.getClass().getName();
+							Log.w(TAG, "importedIfMethod failed: " + errorMessage);
+							Log.d(TAG, "importedIfMethod exception details", cause);
+							resp_data.putBoolean("error", true);
+							resp_data.putString("errorMessage", errorMessage);
+							int errorCode;
+							if (cause instanceof RemoteOperationException) {
+								errorCode = ((RemoteOperationException) cause).getErrorCode();
+							} else if (cause instanceof IllegalArgumentException) {
+								errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+							} else if (cause instanceof UnsupportedOperationException) {
+								errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+							} else {
+								errorCode = RemoteOperationException.ERROR_INTERNAL;
+							}
+							resp_data.putInt("errorCode", errorCode);
 						} else {
-							errorCode = RemoteOperationException.ERROR_INTERNAL;
+							tbIfaceimport.tbIfaceimport_api.IEmptyIf result = (tbIfaceimport.tbIfaceimport_api.IEmptyIf) rawResult;
+							
+		        resp_data.putParcelable("result", new tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable(result));
 						}
-						resp_data.putInt("errorCode", errorCode);
-					}
 
-					respMsg.setData(resp_data);
+						respMsg.setData(resp_data);
 
-					if (msg.replyTo != null) {
-						try {
-							msg.replyTo.send(respMsg);
-						} catch (RemoteException e) {
-							Log.e(TAG, "failed to send importedIfMethod response: " + e);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send importedIfMethod response: " + e);
+							}
+						} else {
+							Log.w(TAG, "importedIfMethod: replyTo is null, cannot send response");
 						}
-					} else {
-						Log.w(TAG, "importedIfMethod: replyTo is null, cannot send response");
-					}
+					});
 					break;
-
 				}
-			// TODO params may be different structs from different modules, there should be a custom class loader 
-			// with a list of class loaders required for this message
-			// IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 				case RPC_ImportedIfMethodListReq: {
-
 					Bundle data = msg.getData();
 					
         data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
-					int callId = data.getInt("callId");
+					final int callId = data.getInt("callId");
+					final Messenger replyTo = msg.replyTo;
 					
                     tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param =  tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class));
-					Message respMsg = new Message();
-					respMsg.what = ParentIfMessageType.RPC_ImportedIfMethodListResp.getValue();
-					Bundle resp_data = new Bundle();
-					resp_data.putInt("callId", callId);
 
-					try {
-						if (backend == null || !backend._isReady()) {
-							throw new RemoteOperationException("service not ready",
-								RemoteOperationException.ERROR_SERVICE_NOT_READY);
-						}
-						tbIfaceimport.tbIfaceimport_api.IEmptyIf[] result =  backend.importedIfMethodList(param);
-						
-		        resp_data.putParcelableArray("result",tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(result));
-					} catch (Exception e) {
-						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
-						Log.w(TAG, "importedIfMethodList failed: " + errorMessage);
-						Log.d(TAG, "importedIfMethodList exception details", e);
+					// Pre-flight: backend not ready — respond synchronously with error
+					if (backend == null || !backend._isReady()) {
+						Message respMsg = new Message();
+						respMsg.what = ParentIfMessageType.RPC_ImportedIfMethodListResp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
 						resp_data.putBoolean("error", true);
-						resp_data.putString("errorMessage", errorMessage);
-						int errorCode;
-						if (e instanceof RemoteOperationException) {
-							errorCode = ((RemoteOperationException) e).getErrorCode();
-						} else if (e instanceof IllegalArgumentException) {
-							errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
-						} else if (e instanceof UnsupportedOperationException) {
-							errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+						resp_data.putString("errorMessage", "service not ready");
+						resp_data.putInt("errorCode", RemoteOperationException.ERROR_SERVICE_NOT_READY);
+						respMsg.setData(resp_data);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send importedIfMethodList not-ready response: " + e);
+							}
+						}
+						break;
+					}
+
+					// Async dispatch — returns immediately, looper is free
+					backend.importedIfMethodListAsync(param).whenComplete((Object rawResult, Throwable error) -> {
+						Message respMsg = new Message();
+						respMsg.what = ParentIfMessageType.RPC_ImportedIfMethodListResp.getValue();
+						Bundle resp_data = new Bundle();
+						resp_data.putInt("callId", callId);
+
+						if (error != null) {
+							Throwable cause = error;
+							if (error instanceof java.util.concurrent.CompletionException && error.getCause() != null) {
+								cause = error.getCause();
+							}
+							String errorMessage = cause.getMessage() != null ? cause.getMessage() : cause.getClass().getName();
+							Log.w(TAG, "importedIfMethodList failed: " + errorMessage);
+							Log.d(TAG, "importedIfMethodList exception details", cause);
+							resp_data.putBoolean("error", true);
+							resp_data.putString("errorMessage", errorMessage);
+							int errorCode;
+							if (cause instanceof RemoteOperationException) {
+								errorCode = ((RemoteOperationException) cause).getErrorCode();
+							} else if (cause instanceof IllegalArgumentException) {
+								errorCode = RemoteOperationException.ERROR_INVALID_ARGUMENT;
+							} else if (cause instanceof UnsupportedOperationException) {
+								errorCode = RemoteOperationException.ERROR_NOT_IMPLEMENTED;
+							} else {
+								errorCode = RemoteOperationException.ERROR_INTERNAL;
+							}
+							resp_data.putInt("errorCode", errorCode);
 						} else {
-							errorCode = RemoteOperationException.ERROR_INTERNAL;
+							tbIfaceimport.tbIfaceimport_api.IEmptyIf[] result = (tbIfaceimport.tbIfaceimport_api.IEmptyIf[]) rawResult;
+							
+		        resp_data.putParcelableArray("result",tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(result));
 						}
-						resp_data.putInt("errorCode", errorCode);
-					}
 
-					respMsg.setData(resp_data);
+						respMsg.setData(resp_data);
 
-					if (msg.replyTo != null) {
-						try {
-							msg.replyTo.send(respMsg);
-						} catch (RemoteException e) {
-							Log.e(TAG, "failed to send importedIfMethodList response: " + e);
+						if (replyTo != null) {
+							try {
+								replyTo.send(respMsg);
+							} catch (RemoteException e) {
+								Log.e(TAG, "failed to send importedIfMethodList response: " + e);
+							}
+						} else {
+							Log.w(TAG, "importedIfMethodList: replyTo is null, cannot send response");
 						}
-					} else {
-						Log.w(TAG, "importedIfMethodList: replyTo is null, cannot send response");
-					}
+					});
 					break;
-
 				}
 				default:
 					Log.e(TAG, "Receive Unsupported message: " + msg.what);
