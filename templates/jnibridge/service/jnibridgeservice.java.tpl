@@ -13,6 +13,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
@@ -22,7 +24,7 @@ public class {{Camel .Interface.Name}}JniService extends Abstract{{Camel .Interf
 
     private final static String TAG = "{{Camel .Interface.Name}}JniService";
     private static volatile boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public {{Camel .Interface.Name}}JniService()
     {
@@ -56,9 +58,15 @@ public class {{Camel .Interface.Name}}JniService extends Abstract{{Camel .Interf
 
     @Override
     public  {{javaAsyncReturn "" .Return}} {{camel .Name}}Async({{javaParams "" .Params}}) {
-        return CompletableFuture.{{- if .Return.IsVoid }}runAsync{{else}}supplyAsync{{end}}(
-                () -> {     {{- if not .Return.IsVoid }}return{{end}} {{camel .Name}}({{javaVars .Params }}); },
-                executor);
+        try {
+            return CompletableFuture.{{- if .Return.IsVoid }}runAsync{{else}}supplyAsync{{end}}(
+                    () -> {     {{- if not .Return.IsVoid }}return{{end}} {{camel .Name}}({{javaVars .Params }}); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            {{javaAsyncReturn "" .Return}} f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
   {{- end }}    
@@ -66,6 +74,21 @@ public class {{Camel .Interface.Name}}JniService extends Abstract{{Camel .Interf
     @Override
     public boolean _isReady() {
         return isServiceReady;
+    }
+
+    @Override
+    public void _shutdown() {
+        isServiceReady = false;
+        fire_readyStatusChanged(false);
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 
     // Called on Native Impl Service

@@ -45,6 +45,7 @@ public class NestedStruct1InterfaceJniServiceProvider extends HandlerThread impl
 		synchronized (this)
 		{
 			Log.i(TAG, "LIFECYCLE: onDestroy() - stop instance thread, service = " + jniService);
+			clear();
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -82,6 +83,10 @@ public class NestedStruct1InterfaceJniServiceProvider extends HandlerThread impl
 
 	public synchronized void clear()
 	{
+		if (jniService != null)
+		{
+			jniService._shutdown();
+		}
 		jniService = null;
 	}
 }

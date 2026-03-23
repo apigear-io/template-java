@@ -34,6 +34,7 @@ import java.util.concurrent.CompletableFuture;
     CompletableFuture<customTypes.customTypes_api.Vector3D[]> decrementArrayAsync(customTypes.customTypes_api.Vector3D[] vec);
     public void fireValueChanged(customTypes.customTypes_api.Vector3D vector, org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector, customTypes.customTypes_api.Vector3D[] vectorArray, org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] extern_vectorArray);
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(ICounterEventListener listener);

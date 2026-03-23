@@ -20,6 +20,7 @@ import java.util.concurrent.CompletableFuture;
     CompletableFuture<Struct1> func1Async(Struct1 param1);
     public void fireSig1(Struct1 param1);
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(ISameStruct1InterfaceEventListener listener);

@@ -16,6 +16,7 @@ import java.util.concurrent.CompletableFuture;
     CompletableFuture<Integer> intMethodAsync(int param);
     public void fireIntSignal(int param);
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(ISimpleLocalIfEventListener listener);

@@ -12,6 +12,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
@@ -21,7 +23,7 @@ public class VoidInterfaceJniService extends AbstractVoidInterface {
 
     private final static String TAG = "VoidInterfaceJniService";
     private static volatile boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public VoidInterfaceJniService()
     {
@@ -37,14 +39,35 @@ public class VoidInterfaceJniService extends AbstractVoidInterface {
 
     @Override
     public  CompletableFuture<Void> funcVoidAsync() {
-        return CompletableFuture.runAsync(
-                () -> { funcVoid(); },
-                executor);
+        try {
+            return CompletableFuture.runAsync(
+                    () -> { funcVoid(); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<Void> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }    
 
     @Override
     public boolean _isReady() {
         return isServiceReady;
+    }
+
+    @Override
+    public void _shutdown() {
+        isServiceReady = false;
+        fire_readyStatusChanged(false);
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 
     // Called on Native Impl Service

@@ -20,6 +20,7 @@ import java.util.concurrent.CompletableFuture;
     CompletableFuture<Enum1> func1Async(Enum1 param1);
     public void fireSig1(Enum1 param1);
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(ISameEnum1InterfaceEventListener listener);

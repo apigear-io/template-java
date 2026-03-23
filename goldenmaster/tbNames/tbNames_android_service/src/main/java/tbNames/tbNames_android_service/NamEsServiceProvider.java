@@ -45,6 +45,7 @@ public class NamEsServiceProvider extends HandlerThread implements INamEsService
 		synchronized (this)
 		{
 			Log.i(TAG, "LIFECYCLE: onDestroy() - stop instance thread, service = " + m_Service);
+			clear();
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -82,6 +83,10 @@ public class NamEsServiceProvider extends HandlerThread implements INamEsService
 
 	public synchronized void clear()
 	{
+		if (m_Service != null)
+		{
+			m_Service._shutdown();
+		}
 		m_Service = null;
 	}
 }

@@ -37,6 +37,7 @@ import java.util.concurrent.CompletableFuture;
     public void fireImportedIfSignal(tbIfaceimport.tbIfaceimport_api.IEmptyIf param);
     public void fireImportedIfSignalList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param);
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(IParentIfEventListener listener);

@@ -57,6 +57,7 @@ import java.util.concurrent.CompletableFuture;
     public void fireSigString(StructString[] paramString);
     public void fireSigEnum(Enum0[] paramEnum);
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(IStructArrayInterfaceEventListener listener);

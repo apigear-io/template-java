@@ -30,4 +30,7 @@ import java.util.concurrent.ConcurrentHashMap;
         listener.on_readyStatusChanged(isReady);
       }
     }
+
+    @Override
+    public void _shutdown() {}
   }

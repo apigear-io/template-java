@@ -32,6 +32,7 @@ import java.util.concurrent.CompletableFuture;
     public void fireSomeSignal(boolean SOME_PARAM);
     public void fireSomeSignal2(boolean Some_Param);
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(INamEsEventListener listener);

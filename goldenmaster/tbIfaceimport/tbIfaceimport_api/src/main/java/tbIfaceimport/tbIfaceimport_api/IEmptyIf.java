@@ -9,6 +9,7 @@ import java.util.concurrent.CompletableFuture;
     // properties
     // methods
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(IEmptyIfEventListener listener);

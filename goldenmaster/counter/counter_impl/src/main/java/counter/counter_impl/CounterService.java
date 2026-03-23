@@ -14,6 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.Arrays;
@@ -23,7 +25,7 @@ public class CounterService extends AbstractCounter {
 
     private final static String TAG = "CounterService";
     private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private customTypes.customTypes_api.Vector3D m_vector = new customTypes.customTypes_api.Vector3D();
     private org.apache.commons.math3.geometry.euclidean.threed.Vector3D m_extern_vector = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0);
     private customTypes.customTypes_api.Vector3D[] m_vectorArray = new customTypes.customTypes_api.Vector3D[]{};
@@ -125,9 +127,15 @@ public class CounterService extends AbstractCounter {
 
     @Override
     public  CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> incrementAsync(org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec) {
-        return CompletableFuture.supplyAsync(
-                () -> {return increment(vec); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return increment(vec); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -138,9 +146,15 @@ public class CounterService extends AbstractCounter {
 
     @Override
     public  CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]> incrementArrayAsync(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec) {
-        return CompletableFuture.supplyAsync(
-                () -> {return incrementArray(vec); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return incrementArray(vec); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -151,9 +165,15 @@ public class CounterService extends AbstractCounter {
 
     @Override
     public  CompletableFuture<customTypes.customTypes_api.Vector3D> decrementAsync(customTypes.customTypes_api.Vector3D vec) {
-        return CompletableFuture.supplyAsync(
-                () -> {return decrement(vec); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return decrement(vec); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<customTypes.customTypes_api.Vector3D> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -164,14 +184,35 @@ public class CounterService extends AbstractCounter {
 
     @Override
     public  CompletableFuture<customTypes.customTypes_api.Vector3D[]> decrementArrayAsync(customTypes.customTypes_api.Vector3D[] vec) {
-        return CompletableFuture.supplyAsync(
-                () -> {return decrementArray(vec); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return decrementArray(vec); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<customTypes.customTypes_api.Vector3D[]> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }    
 
     @Override
     public boolean _isReady() {
         return isServiceReady;
+    }
+
+    @Override
+    public void _shutdown() {
+        isServiceReady = false;
+        fire_readyStatusChanged(false);
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 
     //In theory event listener interface

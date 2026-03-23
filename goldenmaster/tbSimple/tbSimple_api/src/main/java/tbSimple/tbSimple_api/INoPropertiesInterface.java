@@ -15,6 +15,7 @@ import java.util.concurrent.CompletableFuture;
     public void fireSigVoid();
     public void fireSigBool(boolean paramBool);
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(INoPropertiesInterfaceEventListener listener);

@@ -19,6 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.Arrays;
@@ -28,7 +30,7 @@ public class StructArrayInterfaceService extends AbstractStructArrayInterface {
 
     private final static String TAG = "StructArrayInterfaceService";
     private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private StructBool[] m_propBool = new StructBool[]{};
     private StructInt[] m_propInt = new StructInt[]{};
     private StructFloat[] m_propFloat = new StructFloat[]{};
@@ -149,9 +151,15 @@ public class StructArrayInterfaceService extends AbstractStructArrayInterface {
 
     @Override
     public  CompletableFuture<StructBool[]> funcBoolAsync(StructBool[] paramBool) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcBool(paramBool); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcBool(paramBool); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<StructBool[]> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -162,9 +170,15 @@ public class StructArrayInterfaceService extends AbstractStructArrayInterface {
 
     @Override
     public  CompletableFuture<StructInt[]> funcIntAsync(StructInt[] paramInt) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcInt(paramInt); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcInt(paramInt); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<StructInt[]> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -175,9 +189,15 @@ public class StructArrayInterfaceService extends AbstractStructArrayInterface {
 
     @Override
     public  CompletableFuture<StructFloat[]> funcFloatAsync(StructFloat[] paramFloat) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcFloat(paramFloat); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcFloat(paramFloat); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<StructFloat[]> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -188,9 +208,15 @@ public class StructArrayInterfaceService extends AbstractStructArrayInterface {
 
     @Override
     public  CompletableFuture<StructString[]> funcStringAsync(StructString[] paramString) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcString(paramString); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcString(paramString); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<StructString[]> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -201,14 +227,35 @@ public class StructArrayInterfaceService extends AbstractStructArrayInterface {
 
     @Override
     public  CompletableFuture<Enum0[]> funcEnumAsync(Enum0[] paramEnum) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcEnum(paramEnum); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcEnum(paramEnum); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<Enum0[]> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }    
 
     @Override
     public boolean _isReady() {
         return isServiceReady;
+    }
+
+    @Override
+    public void _shutdown() {
+        isServiceReady = false;
+        fire_readyStatusChanged(false);
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 
     //In theory event listener interface

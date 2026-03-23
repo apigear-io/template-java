@@ -45,6 +45,7 @@ public class EnumInterfaceJniServiceProvider extends HandlerThread implements IE
 		synchronized (this)
 		{
 			Log.i(TAG, "LIFECYCLE: onDestroy() - stop instance thread, service = " + jniService);
+			clear();
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -82,6 +83,10 @@ public class EnumInterfaceJniServiceProvider extends HandlerThread implements IE
 
 	public synchronized void clear()
 	{
+		if (jniService != null)
+		{
+			jniService._shutdown();
+		}
 		jniService = null;
 	}
 }

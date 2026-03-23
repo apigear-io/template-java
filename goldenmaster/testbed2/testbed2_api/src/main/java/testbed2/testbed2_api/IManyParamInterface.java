@@ -47,6 +47,7 @@ import java.util.concurrent.CompletableFuture;
     public void fireSig3(int param1, int param2, int param3);
     public void fireSig4(int param1, int param2, int param3, int param4);
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(IManyParamInterfaceEventListener listener);

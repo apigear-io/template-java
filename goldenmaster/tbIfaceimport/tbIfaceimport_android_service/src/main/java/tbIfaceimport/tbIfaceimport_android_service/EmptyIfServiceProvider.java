@@ -45,6 +45,7 @@ public class EmptyIfServiceProvider extends HandlerThread implements IEmptyIfSer
 		synchronized (this)
 		{
 			Log.i(TAG, "LIFECYCLE: onDestroy() - stop instance thread, service = " + m_Service);
+			clear();
 			Singleton.INSTANCE.quit();
 		}
 	}
@@ -82,6 +83,10 @@ public class EmptyIfServiceProvider extends HandlerThread implements IEmptyIfSer
 
 	public synchronized void clear()
 	{
+		if (m_Service != null)
+		{
+			m_Service._shutdown();
+		}
 		m_Service = null;
 	}
 }

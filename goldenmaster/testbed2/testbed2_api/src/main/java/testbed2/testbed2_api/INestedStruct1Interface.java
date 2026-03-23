@@ -30,6 +30,7 @@ import java.util.concurrent.CompletableFuture;
     CompletableFuture<NestedStruct1> func1Async(NestedStruct1 param1);
     public void fireSig1(NestedStruct1 param1);
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(INestedStruct1InterfaceEventListener listener);

@@ -14,6 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.Arrays;
@@ -23,7 +25,7 @@ public class SimpleArrayInterfaceService extends AbstractSimpleArrayInterface {
 
     private final static String TAG = "SimpleArrayInterfaceService";
     private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private boolean[] m_propBool = new boolean[]{};
     private int[] m_propInt = new int[]{};
     private int[] m_propInt32 = new int[]{};
@@ -228,9 +230,15 @@ public class SimpleArrayInterfaceService extends AbstractSimpleArrayInterface {
 
     @Override
     public  CompletableFuture<boolean[]> funcBoolAsync(boolean[] paramBool) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcBool(paramBool); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcBool(paramBool); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<boolean[]> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -241,9 +249,15 @@ public class SimpleArrayInterfaceService extends AbstractSimpleArrayInterface {
 
     @Override
     public  CompletableFuture<int[]> funcIntAsync(int[] paramInt) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcInt(paramInt); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcInt(paramInt); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<int[]> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -254,9 +268,15 @@ public class SimpleArrayInterfaceService extends AbstractSimpleArrayInterface {
 
     @Override
     public  CompletableFuture<int[]> funcInt32Async(int[] paramInt32) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcInt32(paramInt32); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcInt32(paramInt32); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<int[]> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -267,9 +287,15 @@ public class SimpleArrayInterfaceService extends AbstractSimpleArrayInterface {
 
     @Override
     public  CompletableFuture<long[]> funcInt64Async(long[] paramInt64) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcInt64(paramInt64); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcInt64(paramInt64); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<long[]> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -280,9 +306,15 @@ public class SimpleArrayInterfaceService extends AbstractSimpleArrayInterface {
 
     @Override
     public  CompletableFuture<float[]> funcFloatAsync(float[] paramFloat) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcFloat(paramFloat); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcFloat(paramFloat); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<float[]> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -293,9 +325,15 @@ public class SimpleArrayInterfaceService extends AbstractSimpleArrayInterface {
 
     @Override
     public  CompletableFuture<float[]> funcFloat32Async(float[] paramFloat32) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcFloat32(paramFloat32); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcFloat32(paramFloat32); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<float[]> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -306,9 +344,15 @@ public class SimpleArrayInterfaceService extends AbstractSimpleArrayInterface {
 
     @Override
     public  CompletableFuture<double[]> funcFloat64Async(double[] paramFloat) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcFloat64(paramFloat); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcFloat64(paramFloat); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<double[]> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -319,14 +363,35 @@ public class SimpleArrayInterfaceService extends AbstractSimpleArrayInterface {
 
     @Override
     public  CompletableFuture<String[]> funcStringAsync(String[] paramString) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcString(paramString); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcString(paramString); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<String[]> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }    
 
     @Override
     public boolean _isReady() {
         return isServiceReady;
+    }
+
+    @Override
+    public void _shutdown() {
+        isServiceReady = false;
+        fire_readyStatusChanged(false);
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 
     //In theory event listener interface

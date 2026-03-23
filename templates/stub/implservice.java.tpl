@@ -15,6 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.Arrays;
@@ -24,7 +26,7 @@ public class {{Camel .Interface.Name}}Service extends Abstract{{Camel .Interface
 
     private final static String TAG = "{{Camel .Interface.Name}}Service";
     private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     {{- range .Interface.Properties }}
     private {{javaReturn "" .}} m_{{javaVar  .}} = {{ javaDefault "" . }};
@@ -74,9 +76,15 @@ public class {{Camel .Interface.Name}}Service extends Abstract{{Camel .Interface
 
     @Override
     public  {{javaAsyncReturn "" .Return}} {{camel .Name}}Async({{javaParams "" .Params}}) {
-        return CompletableFuture.{{- if .Return.IsVoid }}runAsync{{else}}supplyAsync{{end}}(
-                () -> {     {{- if not .Return.IsVoid }}return{{end}} {{camel .Name}}({{javaVars .Params }}); },
-                executor);
+        try {
+            return CompletableFuture.{{- if .Return.IsVoid }}runAsync{{else}}supplyAsync{{end}}(
+                    () -> {     {{- if not .Return.IsVoid }}return{{end}} {{camel .Name}}({{javaVars .Params }}); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            {{javaAsyncReturn "" .Return}} f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
   {{- end }}    
@@ -84,6 +92,21 @@ public class {{Camel .Interface.Name}}Service extends Abstract{{Camel .Interface
     @Override
     public boolean _isReady() {
         return isServiceReady;
+    }
+
+    @Override
+    public void _shutdown() {
+        isServiceReady = false;
+        fire_readyStatusChanged(false);
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 
     //In theory event listener interface

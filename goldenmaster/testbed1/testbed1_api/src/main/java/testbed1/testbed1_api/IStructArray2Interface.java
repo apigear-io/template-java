@@ -56,6 +56,7 @@ import java.util.concurrent.CompletableFuture;
     public void fireSigFloat(StructFloatWithArray paramFloat);
     public void fireSigString(StructStringWithArray paramString);
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(IStructArray2InterfaceEventListener listener);

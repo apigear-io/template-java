@@ -69,6 +69,7 @@ import java.util.concurrent.CompletableFuture;
     public void fireSigFloat64(double paramFloat64);
     public void fireSigString(String paramString);
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(ISimpleInterfaceEventListener listener);

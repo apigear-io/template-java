@@ -15,6 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.Arrays;
@@ -24,7 +26,7 @@ public class NamEsService extends AbstractNamEs {
 
     private final static String TAG = "NamEsService";
     private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private boolean m_Switch = false;
     private int m_SOME_PROPERTY = 0;
     private int m_Some_Poperty2 = 0;
@@ -124,9 +126,15 @@ public class NamEsService extends AbstractNamEs {
 
     @Override
     public  CompletableFuture<Void> someFunctionAsync(boolean SOME_PARAM) {
-        return CompletableFuture.runAsync(
-                () -> { someFunction(SOME_PARAM); },
-                executor);
+        try {
+            return CompletableFuture.runAsync(
+                    () -> { someFunction(SOME_PARAM); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<Void> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -137,14 +145,35 @@ public class NamEsService extends AbstractNamEs {
 
     @Override
     public  CompletableFuture<Void> someFunction2Async(boolean Some_Param) {
-        return CompletableFuture.runAsync(
-                () -> { someFunction2(Some_Param); },
-                executor);
+        try {
+            return CompletableFuture.runAsync(
+                    () -> { someFunction2(Some_Param); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<Void> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }    
 
     @Override
     public boolean _isReady() {
         return isServiceReady;
+    }
+
+    @Override
+    public void _shutdown() {
+        isServiceReady = false;
+        fire_readyStatusChanged(false);
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 
     //In theory event listener interface

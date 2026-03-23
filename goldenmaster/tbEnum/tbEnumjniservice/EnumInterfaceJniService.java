@@ -20,6 +20,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
@@ -29,7 +31,7 @@ public class EnumInterfaceJniService extends AbstractEnumInterface {
 
     private final static String TAG = "EnumInterfaceJniService";
     private static volatile boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public EnumInterfaceJniService()
     {
@@ -105,9 +107,15 @@ public class EnumInterfaceJniService extends AbstractEnumInterface {
 
     @Override
     public  CompletableFuture<Enum0> func0Async(Enum0 param0) {
-        return CompletableFuture.supplyAsync(
-                () -> {return func0(param0); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return func0(param0); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<Enum0> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -118,9 +126,15 @@ public class EnumInterfaceJniService extends AbstractEnumInterface {
 
     @Override
     public  CompletableFuture<Enum1> func1Async(Enum1 param1) {
-        return CompletableFuture.supplyAsync(
-                () -> {return func1(param1); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return func1(param1); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<Enum1> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -131,9 +145,15 @@ public class EnumInterfaceJniService extends AbstractEnumInterface {
 
     @Override
     public  CompletableFuture<Enum2> func2Async(Enum2 param2) {
-        return CompletableFuture.supplyAsync(
-                () -> {return func2(param2); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return func2(param2); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<Enum2> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -144,14 +164,35 @@ public class EnumInterfaceJniService extends AbstractEnumInterface {
 
     @Override
     public  CompletableFuture<Enum3> func3Async(Enum3 param3) {
-        return CompletableFuture.supplyAsync(
-                () -> {return func3(param3); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return func3(param3); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<Enum3> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }    
 
     @Override
     public boolean _isReady() {
         return isServiceReady;
+    }
+
+    @Override
+    public void _shutdown() {
+        isServiceReady = false;
+        fire_readyStatusChanged(false);
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 
     // Called on Native Impl Service

@@ -41,6 +41,7 @@ import java.util.concurrent.CompletableFuture;
     public void fireSig2(Enum2 param2);
     public void fireSig3(Enum3 param3);
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(IEnumInterfaceEventListener listener);

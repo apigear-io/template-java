@@ -27,6 +27,7 @@ import java.util.concurrent.CompletableFuture;
     public void fire{{Camel .Name}}({{javaParams "" .Params}});
   {{- end }}
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(I{{Camel .Interface.Name }}EventListener listener);

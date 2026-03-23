@@ -40,6 +40,7 @@ import java.util.concurrent.CompletableFuture;
     public void fireSig2(NestedStruct1 param1, NestedStruct2 param2);
     public void fireSig3(NestedStruct1 param1, NestedStruct2 param2, NestedStruct3 param3);
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(INestedStruct3InterfaceEventListener listener);

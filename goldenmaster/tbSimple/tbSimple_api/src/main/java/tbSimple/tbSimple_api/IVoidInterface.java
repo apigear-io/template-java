@@ -12,6 +12,7 @@ import java.util.concurrent.CompletableFuture;
     CompletableFuture<Void> funcVoidAsync();
     public void fireSigVoid();
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(IVoidInterfaceEventListener listener);

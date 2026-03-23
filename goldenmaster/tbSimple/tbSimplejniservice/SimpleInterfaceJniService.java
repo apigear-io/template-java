@@ -12,6 +12,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
@@ -21,7 +23,7 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
 
     private final static String TAG = "SimpleInterfaceJniService";
     private static volatile boolean isServiceReady = false;
-    private static final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public SimpleInterfaceJniService()
     {
@@ -157,9 +159,15 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
 
     @Override
     public  CompletableFuture<Void> funcNoReturnValueAsync(boolean paramBool) {
-        return CompletableFuture.runAsync(
-                () -> { funcNoReturnValue(paramBool); },
-                executor);
+        try {
+            return CompletableFuture.runAsync(
+                    () -> { funcNoReturnValue(paramBool); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<Void> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -170,9 +178,15 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
 
     @Override
     public  CompletableFuture<Boolean> funcNoParamsAsync() {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcNoParams(); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcNoParams(); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<Boolean> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -183,9 +197,15 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
 
     @Override
     public  CompletableFuture<Boolean> funcBoolAsync(boolean paramBool) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcBool(paramBool); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcBool(paramBool); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<Boolean> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -196,9 +216,15 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
 
     @Override
     public  CompletableFuture<Integer> funcIntAsync(int paramInt) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcInt(paramInt); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcInt(paramInt); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<Integer> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -209,9 +235,15 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
 
     @Override
     public  CompletableFuture<Integer> funcInt32Async(int paramInt32) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcInt32(paramInt32); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcInt32(paramInt32); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<Integer> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -222,9 +254,15 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
 
     @Override
     public  CompletableFuture<Long> funcInt64Async(long paramInt64) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcInt64(paramInt64); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcInt64(paramInt64); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<Long> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -235,9 +273,15 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
 
     @Override
     public  CompletableFuture<Float> funcFloatAsync(float paramFloat) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcFloat(paramFloat); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcFloat(paramFloat); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<Float> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -248,9 +292,15 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
 
     @Override
     public  CompletableFuture<Float> funcFloat32Async(float paramFloat32) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcFloat32(paramFloat32); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcFloat32(paramFloat32); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<Float> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -261,9 +311,15 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
 
     @Override
     public  CompletableFuture<Double> funcFloat64Async(double paramFloat) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcFloat64(paramFloat); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcFloat64(paramFloat); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<Double> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }
 
     @Override
@@ -274,14 +330,35 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
 
     @Override
     public  CompletableFuture<String> funcStringAsync(String paramString) {
-        return CompletableFuture.supplyAsync(
-                () -> {return funcString(paramString); },
-                executor);
+        try {
+            return CompletableFuture.supplyAsync(
+                    () -> {return funcString(paramString); },
+                    executor);
+        } catch (RejectedExecutionException e) {
+            CompletableFuture<String> f = new CompletableFuture<>();
+            f.completeExceptionally(e);
+            return f;
+        }
     }    
 
     @Override
     public boolean _isReady() {
         return isServiceReady;
+    }
+
+    @Override
+    public void _shutdown() {
+        isServiceReady = false;
+        fire_readyStatusChanged(false);
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 
     // Called on Native Impl Service

@@ -27,6 +27,7 @@ import java.util.concurrent.CompletableFuture;
     public void fireSig1(Struct1 param1);
     public void fireSig2(Struct1 param1, Struct2 param2);
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(ISameStruct2InterfaceEventListener listener);

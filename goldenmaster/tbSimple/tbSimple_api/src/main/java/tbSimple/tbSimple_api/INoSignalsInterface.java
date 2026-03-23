@@ -21,6 +21,7 @@ import java.util.concurrent.CompletableFuture;
     boolean funcBool(boolean paramBool);
     CompletableFuture<Boolean> funcBoolAsync(boolean paramBool);
     boolean _isReady();
+    void _shutdown();
     // signal listeners
     public void fire_readyStatusChanged(boolean isReady);
     void addEventListener(INoSignalsInterfaceEventListener listener);
