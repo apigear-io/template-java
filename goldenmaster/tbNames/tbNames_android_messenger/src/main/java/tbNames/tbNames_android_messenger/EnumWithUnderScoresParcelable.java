@@ -63,7 +63,7 @@ import java.util.Arrays;
     }
 
     public static EnumWithUnderScores[] unwrapArray(EnumWithUnderScoresParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new EnumWithUnderScores[0];
         return Arrays.stream(parcelables)
            .map(EnumWithUnderScoresParcelable::getEnumWithUnderScores)
            .toArray(EnumWithUnderScores[]::new);

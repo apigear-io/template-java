@@ -22,7 +22,10 @@ import tbIfaceimport.tbIfaceimport_api.IEmptyIfEventListener;
 import tbIfaceimport.tbIfaceimport_api.IEmptyIf;
 import tbIfaceimport.tbIfaceimport_api.AbstractEmptyIf;
 import tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfMessageType;
+import tbIfaceimport.tbIfaceimport_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
@@ -30,7 +33,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
 
 public class EmptyIfClient extends AbstractEmptyIf implements ServiceConnection
@@ -193,7 +195,7 @@ public class EmptyIfClient extends AbstractEmptyIf implements ServiceConnection
 
                     break;
                 }
-			    // TODO params may be different structs from different modules, there should be a custom class loader 
+			    // TODO params may be different structs from different modules, there should be a custom class loader
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 			    default:
@@ -204,7 +206,7 @@ public class EmptyIfClient extends AbstractEmptyIf implements ServiceConnection
 
 	    }
     };
-    // methods    
+    // methods
 
     @Override
     public boolean _isReady() {

@@ -1,23 +1,20 @@
 package testbed2.testbed2jniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import testbed2.testbed2_api.INestedStruct1Interface;
 import testbed2.testbed2_api.AbstractNestedStruct1Interface;
 import testbed2.testbed2_api.INestedStruct1InterfaceEventListener;
+import testbed2.testbed2_android_messenger.Conversions;
 import testbed2.testbed2_api.NestedStruct1;
 import testbed2.testbed2_android_messenger.NestedStruct1Parcelable;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 
 public class NestedStruct1InterfaceJniService extends AbstractNestedStruct1Interface {
@@ -51,7 +48,7 @@ public class NestedStruct1InterfaceJniService extends AbstractNestedStruct1Inter
     @Override
     public void funcNoReturnValue(NestedStruct1 param1) {
         Log.i(TAG, "request method funcNoReturnValue called, will call native");
-         nativeFuncNoReturnValue(param1);
+        nativeFuncNoReturnValue(param1);
     }
 
     @Override
@@ -103,7 +100,7 @@ public class NestedStruct1InterfaceJniService extends AbstractNestedStruct1Inter
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -125,11 +122,10 @@ public class NestedStruct1InterfaceJniService extends AbstractNestedStruct1Inter
         }
     }
 
-    // Called on Native Impl Service
+    // Native methods — use array types for JNI compatibility
     private native void nativeSetProp1(NestedStruct1 prop1);
     private native NestedStruct1 nativeGetProp1();
   
-    // methods
     private native void nativeFuncNoReturnValue(NestedStruct1 param1);
     private native NestedStruct1 nativeFuncNoParams();
     private native NestedStruct1 nativeFunc1(NestedStruct1 param1);
@@ -139,7 +135,7 @@ public class NestedStruct1InterfaceJniService extends AbstractNestedStruct1Inter
         isServiceReady = value;
     }
 
-    //In theory event listener interface
+    // Callbacks from native — receive arrays, convert to List and fire events
     public void onProp1Changed(NestedStruct1 newValue)
     {
          Log.i(TAG, "onProp1Changed, will pass notification to all listeners");

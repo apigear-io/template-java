@@ -5,7 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
   public  class SimpleArrayInterfaceParcelable implements Parcelable {
 
@@ -51,14 +53,14 @@ import java.util.Arrays;
         if (data == null) {
             return;
         }
-        dest.writeBooleanArray(data.getPropBool());
-        dest.writeIntArray(data.getPropInt());
-        dest.writeIntArray(data.getPropInt32());
-        dest.writeLongArray(data.getPropInt64());
-        dest.writeFloatArray(data.getPropFloat());
-        dest.writeFloatArray(data.getPropFloat32());
-        dest.writeDoubleArray(data.getPropFloat64());
-        dest.writeStringArray(data.getPropString());
+        dest.writeBooleanArray(Conversions.toArray(data.getPropBool(), new boolean[0]));
+        dest.writeIntArray(Conversions.toArray(data.getPropInt(), new int[0]));
+        dest.writeIntArray(Conversions.toArray(data.getPropInt32(), new int[0]));
+        dest.writeLongArray(Conversions.toArray(data.getPropInt64(), new long[0]));
+        dest.writeFloatArray(Conversions.toArray(data.getPropFloat(), new float[0]));
+        dest.writeFloatArray(Conversions.toArray(data.getPropFloat32(), new float[0]));
+        dest.writeDoubleArray(Conversions.toArray(data.getPropFloat64(), new double[0]));
+        dest.writeStringArray(Conversions.toArray(data.getPropString(), new String[0]));
         dest.writeString(data.getPropReadOnlyString());
 
 
@@ -71,7 +73,7 @@ import java.util.Arrays;
     }
 
     public static ISimpleArrayInterface[] unwrapArray(SimpleArrayInterfaceParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new ISimpleArrayInterface[0];
         return Arrays.stream(parcelables)
            .map(SimpleArrayInterfaceParcelable::getSimpleArrayInterface)
            .toArray(ISimpleArrayInterface[]::new);

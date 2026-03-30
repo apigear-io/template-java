@@ -61,7 +61,7 @@ import java.util.Arrays;
     }
 
     public static Vector3D[] unwrapArray(MyVector3DParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new Vector3D[0];
         return Arrays.stream(parcelables)
            .map(MyVector3DParcelable::getMyVector3D)
            .toArray(Vector3D[]::new);

@@ -31,7 +31,10 @@ import testbed1.testbed1_api.IStructArrayInterface;
 import testbed1.testbed1_api.AbstractStructArrayInterface;
 import testbed1.testbed1_api.RemoteOperationException;
 import testbed1.testbed1_android_messenger.StructArrayInterfaceMessageType;
+import testbed1.testbed1_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 public class StructArrayInterfaceServiceAdapter extends Service
@@ -240,7 +243,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						data.setClassLoader(StructBoolParcelable.class.getClassLoader());
 						
-                    StructBool[] propBool =  StructBoolParcelable.unwrapArray((StructBoolParcelable[])data.getParcelableArray("propBool", StructBoolParcelable.class));
+                    List<StructBool> propBool = Conversions.toList(StructBoolParcelable.unwrapArray((StructBoolParcelable[])data.getParcelableArray("propBool", StructBoolParcelable.class)));
 						backend.setPropBool(propBool);
 						break;
 					}
@@ -249,7 +252,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						data.setClassLoader(StructIntParcelable.class.getClassLoader());
 						
-                    StructInt[] propInt =  StructIntParcelable.unwrapArray((StructIntParcelable[])data.getParcelableArray("propInt", StructIntParcelable.class));
+                    List<StructInt> propInt = Conversions.toList(StructIntParcelable.unwrapArray((StructIntParcelable[])data.getParcelableArray("propInt", StructIntParcelable.class)));
 						backend.setPropInt(propInt);
 						break;
 					}
@@ -258,7 +261,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						data.setClassLoader(StructFloatParcelable.class.getClassLoader());
 						
-                    StructFloat[] propFloat =  StructFloatParcelable.unwrapArray((StructFloatParcelable[])data.getParcelableArray("propFloat", StructFloatParcelable.class));
+                    List<StructFloat> propFloat = Conversions.toList(StructFloatParcelable.unwrapArray((StructFloatParcelable[])data.getParcelableArray("propFloat", StructFloatParcelable.class)));
 						backend.setPropFloat(propFloat);
 						break;
 					}
@@ -267,7 +270,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						data.setClassLoader(StructStringParcelable.class.getClassLoader());
 						
-                    StructString[] propString =  StructStringParcelable.unwrapArray((StructStringParcelable[])data.getParcelableArray("propString", StructStringParcelable.class));
+                    List<StructString> propString = Conversions.toList(StructStringParcelable.unwrapArray((StructStringParcelable[])data.getParcelableArray("propString", StructStringParcelable.class)));
 						backend.setPropString(propString);
 						break;
 					}
@@ -276,7 +279,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
 						Bundle data = msg.getData();
 						data.setClassLoader(Enum0Parcelable.class.getClassLoader());
 						
-                    Enum0[] propEnum =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("propEnum", Enum0Parcelable.class));
+                    List<Enum0> propEnum = Conversions.toList(Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("propEnum", Enum0Parcelable.class)));
 						backend.setPropEnum(propEnum);
 						break;
 					}
@@ -290,7 +293,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
         data.setClassLoader(StructBoolParcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
-                    StructBool[] paramBool =  StructBoolParcelable.unwrapArray((StructBoolParcelable[])data.getParcelableArray("paramBool", StructBoolParcelable.class));
+                    List<StructBool> paramBool = Conversions.toList(StructBoolParcelable.unwrapArray((StructBoolParcelable[])data.getParcelableArray("paramBool", StructBoolParcelable.class)));
 					Message respMsg = new Message();
 					respMsg.what = StructArrayInterfaceMessageType.RPC_FuncBoolResp.getValue();
 					Bundle resp_data = new Bundle();
@@ -301,9 +304,9 @@ public class StructArrayInterfaceServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						StructBool[] result =  backend.funcBool(paramBool);
+						List<StructBool> result =  backend.funcBool(paramBool);
 						
-		        resp_data.putParcelableArray("result",StructBoolParcelable.wrapArray(result));
+		        resp_data.putParcelableArray("result",StructBoolParcelable.wrapArray(Conversions.toArray(result, new StructBool[0])));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "funcBool failed: " + errorMessage);
@@ -347,7 +350,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
         data.setClassLoader(StructIntParcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
-                    StructInt[] paramInt =  StructIntParcelable.unwrapArray((StructIntParcelable[])data.getParcelableArray("paramInt", StructIntParcelable.class));
+                    List<StructInt> paramInt = Conversions.toList(StructIntParcelable.unwrapArray((StructIntParcelable[])data.getParcelableArray("paramInt", StructIntParcelable.class)));
 					Message respMsg = new Message();
 					respMsg.what = StructArrayInterfaceMessageType.RPC_FuncIntResp.getValue();
 					Bundle resp_data = new Bundle();
@@ -358,9 +361,9 @@ public class StructArrayInterfaceServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						StructInt[] result =  backend.funcInt(paramInt);
+						List<StructInt> result =  backend.funcInt(paramInt);
 						
-		        resp_data.putParcelableArray("result",StructIntParcelable.wrapArray(result));
+		        resp_data.putParcelableArray("result",StructIntParcelable.wrapArray(Conversions.toArray(result, new StructInt[0])));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "funcInt failed: " + errorMessage);
@@ -404,7 +407,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
         data.setClassLoader(StructFloatParcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
-                    StructFloat[] paramFloat =  StructFloatParcelable.unwrapArray((StructFloatParcelable[])data.getParcelableArray("paramFloat", StructFloatParcelable.class));
+                    List<StructFloat> paramFloat = Conversions.toList(StructFloatParcelable.unwrapArray((StructFloatParcelable[])data.getParcelableArray("paramFloat", StructFloatParcelable.class)));
 					Message respMsg = new Message();
 					respMsg.what = StructArrayInterfaceMessageType.RPC_FuncFloatResp.getValue();
 					Bundle resp_data = new Bundle();
@@ -415,9 +418,9 @@ public class StructArrayInterfaceServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						StructFloat[] result =  backend.funcFloat(paramFloat);
+						List<StructFloat> result =  backend.funcFloat(paramFloat);
 						
-		        resp_data.putParcelableArray("result",StructFloatParcelable.wrapArray(result));
+		        resp_data.putParcelableArray("result",StructFloatParcelable.wrapArray(Conversions.toArray(result, new StructFloat[0])));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "funcFloat failed: " + errorMessage);
@@ -461,7 +464,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
         data.setClassLoader(StructStringParcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
-                    StructString[] paramString =  StructStringParcelable.unwrapArray((StructStringParcelable[])data.getParcelableArray("paramString", StructStringParcelable.class));
+                    List<StructString> paramString = Conversions.toList(StructStringParcelable.unwrapArray((StructStringParcelable[])data.getParcelableArray("paramString", StructStringParcelable.class)));
 					Message respMsg = new Message();
 					respMsg.what = StructArrayInterfaceMessageType.RPC_FuncStringResp.getValue();
 					Bundle resp_data = new Bundle();
@@ -472,9 +475,9 @@ public class StructArrayInterfaceServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						StructString[] result =  backend.funcString(paramString);
+						List<StructString> result =  backend.funcString(paramString);
 						
-		        resp_data.putParcelableArray("result",StructStringParcelable.wrapArray(result));
+		        resp_data.putParcelableArray("result",StructStringParcelable.wrapArray(Conversions.toArray(result, new StructString[0])));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "funcString failed: " + errorMessage);
@@ -518,7 +521,7 @@ public class StructArrayInterfaceServiceAdapter extends Service
         data.setClassLoader(Enum0Parcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
-                    Enum0[] paramEnum =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("paramEnum", Enum0Parcelable.class));
+                    List<Enum0> paramEnum = Conversions.toList(Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("paramEnum", Enum0Parcelable.class)));
 					Message respMsg = new Message();
 					respMsg.what = StructArrayInterfaceMessageType.RPC_FuncEnumResp.getValue();
 					Bundle resp_data = new Bundle();
@@ -529,9 +532,9 @@ public class StructArrayInterfaceServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						Enum0[] result =  backend.funcEnum(paramEnum);
+						List<Enum0> result =  backend.funcEnum(paramEnum);
 						
-		        resp_data.putParcelableArray("result",Enum0Parcelable.wrapArray(result));
+		        resp_data.putParcelableArray("result",Enum0Parcelable.wrapArray(Conversions.toArray(result, new Enum0[0])));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "funcEnum failed: " + errorMessage);
@@ -600,137 +603,137 @@ public class StructArrayInterfaceServiceAdapter extends Service
 			if (backend != null && backend._isReady())
 			{
 				
-				StructBool[] propBool = backend.getPropBool();
+				List<StructBool> propBool = backend.getPropBool();
 				
-		        data.putParcelableArray("propBool", StructBoolParcelable.wrapArray(propBool));
-				StructInt[] propInt = backend.getPropInt();
+		        data.putParcelableArray("propBool", StructBoolParcelable.wrapArray(Conversions.toArray(propBool, new StructBool[0])));
+				List<StructInt> propInt = backend.getPropInt();
 				
-		        data.putParcelableArray("propInt", StructIntParcelable.wrapArray(propInt));
-				StructFloat[] propFloat = backend.getPropFloat();
+		        data.putParcelableArray("propInt", StructIntParcelable.wrapArray(Conversions.toArray(propInt, new StructInt[0])));
+				List<StructFloat> propFloat = backend.getPropFloat();
 				
-		        data.putParcelableArray("propFloat", StructFloatParcelable.wrapArray(propFloat));
-				StructString[] propString = backend.getPropString();
+		        data.putParcelableArray("propFloat", StructFloatParcelable.wrapArray(Conversions.toArray(propFloat, new StructFloat[0])));
+				List<StructString> propString = backend.getPropString();
 				
-		        data.putParcelableArray("propString", StructStringParcelable.wrapArray(propString));
-				Enum0[] propEnum = backend.getPropEnum();
+		        data.putParcelableArray("propString", StructStringParcelable.wrapArray(Conversions.toArray(propString, new StructString[0])));
+				List<Enum0> propEnum = backend.getPropEnum();
 				
-		        data.putParcelableArray("propEnum", Enum0Parcelable.wrapArray(propEnum));
+		        data.putParcelableArray("propEnum", Enum0Parcelable.wrapArray(Conversions.toArray(propEnum, new Enum0[0])));
 				msg.setData(data);
 				sendMessageToClients(msg);
 			}
 		}
 		@Override
-		public void onPropBoolChanged(StructBool[] propBool){
+		public void onPropBoolChanged(List<StructBool> propBool){
 			Log.i(TAG, "New value for PropBool from backend" + propBool);
 
 			Message msg = new Message();
 			msg.what = StructArrayInterfaceMessageType.SET_PropBool.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putParcelableArray("propBool", StructBoolParcelable.wrapArray(propBool));
+		        data.putParcelableArray("propBool", StructBoolParcelable.wrapArray(Conversions.toArray(propBool, new StructBool[0])));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onPropIntChanged(StructInt[] propInt){
+		public void onPropIntChanged(List<StructInt> propInt){
 			Log.i(TAG, "New value for PropInt from backend" + propInt);
 
 			Message msg = new Message();
 			msg.what = StructArrayInterfaceMessageType.SET_PropInt.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putParcelableArray("propInt", StructIntParcelable.wrapArray(propInt));
+		        data.putParcelableArray("propInt", StructIntParcelable.wrapArray(Conversions.toArray(propInt, new StructInt[0])));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onPropFloatChanged(StructFloat[] propFloat){
+		public void onPropFloatChanged(List<StructFloat> propFloat){
 			Log.i(TAG, "New value for PropFloat from backend" + propFloat);
 
 			Message msg = new Message();
 			msg.what = StructArrayInterfaceMessageType.SET_PropFloat.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putParcelableArray("propFloat", StructFloatParcelable.wrapArray(propFloat));
+		        data.putParcelableArray("propFloat", StructFloatParcelable.wrapArray(Conversions.toArray(propFloat, new StructFloat[0])));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onPropStringChanged(StructString[] propString){
+		public void onPropStringChanged(List<StructString> propString){
 			Log.i(TAG, "New value for PropString from backend" + propString);
 
 			Message msg = new Message();
 			msg.what = StructArrayInterfaceMessageType.SET_PropString.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putParcelableArray("propString", StructStringParcelable.wrapArray(propString));
+		        data.putParcelableArray("propString", StructStringParcelable.wrapArray(Conversions.toArray(propString, new StructString[0])));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onPropEnumChanged(Enum0[] propEnum){
+		public void onPropEnumChanged(List<Enum0> propEnum){
 			Log.i(TAG, "New value for PropEnum from backend" + propEnum);
 
 			Message msg = new Message();
 			msg.what = StructArrayInterfaceMessageType.SET_PropEnum.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putParcelableArray("propEnum", Enum0Parcelable.wrapArray(propEnum));
+		        data.putParcelableArray("propEnum", Enum0Parcelable.wrapArray(Conversions.toArray(propEnum, new Enum0[0])));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onSigBool(StructBool[] paramBool){
+		public void onSigBool(List<StructBool> paramBool){
 			Log.i(TAG, "New singal for SigBool = "+ " " + paramBool);
 			Message msg = new Message();
 			msg.what = StructArrayInterfaceMessageType.SIG_SigBool.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putParcelableArray("paramBool", StructBoolParcelable.wrapArray(paramBool));
+		        data.putParcelableArray("paramBool", StructBoolParcelable.wrapArray(Conversions.toArray(paramBool, new StructBool[0])));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onSigInt(StructInt[] paramInt){
+		public void onSigInt(List<StructInt> paramInt){
 			Log.i(TAG, "New singal for SigInt = "+ " " + paramInt);
 			Message msg = new Message();
 			msg.what = StructArrayInterfaceMessageType.SIG_SigInt.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putParcelableArray("paramInt", StructIntParcelable.wrapArray(paramInt));
+		        data.putParcelableArray("paramInt", StructIntParcelable.wrapArray(Conversions.toArray(paramInt, new StructInt[0])));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onSigFloat(StructFloat[] paramFloat){
+		public void onSigFloat(List<StructFloat> paramFloat){
 			Log.i(TAG, "New singal for SigFloat = "+ " " + paramFloat);
 			Message msg = new Message();
 			msg.what = StructArrayInterfaceMessageType.SIG_SigFloat.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putParcelableArray("paramFloat", StructFloatParcelable.wrapArray(paramFloat));
+		        data.putParcelableArray("paramFloat", StructFloatParcelable.wrapArray(Conversions.toArray(paramFloat, new StructFloat[0])));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onSigString(StructString[] paramString){
+		public void onSigString(List<StructString> paramString){
 			Log.i(TAG, "New singal for SigString = "+ " " + paramString);
 			Message msg = new Message();
 			msg.what = StructArrayInterfaceMessageType.SIG_SigString.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putParcelableArray("paramString", StructStringParcelable.wrapArray(paramString));
+		        data.putParcelableArray("paramString", StructStringParcelable.wrapArray(Conversions.toArray(paramString, new StructString[0])));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onSigEnum(Enum0[] paramEnum){
+		public void onSigEnum(List<Enum0> paramEnum){
 			Log.i(TAG, "New singal for SigEnum = "+ " " + paramEnum);
 			Message msg = new Message();
 			msg.what = StructArrayInterfaceMessageType.SIG_SigEnum.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putParcelableArray("paramEnum", Enum0Parcelable.wrapArray(paramEnum));
+		        data.putParcelableArray("paramEnum", Enum0Parcelable.wrapArray(Conversions.toArray(paramEnum, new Enum0[0])));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}

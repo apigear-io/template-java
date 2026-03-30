@@ -29,7 +29,10 @@ import tbEnum.tbEnum_api.IEnumInterface;
 import tbEnum.tbEnum_api.AbstractEnumInterface;
 import tbEnum.tbEnum_api.RemoteOperationException;
 import tbEnum.tbEnum_android_messenger.EnumInterfaceMessageType;
+import tbEnum.tbEnum_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 public class EnumInterfaceServiceAdapter extends Service

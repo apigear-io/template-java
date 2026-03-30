@@ -13,6 +13,8 @@ import testbed1.testbed1_api.StructInt;
 import testbed1.testbed1_api.StructString;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,7 +25,6 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
-import java.util.Arrays;
 
 
 public class StructArrayInterfaceService extends AbstractStructArrayInterface {
@@ -31,212 +32,212 @@ public class StructArrayInterfaceService extends AbstractStructArrayInterface {
     private final static String TAG = "StructArrayInterfaceService";
     private volatile boolean isServiceReady = true;//Use if you're waiting for some setup to be done
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
-    private StructBool[] m_propBool = new StructBool[]{};
-    private StructInt[] m_propInt = new StructInt[]{};
-    private StructFloat[] m_propFloat = new StructFloat[]{};
-    private StructString[] m_propString = new StructString[]{};
-    private Enum0[] m_propEnum = new Enum0[]{};
+    private List<StructBool> m_propBool = new ArrayList<>();
+    private List<StructInt> m_propInt = new ArrayList<>();
+    private List<StructFloat> m_propFloat = new ArrayList<>();
+    private List<StructString> m_propString = new ArrayList<>();
+    private List<Enum0> m_propEnum = new ArrayList<>();
 
     public StructArrayInterfaceService()
     {
         fire_readyStatusChanged(true);
     }
     @Override
-    public void setPropBool(StructBool[] propBool)
+    public void setPropBool(List<StructBool> propBool)
     {
         Log.i(TAG, "request setPropBool called ");
-        if (! Arrays.equals(m_propBool, propBool))
+        if (!m_propBool.equals(propBool))
         {
-            m_propBool = propBool;
-            onPropBoolChanged(m_propBool);
+            m_propBool = new ArrayList<>(propBool);
+            onPropBoolChanged(new ArrayList<>(m_propBool));
         }
 
     }
 
     @Override
-    public StructBool[] getPropBool()
+    public List<StructBool> getPropBool()
     {
         Log.i(TAG, "request getPropBool called,");
-        return m_propBool;
+        return new ArrayList<>(m_propBool);
     }
 
   
     @Override
-    public void setPropInt(StructInt[] propInt)
+    public void setPropInt(List<StructInt> propInt)
     {
         Log.i(TAG, "request setPropInt called ");
-        if (! Arrays.equals(m_propInt, propInt))
+        if (!m_propInt.equals(propInt))
         {
-            m_propInt = propInt;
-            onPropIntChanged(m_propInt);
+            m_propInt = new ArrayList<>(propInt);
+            onPropIntChanged(new ArrayList<>(m_propInt));
         }
 
     }
 
     @Override
-    public StructInt[] getPropInt()
+    public List<StructInt> getPropInt()
     {
         Log.i(TAG, "request getPropInt called,");
-        return m_propInt;
+        return new ArrayList<>(m_propInt);
     }
 
   
     @Override
-    public void setPropFloat(StructFloat[] propFloat)
+    public void setPropFloat(List<StructFloat> propFloat)
     {
         Log.i(TAG, "request setPropFloat called ");
-        if (! Arrays.equals(m_propFloat, propFloat))
+        if (!m_propFloat.equals(propFloat))
         {
-            m_propFloat = propFloat;
-            onPropFloatChanged(m_propFloat);
+            m_propFloat = new ArrayList<>(propFloat);
+            onPropFloatChanged(new ArrayList<>(m_propFloat));
         }
 
     }
 
     @Override
-    public StructFloat[] getPropFloat()
+    public List<StructFloat> getPropFloat()
     {
         Log.i(TAG, "request getPropFloat called,");
-        return m_propFloat;
+        return new ArrayList<>(m_propFloat);
     }
 
   
     @Override
-    public void setPropString(StructString[] propString)
+    public void setPropString(List<StructString> propString)
     {
         Log.i(TAG, "request setPropString called ");
-        if (! Arrays.equals(m_propString, propString))
+        if (!m_propString.equals(propString))
         {
-            m_propString = propString;
-            onPropStringChanged(m_propString);
+            m_propString = new ArrayList<>(propString);
+            onPropStringChanged(new ArrayList<>(m_propString));
         }
 
     }
 
     @Override
-    public StructString[] getPropString()
+    public List<StructString> getPropString()
     {
         Log.i(TAG, "request getPropString called,");
-        return m_propString;
+        return new ArrayList<>(m_propString);
     }
 
   
     @Override
-    public void setPropEnum(Enum0[] propEnum)
+    public void setPropEnum(List<Enum0> propEnum)
     {
         Log.i(TAG, "request setPropEnum called ");
-        if (! Arrays.equals(m_propEnum, propEnum))
+        if (!m_propEnum.equals(propEnum))
         {
-            m_propEnum = propEnum;
-            onPropEnumChanged(m_propEnum);
+            m_propEnum = new ArrayList<>(propEnum);
+            onPropEnumChanged(new ArrayList<>(m_propEnum));
         }
 
     }
 
     @Override
-    public Enum0[] getPropEnum()
+    public List<Enum0> getPropEnum()
     {
         Log.i(TAG, "request getPropEnum called,");
-        return m_propEnum;
+        return new ArrayList<>(m_propEnum);
     }
 
   
     // methods
 
     @Override
-    public StructBool[] funcBool(StructBool[] paramBool) {
+    public List<StructBool> funcBool(List<StructBool> paramBool) {
         Log.i(TAG, "request method funcBool called, returnig default");
-        return new StructBool[]{};
+        return new ArrayList<>();
     }
 
     @Override
-    public  CompletableFuture<StructBool[]> funcBoolAsync(StructBool[] paramBool) {
+    public  CompletableFuture<List<StructBool>> funcBoolAsync(List<StructBool> paramBool) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcBool(paramBool); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<StructBool[]> f = new CompletableFuture<>();
+            CompletableFuture<List<StructBool>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public StructInt[] funcInt(StructInt[] paramInt) {
+    public List<StructInt> funcInt(List<StructInt> paramInt) {
         Log.i(TAG, "request method funcInt called, returnig default");
-        return new StructInt[]{};
+        return new ArrayList<>();
     }
 
     @Override
-    public  CompletableFuture<StructInt[]> funcIntAsync(StructInt[] paramInt) {
+    public  CompletableFuture<List<StructInt>> funcIntAsync(List<StructInt> paramInt) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcInt(paramInt); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<StructInt[]> f = new CompletableFuture<>();
+            CompletableFuture<List<StructInt>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public StructFloat[] funcFloat(StructFloat[] paramFloat) {
+    public List<StructFloat> funcFloat(List<StructFloat> paramFloat) {
         Log.i(TAG, "request method funcFloat called, returnig default");
-        return new StructFloat[]{};
+        return new ArrayList<>();
     }
 
     @Override
-    public  CompletableFuture<StructFloat[]> funcFloatAsync(StructFloat[] paramFloat) {
+    public  CompletableFuture<List<StructFloat>> funcFloatAsync(List<StructFloat> paramFloat) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcFloat(paramFloat); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<StructFloat[]> f = new CompletableFuture<>();
+            CompletableFuture<List<StructFloat>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public StructString[] funcString(StructString[] paramString) {
+    public List<StructString> funcString(List<StructString> paramString) {
         Log.i(TAG, "request method funcString called, returnig default");
-        return new StructString[]{};
+        return new ArrayList<>();
     }
 
     @Override
-    public  CompletableFuture<StructString[]> funcStringAsync(StructString[] paramString) {
+    public  CompletableFuture<List<StructString>> funcStringAsync(List<StructString> paramString) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcString(paramString); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<StructString[]> f = new CompletableFuture<>();
+            CompletableFuture<List<StructString>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public Enum0[] funcEnum(Enum0[] paramEnum) {
+    public List<Enum0> funcEnum(List<Enum0> paramEnum) {
         Log.i(TAG, "request method funcEnum called, returnig default");
-        return new Enum0[]{};
+        return new ArrayList<>();
     }
 
     @Override
-    public  CompletableFuture<Enum0[]> funcEnumAsync(Enum0[] paramEnum) {
+    public  CompletableFuture<List<Enum0>> funcEnumAsync(List<Enum0> paramEnum) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcEnum(paramEnum); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<Enum0[]> f = new CompletableFuture<>();
+            CompletableFuture<List<Enum0>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -259,52 +260,52 @@ public class StructArrayInterfaceService extends AbstractStructArrayInterface {
     }
 
     //In theory event listener interface
-    private void onPropBoolChanged(StructBool[] newValue)
+    private void onPropBoolChanged(List<StructBool> newValue)
     {
          Log.i(TAG, "onPropBoolChanged, will pass notification to all listeners");
          firePropBoolChanged(newValue);
     }
-    private void onPropIntChanged(StructInt[] newValue)
+    private void onPropIntChanged(List<StructInt> newValue)
     {
          Log.i(TAG, "onPropIntChanged, will pass notification to all listeners");
          firePropIntChanged(newValue);
     }
-    private void onPropFloatChanged(StructFloat[] newValue)
+    private void onPropFloatChanged(List<StructFloat> newValue)
     {
          Log.i(TAG, "onPropFloatChanged, will pass notification to all listeners");
          firePropFloatChanged(newValue);
     }
-    private void onPropStringChanged(StructString[] newValue)
+    private void onPropStringChanged(List<StructString> newValue)
     {
          Log.i(TAG, "onPropStringChanged, will pass notification to all listeners");
          firePropStringChanged(newValue);
     }
-    private void onPropEnumChanged(Enum0[] newValue)
+    private void onPropEnumChanged(List<Enum0> newValue)
     {
          Log.i(TAG, "onPropEnumChanged, will pass notification to all listeners");
          firePropEnumChanged(newValue);
     }
-    public void onSigBool(StructBool[] paramBool)
+    public void onSigBool(List<StructBool> paramBool)
     {
         Log.i(TAG, "onSigBool, will pass notification to all listeners");
         fireSigBool(paramBool);
     }
-    public void onSigInt(StructInt[] paramInt)
+    public void onSigInt(List<StructInt> paramInt)
     {
         Log.i(TAG, "onSigInt, will pass notification to all listeners");
         fireSigInt(paramInt);
     }
-    public void onSigFloat(StructFloat[] paramFloat)
+    public void onSigFloat(List<StructFloat> paramFloat)
     {
         Log.i(TAG, "onSigFloat, will pass notification to all listeners");
         fireSigFloat(paramFloat);
     }
-    public void onSigString(StructString[] paramString)
+    public void onSigString(List<StructString> paramString)
     {
         Log.i(TAG, "onSigString, will pass notification to all listeners");
         fireSigString(paramString);
     }
-    public void onSigEnum(Enum0[] paramEnum)
+    public void onSigEnum(List<Enum0> paramEnum)
     {
         Log.i(TAG, "onSigEnum, will pass notification to all listeners");
         fireSigEnum(paramEnum);

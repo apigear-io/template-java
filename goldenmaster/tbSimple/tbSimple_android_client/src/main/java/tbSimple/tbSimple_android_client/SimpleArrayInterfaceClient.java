@@ -23,7 +23,10 @@ import tbSimple.tbSimple_api.ISimpleArrayInterface;
 import tbSimple.tbSimple_api.AbstractSimpleArrayInterface;
 import tbSimple.tbSimple_api.RemoteOperationException;
 import tbSimple.tbSimple_android_messenger.SimpleArrayInterfaceMessageType;
+import tbSimple.tbSimple_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
@@ -31,7 +34,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
 
 public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface implements ServiceConnection
@@ -48,14 +50,14 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 
     private final Map<Integer, Consumer<Bundle>> mpendingCalls = new ConcurrentHashMap<>();
     AtomicInteger callIdsGetter = new AtomicInteger(0);
-    private boolean[] m_propBool = new boolean[]{};
-    private int[] m_propInt = new int[]{};
-    private int[] m_propInt32 = new int[]{};
-    private long[] m_propInt64 = new long[]{};
-    private float[] m_propFloat = new float[]{};
-    private float[] m_propFloat32 = new float[]{};
-    private double[] m_propFloat64 = new double[]{};
-    private String[] m_propString = new String[]{};
+    private List<Boolean> m_propBool = new ArrayList<>();
+    private List<Integer> m_propInt = new ArrayList<>();
+    private List<Integer> m_propInt32 = new ArrayList<>();
+    private List<Long> m_propInt64 = new ArrayList<>();
+    private List<Float> m_propFloat = new ArrayList<>();
+    private List<Float> m_propFloat32 = new ArrayList<>();
+    private List<Double> m_propFloat64 = new ArrayList<>();
+    private List<String> m_propString = new ArrayList<>();
     private String m_propReadOnlyString = new String();
 
 
@@ -201,28 +203,28 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
                     
 			        
                     
-			        boolean[] propBool = data.getBooleanArray("propBool");
+			        List<Boolean> propBool = Conversions.toList(data.getBooleanArray("propBool"));
 				    onPropBool(propBool);
                     
-			        int[] propInt = data.getIntArray("propInt");
+			        List<Integer> propInt = Conversions.toList(data.getIntArray("propInt"));
 				    onPropInt(propInt);
                     
-			        int[] propInt32 = data.getIntArray("propInt32");
+			        List<Integer> propInt32 = Conversions.toList(data.getIntArray("propInt32"));
 				    onPropInt32(propInt32);
                     
-			        long[] propInt64 = data.getLongArray("propInt64");
+			        List<Long> propInt64 = Conversions.toList(data.getLongArray("propInt64"));
 				    onPropInt64(propInt64);
                     
-			        float[] propFloat = data.getFloatArray("propFloat");
+			        List<Float> propFloat = Conversions.toList(data.getFloatArray("propFloat"));
 				    onPropFloat(propFloat);
                     
-			        float[] propFloat32 = data.getFloatArray("propFloat32");
+			        List<Float> propFloat32 = Conversions.toList(data.getFloatArray("propFloat32"));
 				    onPropFloat32(propFloat32);
                     
-			        double[] propFloat64 = data.getDoubleArray("propFloat64");
+			        List<Double> propFloat64 = Conversions.toList(data.getDoubleArray("propFloat64"));
 				    onPropFloat64(propFloat64);
                     
-			        String[] propString = data.getStringArray("propString");
+			        List<String> propString = Conversions.toList(data.getStringArray("propString"));
 				    onPropString(propString);
                     
 			        String propReadOnlyString = data.getString("propReadOnlyString", new String());
@@ -235,7 +237,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 				    Bundle data = msg.getData();
 
                     
-			        boolean[] propBool = data.getBooleanArray("propBool");
+			        List<Boolean> propBool = Conversions.toList(data.getBooleanArray("propBool"));
 
 				    onPropBool(propBool);
 				    break;
@@ -245,7 +247,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 				    Bundle data = msg.getData();
 
                     
-			        int[] propInt = data.getIntArray("propInt");
+			        List<Integer> propInt = Conversions.toList(data.getIntArray("propInt"));
 
 				    onPropInt(propInt);
 				    break;
@@ -255,7 +257,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 				    Bundle data = msg.getData();
 
                     
-			        int[] propInt32 = data.getIntArray("propInt32");
+			        List<Integer> propInt32 = Conversions.toList(data.getIntArray("propInt32"));
 
 				    onPropInt32(propInt32);
 				    break;
@@ -265,7 +267,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 				    Bundle data = msg.getData();
 
                     
-			        long[] propInt64 = data.getLongArray("propInt64");
+			        List<Long> propInt64 = Conversions.toList(data.getLongArray("propInt64"));
 
 				    onPropInt64(propInt64);
 				    break;
@@ -275,7 +277,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 				    Bundle data = msg.getData();
 
                     
-			        float[] propFloat = data.getFloatArray("propFloat");
+			        List<Float> propFloat = Conversions.toList(data.getFloatArray("propFloat"));
 
 				    onPropFloat(propFloat);
 				    break;
@@ -285,7 +287,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 				    Bundle data = msg.getData();
 
                     
-			        float[] propFloat32 = data.getFloatArray("propFloat32");
+			        List<Float> propFloat32 = Conversions.toList(data.getFloatArray("propFloat32"));
 
 				    onPropFloat32(propFloat32);
 				    break;
@@ -295,7 +297,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 				    Bundle data = msg.getData();
 
                     
-			        double[] propFloat64 = data.getDoubleArray("propFloat64");
+			        List<Double> propFloat64 = Conversions.toList(data.getDoubleArray("propFloat64"));
 
 				    onPropFloat64(propFloat64);
 				    break;
@@ -305,7 +307,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 				    Bundle data = msg.getData();
 
                     
-			        String[] propString = data.getStringArray("propString");
+			        List<String> propString = Conversions.toList(data.getStringArray("propString"));
 
 				    onPropString(propString);
 				    break;
@@ -320,7 +322,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 				    onPropReadOnlyString(propReadOnlyString);
 				    break;
 			    }
-			    // TODO params may be different structs from different modules, there should be a custom class loader 
+			    // TODO params may be different structs from different modules, there should be a custom class loader
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 			    case SIG_SigBool: {
@@ -328,7 +330,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 				    Bundle data = msg.getData();
                     
                 
-			        boolean[] paramBool = data.getBooleanArray("paramBool");
+			        List<Boolean> paramBool = Conversions.toList(data.getBooleanArray("paramBool"));
 				    onSigBool(paramBool);
 				    break;
 			    }
@@ -337,7 +339,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 				    Bundle data = msg.getData();
                     
                 
-			        int[] paramInt = data.getIntArray("paramInt");
+			        List<Integer> paramInt = Conversions.toList(data.getIntArray("paramInt"));
 				    onSigInt(paramInt);
 				    break;
 			    }
@@ -346,7 +348,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 				    Bundle data = msg.getData();
                     
                 
-			        int[] paramInt32 = data.getIntArray("paramInt32");
+			        List<Integer> paramInt32 = Conversions.toList(data.getIntArray("paramInt32"));
 				    onSigInt32(paramInt32);
 				    break;
 			    }
@@ -355,7 +357,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 				    Bundle data = msg.getData();
                     
                 
-			        long[] paramInt64 = data.getLongArray("paramInt64");
+			        List<Long> paramInt64 = Conversions.toList(data.getLongArray("paramInt64"));
 				    onSigInt64(paramInt64);
 				    break;
 			    }
@@ -364,7 +366,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 				    Bundle data = msg.getData();
                     
                 
-			        float[] paramFloat = data.getFloatArray("paramFloat");
+			        List<Float> paramFloat = Conversions.toList(data.getFloatArray("paramFloat"));
 				    onSigFloat(paramFloat);
 				    break;
 			    }
@@ -373,7 +375,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 				    Bundle data = msg.getData();
                     
                 
-			        float[] paramFloa32 = data.getFloatArray("paramFloa32");
+			        List<Float> paramFloa32 = Conversions.toList(data.getFloatArray("paramFloa32"));
 				    onSigFloat32(paramFloa32);
 				    break;
 			    }
@@ -382,7 +384,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 				    Bundle data = msg.getData();
                     
                 
-			        double[] paramFloat64 = data.getDoubleArray("paramFloat64");
+			        List<Double> paramFloat64 = Conversions.toList(data.getDoubleArray("paramFloat64"));
 				    onSigFloat64(paramFloat64);
 				    break;
 			    }
@@ -391,7 +393,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 				    Bundle data = msg.getData();
                     
                 
-			        String[] paramString = data.getStringArray("paramString");
+			        List<String> paramString = Conversions.toList(data.getStringArray("paramString"));
 				    onSigString(paramString);
 				    break;
 			    }
@@ -540,290 +542,290 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 	    }
     };
     @Override
-    public void setPropBool(boolean[] propBool)
+    public void setPropBool(List<Boolean> propBool)
     {
         Log.i(TAG, "request setPropBool called "+ propBool);
-        if (! Arrays.equals(m_propBool, propBool))
+        if (!m_propBool.equals(propBool))
         {
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.PROP_PropBool.getValue();
 			Bundle data = new Bundle();
             
-		        data.putBooleanArray("propBool", propBool);
+		        data.putBooleanArray("propBool", Conversions.toArray(propBool, new boolean[0]));
 			msg.setData(data);
 			mClientHandler.sendToService(msg);
         }
 
     }
 
-	public void onPropBool(boolean[] propBool)
+	public void onPropBool(List<Boolean> propBool)
     {
         Log.i(TAG, "value received from service for PropBool ");
-        if (! Arrays.equals(m_propBool, propBool))
+        if (!m_propBool.equals(propBool))
         {
-            m_propBool = propBool;
+            m_propBool = new ArrayList<>(propBool);
             firePropBoolChanged(propBool);
         }
 
     }
 
     @Override
-    public boolean[] getPropBool()
+    public List<Boolean> getPropBool()
     {
         Log.i(TAG, "request getPropBool called, returning local");
-        return m_propBool;
+        return new ArrayList<>(m_propBool);
     }
 
   
     @Override
-    public void setPropInt(int[] propInt)
+    public void setPropInt(List<Integer> propInt)
     {
         Log.i(TAG, "request setPropInt called "+ propInt);
-        if (! Arrays.equals(m_propInt, propInt))
+        if (!m_propInt.equals(propInt))
         {
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.PROP_PropInt.getValue();
 			Bundle data = new Bundle();
             
-		        data.putIntArray("propInt", propInt);
+		        data.putIntArray("propInt", Conversions.toArray(propInt, new int[0]));
 			msg.setData(data);
 			mClientHandler.sendToService(msg);
         }
 
     }
 
-	public void onPropInt(int[] propInt)
+	public void onPropInt(List<Integer> propInt)
     {
         Log.i(TAG, "value received from service for PropInt ");
-        if (! Arrays.equals(m_propInt, propInt))
+        if (!m_propInt.equals(propInt))
         {
-            m_propInt = propInt;
+            m_propInt = new ArrayList<>(propInt);
             firePropIntChanged(propInt);
         }
 
     }
 
     @Override
-    public int[] getPropInt()
+    public List<Integer> getPropInt()
     {
         Log.i(TAG, "request getPropInt called, returning local");
-        return m_propInt;
+        return new ArrayList<>(m_propInt);
     }
 
   
     @Override
-    public void setPropInt32(int[] propInt32)
+    public void setPropInt32(List<Integer> propInt32)
     {
         Log.i(TAG, "request setPropInt32 called "+ propInt32);
-        if (! Arrays.equals(m_propInt32, propInt32))
+        if (!m_propInt32.equals(propInt32))
         {
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.PROP_PropInt32.getValue();
 			Bundle data = new Bundle();
             
-		        data.putIntArray("propInt32", propInt32);
+		        data.putIntArray("propInt32", Conversions.toArray(propInt32, new int[0]));
 			msg.setData(data);
 			mClientHandler.sendToService(msg);
         }
 
     }
 
-	public void onPropInt32(int[] propInt32)
+	public void onPropInt32(List<Integer> propInt32)
     {
         Log.i(TAG, "value received from service for PropInt32 ");
-        if (! Arrays.equals(m_propInt32, propInt32))
+        if (!m_propInt32.equals(propInt32))
         {
-            m_propInt32 = propInt32;
+            m_propInt32 = new ArrayList<>(propInt32);
             firePropInt32Changed(propInt32);
         }
 
     }
 
     @Override
-    public int[] getPropInt32()
+    public List<Integer> getPropInt32()
     {
         Log.i(TAG, "request getPropInt32 called, returning local");
-        return m_propInt32;
+        return new ArrayList<>(m_propInt32);
     }
 
   
     @Override
-    public void setPropInt64(long[] propInt64)
+    public void setPropInt64(List<Long> propInt64)
     {
         Log.i(TAG, "request setPropInt64 called "+ propInt64);
-        if (! Arrays.equals(m_propInt64, propInt64))
+        if (!m_propInt64.equals(propInt64))
         {
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.PROP_PropInt64.getValue();
 			Bundle data = new Bundle();
             
-		        data.putLongArray("propInt64", propInt64);
+		        data.putLongArray("propInt64", Conversions.toArray(propInt64, new long[0]));
 			msg.setData(data);
 			mClientHandler.sendToService(msg);
         }
 
     }
 
-	public void onPropInt64(long[] propInt64)
+	public void onPropInt64(List<Long> propInt64)
     {
         Log.i(TAG, "value received from service for PropInt64 ");
-        if (! Arrays.equals(m_propInt64, propInt64))
+        if (!m_propInt64.equals(propInt64))
         {
-            m_propInt64 = propInt64;
+            m_propInt64 = new ArrayList<>(propInt64);
             firePropInt64Changed(propInt64);
         }
 
     }
 
     @Override
-    public long[] getPropInt64()
+    public List<Long> getPropInt64()
     {
         Log.i(TAG, "request getPropInt64 called, returning local");
-        return m_propInt64;
+        return new ArrayList<>(m_propInt64);
     }
 
   
     @Override
-    public void setPropFloat(float[] propFloat)
+    public void setPropFloat(List<Float> propFloat)
     {
         Log.i(TAG, "request setPropFloat called "+ propFloat);
-        if (! Arrays.equals(m_propFloat, propFloat))
+        if (!m_propFloat.equals(propFloat))
         {
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.PROP_PropFloat.getValue();
 			Bundle data = new Bundle();
             
-		        data.putFloatArray("propFloat", propFloat);
+		        data.putFloatArray("propFloat", Conversions.toArray(propFloat, new float[0]));
 			msg.setData(data);
 			mClientHandler.sendToService(msg);
         }
 
     }
 
-	public void onPropFloat(float[] propFloat)
+	public void onPropFloat(List<Float> propFloat)
     {
         Log.i(TAG, "value received from service for PropFloat ");
-        if (! Arrays.equals(m_propFloat, propFloat))
+        if (!m_propFloat.equals(propFloat))
         {
-            m_propFloat = propFloat;
+            m_propFloat = new ArrayList<>(propFloat);
             firePropFloatChanged(propFloat);
         }
 
     }
 
     @Override
-    public float[] getPropFloat()
+    public List<Float> getPropFloat()
     {
         Log.i(TAG, "request getPropFloat called, returning local");
-        return m_propFloat;
+        return new ArrayList<>(m_propFloat);
     }
 
   
     @Override
-    public void setPropFloat32(float[] propFloat32)
+    public void setPropFloat32(List<Float> propFloat32)
     {
         Log.i(TAG, "request setPropFloat32 called "+ propFloat32);
-        if (! Arrays.equals(m_propFloat32, propFloat32))
+        if (!m_propFloat32.equals(propFloat32))
         {
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.PROP_PropFloat32.getValue();
 			Bundle data = new Bundle();
             
-		        data.putFloatArray("propFloat32", propFloat32);
+		        data.putFloatArray("propFloat32", Conversions.toArray(propFloat32, new float[0]));
 			msg.setData(data);
 			mClientHandler.sendToService(msg);
         }
 
     }
 
-	public void onPropFloat32(float[] propFloat32)
+	public void onPropFloat32(List<Float> propFloat32)
     {
         Log.i(TAG, "value received from service for PropFloat32 ");
-        if (! Arrays.equals(m_propFloat32, propFloat32))
+        if (!m_propFloat32.equals(propFloat32))
         {
-            m_propFloat32 = propFloat32;
+            m_propFloat32 = new ArrayList<>(propFloat32);
             firePropFloat32Changed(propFloat32);
         }
 
     }
 
     @Override
-    public float[] getPropFloat32()
+    public List<Float> getPropFloat32()
     {
         Log.i(TAG, "request getPropFloat32 called, returning local");
-        return m_propFloat32;
+        return new ArrayList<>(m_propFloat32);
     }
 
   
     @Override
-    public void setPropFloat64(double[] propFloat64)
+    public void setPropFloat64(List<Double> propFloat64)
     {
         Log.i(TAG, "request setPropFloat64 called "+ propFloat64);
-        if (! Arrays.equals(m_propFloat64, propFloat64))
+        if (!m_propFloat64.equals(propFloat64))
         {
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.PROP_PropFloat64.getValue();
 			Bundle data = new Bundle();
             
-		        data.putDoubleArray("propFloat64", propFloat64);
+		        data.putDoubleArray("propFloat64", Conversions.toArray(propFloat64, new double[0]));
 			msg.setData(data);
 			mClientHandler.sendToService(msg);
         }
 
     }
 
-	public void onPropFloat64(double[] propFloat64)
+	public void onPropFloat64(List<Double> propFloat64)
     {
         Log.i(TAG, "value received from service for PropFloat64 ");
-        if (! Arrays.equals(m_propFloat64, propFloat64))
+        if (!m_propFloat64.equals(propFloat64))
         {
-            m_propFloat64 = propFloat64;
+            m_propFloat64 = new ArrayList<>(propFloat64);
             firePropFloat64Changed(propFloat64);
         }
 
     }
 
     @Override
-    public double[] getPropFloat64()
+    public List<Double> getPropFloat64()
     {
         Log.i(TAG, "request getPropFloat64 called, returning local");
-        return m_propFloat64;
+        return new ArrayList<>(m_propFloat64);
     }
 
   
     @Override
-    public void setPropString(String[] propString)
+    public void setPropString(List<String> propString)
     {
         Log.i(TAG, "request setPropString called "+ propString);
-        if (! Arrays.equals(m_propString, propString))
+        if (!m_propString.equals(propString))
         {
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.PROP_PropString.getValue();
 			Bundle data = new Bundle();
             
-		        data.putStringArray("propString", propString);
+		        data.putStringArray("propString", Conversions.toArray(propString, new String[0]));
 			msg.setData(data);
 			mClientHandler.sendToService(msg);
         }
 
     }
 
-	public void onPropString(String[] propString)
+	public void onPropString(List<String> propString)
     {
         Log.i(TAG, "value received from service for PropString ");
-        if (! Arrays.equals(m_propString, propString))
+        if (!m_propString.equals(propString))
         {
-            m_propString = propString;
+            m_propString = new ArrayList<>(propString);
             firePropStringChanged(propString);
         }
 
     }
 
     @Override
-    public String[] getPropString()
+    public List<String> getPropString()
     {
         Log.i(TAG, "request getPropString called, returning local");
-        return m_propString;
+        return new ArrayList<>(m_propString);
     }
 
   
@@ -865,10 +867,10 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
   
     // methods
 
-   
+
     @Override
-    public boolean[] funcBool(boolean[] paramBool) {
-        CompletableFuture<boolean[]> resFuture = funcBoolAsync(paramBool);
+    public List<Boolean> funcBool(List<Boolean> paramBool) {
+        CompletableFuture<List<Boolean>> resFuture = funcBoolAsync(paramBool);
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
@@ -884,7 +886,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
     }
 
     @Override
-    public  CompletableFuture<boolean[]> funcBoolAsync(boolean[] paramBool) {
+    public  CompletableFuture<List<Boolean>> funcBoolAsync(List<Boolean> paramBool) {
 
     	Log.i(TAG, "Call on service funcBool  "+ " " + paramBool);
 		Message msg = new Message();
@@ -893,11 +895,11 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
         int msgId =  callIdsGetter.getAndIncrement();
         data.putInt("callId",msgId);
         
-		        data.putBooleanArray("paramBool", paramBool);
+		        data.putBooleanArray("paramBool", Conversions.toArray(paramBool, new boolean[0]));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
 
-        CompletableFuture<boolean[]>  future = new CompletableFuture<>();
+        CompletableFuture<List<Boolean>>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
@@ -914,7 +916,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
                 return;
             }
             
-		    boolean[] result = bundle.getBooleanArray("result");
+		    List<Boolean> result = Conversions.toList(bundle.getBooleanArray("result"));
             Log.v(TAG, "resolve funcBool" + result);
             future.complete(result);
         };
@@ -926,10 +928,10 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
         return future;
     }
 
-   
+
     @Override
-    public int[] funcInt(int[] paramInt) {
-        CompletableFuture<int[]> resFuture = funcIntAsync(paramInt);
+    public List<Integer> funcInt(List<Integer> paramInt) {
+        CompletableFuture<List<Integer>> resFuture = funcIntAsync(paramInt);
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
@@ -945,7 +947,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
     }
 
     @Override
-    public  CompletableFuture<int[]> funcIntAsync(int[] paramInt) {
+    public  CompletableFuture<List<Integer>> funcIntAsync(List<Integer> paramInt) {
 
     	Log.i(TAG, "Call on service funcInt  "+ " " + paramInt);
 		Message msg = new Message();
@@ -954,11 +956,11 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
         int msgId =  callIdsGetter.getAndIncrement();
         data.putInt("callId",msgId);
         
-		        data.putIntArray("paramInt", paramInt);
+		        data.putIntArray("paramInt", Conversions.toArray(paramInt, new int[0]));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
 
-        CompletableFuture<int[]>  future = new CompletableFuture<>();
+        CompletableFuture<List<Integer>>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
@@ -975,7 +977,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
                 return;
             }
             
-		    int[] result = bundle.getIntArray("result");
+		    List<Integer> result = Conversions.toList(bundle.getIntArray("result"));
             Log.v(TAG, "resolve funcInt" + result);
             future.complete(result);
         };
@@ -987,10 +989,10 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
         return future;
     }
 
-   
+
     @Override
-    public int[] funcInt32(int[] paramInt32) {
-        CompletableFuture<int[]> resFuture = funcInt32Async(paramInt32);
+    public List<Integer> funcInt32(List<Integer> paramInt32) {
+        CompletableFuture<List<Integer>> resFuture = funcInt32Async(paramInt32);
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
@@ -1006,7 +1008,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
     }
 
     @Override
-    public  CompletableFuture<int[]> funcInt32Async(int[] paramInt32) {
+    public  CompletableFuture<List<Integer>> funcInt32Async(List<Integer> paramInt32) {
 
     	Log.i(TAG, "Call on service funcInt32  "+ " " + paramInt32);
 		Message msg = new Message();
@@ -1015,11 +1017,11 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
         int msgId =  callIdsGetter.getAndIncrement();
         data.putInt("callId",msgId);
         
-		        data.putIntArray("paramInt32", paramInt32);
+		        data.putIntArray("paramInt32", Conversions.toArray(paramInt32, new int[0]));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
 
-        CompletableFuture<int[]>  future = new CompletableFuture<>();
+        CompletableFuture<List<Integer>>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
@@ -1036,7 +1038,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
                 return;
             }
             
-		    int[] result = bundle.getIntArray("result");
+		    List<Integer> result = Conversions.toList(bundle.getIntArray("result"));
             Log.v(TAG, "resolve funcInt32" + result);
             future.complete(result);
         };
@@ -1048,10 +1050,10 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
         return future;
     }
 
-   
+
     @Override
-    public long[] funcInt64(long[] paramInt64) {
-        CompletableFuture<long[]> resFuture = funcInt64Async(paramInt64);
+    public List<Long> funcInt64(List<Long> paramInt64) {
+        CompletableFuture<List<Long>> resFuture = funcInt64Async(paramInt64);
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
@@ -1067,7 +1069,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
     }
 
     @Override
-    public  CompletableFuture<long[]> funcInt64Async(long[] paramInt64) {
+    public  CompletableFuture<List<Long>> funcInt64Async(List<Long> paramInt64) {
 
     	Log.i(TAG, "Call on service funcInt64  "+ " " + paramInt64);
 		Message msg = new Message();
@@ -1076,11 +1078,11 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
         int msgId =  callIdsGetter.getAndIncrement();
         data.putInt("callId",msgId);
         
-		        data.putLongArray("paramInt64", paramInt64);
+		        data.putLongArray("paramInt64", Conversions.toArray(paramInt64, new long[0]));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
 
-        CompletableFuture<long[]>  future = new CompletableFuture<>();
+        CompletableFuture<List<Long>>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
@@ -1097,7 +1099,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
                 return;
             }
             
-		    long[] result = bundle.getLongArray("result");
+		    List<Long> result = Conversions.toList(bundle.getLongArray("result"));
             Log.v(TAG, "resolve funcInt64" + result);
             future.complete(result);
         };
@@ -1109,10 +1111,10 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
         return future;
     }
 
-   
+
     @Override
-    public float[] funcFloat(float[] paramFloat) {
-        CompletableFuture<float[]> resFuture = funcFloatAsync(paramFloat);
+    public List<Float> funcFloat(List<Float> paramFloat) {
+        CompletableFuture<List<Float>> resFuture = funcFloatAsync(paramFloat);
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
@@ -1128,7 +1130,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
     }
 
     @Override
-    public  CompletableFuture<float[]> funcFloatAsync(float[] paramFloat) {
+    public  CompletableFuture<List<Float>> funcFloatAsync(List<Float> paramFloat) {
 
     	Log.i(TAG, "Call on service funcFloat  "+ " " + paramFloat);
 		Message msg = new Message();
@@ -1137,11 +1139,11 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
         int msgId =  callIdsGetter.getAndIncrement();
         data.putInt("callId",msgId);
         
-		        data.putFloatArray("paramFloat", paramFloat);
+		        data.putFloatArray("paramFloat", Conversions.toArray(paramFloat, new float[0]));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
 
-        CompletableFuture<float[]>  future = new CompletableFuture<>();
+        CompletableFuture<List<Float>>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
@@ -1158,7 +1160,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
                 return;
             }
             
-		    float[] result = bundle.getFloatArray("result");
+		    List<Float> result = Conversions.toList(bundle.getFloatArray("result"));
             Log.v(TAG, "resolve funcFloat" + result);
             future.complete(result);
         };
@@ -1170,10 +1172,10 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
         return future;
     }
 
-   
+
     @Override
-    public float[] funcFloat32(float[] paramFloat32) {
-        CompletableFuture<float[]> resFuture = funcFloat32Async(paramFloat32);
+    public List<Float> funcFloat32(List<Float> paramFloat32) {
+        CompletableFuture<List<Float>> resFuture = funcFloat32Async(paramFloat32);
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
@@ -1189,7 +1191,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
     }
 
     @Override
-    public  CompletableFuture<float[]> funcFloat32Async(float[] paramFloat32) {
+    public  CompletableFuture<List<Float>> funcFloat32Async(List<Float> paramFloat32) {
 
     	Log.i(TAG, "Call on service funcFloat32  "+ " " + paramFloat32);
 		Message msg = new Message();
@@ -1198,11 +1200,11 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
         int msgId =  callIdsGetter.getAndIncrement();
         data.putInt("callId",msgId);
         
-		        data.putFloatArray("paramFloat32", paramFloat32);
+		        data.putFloatArray("paramFloat32", Conversions.toArray(paramFloat32, new float[0]));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
 
-        CompletableFuture<float[]>  future = new CompletableFuture<>();
+        CompletableFuture<List<Float>>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
@@ -1219,7 +1221,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
                 return;
             }
             
-		    float[] result = bundle.getFloatArray("result");
+		    List<Float> result = Conversions.toList(bundle.getFloatArray("result"));
             Log.v(TAG, "resolve funcFloat32" + result);
             future.complete(result);
         };
@@ -1231,10 +1233,10 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
         return future;
     }
 
-   
+
     @Override
-    public double[] funcFloat64(double[] paramFloat) {
-        CompletableFuture<double[]> resFuture = funcFloat64Async(paramFloat);
+    public List<Double> funcFloat64(List<Double> paramFloat) {
+        CompletableFuture<List<Double>> resFuture = funcFloat64Async(paramFloat);
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
@@ -1250,7 +1252,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
     }
 
     @Override
-    public  CompletableFuture<double[]> funcFloat64Async(double[] paramFloat) {
+    public  CompletableFuture<List<Double>> funcFloat64Async(List<Double> paramFloat) {
 
     	Log.i(TAG, "Call on service funcFloat64  "+ " " + paramFloat);
 		Message msg = new Message();
@@ -1259,11 +1261,11 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
         int msgId =  callIdsGetter.getAndIncrement();
         data.putInt("callId",msgId);
         
-		        data.putDoubleArray("paramFloat", paramFloat);
+		        data.putDoubleArray("paramFloat", Conversions.toArray(paramFloat, new double[0]));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
 
-        CompletableFuture<double[]>  future = new CompletableFuture<>();
+        CompletableFuture<List<Double>>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
@@ -1280,7 +1282,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
                 return;
             }
             
-		    double[] result = bundle.getDoubleArray("result");
+		    List<Double> result = Conversions.toList(bundle.getDoubleArray("result"));
             Log.v(TAG, "resolve funcFloat64" + result);
             future.complete(result);
         };
@@ -1292,10 +1294,10 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
         return future;
     }
 
-   
+
     @Override
-    public String[] funcString(String[] paramString) {
-        CompletableFuture<String[]> resFuture = funcStringAsync(paramString);
+    public List<String> funcString(List<String> paramString) {
+        CompletableFuture<List<String>> resFuture = funcStringAsync(paramString);
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
@@ -1311,7 +1313,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
     }
 
     @Override
-    public  CompletableFuture<String[]> funcStringAsync(String[] paramString) {
+    public  CompletableFuture<List<String>> funcStringAsync(List<String> paramString) {
 
     	Log.i(TAG, "Call on service funcString  "+ " " + paramString);
 		Message msg = new Message();
@@ -1320,11 +1322,11 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
         int msgId =  callIdsGetter.getAndIncrement();
         data.putInt("callId",msgId);
         
-		        data.putStringArray("paramString", paramString);
+		        data.putStringArray("paramString", Conversions.toArray(paramString, new String[0]));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
 
-        CompletableFuture<String[]>  future = new CompletableFuture<>();
+        CompletableFuture<List<String>>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
@@ -1341,7 +1343,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
                 return;
             }
             
-		    String[] result = bundle.getStringArray("result");
+		    List<String> result = Conversions.toList(bundle.getStringArray("result"));
             Log.v(TAG, "resolve funcString" + result);
             future.complete(result);
         };
@@ -1351,7 +1353,7 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
 		mClientHandler.sendToService(msg);
 
         return future;
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -1359,42 +1361,42 @@ public class SimpleArrayInterfaceClient extends AbstractSimpleArrayInterface imp
     }
 
 	// Should be called when message arrives
-    public void onSigBool(boolean[] paramBool)
+    public void onSigBool(List<Boolean> paramBool)
     {
         Log.i(TAG, "onSigBool  received from service");
         fireSigBool(paramBool);
     }
-    public void onSigInt(int[] paramInt)
+    public void onSigInt(List<Integer> paramInt)
     {
         Log.i(TAG, "onSigInt  received from service");
         fireSigInt(paramInt);
     }
-    public void onSigInt32(int[] paramInt32)
+    public void onSigInt32(List<Integer> paramInt32)
     {
         Log.i(TAG, "onSigInt32  received from service");
         fireSigInt32(paramInt32);
     }
-    public void onSigInt64(long[] paramInt64)
+    public void onSigInt64(List<Long> paramInt64)
     {
         Log.i(TAG, "onSigInt64  received from service");
         fireSigInt64(paramInt64);
     }
-    public void onSigFloat(float[] paramFloat)
+    public void onSigFloat(List<Float> paramFloat)
     {
         Log.i(TAG, "onSigFloat  received from service");
         fireSigFloat(paramFloat);
     }
-    public void onSigFloat32(float[] paramFloa32)
+    public void onSigFloat32(List<Float> paramFloa32)
     {
         Log.i(TAG, "onSigFloat32  received from service");
         fireSigFloat32(paramFloa32);
     }
-    public void onSigFloat64(double[] paramFloat64)
+    public void onSigFloat64(List<Double> paramFloat64)
     {
         Log.i(TAG, "onSigFloat64  received from service");
         fireSigFloat64(paramFloat64);
     }
-    public void onSigString(String[] paramString)
+    public void onSigString(List<String> paramString)
     {
         Log.i(TAG, "onSigString  received from service");
         fireSigString(paramString);

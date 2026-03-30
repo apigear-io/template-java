@@ -1,8 +1,10 @@
 package tbSame1.tbSame1_api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public  class Struct1 {
 
@@ -11,9 +13,9 @@ public  class Struct1 {
       this.field1 = field1;
       this.field2 = field2;
       this.field3 = field3;
-    }  
+    }
 
-    public Struct1() 
+    public Struct1()
     {
     }
     @JsonProperty("field1")

@@ -10,6 +10,8 @@ import tbSame1.tbSame1_api.Struct1;
 import tbSame1.tbSame1_api.Struct2;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +22,6 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
-import java.util.Arrays;
 
 
 public class SameStruct2InterfaceService extends AbstractSameStruct2Interface {
@@ -115,7 +116,7 @@ public class SameStruct2InterfaceService extends AbstractSameStruct2Interface {
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {

@@ -21,7 +21,10 @@ import testbed2.testbed2_api.IManyParamInterface;
 import testbed2.testbed2_api.AbstractManyParamInterface;
 import testbed2.testbed2_api.RemoteOperationException;
 import testbed2.testbed2_android_messenger.ManyParamInterfaceMessageType;
+import testbed2.testbed2_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 public class ManyParamInterfaceServiceAdapter extends Service

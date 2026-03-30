@@ -20,7 +20,10 @@ import tbSimple.tbSimple_android_service.IEmptyInterfaceServiceProvider;
 import tbSimple.tbSimple_api.IEmptyInterface;
 import tbSimple.tbSimple_api.AbstractEmptyInterface;
 import tbSimple.tbSimple_android_messenger.EmptyInterfaceMessageType;
+import tbSimple.tbSimple_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 public class EmptyInterfaceServiceAdapter extends Service

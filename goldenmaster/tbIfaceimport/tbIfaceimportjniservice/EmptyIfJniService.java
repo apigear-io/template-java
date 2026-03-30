@@ -1,21 +1,18 @@
 package tbIfaceimport.tbIfaceimportjniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import tbIfaceimport.tbIfaceimport_api.IEmptyIf;
 import tbIfaceimport.tbIfaceimport_api.AbstractEmptyIf;
 import tbIfaceimport.tbIfaceimport_api.IEmptyIfEventListener;
+import tbIfaceimport.tbIfaceimport_android_messenger.Conversions;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 
 public class EmptyIfJniService extends AbstractEmptyIf {
@@ -29,7 +26,7 @@ public class EmptyIfJniService extends AbstractEmptyIf {
     {
         fire_readyStatusChanged(true);
     }
-    // methods    
+    // methods
 
     @Override
     public boolean _isReady() {
@@ -51,14 +48,13 @@ public class EmptyIfJniService extends AbstractEmptyIf {
         }
     }
 
-    // Called on Native Impl Service
-    // methods
+    // Native methods — use array types for JNI compatibility
 
     // Called by Native Impl Service
     public void nativeServiceReady(boolean value) {
         isServiceReady = value;
     }
 
-    //In theory event listener interface
+    // Callbacks from native — receive arrays, convert to List and fire events
 
 }

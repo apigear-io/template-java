@@ -11,6 +11,7 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
 {{- end }}
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 {{- $interfaceName := printf "I%s" (Camel .Interface.Name) }}
@@ -27,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
     }
   {{- range .Interface.Properties }}
     @Override
-    public void fire{{Camel .Name}}Changed({{javaType "" .}} newValue) {
+    public void fire{{Camel .Name}}Changed({{javaListType "" .}} newValue) {
       for ({{$interfaceName}}EventListener listener : listeners) {
         listener.on{{Camel .Name}}Changed(newValue);
       }
@@ -35,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
   {{ end }}
   {{- range .Interface.Signals }}
     @Override
-    public void fire{{Camel .Name}}({{javaParams "" .Params}}) {
+    public void fire{{Camel .Name}}({{javaListParams "" .Params}}) {
       for ({{$interfaceName}}EventListener listener : listeners) {
         listener.on{{Camel .Name}}({{ javaVars .Params}});
       }

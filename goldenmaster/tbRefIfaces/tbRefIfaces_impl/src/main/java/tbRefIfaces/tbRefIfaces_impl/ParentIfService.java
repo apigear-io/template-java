@@ -10,6 +10,8 @@ import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_impl.SimpleLocalIfService;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +22,6 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
-import java.util.Arrays;
 
 
 public class ParentIfService extends AbstractParentIf {
@@ -29,9 +30,9 @@ public class ParentIfService extends AbstractParentIf {
     private volatile boolean isServiceReady = true;//Use if you're waiting for some setup to be done
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private ISimpleLocalIf m_localIf = null;
-    private ISimpleLocalIf[] m_localIfList = new ISimpleLocalIf[]{};
+    private List<ISimpleLocalIf> m_localIfList = new ArrayList<>();
     private tbIfaceimport.tbIfaceimport_api.IEmptyIf m_importedIf = null;
-    private tbIfaceimport.tbIfaceimport_api.IEmptyIf[] m_importedIfList = new tbIfaceimport.tbIfaceimport_api.IEmptyIf[]{};
+    private List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> m_importedIfList = new ArrayList<>();
 
     public ParentIfService()
     {
@@ -58,22 +59,22 @@ public class ParentIfService extends AbstractParentIf {
 
   
     @Override
-    public void setLocalIfList(ISimpleLocalIf[] localIfList)
+    public void setLocalIfList(List<ISimpleLocalIf> localIfList)
     {
         Log.i(TAG, "request setLocalIfList called ");
-        if (! Arrays.equals(m_localIfList, localIfList))
+        if (!m_localIfList.equals(localIfList))
         {
-            m_localIfList = localIfList;
-            onLocalIfListChanged(m_localIfList);
+            m_localIfList = new ArrayList<>(localIfList);
+            onLocalIfListChanged(new ArrayList<>(m_localIfList));
         }
 
     }
 
     @Override
-    public ISimpleLocalIf[] getLocalIfList()
+    public List<ISimpleLocalIf> getLocalIfList()
     {
         Log.i(TAG, "request getLocalIfList called,");
-        return m_localIfList;
+        return new ArrayList<>(m_localIfList);
     }
 
   
@@ -98,22 +99,22 @@ public class ParentIfService extends AbstractParentIf {
 
   
     @Override
-    public void setImportedIfList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfList)
+    public void setImportedIfList(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> importedIfList)
     {
         Log.i(TAG, "request setImportedIfList called ");
-        if (! Arrays.equals(m_importedIfList, importedIfList))
+        if (!m_importedIfList.equals(importedIfList))
         {
-            m_importedIfList = importedIfList;
-            onImportedIfListChanged(m_importedIfList);
+            m_importedIfList = new ArrayList<>(importedIfList);
+            onImportedIfListChanged(new ArrayList<>(m_importedIfList));
         }
 
     }
 
     @Override
-    public tbIfaceimport.tbIfaceimport_api.IEmptyIf[] getImportedIfList()
+    public List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> getImportedIfList()
     {
         Log.i(TAG, "request getImportedIfList called,");
-        return m_importedIfList;
+        return new ArrayList<>(m_importedIfList);
     }
 
   
@@ -139,19 +140,19 @@ public class ParentIfService extends AbstractParentIf {
     }
 
     @Override
-    public ISimpleLocalIf[] localIfMethodList(ISimpleLocalIf[] param) {
+    public List<ISimpleLocalIf> localIfMethodList(List<ISimpleLocalIf> param) {
         Log.i(TAG, "request method localIfMethodList called, returnig default");
-        return new ISimpleLocalIf[]{};
+        return new ArrayList<>();
     }
 
     @Override
-    public  CompletableFuture<ISimpleLocalIf[]> localIfMethodListAsync(ISimpleLocalIf[] param) {
+    public  CompletableFuture<List<ISimpleLocalIf>> localIfMethodListAsync(List<ISimpleLocalIf> param) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return localIfMethodList(param); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<ISimpleLocalIf[]> f = new CompletableFuture<>();
+            CompletableFuture<List<ISimpleLocalIf>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
@@ -177,23 +178,23 @@ public class ParentIfService extends AbstractParentIf {
     }
 
     @Override
-    public tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfMethodList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param) {
+    public List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> importedIfMethodList(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> param) {
         Log.i(TAG, "request method importedIfMethodList called, returnig default");
-        return new tbIfaceimport.tbIfaceimport_api.IEmptyIf[]{};
+        return new ArrayList<>();
     }
 
     @Override
-    public  CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf[]> importedIfMethodListAsync(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param) {
+    public  CompletableFuture<List<tbIfaceimport.tbIfaceimport_api.IEmptyIf>> importedIfMethodListAsync(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> param) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return importedIfMethodList(param); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf[]> f = new CompletableFuture<>();
+            CompletableFuture<List<tbIfaceimport.tbIfaceimport_api.IEmptyIf>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -221,7 +222,7 @@ public class ParentIfService extends AbstractParentIf {
          Log.i(TAG, "onLocalIfChanged, will pass notification to all listeners");
          fireLocalIfChanged(newValue);
     }
-    private void onLocalIfListChanged(ISimpleLocalIf[] newValue)
+    private void onLocalIfListChanged(List<ISimpleLocalIf> newValue)
     {
          Log.i(TAG, "onLocalIfListChanged, will pass notification to all listeners");
          fireLocalIfListChanged(newValue);
@@ -231,7 +232,7 @@ public class ParentIfService extends AbstractParentIf {
          Log.i(TAG, "onImportedIfChanged, will pass notification to all listeners");
          fireImportedIfChanged(newValue);
     }
-    private void onImportedIfListChanged(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] newValue)
+    private void onImportedIfListChanged(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> newValue)
     {
          Log.i(TAG, "onImportedIfListChanged, will pass notification to all listeners");
          fireImportedIfListChanged(newValue);
@@ -241,7 +242,7 @@ public class ParentIfService extends AbstractParentIf {
         Log.i(TAG, "onLocalIfSignal, will pass notification to all listeners");
         fireLocalIfSignal(param);
     }
-    public void onLocalIfSignalList(ISimpleLocalIf[] param)
+    public void onLocalIfSignalList(List<ISimpleLocalIf> param)
     {
         Log.i(TAG, "onLocalIfSignalList, will pass notification to all listeners");
         fireLocalIfSignalList(param);
@@ -251,7 +252,7 @@ public class ParentIfService extends AbstractParentIf {
         Log.i(TAG, "onImportedIfSignal, will pass notification to all listeners");
         fireImportedIfSignal(param);
     }
-    public void onImportedIfSignalList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param)
+    public void onImportedIfSignalList(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> param)
     {
         Log.i(TAG, "onImportedIfSignalList, will pass notification to all listeners");
         fireImportedIfSignalList(param);

@@ -5,7 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import testbed1.testbed1_api.Enum0;
 import testbed1.testbed1_api.StructBool;
 import testbed1.testbed1_api.StructBoolWithArray;
@@ -77,7 +79,7 @@ import testbed1.testbed1_api.StructStringWithArray;
     }
 
     public static IStructArray2Interface[] unwrapArray(StructArray2InterfaceParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new IStructArray2Interface[0];
         return Arrays.stream(parcelables)
            .map(StructArray2InterfaceParcelable::getStructArray2Interface)
            .toArray(IStructArray2Interface[]::new);

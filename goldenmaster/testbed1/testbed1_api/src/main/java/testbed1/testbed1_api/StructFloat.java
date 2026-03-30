@@ -1,17 +1,19 @@
 package testbed1.testbed1_api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public  class StructFloat {
 
     public StructFloat(float fieldFloat)
     {
       this.fieldFloat = fieldFloat;
-    }  
+    }
 
-    public StructFloat() 
+    public StructFloat()
     {
     }
     @JsonProperty("field_float")

@@ -7,12 +7,14 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
 {{- end }}
 
+import java.util.List;
+
   public interface I{{Camel .Interface.Name }}EventListener {
   {{- range .Interface.Properties }}
-    void on{{Camel .Name}}Changed({{javaType "" .}} newValue);
+    void on{{Camel .Name}}Changed({{javaListType "" .}} newValue);
   {{- end }}
   {{- range .Interface.Signals }}
-    void on{{Camel .Name}}({{javaParams "" .Params}});
+    void on{{Camel .Name}}({{javaListParams "" .Params}});
   {{- end }}
   void on_readyStatusChanged(boolean isReady);
   }

@@ -27,7 +27,10 @@ import tbSame2.tbSame2_api.ISameStruct2Interface;
 import tbSame2.tbSame2_api.AbstractSameStruct2Interface;
 import tbSame2.tbSame2_api.RemoteOperationException;
 import tbSame2.tbSame2_android_messenger.SameStruct2InterfaceMessageType;
+import tbSame2.tbSame2_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
@@ -35,7 +38,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
 
 public class SameStruct2InterfaceClient extends AbstractSameStruct2Interface implements ServiceConnection
@@ -231,7 +233,7 @@ public class SameStruct2InterfaceClient extends AbstractSameStruct2Interface imp
 				    onProp2(prop2);
 				    break;
 			    }
-			    // TODO params may be different structs from different modules, there should be a custom class loader 
+			    // TODO params may be different structs from different modules, there should be a custom class loader
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 			    case SIG_Sig1: {
@@ -380,7 +382,7 @@ public class SameStruct2InterfaceClient extends AbstractSameStruct2Interface imp
   
     // methods
 
-   
+
     @Override
     public Struct1 func1(Struct1 param1) {
         CompletableFuture<Struct1> resFuture = func1Async(param1);
@@ -441,7 +443,7 @@ public class SameStruct2InterfaceClient extends AbstractSameStruct2Interface imp
         return future;
     }
 
-   
+
     @Override
     public Struct1 func2(Struct1 param1, Struct2 param2) {
         CompletableFuture<Struct1> resFuture = func2Async(param1, param2);
@@ -502,7 +504,7 @@ public class SameStruct2InterfaceClient extends AbstractSameStruct2Interface imp
 		mClientHandler.sendToService(msg);
 
         return future;
-    }    
+    }
 
     @Override
     public boolean _isReady() {

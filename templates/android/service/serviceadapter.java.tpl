@@ -25,7 +25,10 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.Abstract{{Camel .Interf
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.RemoteOperationException;
 {{- end }}
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Interface.Name}}MessageType;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 public class {{Camel .Interface.Name }}ServiceAdapter extends Service
@@ -263,7 +266,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						{{ if not .Return.IsVoid }}{{javaReturn "" .Return}} result = {{ end}} backend.{{camel .Name}}({{javaVars .Params}});
+						{{ if not .Return.IsVoid }}{{javaListReturn "" .Return}} result = {{ end}} backend.{{camel .Name}}({{javaVars .Params}});
 						{{- if not .Return.IsVoid }}
 						{{ template "putResultIntoBundle" . }}
 						{{- end }}
@@ -336,7 +339,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 			if (backend != null && backend._isReady())
 			{
 				{{range .Interface.Properties}}
-				{{javaReturn "" .}} {{javaVar .}} = backend.get{{Camel .Name}}();
+				{{javaListReturn "" .}} {{javaVar .}} = backend.get{{Camel .Name}}();
 				{{template "putDataIntoBundle" .}}
 				{{- end}}
 				msg.setData(data);
@@ -346,7 +349,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 
 		{{- range .Interface.Properties }}
 		@Override
-		public void on{{Camel .Name}}Changed({{javaType "" .}} {{javaVar .}}){
+		public void on{{Camel .Name}}Changed({{javaListType "" .}} {{javaVar .}}){
 			Log.i(TAG, "New value for {{Camel .Name}} from backend" + {{javaVar .}});
 
 			Message msg = new Message();
@@ -359,7 +362,7 @@ public class {{Camel .Interface.Name }}ServiceAdapter extends Service
 		{{- end }}
 		{{- range .Interface.Signals }}
 		@Override
-		public void on{{Camel .Name}}({{javaParams "" .Params}}){
+		public void on{{Camel .Name}}({{javaListParams "" .Params}}){
 			Log.i(TAG, "New singal for {{Camel .Name}} = "
 			{{- range .Params -}} + " " + {{javaVar .}}{{ end}});
 			Message msg = new Message();

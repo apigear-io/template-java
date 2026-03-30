@@ -56,8 +56,11 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import testbed1.testbed1_android_messenger.Conversions;
 import android.content.ComponentName;
 
 import static org.junit.Assert.assertEquals;
@@ -422,11 +425,11 @@ public class StructArray2InterfaceClientTest
 
         // Execute method
         StructBoolWithArray testparamBool = Testbed1TestHelper.makeTestStructBoolWithArray();
-        StructBool[] expectedResult = new StructBool[1];
-        expectedResult[0] = Testbed1TestHelper.makeTestStructBool();
+        List<StructBool> expectedResult = new ArrayList<>();
+        expectedResult.add(Testbed1TestHelper.makeTestStructBool());
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
-        CompletableFuture<StructBool[]> resFuture = testedClient.funcBoolAsync(testparamBool);
+        CompletableFuture<List<StructBool>> resFuture = testedClient.funcBoolAsync(testparamBool);
 
         resFuture.thenAccept(result -> {
             assertEquals(expectedResult, result);
@@ -454,7 +457,7 @@ public class StructArray2InterfaceClientTest
 
         Bundle result_data = new Bundle();
 		result_data.putInt("callId", returnedCallId);
-		result_data.putParcelableArray("result", StructBoolParcelable.wrapArray(expectedResult));
+		result_data.putParcelableArray("result", StructBoolParcelable.wrapArray(Conversions.toArray(expectedResult, new StructBool[0])));
 
         msg.setData(result_data);
         method_request.replyTo.send(msg);
@@ -469,11 +472,11 @@ public class StructArray2InterfaceClientTest
 
         // Execute method
         StructIntWithArray testparamInt = Testbed1TestHelper.makeTestStructIntWithArray();
-        StructInt[] expectedResult = new StructInt[1];
-        expectedResult[0] = Testbed1TestHelper.makeTestStructInt();
+        List<StructInt> expectedResult = new ArrayList<>();
+        expectedResult.add(Testbed1TestHelper.makeTestStructInt());
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
-        CompletableFuture<StructInt[]> resFuture = testedClient.funcIntAsync(testparamInt);
+        CompletableFuture<List<StructInt>> resFuture = testedClient.funcIntAsync(testparamInt);
 
         resFuture.thenAccept(result -> {
             assertEquals(expectedResult, result);
@@ -501,7 +504,7 @@ public class StructArray2InterfaceClientTest
 
         Bundle result_data = new Bundle();
 		result_data.putInt("callId", returnedCallId);
-		result_data.putParcelableArray("result", StructIntParcelable.wrapArray(expectedResult));
+		result_data.putParcelableArray("result", StructIntParcelable.wrapArray(Conversions.toArray(expectedResult, new StructInt[0])));
 
         msg.setData(result_data);
         method_request.replyTo.send(msg);
@@ -516,11 +519,11 @@ public class StructArray2InterfaceClientTest
 
         // Execute method
         StructFloatWithArray testparamFloat = Testbed1TestHelper.makeTestStructFloatWithArray();
-        StructFloat[] expectedResult = new StructFloat[1];
-        expectedResult[0] = Testbed1TestHelper.makeTestStructFloat();
+        List<StructFloat> expectedResult = new ArrayList<>();
+        expectedResult.add(Testbed1TestHelper.makeTestStructFloat());
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
-        CompletableFuture<StructFloat[]> resFuture = testedClient.funcFloatAsync(testparamFloat);
+        CompletableFuture<List<StructFloat>> resFuture = testedClient.funcFloatAsync(testparamFloat);
 
         resFuture.thenAccept(result -> {
             assertEquals(expectedResult, result);
@@ -548,7 +551,7 @@ public class StructArray2InterfaceClientTest
 
         Bundle result_data = new Bundle();
 		result_data.putInt("callId", returnedCallId);
-		result_data.putParcelableArray("result", StructFloatParcelable.wrapArray(expectedResult));
+		result_data.putParcelableArray("result", StructFloatParcelable.wrapArray(Conversions.toArray(expectedResult, new StructFloat[0])));
 
         msg.setData(result_data);
         method_request.replyTo.send(msg);
@@ -563,11 +566,11 @@ public class StructArray2InterfaceClientTest
 
         // Execute method
         StructStringWithArray testparamString = Testbed1TestHelper.makeTestStructStringWithArray();
-        StructString[] expectedResult = new StructString[1];
-        expectedResult[0] = Testbed1TestHelper.makeTestStructString();
+        List<StructString> expectedResult = new ArrayList<>();
+        expectedResult.add(Testbed1TestHelper.makeTestStructString());
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
-        CompletableFuture<StructString[]> resFuture = testedClient.funcStringAsync(testparamString);
+        CompletableFuture<List<StructString>> resFuture = testedClient.funcStringAsync(testparamString);
 
         resFuture.thenAccept(result -> {
             assertEquals(expectedResult, result);
@@ -595,7 +598,7 @@ public class StructArray2InterfaceClientTest
 
         Bundle result_data = new Bundle();
 		result_data.putInt("callId", returnedCallId);
-		result_data.putParcelableArray("result", StructStringParcelable.wrapArray(expectedResult));
+		result_data.putParcelableArray("result", StructStringParcelable.wrapArray(Conversions.toArray(expectedResult, new StructString[0])));
 
         msg.setData(result_data);
         method_request.replyTo.send(msg);
@@ -610,11 +613,11 @@ public class StructArray2InterfaceClientTest
 
         // Execute method
         StructEnumWithArray testparamEnum = Testbed1TestHelper.makeTestStructEnumWithArray();
-        Enum0[] expectedResult = new Enum0[1];
-        expectedResult[0] = Enum0.Value1;
+        List<Enum0> expectedResult = new ArrayList<>();
+        expectedResult.add(Enum0.Value1);
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
-        CompletableFuture<Enum0[]> resFuture = testedClient.funcEnumAsync(testparamEnum);
+        CompletableFuture<List<Enum0>> resFuture = testedClient.funcEnumAsync(testparamEnum);
 
         resFuture.thenAccept(result -> {
             assertEquals(expectedResult, result);
@@ -642,7 +645,7 @@ public class StructArray2InterfaceClientTest
 
         Bundle result_data = new Bundle();
 		result_data.putInt("callId", returnedCallId);
-		result_data.putParcelableArray("result", Enum0Parcelable.wrapArray(expectedResult));
+		result_data.putParcelableArray("result", Enum0Parcelable.wrapArray(Conversions.toArray(expectedResult, new Enum0[0])));
 
         msg.setData(result_data);
         method_request.replyTo.send(msg);

@@ -34,8 +34,11 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.Conversions;
 import android.content.ComponentName;
 
 import static org.junit.Assert.assertEquals;
@@ -167,7 +170,7 @@ public class {{Camel .Interface.Name }}ClientTest
         {{ if or (eq .KindType "extern") (eq .KindType "interface")}}
         // Make sure test data is properly filled and in case of extern serialization is in place.
         //{{end -}}
-        inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}Changed(any({{javaReturn "" . }}.class));
+        inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}Changed(any({{javaListReturn "" . }}.class));
 		{{- end }}
     {{- end }}
     }
@@ -190,7 +193,7 @@ public class {{Camel .Interface.Name }}ClientTest
         {{ if or (eq .KindType "extern") (eq .KindType "interface")}}
         // Make sure test data is properly filled and in case of extern serialization is in place.
         //{{end -}}
-        inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}Changed(any({{javaReturn "" . }}.class));
+        inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}Changed(any({{javaListReturn "" . }}.class));
 		{{- end }}	    
     }
     {{- if not .IsReadOnly }}
@@ -242,7 +245,7 @@ public class {{Camel .Interface.Name }}ClientTest
         
         inOrderEventListener.verify(listenerMock,times(1)).on{{Camel .Name}}(
         {{- range $idx, $p :=.Params }}{{- if $idx}}, {{ end -}}
-        {{- if or (.IsPrimitive) (eq .KindType "enum") }}test{{javaVar $p}}{{- else }} any({{javaReturn "" . }}.class) {{- end -}}{{- end -}}
+        {{- if or (.IsPrimitive) (eq .KindType "enum") }}test{{javaVar $p}}{{- else }} any({{javaListReturn "" . }}.class) {{- end -}}{{- end -}}
         );
 
 }
@@ -261,28 +264,25 @@ public class {{Camel .Interface.Name }}ClientTest
 
     {{- if not .Return.IsVoid }}
         {{- if .Return.IsArray }}
-            {{- if or  (.Return.IsPrimitive) (eq .Return.KindType "enum")}}
-        {{javaType "" .Return }} expectedResult = new {{javaElementType "" .Return }}[1];
-        expectedResult[0] = {{javaTestValue "" .Return }};
+        {{javaListReturn "" .Return}} expectedResult = new ArrayList<>();
+            {{- if or (.Return.IsPrimitive) (eq .Return.KindType "enum") }}
+        expectedResult.add({{javaTestValue "" .Return }});
+            {{- else if (eq .Return.KindType "extern") }}
+        expectedResult.add({{javaTestValue "" .Return}});
             {{- else }}
-        {{javaElementType "" .Return }}[] expectedResult = new {{javaElementType "" .Return }}[1];
-                {{- if (eq .Return.KindType "extern") }}
-		expectedResult[0] = {{javaTestValue "" .Return}};
-                {{- else }}
-        expectedResult[0] = {{template "getMakeTestHelper" .Return }}({{-  if (eq .Return.KindType "interface")}}{{javaTestValue "" .Return}}{{end}});
-                {{- end }}
+        expectedResult.add({{template "getMakeTestHelper" .Return }}({{-  if (eq .Return.KindType "interface")}}{{javaTestValue "" .Return}}{{end}}));
             {{- end}}
 		{{- else if or  ( .Return.IsPrimitive) (eq .Return.KindType "enum") }}
-        {{javaReturn "" .Return }} expectedResult = {{javaTestValue "" .Return }};
+        {{javaListReturn "" .Return }} expectedResult = {{javaTestValue "" .Return }};
         {{- else if (eq .Return.KindType "extern") }}
-		{{javaReturn "" .Return }} expectedResult = {{javaTestValue ""  .Return}};
+		{{javaListReturn "" .Return }} expectedResult = {{javaTestValue ""  .Return}};
         {{- else }}
-        {{javaReturn "" .Return }} expectedResult = {{template "getMakeTestHelper" .Return }}({{-  if (eq .Return.KindType "interface")}}{{javaDefault "" .Return}}{{end}});
+        {{javaListReturn "" .Return }} expectedResult = {{template "getMakeTestHelper" .Return }}({{-  if (eq .Return.KindType "interface")}}{{javaDefault "" .Return}}{{end}});
 		{{- end }}
     {{- end }}
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
-        {{javaAsyncReturn "" .Return}} resFuture = testedClient.{{camel .Name}}Async({{- range $idx, $p :=.Params }}{{- if $idx}}, {{ end -}}test{{javaVar $p}}{{- end }});
+        {{javaListAsyncReturn "" .Return}} resFuture = testedClient.{{camel .Name}}Async({{- range $idx, $p :=.Params }}{{- if $idx}}, {{ end -}}test{{javaVar $p}}{{- end }});
 
         resFuture.thenAccept(result -> {
         {{- if not .Return.IsVoid }}
@@ -326,10 +326,12 @@ public class {{Camel .Interface.Name }}ClientTest
 		result_data.putInt("callId", returnedCallId);
 
         {{- if not .Return.IsVoid }}
-		{{- if .Return.IsPrimitive }}
-		result_data.put{{ ( Camel  (javaElementType "" .Return) ) }}{{if .Return.IsArray}}Array{{end}}("result", expectedResult);
+		{{- if and .Return.IsPrimitive (not .Return.IsArray) }}
+		result_data.put{{ ( Camel  (javaElementType "" .Return) ) }}("result", expectedResult);
+		{{- else if and .Return.IsPrimitive .Return.IsArray }}
+		result_data.put{{ ( Camel  (javaElementType "" .Return) ) }}Array("result", Conversions.toArray(expectedResult, new {{javaElementType "" .Return}}[0]));
 		{{- else if .Return.IsArray }}
-		result_data.putParcelableArray("result", {{template "getParcelable" .Return }}.wrapArray(expectedResult));
+		result_data.putParcelableArray("result", {{template "getParcelable" .Return }}.wrapArray(Conversions.toArray(expectedResult, new {{javaElementType "" .Return}}[0])));
         {{- else }}
 		result_data.putParcelable("result", new {{template "getParcelable" .Return }}(expectedResult));
 		{{- end }}

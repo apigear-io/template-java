@@ -1,23 +1,20 @@
 package tbRefIfaces.tbRefIfacesjniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import tbRefIfaces.tbRefIfaces_api.IParentIf;
 import tbRefIfaces.tbRefIfaces_api.AbstractParentIf;
 import tbRefIfaces.tbRefIfaces_api.IParentIfEventListener;
+import tbRefIfaces.tbRefIfaces_android_messenger.Conversions;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_android_messenger.SimpleLocalIfParcelable;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 
 public class ParentIfJniService extends AbstractParentIf {
@@ -47,17 +44,17 @@ public class ParentIfJniService extends AbstractParentIf {
 
   
     @Override
-    public void setLocalIfList(ISimpleLocalIf[] localIfList)
+    public void setLocalIfList(List<ISimpleLocalIf> localIfList)
     {
         Log.i(TAG, "request setLocalIfList called, will call native ");
-        nativeSetLocalIfList(localIfList);
+        nativeSetLocalIfList(Conversions.toArray(localIfList, new ISimpleLocalIf[0]));
     }
 
     @Override
-    public ISimpleLocalIf[] getLocalIfList()
+    public List<ISimpleLocalIf> getLocalIfList()
     {
         Log.i(TAG, "request getLocalIfList called, will call native ");
-        return nativeGetLocalIfList();
+        return Conversions.toList(nativeGetLocalIfList());
     }
 
   
@@ -77,17 +74,17 @@ public class ParentIfJniService extends AbstractParentIf {
 
   
     @Override
-    public void setImportedIfList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfList)
+    public void setImportedIfList(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> importedIfList)
     {
         Log.i(TAG, "request setImportedIfList called, will call native ");
-        nativeSetImportedIfList(importedIfList);
+        nativeSetImportedIfList(Conversions.toArray(importedIfList, new tbIfaceimport.tbIfaceimport_api.IEmptyIf[0]));
     }
 
     @Override
-    public tbIfaceimport.tbIfaceimport_api.IEmptyIf[] getImportedIfList()
+    public List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> getImportedIfList()
     {
         Log.i(TAG, "request getImportedIfList called, will call native ");
-        return nativeGetImportedIfList();
+        return Conversions.toList(nativeGetImportedIfList());
     }
 
   
@@ -113,19 +110,19 @@ public class ParentIfJniService extends AbstractParentIf {
     }
 
     @Override
-    public ISimpleLocalIf[] localIfMethodList(ISimpleLocalIf[] param) {
+    public List<ISimpleLocalIf> localIfMethodList(List<ISimpleLocalIf> param) {
         Log.i(TAG, "request method localIfMethodList called, will call native");
-        return nativeLocalIfMethodList(param);
+        return Conversions.toList(nativeLocalIfMethodList(Conversions.toArray(param, new ISimpleLocalIf[0])));
     }
 
     @Override
-    public  CompletableFuture<ISimpleLocalIf[]> localIfMethodListAsync(ISimpleLocalIf[] param) {
+    public  CompletableFuture<List<ISimpleLocalIf>> localIfMethodListAsync(List<ISimpleLocalIf> param) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return localIfMethodList(param); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<ISimpleLocalIf[]> f = new CompletableFuture<>();
+            CompletableFuture<List<ISimpleLocalIf>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
@@ -151,23 +148,23 @@ public class ParentIfJniService extends AbstractParentIf {
     }
 
     @Override
-    public tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfMethodList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param) {
+    public List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> importedIfMethodList(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> param) {
         Log.i(TAG, "request method importedIfMethodList called, will call native");
-        return nativeImportedIfMethodList(param);
+        return Conversions.toList(nativeImportedIfMethodList(Conversions.toArray(param, new tbIfaceimport.tbIfaceimport_api.IEmptyIf[0])));
     }
 
     @Override
-    public  CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf[]> importedIfMethodListAsync(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param) {
+    public  CompletableFuture<List<tbIfaceimport.tbIfaceimport_api.IEmptyIf>> importedIfMethodListAsync(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> param) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return importedIfMethodList(param); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf[]> f = new CompletableFuture<>();
+            CompletableFuture<List<tbIfaceimport.tbIfaceimport_api.IEmptyIf>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -189,7 +186,7 @@ public class ParentIfJniService extends AbstractParentIf {
         }
     }
 
-    // Called on Native Impl Service
+    // Native methods — use array types for JNI compatibility
     private native void nativeSetLocalIf(ISimpleLocalIf localIf);
     private native ISimpleLocalIf nativeGetLocalIf();
   
@@ -202,7 +199,6 @@ public class ParentIfJniService extends AbstractParentIf {
     private native void nativeSetImportedIfList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfList);
     private native tbIfaceimport.tbIfaceimport_api.IEmptyIf[] nativeGetImportedIfList();
   
-    // methods
     private native ISimpleLocalIf nativeLocalIfMethod(ISimpleLocalIf param);
     private native ISimpleLocalIf[] nativeLocalIfMethodList(ISimpleLocalIf[] param);
     private native tbIfaceimport.tbIfaceimport_api.IEmptyIf nativeImportedIfMethod(tbIfaceimport.tbIfaceimport_api.IEmptyIf param);
@@ -213,7 +209,7 @@ public class ParentIfJniService extends AbstractParentIf {
         isServiceReady = value;
     }
 
-    //In theory event listener interface
+    // Callbacks from native — receive arrays, convert to List and fire events
     public void onLocalIfChanged(ISimpleLocalIf newValue)
     {
          Log.i(TAG, "onLocalIfChanged, will pass notification to all listeners");
@@ -222,7 +218,7 @@ public class ParentIfJniService extends AbstractParentIf {
     public void onLocalIfListChanged(ISimpleLocalIf[] newValue)
     {
          Log.i(TAG, "onLocalIfListChanged, will pass notification to all listeners");
-         fireLocalIfListChanged(newValue);
+         fireLocalIfListChanged(Conversions.toList(newValue));
     }
     public void onImportedIfChanged(tbIfaceimport.tbIfaceimport_api.IEmptyIf newValue)
     {
@@ -232,7 +228,7 @@ public class ParentIfJniService extends AbstractParentIf {
     public void onImportedIfListChanged(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] newValue)
     {
          Log.i(TAG, "onImportedIfListChanged, will pass notification to all listeners");
-         fireImportedIfListChanged(newValue);
+         fireImportedIfListChanged(Conversions.toList(newValue));
     }
     public void onLocalIfSignal(ISimpleLocalIf param)
     {
@@ -242,7 +238,7 @@ public class ParentIfJniService extends AbstractParentIf {
     public void onLocalIfSignalList(ISimpleLocalIf[] param)
     {
         Log.i(TAG, "onLocalIfSignalList, will pass notification to all listeners");
-        fireLocalIfSignalList(param);
+        fireLocalIfSignalList(Conversions.toList(param));
     }
     public void onImportedIfSignal(tbIfaceimport.tbIfaceimport_api.IEmptyIf param)
     {
@@ -252,7 +248,7 @@ public class ParentIfJniService extends AbstractParentIf {
     public void onImportedIfSignalList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param)
     {
         Log.i(TAG, "onImportedIfSignalList, will pass notification to all listeners");
-        fireImportedIfSignalList(param);
+        fireImportedIfSignalList(Conversions.toList(param));
     }
 
 }

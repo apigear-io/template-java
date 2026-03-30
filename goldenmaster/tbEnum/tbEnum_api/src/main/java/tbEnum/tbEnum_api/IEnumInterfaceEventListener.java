@@ -4,6 +4,8 @@ import tbEnum.tbEnum_api.Enum1;
 import tbEnum.tbEnum_api.Enum2;
 import tbEnum.tbEnum_api.Enum3;
 
+import java.util.List;
+
   public interface IEnumInterfaceEventListener {
     void onProp0Changed(Enum0 newValue);
     void onProp1Changed(Enum1 newValue);

@@ -5,7 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 
   public  class ParentIfParcelable implements Parcelable {
@@ -53,9 +55,9 @@ import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
             return;
         }
         dest.writeParcelable(new SimpleLocalIfParcelable(data.getLocalIf()), flags);
-        dest.writeTypedArray(SimpleLocalIfParcelable.wrapArray(data.getLocalIfList()), flags);
+        dest.writeTypedArray(SimpleLocalIfParcelable.wrapArray(Conversions.toArray(data.getLocalIfList(), new ISimpleLocalIf[0])), flags);
         dest.writeParcelable(new tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable(data.getImportedIf()), flags);
-        dest.writeTypedArray(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(data.getImportedIfList()), flags);
+        dest.writeTypedArray(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(Conversions.toArray(data.getImportedIfList(), new tbIfaceimport.tbIfaceimport_api.IEmptyIf[0])), flags);
 
 
     }
@@ -67,7 +69,7 @@ import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
     }
 
     public static IParentIf[] unwrapArray(ParentIfParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new IParentIf[0];
         return Arrays.stream(parcelables)
            .map(ParentIfParcelable::getParentIf)
            .toArray(IParentIf[]::new);

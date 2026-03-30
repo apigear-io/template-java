@@ -6,9 +6,11 @@ import tbSimple.tbSimple_api.INoPropertiesInterfaceEventListener;
 import tbSimple.tbSimple_api.RemoteOperationException;
 
 import tbSimple.tbSimple_android_client.NoPropertiesInterfaceClient;
+import tbSimple.tbSimple_android_messenger.Conversions;
 import android.content.Context;
 
 import android.os.Bundle;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import android.util.Log;
 
@@ -30,15 +32,16 @@ public class NoPropertiesInterfaceJniClient extends AbstractNoPropertiesInterfac
     {
         return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
-     @Override
-     public void funcVoid()
-     {
+    // Interface method — List types
+    @Override
+    public void funcVoid()
+    {
         Log.v(TAG, "Blocking callfuncVoid - should not be used ");
          mMessengerClient.funcVoid();
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncVoidResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -68,15 +71,16 @@ public class NoPropertiesInterfaceJniClient extends AbstractNoPropertiesInterfac
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcVoidAsync();
     }
-     @Override
-     public boolean funcBool(boolean paramBool)
-     {
+    // Interface method — List types
+    @Override
+    public boolean funcBool(boolean paramBool)
+    {
         Log.v(TAG, "Blocking callfuncBool - should not be used ");
         return mMessengerClient.funcBool(paramBool);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncBoolResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -143,7 +147,7 @@ public class NoPropertiesInterfaceJniClient extends AbstractNoPropertiesInterfac
         nativeIsReady(isReady);
     }
 
-    //Event listener
+    // Event listener — receives List from messenger client, converts to array for native
     @Override
     public void onSigVoid()
     {
@@ -156,6 +160,9 @@ public class NoPropertiesInterfaceJniClient extends AbstractNoPropertiesInterfac
         Log.i(TAG, "NOTIFICATION from messenger client Signal sigBool "+ " " + paramBool);
         nativeOnSigBool(paramBool);
     }
+
+
+    // Native declarations — array types for JNI compatibility
     private native void nativeOnSigVoid();
     private native void nativeOnSigBool(boolean paramBool);
     private native void nativeOnFuncVoidResult(String callId);

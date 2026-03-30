@@ -25,7 +25,10 @@ import tbNames.tbNames_api.INamEs;
 import tbNames.tbNames_api.AbstractNamEs;
 import tbNames.tbNames_api.RemoteOperationException;
 import tbNames.tbNames_android_messenger.NamEsMessageType;
+import tbNames.tbNames_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
@@ -33,7 +36,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
 
 public class NamEsClient extends AbstractNamEs implements ServiceConnection
@@ -254,7 +256,7 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
 				    onEnumProperty(enum_property);
 				    break;
 			    }
-			    // TODO params may be different structs from different modules, there should be a custom class loader 
+			    // TODO params may be different structs from different modules, there should be a custom class loader
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 			    case SIG_SomeSignal: {
@@ -463,7 +465,7 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
   
     // methods
 
-   
+
     @Override
     public void someFunction(boolean SOME_PARAM) {
         CompletableFuture<Void> resFuture = someFunctionAsync(SOME_PARAM);
@@ -523,7 +525,7 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
         return future;
     }
 
-   
+
     @Override
     public void someFunction2(boolean Some_Param) {
         CompletableFuture<Void> resFuture = someFunction2Async(Some_Param);
@@ -581,7 +583,7 @@ public class NamEsClient extends AbstractNamEs implements ServiceConnection
 		mClientHandler.sendToService(msg);
 
         return future;
-    }    
+    }
 
     @Override
     public boolean _isReady() {

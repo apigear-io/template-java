@@ -26,7 +26,10 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.Abstract{{Camel .Interf
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.RemoteOperationException;
 {{- end }}
 import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.{{Camel .Interface.Name}}MessageType;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
@@ -34,7 +37,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
 
 public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface.Name}} implements ServiceConnection
@@ -53,7 +55,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
     AtomicInteger callIdsGetter = new AtomicInteger(0);
 
 	{{- range .Interface.Properties }}
-    private {{javaReturn "" .}} m_{{javaVar  .}} = {{ javaDefault "" . }};
+    private {{javaListReturn "" .}} m_{{javaVar  .}} = {{ javaListDefault "" . }};
     {{- end}}
 
 
@@ -221,7 +223,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 				    break;
 			    }
 		    {{- end }}
-			    // TODO params may be different structs from different modules, there should be a custom class loader 
+			    // TODO params may be different structs from different modules, there should be a custom class loader
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 		    {{- range .Interface.Signals }}
@@ -269,11 +271,11 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 
 {{- range .Interface.Properties }}
     @Override
-    public void set{{Camel .Name}}({{javaParam "" .}})
+    public void set{{Camel .Name}}({{javaListParam "" .}})
     {
         Log.i(TAG, "request set{{Camel .Name}} called "+ {{javaVar . }});
         {{- if .IsArray }}
-        if (! Arrays.equals(m_{{javaVar  .}}, {{javaVar  .}}))
+        if (!m_{{javaVar  .}}.equals({{javaVar  .}}))
         {{- else if or (or .IsPrimitive  (eq .KindType "enum")) (eq .KindType "interface") }}
         if (m_{{javaVar  .}} != {{javaVar  .}})
         {{- else }}
@@ -291,11 +293,11 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 
     }
 
-	public void on{{Camel .Name}}({{javaParam "" .}})
+	public void on{{Camel .Name}}({{javaListParam "" .}})
     {
         Log.i(TAG, "value received from service for {{Camel .Name}} ");
         {{- if .IsArray }}
-        if (! Arrays.equals(m_{{javaVar  .}}, {{javaVar  .}}))
+        if (!m_{{javaVar  .}}.equals({{javaVar  .}}))
         {{- else if or (or .IsPrimitive  (eq .KindType "enum")) (eq .KindType "interface") }}
         if (m_{{javaVar  .}} != {{javaVar  .}})
         {{- else }}
@@ -303,27 +305,27 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
         || (m_{{javaVar  .}} == null && {{javaVar  .}} != null ))
         {{- end }}
         {
-            m_{{javaVar  .}} = {{javaVar  .}};
+            m_{{javaVar  .}} = {{- if .IsArray }} new ArrayList<>({{javaVar  .}}){{- else }} {{javaVar  .}}{{- end}};
             fire{{Camel .Name}}Changed({{javaVar .}});
         }
 
     }
 
     @Override
-    public {{javaReturn "" . }} get{{Camel .Name}}()
+    public {{javaListReturn "" . }} get{{Camel .Name}}()
     {
         Log.i(TAG, "request get{{Camel .Name}} called, returning local");
-        return m_{{javaVar  .}};
+        return {{- if .IsArray }} new ArrayList<>(m_{{javaVar  .}}){{- else }} m_{{javaVar  .}}{{- end}};
     }
 
   {{ end }}
     // methods
   {{- range .Interface.Operations }}
 
-   
+
     @Override
-    public {{javaReturn "" .Return}} {{camel .Name}}({{javaParams "" .Params}}) {
-        {{javaAsyncReturn "" .Return}} resFuture = {{camel .Name}}Async({{javaVars .Params }});
+    public {{javaListReturn "" .Return}} {{camel .Name}}({{javaListParams "" .Params}}) {
+        {{javaListAsyncReturn "" .Return}} resFuture = {{camel .Name}}Async({{javaVars .Params }});
         try {
             {{- if .Return.IsVoid }}
             resFuture.get();
@@ -344,7 +346,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
     }
 
     @Override
-    public  {{javaAsyncReturn "" .Return}} {{camel .Name}}Async({{javaParams "" .Params}}) {
+    public  {{javaListAsyncReturn "" .Return}} {{camel .Name}}Async({{javaListParams "" .Params}}) {
 
     	Log.i(TAG, "Call on service {{camel .Name}}  "
 	{{- range .Params -}} + " " + {{javaVar .}}{{ end}});
@@ -359,7 +361,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
 
-        {{javaAsyncReturn "" .Return}}  future = new CompletableFuture<>();
+        {{javaListAsyncReturn "" .Return}}  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
@@ -392,7 +394,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
         return future;
     }
 
-  {{- end }}    
+  {{- end }}
 
     @Override
     public boolean _isReady() {
@@ -401,7 +403,7 @@ public class {{Camel .Interface.Name }}Client extends Abstract{{Camel .Interface
 
 	// Should be called when message arrives
     {{- range .Interface.Signals }}
-    public void on{{Camel .Name}}({{javaParams "" .Params}})
+    public void on{{Camel .Name}}({{javaListParams "" .Params}})
     {
         Log.i(TAG, "on{{Camel .Name}}  received from service");
         fire{{Camel .Name}}({{javaVars .Params}});

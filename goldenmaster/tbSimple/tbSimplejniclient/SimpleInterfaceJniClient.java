@@ -6,9 +6,11 @@ import tbSimple.tbSimple_api.ISimpleInterfaceEventListener;
 import tbSimple.tbSimple_api.RemoteOperationException;
 
 import tbSimple.tbSimple_android_client.SimpleInterfaceClient;
+import tbSimple.tbSimple_android_messenger.Conversions;
 import android.content.Context;
 
 import android.os.Bundle;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import android.util.Log;
 
@@ -30,119 +32,144 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
     {
         return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
+    // Interface method — List types
     @Override
     public void setPropBool(boolean propBool)
     {
-        Log.i(TAG, "got request from ue, setPropBool" + (propBool));
+        Log.i(TAG, "got request setPropBool" + (propBool));
         mMessengerClient.setPropBool(propBool);
     }
     @Override
     public boolean getPropBool()
     {
-        Log.i(TAG, "got request from ue, getPropBool");
+        Log.i(TAG, "got request getPropBool");
         return mMessengerClient.getPropBool();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setPropInt(int propInt)
     {
-        Log.i(TAG, "got request from ue, setPropInt" + (propInt));
+        Log.i(TAG, "got request setPropInt" + (propInt));
         mMessengerClient.setPropInt(propInt);
     }
     @Override
     public int getPropInt()
     {
-        Log.i(TAG, "got request from ue, getPropInt");
+        Log.i(TAG, "got request getPropInt");
         return mMessengerClient.getPropInt();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setPropInt32(int propInt32)
     {
-        Log.i(TAG, "got request from ue, setPropInt32" + (propInt32));
+        Log.i(TAG, "got request setPropInt32" + (propInt32));
         mMessengerClient.setPropInt32(propInt32);
     }
     @Override
     public int getPropInt32()
     {
-        Log.i(TAG, "got request from ue, getPropInt32");
+        Log.i(TAG, "got request getPropInt32");
         return mMessengerClient.getPropInt32();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setPropInt64(long propInt64)
     {
-        Log.i(TAG, "got request from ue, setPropInt64" + (propInt64));
+        Log.i(TAG, "got request setPropInt64" + (propInt64));
         mMessengerClient.setPropInt64(propInt64);
     }
     @Override
     public long getPropInt64()
     {
-        Log.i(TAG, "got request from ue, getPropInt64");
+        Log.i(TAG, "got request getPropInt64");
         return mMessengerClient.getPropInt64();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setPropFloat(float propFloat)
     {
-        Log.i(TAG, "got request from ue, setPropFloat" + (propFloat));
+        Log.i(TAG, "got request setPropFloat" + (propFloat));
         mMessengerClient.setPropFloat(propFloat);
     }
     @Override
     public float getPropFloat()
     {
-        Log.i(TAG, "got request from ue, getPropFloat");
+        Log.i(TAG, "got request getPropFloat");
         return mMessengerClient.getPropFloat();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setPropFloat32(float propFloat32)
     {
-        Log.i(TAG, "got request from ue, setPropFloat32" + (propFloat32));
+        Log.i(TAG, "got request setPropFloat32" + (propFloat32));
         mMessengerClient.setPropFloat32(propFloat32);
     }
     @Override
     public float getPropFloat32()
     {
-        Log.i(TAG, "got request from ue, getPropFloat32");
+        Log.i(TAG, "got request getPropFloat32");
         return mMessengerClient.getPropFloat32();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setPropFloat64(double propFloat64)
     {
-        Log.i(TAG, "got request from ue, setPropFloat64" + (propFloat64));
+        Log.i(TAG, "got request setPropFloat64" + (propFloat64));
         mMessengerClient.setPropFloat64(propFloat64);
     }
     @Override
     public double getPropFloat64()
     {
-        Log.i(TAG, "got request from ue, getPropFloat64");
+        Log.i(TAG, "got request getPropFloat64");
         return mMessengerClient.getPropFloat64();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setPropString(String propString)
     {
-        Log.i(TAG, "got request from ue, setPropString" + (propString));
+        Log.i(TAG, "got request setPropString" + (propString));
         mMessengerClient.setPropString(propString);
     }
     @Override
     public String getPropString()
     {
-        Log.i(TAG, "got request from ue, getPropString");
+        Log.i(TAG, "got request getPropString");
         return mMessengerClient.getPropString();
     }
+
+
     
-     @Override
-     public void funcNoReturnValue(boolean paramBool)
-     {
+    // Interface method — List types
+    @Override
+    public void funcNoReturnValue(boolean paramBool)
+    {
         Log.v(TAG, "Blocking callfuncNoReturnValue - should not be used ");
          mMessengerClient.funcNoReturnValue(paramBool);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncNoReturnValueResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -172,15 +199,16 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcNoReturnValueAsync(paramBool);
     }
-     @Override
-     public boolean funcNoParams()
-     {
+    // Interface method — List types
+    @Override
+    public boolean funcNoParams()
+    {
         Log.v(TAG, "Blocking callfuncNoParams - should not be used ");
         return mMessengerClient.funcNoParams();
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncNoParamsResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -210,15 +238,16 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcNoParamsAsync();
     }
-     @Override
-     public boolean funcBool(boolean paramBool)
-     {
+    // Interface method — List types
+    @Override
+    public boolean funcBool(boolean paramBool)
+    {
         Log.v(TAG, "Blocking callfuncBool - should not be used ");
         return mMessengerClient.funcBool(paramBool);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncBoolResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -248,15 +277,16 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcBoolAsync(paramBool);
     }
-     @Override
-     public int funcInt(int paramInt)
-     {
+    // Interface method — List types
+    @Override
+    public int funcInt(int paramInt)
+    {
         Log.v(TAG, "Blocking callfuncInt - should not be used ");
         return mMessengerClient.funcInt(paramInt);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncIntResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -286,15 +316,16 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcIntAsync(paramInt);
     }
-     @Override
-     public int funcInt32(int paramInt32)
-     {
+    // Interface method — List types
+    @Override
+    public int funcInt32(int paramInt32)
+    {
         Log.v(TAG, "Blocking callfuncInt32 - should not be used ");
         return mMessengerClient.funcInt32(paramInt32);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncInt32Result with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -324,15 +355,16 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcInt32Async(paramInt32);
     }
-     @Override
-     public long funcInt64(long paramInt64)
-     {
+    // Interface method — List types
+    @Override
+    public long funcInt64(long paramInt64)
+    {
         Log.v(TAG, "Blocking callfuncInt64 - should not be used ");
         return mMessengerClient.funcInt64(paramInt64);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncInt64Result with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -362,15 +394,16 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcInt64Async(paramInt64);
     }
-     @Override
-     public float funcFloat(float paramFloat)
-     {
+    // Interface method — List types
+    @Override
+    public float funcFloat(float paramFloat)
+    {
         Log.v(TAG, "Blocking callfuncFloat - should not be used ");
         return mMessengerClient.funcFloat(paramFloat);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncFloatResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -400,15 +433,16 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcFloatAsync(paramFloat);
     }
-     @Override
-     public float funcFloat32(float paramFloat32)
-     {
+    // Interface method — List types
+    @Override
+    public float funcFloat32(float paramFloat32)
+    {
         Log.v(TAG, "Blocking callfuncFloat32 - should not be used ");
         return mMessengerClient.funcFloat32(paramFloat32);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncFloat32Result with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -438,15 +472,16 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcFloat32Async(paramFloat32);
     }
-     @Override
-     public double funcFloat64(double paramFloat)
-     {
+    // Interface method — List types
+    @Override
+    public double funcFloat64(double paramFloat)
+    {
         Log.v(TAG, "Blocking callfuncFloat64 - should not be used ");
         return mMessengerClient.funcFloat64(paramFloat);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncFloat64Result with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -476,15 +511,16 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcFloat64Async(paramFloat);
     }
-     @Override
-     public String funcString(String paramString)
-     {
+    // Interface method — List types
+    @Override
+    public String funcString(String paramString)
+    {
         Log.v(TAG, "Blocking callfuncString - should not be used ");
         return mMessengerClient.funcString(paramString);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncStringResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -551,7 +587,7 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
         nativeIsReady(isReady);
     }
 
-    //Event listener
+    // Event listener — receives List from messenger client, converts to array for native
     @Override
     public void onPropBoolChanged(boolean newValue)
     {
@@ -648,6 +684,9 @@ public class SimpleInterfaceJniClient extends AbstractSimpleInterface implements
         Log.i(TAG, "NOTIFICATION from messenger client Signal sigString "+ " " + paramString);
         nativeOnSigString(paramString);
     }
+
+
+    // Native declarations — array types for JNI compatibility
      private native void nativeOnPropBoolChanged(boolean propBool);
      private native void nativeOnPropIntChanged(int propInt);
      private native void nativeOnPropInt32Changed(int propInt32);

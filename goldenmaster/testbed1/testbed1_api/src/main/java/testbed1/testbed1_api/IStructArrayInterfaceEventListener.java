@@ -13,16 +13,18 @@ import testbed1.testbed1_api.StructStructWithArray;
 import testbed1.testbed1_api.StructEnumWithArray;
 import testbed1.testbed1_api.Enum0;
 
+import java.util.List;
+
   public interface IStructArrayInterfaceEventListener {
-    void onPropBoolChanged(StructBool[] newValue);
-    void onPropIntChanged(StructInt[] newValue);
-    void onPropFloatChanged(StructFloat[] newValue);
-    void onPropStringChanged(StructString[] newValue);
-    void onPropEnumChanged(Enum0[] newValue);
-    void onSigBool(StructBool[] paramBool);
-    void onSigInt(StructInt[] paramInt);
-    void onSigFloat(StructFloat[] paramFloat);
-    void onSigString(StructString[] paramString);
-    void onSigEnum(Enum0[] paramEnum);
+    void onPropBoolChanged(List<StructBool> newValue);
+    void onPropIntChanged(List<StructInt> newValue);
+    void onPropFloatChanged(List<StructFloat> newValue);
+    void onPropStringChanged(List<StructString> newValue);
+    void onPropEnumChanged(List<Enum0> newValue);
+    void onSigBool(List<StructBool> paramBool);
+    void onSigInt(List<StructInt> paramInt);
+    void onSigFloat(List<StructFloat> paramFloat);
+    void onSigString(List<StructString> paramString);
+    void onSigEnum(List<Enum0> paramEnum);
   void on_readyStatusChanged(boolean isReady);
   }

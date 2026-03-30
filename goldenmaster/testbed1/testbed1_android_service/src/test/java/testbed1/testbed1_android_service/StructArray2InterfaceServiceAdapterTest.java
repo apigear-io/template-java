@@ -104,8 +104,11 @@ import org.robolectric.annotation.Config;
 import org.robolectric.RuntimeEnvironment;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import testbed1.testbed1_android_messenger.Conversions;
 
 interface IStructArray2InterfaceMessageGetter
 {
@@ -521,8 +524,8 @@ public class StructArray2InterfaceServiceAdapterTest
         data.putInt("callId", callId);
         StructBoolWithArray testparamBool = Testbed1TestHelper.makeTestStructBoolWithArray();
 		data.putParcelable("paramBool", new StructBoolWithArrayParcelable(testparamBool));
-        StructBool[] returnedValue = new StructBool[1];
-        returnedValue[0] = Testbed1TestHelper.makeTestStructBool();
+        List<StructBool> returnedValue = new ArrayList<>();
+        returnedValue.add(Testbed1TestHelper.makeTestStructBool());
 
 
         when(backendServiceMock.funcBool( any(StructBoolWithArray.class))).thenReturn(returnedValue);
@@ -540,7 +543,7 @@ public class StructArray2InterfaceServiceAdapterTest
         assertEquals(StructArray2InterfaceMessageType.RPC_FuncBoolResp.getValue(), response.what);
         Bundle resp_data = response.getData();
         resp_data.setClassLoader(StructBoolParcelable.class.getClassLoader());
-        StructBool[] receivedByClient =  StructBoolParcelable.unwrapArray((StructBoolParcelable[])resp_data.getParcelableArray("result", StructBoolParcelable.class));
+        List<StructBool> receivedByClient = Conversions.toList(StructBoolParcelable.unwrapArray((StructBoolParcelable[])resp_data.getParcelableArray("result", StructBoolParcelable.class)));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));
@@ -556,8 +559,8 @@ public class StructArray2InterfaceServiceAdapterTest
         data.putInt("callId", callId);
         StructIntWithArray testparamInt = Testbed1TestHelper.makeTestStructIntWithArray();
 		data.putParcelable("paramInt", new StructIntWithArrayParcelable(testparamInt));
-        StructInt[] returnedValue = new StructInt[1];
-        returnedValue[0] = Testbed1TestHelper.makeTestStructInt();
+        List<StructInt> returnedValue = new ArrayList<>();
+        returnedValue.add(Testbed1TestHelper.makeTestStructInt());
 
 
         when(backendServiceMock.funcInt( any(StructIntWithArray.class))).thenReturn(returnedValue);
@@ -575,7 +578,7 @@ public class StructArray2InterfaceServiceAdapterTest
         assertEquals(StructArray2InterfaceMessageType.RPC_FuncIntResp.getValue(), response.what);
         Bundle resp_data = response.getData();
         resp_data.setClassLoader(StructIntParcelable.class.getClassLoader());
-        StructInt[] receivedByClient =  StructIntParcelable.unwrapArray((StructIntParcelable[])resp_data.getParcelableArray("result", StructIntParcelable.class));
+        List<StructInt> receivedByClient = Conversions.toList(StructIntParcelable.unwrapArray((StructIntParcelable[])resp_data.getParcelableArray("result", StructIntParcelable.class)));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));
@@ -591,8 +594,8 @@ public class StructArray2InterfaceServiceAdapterTest
         data.putInt("callId", callId);
         StructFloatWithArray testparamFloat = Testbed1TestHelper.makeTestStructFloatWithArray();
 		data.putParcelable("paramFloat", new StructFloatWithArrayParcelable(testparamFloat));
-        StructFloat[] returnedValue = new StructFloat[1];
-        returnedValue[0] = Testbed1TestHelper.makeTestStructFloat();
+        List<StructFloat> returnedValue = new ArrayList<>();
+        returnedValue.add(Testbed1TestHelper.makeTestStructFloat());
 
 
         when(backendServiceMock.funcFloat( any(StructFloatWithArray.class))).thenReturn(returnedValue);
@@ -610,7 +613,7 @@ public class StructArray2InterfaceServiceAdapterTest
         assertEquals(StructArray2InterfaceMessageType.RPC_FuncFloatResp.getValue(), response.what);
         Bundle resp_data = response.getData();
         resp_data.setClassLoader(StructFloatParcelable.class.getClassLoader());
-        StructFloat[] receivedByClient =  StructFloatParcelable.unwrapArray((StructFloatParcelable[])resp_data.getParcelableArray("result", StructFloatParcelable.class));
+        List<StructFloat> receivedByClient = Conversions.toList(StructFloatParcelable.unwrapArray((StructFloatParcelable[])resp_data.getParcelableArray("result", StructFloatParcelable.class)));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));
@@ -626,8 +629,8 @@ public class StructArray2InterfaceServiceAdapterTest
         data.putInt("callId", callId);
         StructStringWithArray testparamString = Testbed1TestHelper.makeTestStructStringWithArray();
 		data.putParcelable("paramString", new StructStringWithArrayParcelable(testparamString));
-        StructString[] returnedValue = new StructString[1];
-        returnedValue[0] = Testbed1TestHelper.makeTestStructString();
+        List<StructString> returnedValue = new ArrayList<>();
+        returnedValue.add(Testbed1TestHelper.makeTestStructString());
 
 
         when(backendServiceMock.funcString( any(StructStringWithArray.class))).thenReturn(returnedValue);
@@ -645,7 +648,7 @@ public class StructArray2InterfaceServiceAdapterTest
         assertEquals(StructArray2InterfaceMessageType.RPC_FuncStringResp.getValue(), response.what);
         Bundle resp_data = response.getData();
         resp_data.setClassLoader(StructStringParcelable.class.getClassLoader());
-        StructString[] receivedByClient =  StructStringParcelable.unwrapArray((StructStringParcelable[])resp_data.getParcelableArray("result", StructStringParcelable.class));
+        List<StructString> receivedByClient = Conversions.toList(StructStringParcelable.unwrapArray((StructStringParcelable[])resp_data.getParcelableArray("result", StructStringParcelable.class)));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));
@@ -661,8 +664,8 @@ public class StructArray2InterfaceServiceAdapterTest
         data.putInt("callId", callId);
         StructEnumWithArray testparamEnum = Testbed1TestHelper.makeTestStructEnumWithArray();
 		data.putParcelable("paramEnum", new StructEnumWithArrayParcelable(testparamEnum));
-        Enum0[] returnedValue = new Enum0[1];
-        returnedValue[0] = Enum0.Value1;
+        List<Enum0> returnedValue = new ArrayList<>();
+        returnedValue.add(Enum0.Value1);
 
 
         when(backendServiceMock.funcEnum( any(StructEnumWithArray.class))).thenReturn(returnedValue);
@@ -680,7 +683,7 @@ public class StructArray2InterfaceServiceAdapterTest
         assertEquals(StructArray2InterfaceMessageType.RPC_FuncEnumResp.getValue(), response.what);
         Bundle resp_data = response.getData();
         resp_data.setClassLoader(Enum0Parcelable.class.getClassLoader());
-        Enum0[] receivedByClient =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])resp_data.getParcelableArray("result", Enum0Parcelable.class));
+        List<Enum0> receivedByClient = Conversions.toList(Enum0Parcelable.unwrapArray((Enum0Parcelable[])resp_data.getParcelableArray("result", Enum0Parcelable.class)));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));

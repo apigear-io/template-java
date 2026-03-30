@@ -95,6 +95,11 @@ features:
             target: "build.gradle"
           - source: "android/messenger/additions.gradle.tpl"
             target: "additions.gradle"
+      - match: module
+        prefix: "{{camel .Module.Name}}/{{camel .Module.Name}}_android_messenger/src/main/java/{{camel .Module.Name}}/{{camel .Module.Name}}_android_messenger/"
+        documents:
+          - source: "android/messenger/conversions.java.tpl"
+            target: "Conversions.java"
       - match: interface
         prefix: "{{camel .Module.Name}}/{{camel .Module.Name}}_android_messenger/src/main/java/{{camel .Module.Name}}/{{camel .Module.Name}}_android_messenger/"
         documents:

@@ -5,7 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
   public  class CounterParcelable implements Parcelable {
 
@@ -53,8 +55,8 @@ import java.util.Arrays;
         }
         dest.writeParcelable(new customTypes.customTypes_android_messenger.Vector3DParcelable(data.getVector()), flags);
         dest.writeParcelable(new externTypes.externTypes_android_messenger.MyVector3DParcelable(data.getExternVector()), flags);
-        dest.writeTypedArray(customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(data.getVectorArray()), flags);
-        dest.writeTypedArray(externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(data.getExternVectorArray()), flags);
+        dest.writeTypedArray(customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(Conversions.toArray(data.getVectorArray(), new customTypes.customTypes_api.Vector3D[0])), flags);
+        dest.writeTypedArray(externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(Conversions.toArray(data.getExternVectorArray(), new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[0])), flags);
 
 
     }
@@ -66,7 +68,7 @@ import java.util.Arrays;
     }
 
     public static ICounter[] unwrapArray(CounterParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new ICounter[0];
         return Arrays.stream(parcelables)
            .map(CounterParcelable::getCounter)
            .toArray(ICounter[]::new);

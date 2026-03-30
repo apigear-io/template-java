@@ -25,7 +25,10 @@ import tbSame2.tbSame2_api.ISameEnum1Interface;
 import tbSame2.tbSame2_api.AbstractSameEnum1Interface;
 import tbSame2.tbSame2_api.RemoteOperationException;
 import tbSame2.tbSame2_android_messenger.SameEnum1InterfaceMessageType;
+import tbSame2.tbSame2_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
@@ -33,7 +36,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
 
 public class SameEnum1InterfaceClient extends AbstractSameEnum1Interface implements ServiceConnection
@@ -212,7 +214,7 @@ public class SameEnum1InterfaceClient extends AbstractSameEnum1Interface impleme
 				    onProp1(prop1);
 				    break;
 			    }
-			    // TODO params may be different structs from different modules, there should be a custom class loader 
+			    // TODO params may be different structs from different modules, there should be a custom class loader
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 			    case SIG_Sig1: {
@@ -289,7 +291,7 @@ public class SameEnum1InterfaceClient extends AbstractSameEnum1Interface impleme
   
     // methods
 
-   
+
     @Override
     public Enum1 func1(Enum1 param1) {
         CompletableFuture<Enum1> resFuture = func1Async(param1);
@@ -348,7 +350,7 @@ public class SameEnum1InterfaceClient extends AbstractSameEnum1Interface impleme
 		mClientHandler.sendToService(msg);
 
         return future;
-    }    
+    }
 
     @Override
     public boolean _isReady() {

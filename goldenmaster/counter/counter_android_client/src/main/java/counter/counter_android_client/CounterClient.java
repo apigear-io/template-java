@@ -23,7 +23,10 @@ import counter.counter_api.ICounter;
 import counter.counter_api.AbstractCounter;
 import counter.counter_api.RemoteOperationException;
 import counter.counter_android_messenger.CounterMessageType;
+import counter.counter_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
@@ -31,7 +34,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
 
 public class CounterClient extends AbstractCounter implements ServiceConnection
@@ -50,8 +52,8 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
     AtomicInteger callIdsGetter = new AtomicInteger(0);
     private customTypes.customTypes_api.Vector3D m_vector = new customTypes.customTypes_api.Vector3D();
     private org.apache.commons.math3.geometry.euclidean.threed.Vector3D m_extern_vector = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0);
-    private customTypes.customTypes_api.Vector3D[] m_vectorArray = new customTypes.customTypes_api.Vector3D[]{};
-    private org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] m_extern_vectorArray = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]{};
+    private List<customTypes.customTypes_api.Vector3D> m_vectorArray = new ArrayList<>();
+    private List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> m_extern_vectorArray = new ArrayList<>();
 
 
 	public CounterClient(Context applicationContext, String connectionId)
@@ -205,10 +207,10 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 			        org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector = data.getParcelable("extern_vector", externTypes.externTypes_android_messenger.MyVector3DParcelable.class).getMyVector3D();
 				    onExternVector(extern_vector);
                     
-                    customTypes.customTypes_api.Vector3D[] vectorArray =  customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray((customTypes.customTypes_android_messenger.Vector3DParcelable[])data.getParcelableArray("vectorArray", customTypes.customTypes_android_messenger.Vector3DParcelable.class));
+                    List<customTypes.customTypes_api.Vector3D> vectorArray = Conversions.toList(customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray((customTypes.customTypes_android_messenger.Vector3DParcelable[])data.getParcelableArray("vectorArray", customTypes.customTypes_android_messenger.Vector3DParcelable.class)));
 				    onVectorArray(vectorArray);
                     
-                    org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] extern_vectorArray =  externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])data.getParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.class));
+                    List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> extern_vectorArray = Conversions.toList(externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])data.getParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.class)));
 				    onExternVectorArray(extern_vectorArray);
 
                     break;
@@ -241,7 +243,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 				    data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
 
                     
-                    customTypes.customTypes_api.Vector3D[] vectorArray =  customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray((customTypes.customTypes_android_messenger.Vector3DParcelable[])data.getParcelableArray("vectorArray", customTypes.customTypes_android_messenger.Vector3DParcelable.class));
+                    List<customTypes.customTypes_api.Vector3D> vectorArray = Conversions.toList(customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray((customTypes.customTypes_android_messenger.Vector3DParcelable[])data.getParcelableArray("vectorArray", customTypes.customTypes_android_messenger.Vector3DParcelable.class)));
 
 				    onVectorArray(vectorArray);
 				    break;
@@ -252,12 +254,12 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 				    data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
 
                     
-                    org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] extern_vectorArray =  externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])data.getParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.class));
+                    List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> extern_vectorArray = Conversions.toList(externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])data.getParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.class)));
 
 				    onExternVectorArray(extern_vectorArray);
 				    break;
 			    }
-			    // TODO params may be different structs from different modules, there should be a custom class loader 
+			    // TODO params may be different structs from different modules, there should be a custom class loader
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 			    case SIG_ValueChanged: {
@@ -272,9 +274,9 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
                 
 			        org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector = data.getParcelable("extern_vector", externTypes.externTypes_android_messenger.MyVector3DParcelable.class).getMyVector3D();
                 
-                    customTypes.customTypes_api.Vector3D[] vectorArray =  customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray((customTypes.customTypes_android_messenger.Vector3DParcelable[])data.getParcelableArray("vectorArray", customTypes.customTypes_android_messenger.Vector3DParcelable.class));
+                    List<customTypes.customTypes_api.Vector3D> vectorArray = Conversions.toList(customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray((customTypes.customTypes_android_messenger.Vector3DParcelable[])data.getParcelableArray("vectorArray", customTypes.customTypes_android_messenger.Vector3DParcelable.class)));
                 
-                    org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] extern_vectorArray =  externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])data.getParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.class));
+                    List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> extern_vectorArray = Conversions.toList(externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])data.getParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.class)));
 				    onValueChanged(vector, extern_vector, vectorArray, extern_vectorArray);
 				    break;
 			    }
@@ -435,80 +437,80 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 
   
     @Override
-    public void setVectorArray(customTypes.customTypes_api.Vector3D[] vectorArray)
+    public void setVectorArray(List<customTypes.customTypes_api.Vector3D> vectorArray)
     {
         Log.i(TAG, "request setVectorArray called "+ vectorArray);
-        if (! Arrays.equals(m_vectorArray, vectorArray))
+        if (!m_vectorArray.equals(vectorArray))
         {
 			Message msg = new Message();
 			msg.what = CounterMessageType.PROP_VectorArray.getValue();
 			Bundle data = new Bundle();
             
-		        data.putParcelableArray("vectorArray", customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(vectorArray));
+		        data.putParcelableArray("vectorArray", customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(Conversions.toArray(vectorArray, new customTypes.customTypes_api.Vector3D[0])));
 			msg.setData(data);
 			mClientHandler.sendToService(msg);
         }
 
     }
 
-	public void onVectorArray(customTypes.customTypes_api.Vector3D[] vectorArray)
+	public void onVectorArray(List<customTypes.customTypes_api.Vector3D> vectorArray)
     {
         Log.i(TAG, "value received from service for VectorArray ");
-        if (! Arrays.equals(m_vectorArray, vectorArray))
+        if (!m_vectorArray.equals(vectorArray))
         {
-            m_vectorArray = vectorArray;
+            m_vectorArray = new ArrayList<>(vectorArray);
             fireVectorArrayChanged(vectorArray);
         }
 
     }
 
     @Override
-    public customTypes.customTypes_api.Vector3D[] getVectorArray()
+    public List<customTypes.customTypes_api.Vector3D> getVectorArray()
     {
         Log.i(TAG, "request getVectorArray called, returning local");
-        return m_vectorArray;
+        return new ArrayList<>(m_vectorArray);
     }
 
   
     @Override
-    public void setExternVectorArray(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] extern_vectorArray)
+    public void setExternVectorArray(List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> extern_vectorArray)
     {
         Log.i(TAG, "request setExternVectorArray called "+ extern_vectorArray);
-        if (! Arrays.equals(m_extern_vectorArray, extern_vectorArray))
+        if (!m_extern_vectorArray.equals(extern_vectorArray))
         {
 			Message msg = new Message();
 			msg.what = CounterMessageType.PROP_ExternVectorArray.getValue();
 			Bundle data = new Bundle();
             
-		        data.putParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(extern_vectorArray));
+		        data.putParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(Conversions.toArray(extern_vectorArray, new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[0])));
 			msg.setData(data);
 			mClientHandler.sendToService(msg);
         }
 
     }
 
-	public void onExternVectorArray(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] extern_vectorArray)
+	public void onExternVectorArray(List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> extern_vectorArray)
     {
         Log.i(TAG, "value received from service for ExternVectorArray ");
-        if (! Arrays.equals(m_extern_vectorArray, extern_vectorArray))
+        if (!m_extern_vectorArray.equals(extern_vectorArray))
         {
-            m_extern_vectorArray = extern_vectorArray;
+            m_extern_vectorArray = new ArrayList<>(extern_vectorArray);
             fireExternVectorArrayChanged(extern_vectorArray);
         }
 
     }
 
     @Override
-    public org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] getExternVectorArray()
+    public List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> getExternVectorArray()
     {
         Log.i(TAG, "request getExternVectorArray called, returning local");
-        return m_extern_vectorArray;
+        return new ArrayList<>(m_extern_vectorArray);
     }
 
   
     // methods
 
-   
+
     @Override
     public org.apache.commons.math3.geometry.euclidean.threed.Vector3D increment(org.apache.commons.math3.geometry.euclidean.threed.Vector3D vec) {
         CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> resFuture = incrementAsync(vec);
@@ -569,10 +571,10 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
         return future;
     }
 
-   
+
     @Override
-    public org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] incrementArray(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec) {
-        CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]> resFuture = incrementArrayAsync(vec);
+    public List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> incrementArray(List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> vec) {
+        CompletableFuture<List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D>> resFuture = incrementArrayAsync(vec);
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
@@ -588,7 +590,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
     }
 
     @Override
-    public  CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]> incrementArrayAsync(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec) {
+    public  CompletableFuture<List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D>> incrementArrayAsync(List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> vec) {
 
     	Log.i(TAG, "Call on service incrementArray  "+ " " + vec);
 		Message msg = new Message();
@@ -597,11 +599,11 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
         int msgId =  callIdsGetter.getAndIncrement();
         data.putInt("callId",msgId);
         
-		        data.putParcelableArray("vec", externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(vec));
+		        data.putParcelableArray("vec", externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(Conversions.toArray(vec, new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[0])));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
 
-        CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]>  future = new CompletableFuture<>();
+        CompletableFuture<List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D>>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
@@ -618,7 +620,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
                 return;
             }
             
-            org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] result =  externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])bundle.getParcelableArray("result", externTypes.externTypes_android_messenger.MyVector3DParcelable.class));
+            List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> result = Conversions.toList(externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])bundle.getParcelableArray("result", externTypes.externTypes_android_messenger.MyVector3DParcelable.class)));
             Log.v(TAG, "resolve incrementArray" + result);
             future.complete(result);
         };
@@ -630,7 +632,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
         return future;
     }
 
-   
+
     @Override
     public customTypes.customTypes_api.Vector3D decrement(customTypes.customTypes_api.Vector3D vec) {
         CompletableFuture<customTypes.customTypes_api.Vector3D> resFuture = decrementAsync(vec);
@@ -691,10 +693,10 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
         return future;
     }
 
-   
+
     @Override
-    public customTypes.customTypes_api.Vector3D[] decrementArray(customTypes.customTypes_api.Vector3D[] vec) {
-        CompletableFuture<customTypes.customTypes_api.Vector3D[]> resFuture = decrementArrayAsync(vec);
+    public List<customTypes.customTypes_api.Vector3D> decrementArray(List<customTypes.customTypes_api.Vector3D> vec) {
+        CompletableFuture<List<customTypes.customTypes_api.Vector3D>> resFuture = decrementArrayAsync(vec);
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
@@ -710,7 +712,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
     }
 
     @Override
-    public  CompletableFuture<customTypes.customTypes_api.Vector3D[]> decrementArrayAsync(customTypes.customTypes_api.Vector3D[] vec) {
+    public  CompletableFuture<List<customTypes.customTypes_api.Vector3D>> decrementArrayAsync(List<customTypes.customTypes_api.Vector3D> vec) {
 
     	Log.i(TAG, "Call on service decrementArray  "+ " " + vec);
 		Message msg = new Message();
@@ -719,11 +721,11 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
         int msgId =  callIdsGetter.getAndIncrement();
         data.putInt("callId",msgId);
         
-		        data.putParcelableArray("vec", customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(vec));
+		        data.putParcelableArray("vec", customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(Conversions.toArray(vec, new customTypes.customTypes_api.Vector3D[0])));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
 
-        CompletableFuture<customTypes.customTypes_api.Vector3D[]>  future = new CompletableFuture<>();
+        CompletableFuture<List<customTypes.customTypes_api.Vector3D>>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
@@ -740,7 +742,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
                 return;
             }
             
-            customTypes.customTypes_api.Vector3D[] result =  customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray((customTypes.customTypes_android_messenger.Vector3DParcelable[])bundle.getParcelableArray("result", customTypes.customTypes_android_messenger.Vector3DParcelable.class));
+            List<customTypes.customTypes_api.Vector3D> result = Conversions.toList(customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray((customTypes.customTypes_android_messenger.Vector3DParcelable[])bundle.getParcelableArray("result", customTypes.customTypes_android_messenger.Vector3DParcelable.class)));
             Log.v(TAG, "resolve decrementArray" + result);
             future.complete(result);
         };
@@ -750,7 +752,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
 		mClientHandler.sendToService(msg);
 
         return future;
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -758,7 +760,7 @@ public class CounterClient extends AbstractCounter implements ServiceConnection
     }
 
 	// Should be called when message arrives
-    public void onValueChanged(customTypes.customTypes_api.Vector3D vector, org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector, customTypes.customTypes_api.Vector3D[] vectorArray, org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] extern_vectorArray)
+    public void onValueChanged(customTypes.customTypes_api.Vector3D vector, org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector, List<customTypes.customTypes_api.Vector3D> vectorArray, List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> extern_vectorArray)
     {
         Log.i(TAG, "onValueChanged  received from service");
         fireValueChanged(vector, extern_vector, vectorArray, extern_vectorArray);

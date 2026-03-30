@@ -9,6 +9,8 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.I{{Camel .Interface.Nam
 {{- template "importApiWithService" .}}
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,7 +21,6 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
-import java.util.Arrays;
 
 
 public class {{Camel .Interface.Name}}Service extends Abstract{{Camel .Interface.Name}} {
@@ -29,7 +30,7 @@ public class {{Camel .Interface.Name}}Service extends Abstract{{Camel .Interface
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     {{- range .Interface.Properties }}
-    private {{javaReturn "" .}} m_{{javaVar  .}} = {{ javaDefault "" . }};
+    private {{javaListReturn "" .}} m_{{javaVar  .}} = {{ javaListDefault "" . }};
     {{- end}}
 
     public {{Camel .Interface.Name}}Service()
@@ -39,11 +40,11 @@ public class {{Camel .Interface.Name}}Service extends Abstract{{Camel .Interface
 
 {{- range .Interface.Properties }}
     @Override
-    public void set{{Camel .Name}}({{javaParam "" .}})
+    public void set{{Camel .Name}}({{javaListParam "" .}})
     {
         Log.i(TAG, "request set{{Camel .Name}} called ");
         {{- if .IsArray }}
-        if (! Arrays.equals(m_{{javaVar  .}}, {{javaVar  .}}))
+        if (!m_{{javaVar  .}}.equals({{javaVar  .}}))
         {{- else if or (or .IsPrimitive  (eq .KindType "enum")) (eq .KindType "interface") }}
         if (m_{{javaVar  .}} != {{javaVar  .}})
         {{- else }}
@@ -51,17 +52,17 @@ public class {{Camel .Interface.Name}}Service extends Abstract{{Camel .Interface
         || (m_{{javaVar  .}} == null && {{javaVar  .}} != null ))
         {{- end}}
         {
-            m_{{javaVar  .}} = {{javaVar  .}};
-            on{{Camel .Name}}Changed(m_{{javaVar  .}});
+            m_{{javaVar  .}} = {{- if .IsArray }} new ArrayList<>({{javaVar  .}}){{- else }} {{javaVar  .}}{{- end}};
+            on{{Camel .Name}}Changed({{- if .IsArray }}new ArrayList<>(m_{{javaVar  .}}){{- else }}m_{{javaVar  .}}{{- end}});
         }
 
     }
 
     @Override
-    public {{javaReturn "" . }} get{{Camel .Name}}()
+    public {{javaListReturn "" . }} get{{Camel .Name}}()
     {
         Log.i(TAG, "request get{{Camel .Name}} called,");
-        return m_{{javaVar  .}};
+        return {{- if .IsArray }} new ArrayList<>(m_{{javaVar  .}}){{- else }} m_{{javaVar  .}}{{- end}};
     }
 
   {{ end }}
@@ -69,25 +70,25 @@ public class {{Camel .Interface.Name}}Service extends Abstract{{Camel .Interface
   {{- range .Interface.Operations }}
 
     @Override
-    public {{javaReturn "" .Return}} {{camel .Name}}({{javaParams "" .Params}}) {
+    public {{javaListReturn "" .Return}} {{camel .Name}}({{javaListParams "" .Params}}) {
         Log.i(TAG, "request method {{camel .Name}} called, returnig default");
-        return {{ if not .Return.IsVoid }}{{ javaDefault "" .Return }}{{end }};
+        return {{ if not .Return.IsVoid }}{{ javaListDefault "" .Return }}{{end }};
     }
 
     @Override
-    public  {{javaAsyncReturn "" .Return}} {{camel .Name}}Async({{javaParams "" .Params}}) {
+    public  {{javaListAsyncReturn "" .Return}} {{camel .Name}}Async({{javaListParams "" .Params}}) {
         try {
             return CompletableFuture.{{- if .Return.IsVoid }}runAsync{{else}}supplyAsync{{end}}(
                     () -> {     {{- if not .Return.IsVoid }}return{{end}} {{camel .Name}}({{javaVars .Params }}); },
                     executor);
         } catch (RejectedExecutionException e) {
-            {{javaAsyncReturn "" .Return}} f = new CompletableFuture<>();
+            {{javaListAsyncReturn "" .Return}} f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
-  {{- end }}    
+  {{- end }}
 
     @Override
     public boolean _isReady() {
@@ -112,14 +113,14 @@ public class {{Camel .Interface.Name}}Service extends Abstract{{Camel .Interface
     //In theory event listener interface
 
     {{- range .Interface.Properties }}
-    private void on{{Camel .Name}}Changed({{javaType "" .}} newValue)
+    private void on{{Camel .Name}}Changed({{javaListType "" .}} newValue)
     {
          Log.i(TAG, "on{{Camel .Name}}Changed, will pass notification to all listeners");
          fire{{Camel .Name}}Changed(newValue);
     }
     {{- end}}
     {{- range .Interface.Signals }}
-    public void on{{Camel .Name}}({{javaParams "" .Params}})
+    public void on{{Camel .Name}}({{javaListParams "" .Params}})
     {
         Log.i(TAG, "on{{Camel .Name}}, will pass notification to all listeners");
         fire{{Camel .Name}}({{javaVars .Params}});

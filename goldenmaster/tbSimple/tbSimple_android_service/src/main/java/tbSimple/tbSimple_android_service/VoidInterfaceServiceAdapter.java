@@ -21,7 +21,10 @@ import tbSimple.tbSimple_api.IVoidInterface;
 import tbSimple.tbSimple_api.AbstractVoidInterface;
 import tbSimple.tbSimple_api.RemoteOperationException;
 import tbSimple.tbSimple_android_messenger.VoidInterfaceMessageType;
+import tbSimple.tbSimple_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 public class VoidInterfaceServiceAdapter extends Service

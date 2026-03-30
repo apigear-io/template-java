@@ -1,28 +1,28 @@
 package testbed1.testbed1_api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public  class StructStringWithArray {
 
-    public StructStringWithArray(String[] fieldString)
+    public StructStringWithArray(List<String> fieldString)
     {
       this.fieldString = fieldString;
-    }  
+    }
 
-    public StructStringWithArray() 
+    public StructStringWithArray()
     {
-        this.fieldString = new String[0];
+        this.fieldString = new ArrayList<>();
     }
     @JsonProperty("field_string")
-    public String[] fieldString;
+    public List<String> fieldString;
 
     public StructStringWithArray(StructStringWithArray other)
     {
-        this.fieldString = other.fieldString != null
-            ? java.util.Arrays.copyOf(other.fieldString, other.fieldString.length)
-            : null;
+        this.fieldString = new ArrayList<>(other.fieldString);
     }
 
     @Override
@@ -32,13 +32,13 @@ public  class StructStringWithArray {
         StructStringWithArray other = (StructStringWithArray) o;
 
         return
-         Arrays.equals(this.fieldString, other.fieldString);
+         Objects.equals(this.fieldString, other.fieldString);
     }
 
     @Override
     public int hashCode() {
         int result = 7;
-        result = 31 * result + Arrays.hashCode(fieldString);
+        result = 31 * result + fieldString.hashCode();
         return result;
     }
 

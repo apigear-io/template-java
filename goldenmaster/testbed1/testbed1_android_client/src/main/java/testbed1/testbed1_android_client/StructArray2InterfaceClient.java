@@ -43,7 +43,10 @@ import testbed1.testbed1_api.IStructArray2Interface;
 import testbed1.testbed1_api.AbstractStructArray2Interface;
 import testbed1.testbed1_api.RemoteOperationException;
 import testbed1.testbed1_android_messenger.StructArray2InterfaceMessageType;
+import testbed1.testbed1_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
@@ -51,7 +54,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
 
 public class StructArray2InterfaceClient extends AbstractStructArray2Interface implements ServiceConnection
@@ -292,7 +294,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 				    onPropEnum(propEnum);
 				    break;
 			    }
-			    // TODO params may be different structs from different modules, there should be a custom class loader 
+			    // TODO params may be different structs from different modules, there should be a custom class loader
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 			    case SIG_SigBool: {
@@ -625,10 +627,10 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
   
     // methods
 
-   
+
     @Override
-    public StructBool[] funcBool(StructBoolWithArray paramBool) {
-        CompletableFuture<StructBool[]> resFuture = funcBoolAsync(paramBool);
+    public List<StructBool> funcBool(StructBoolWithArray paramBool) {
+        CompletableFuture<List<StructBool>> resFuture = funcBoolAsync(paramBool);
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
@@ -644,7 +646,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
     }
 
     @Override
-    public  CompletableFuture<StructBool[]> funcBoolAsync(StructBoolWithArray paramBool) {
+    public  CompletableFuture<List<StructBool>> funcBoolAsync(StructBoolWithArray paramBool) {
 
     	Log.i(TAG, "Call on service funcBool  "+ " " + paramBool);
 		Message msg = new Message();
@@ -657,7 +659,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
 
-        CompletableFuture<StructBool[]>  future = new CompletableFuture<>();
+        CompletableFuture<List<StructBool>>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
@@ -674,7 +676,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
                 return;
             }
             
-            StructBool[] result =  StructBoolParcelable.unwrapArray((StructBoolParcelable[])bundle.getParcelableArray("result", StructBoolParcelable.class));
+            List<StructBool> result = Conversions.toList(StructBoolParcelable.unwrapArray((StructBoolParcelable[])bundle.getParcelableArray("result", StructBoolParcelable.class)));
             Log.v(TAG, "resolve funcBool" + result);
             future.complete(result);
         };
@@ -686,10 +688,10 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
         return future;
     }
 
-   
+
     @Override
-    public StructInt[] funcInt(StructIntWithArray paramInt) {
-        CompletableFuture<StructInt[]> resFuture = funcIntAsync(paramInt);
+    public List<StructInt> funcInt(StructIntWithArray paramInt) {
+        CompletableFuture<List<StructInt>> resFuture = funcIntAsync(paramInt);
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
@@ -705,7 +707,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
     }
 
     @Override
-    public  CompletableFuture<StructInt[]> funcIntAsync(StructIntWithArray paramInt) {
+    public  CompletableFuture<List<StructInt>> funcIntAsync(StructIntWithArray paramInt) {
 
     	Log.i(TAG, "Call on service funcInt  "+ " " + paramInt);
 		Message msg = new Message();
@@ -718,7 +720,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
 
-        CompletableFuture<StructInt[]>  future = new CompletableFuture<>();
+        CompletableFuture<List<StructInt>>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
@@ -735,7 +737,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
                 return;
             }
             
-            StructInt[] result =  StructIntParcelable.unwrapArray((StructIntParcelable[])bundle.getParcelableArray("result", StructIntParcelable.class));
+            List<StructInt> result = Conversions.toList(StructIntParcelable.unwrapArray((StructIntParcelable[])bundle.getParcelableArray("result", StructIntParcelable.class)));
             Log.v(TAG, "resolve funcInt" + result);
             future.complete(result);
         };
@@ -747,10 +749,10 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
         return future;
     }
 
-   
+
     @Override
-    public StructFloat[] funcFloat(StructFloatWithArray paramFloat) {
-        CompletableFuture<StructFloat[]> resFuture = funcFloatAsync(paramFloat);
+    public List<StructFloat> funcFloat(StructFloatWithArray paramFloat) {
+        CompletableFuture<List<StructFloat>> resFuture = funcFloatAsync(paramFloat);
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
@@ -766,7 +768,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
     }
 
     @Override
-    public  CompletableFuture<StructFloat[]> funcFloatAsync(StructFloatWithArray paramFloat) {
+    public  CompletableFuture<List<StructFloat>> funcFloatAsync(StructFloatWithArray paramFloat) {
 
     	Log.i(TAG, "Call on service funcFloat  "+ " " + paramFloat);
 		Message msg = new Message();
@@ -779,7 +781,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
 
-        CompletableFuture<StructFloat[]>  future = new CompletableFuture<>();
+        CompletableFuture<List<StructFloat>>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
@@ -796,7 +798,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
                 return;
             }
             
-            StructFloat[] result =  StructFloatParcelable.unwrapArray((StructFloatParcelable[])bundle.getParcelableArray("result", StructFloatParcelable.class));
+            List<StructFloat> result = Conversions.toList(StructFloatParcelable.unwrapArray((StructFloatParcelable[])bundle.getParcelableArray("result", StructFloatParcelable.class)));
             Log.v(TAG, "resolve funcFloat" + result);
             future.complete(result);
         };
@@ -808,10 +810,10 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
         return future;
     }
 
-   
+
     @Override
-    public StructString[] funcString(StructStringWithArray paramString) {
-        CompletableFuture<StructString[]> resFuture = funcStringAsync(paramString);
+    public List<StructString> funcString(StructStringWithArray paramString) {
+        CompletableFuture<List<StructString>> resFuture = funcStringAsync(paramString);
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
@@ -827,7 +829,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
     }
 
     @Override
-    public  CompletableFuture<StructString[]> funcStringAsync(StructStringWithArray paramString) {
+    public  CompletableFuture<List<StructString>> funcStringAsync(StructStringWithArray paramString) {
 
     	Log.i(TAG, "Call on service funcString  "+ " " + paramString);
 		Message msg = new Message();
@@ -840,7 +842,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
 
-        CompletableFuture<StructString[]>  future = new CompletableFuture<>();
+        CompletableFuture<List<StructString>>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
@@ -857,7 +859,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
                 return;
             }
             
-            StructString[] result =  StructStringParcelable.unwrapArray((StructStringParcelable[])bundle.getParcelableArray("result", StructStringParcelable.class));
+            List<StructString> result = Conversions.toList(StructStringParcelable.unwrapArray((StructStringParcelable[])bundle.getParcelableArray("result", StructStringParcelable.class)));
             Log.v(TAG, "resolve funcString" + result);
             future.complete(result);
         };
@@ -869,10 +871,10 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
         return future;
     }
 
-   
+
     @Override
-    public Enum0[] funcEnum(StructEnumWithArray paramEnum) {
-        CompletableFuture<Enum0[]> resFuture = funcEnumAsync(paramEnum);
+    public List<Enum0> funcEnum(StructEnumWithArray paramEnum) {
+        CompletableFuture<List<Enum0>> resFuture = funcEnumAsync(paramEnum);
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
@@ -888,7 +890,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
     }
 
     @Override
-    public  CompletableFuture<Enum0[]> funcEnumAsync(StructEnumWithArray paramEnum) {
+    public  CompletableFuture<List<Enum0>> funcEnumAsync(StructEnumWithArray paramEnum) {
 
     	Log.i(TAG, "Call on service funcEnum  "+ " " + paramEnum);
 		Message msg = new Message();
@@ -901,7 +903,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
 
-        CompletableFuture<Enum0[]>  future = new CompletableFuture<>();
+        CompletableFuture<List<Enum0>>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
@@ -918,7 +920,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
                 return;
             }
             
-            Enum0[] result =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])bundle.getParcelableArray("result", Enum0Parcelable.class));
+            List<Enum0> result = Conversions.toList(Enum0Parcelable.unwrapArray((Enum0Parcelable[])bundle.getParcelableArray("result", Enum0Parcelable.class)));
             Log.v(TAG, "resolve funcEnum" + result);
             future.complete(result);
         };
@@ -928,7 +930,7 @@ public class StructArray2InterfaceClient extends AbstractStructArray2Interface i
 		mClientHandler.sendToService(msg);
 
         return future;
-    }    
+    }
 
     @Override
     public boolean _isReady() {

@@ -6,9 +6,11 @@ import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.RemoteOperationException;
 
 import tbRefIfaces.tbRefIfaces_android_client.SimpleLocalIfClient;
+import tbRefIfaces.tbRefIfaces_android_messenger.Conversions;
 import android.content.Context;
 
 import android.os.Bundle;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import android.util.Log;
 
@@ -30,28 +32,32 @@ public class SimpleLocalIfJniClient extends AbstractSimpleLocalIf implements ISi
     {
         return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
+    // Interface method — List types
     @Override
     public void setIntProperty(int intProperty)
     {
-        Log.i(TAG, "got request from ue, setIntProperty" + (intProperty));
+        Log.i(TAG, "got request setIntProperty" + (intProperty));
         mMessengerClient.setIntProperty(intProperty);
     }
     @Override
     public int getIntProperty()
     {
-        Log.i(TAG, "got request from ue, getIntProperty");
+        Log.i(TAG, "got request getIntProperty");
         return mMessengerClient.getIntProperty();
     }
+
+
     
-     @Override
-     public int intMethod(int param)
-     {
+    // Interface method — List types
+    @Override
+    public int intMethod(int param)
+    {
         Log.v(TAG, "Blocking callintMethod - should not be used ");
         return mMessengerClient.intMethod(param);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnIntMethodResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -118,7 +124,7 @@ public class SimpleLocalIfJniClient extends AbstractSimpleLocalIf implements ISi
         nativeIsReady(isReady);
     }
 
-    //Event listener
+    // Event listener — receives List from messenger client, converts to array for native
     @Override
     public void onIntPropertyChanged(int newValue)
     {
@@ -131,6 +137,9 @@ public class SimpleLocalIfJniClient extends AbstractSimpleLocalIf implements ISi
         Log.i(TAG, "NOTIFICATION from messenger client Signal intSignal "+ " " + param);
         nativeOnIntSignal(param);
     }
+
+
+    // Native declarations — array types for JNI compatibility
      private native void nativeOnIntPropertyChanged(int intProperty);
     private native void nativeOnIntSignal(int param);
     private native void nativeOnIntMethodResult(int result, String callId);

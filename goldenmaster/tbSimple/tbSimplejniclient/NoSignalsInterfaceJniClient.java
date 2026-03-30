@@ -6,9 +6,11 @@ import tbSimple.tbSimple_api.INoSignalsInterfaceEventListener;
 import tbSimple.tbSimple_api.RemoteOperationException;
 
 import tbSimple.tbSimple_android_client.NoSignalsInterfaceClient;
+import tbSimple.tbSimple_android_messenger.Conversions;
 import android.content.Context;
 
 import android.os.Bundle;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import android.util.Log;
 
@@ -30,41 +32,48 @@ public class NoSignalsInterfaceJniClient extends AbstractNoSignalsInterface impl
     {
         return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
+    // Interface method — List types
     @Override
     public void setPropBool(boolean propBool)
     {
-        Log.i(TAG, "got request from ue, setPropBool" + (propBool));
+        Log.i(TAG, "got request setPropBool" + (propBool));
         mMessengerClient.setPropBool(propBool);
     }
     @Override
     public boolean getPropBool()
     {
-        Log.i(TAG, "got request from ue, getPropBool");
+        Log.i(TAG, "got request getPropBool");
         return mMessengerClient.getPropBool();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setPropInt(int propInt)
     {
-        Log.i(TAG, "got request from ue, setPropInt" + (propInt));
+        Log.i(TAG, "got request setPropInt" + (propInt));
         mMessengerClient.setPropInt(propInt);
     }
     @Override
     public int getPropInt()
     {
-        Log.i(TAG, "got request from ue, getPropInt");
+        Log.i(TAG, "got request getPropInt");
         return mMessengerClient.getPropInt();
     }
+
+
     
-     @Override
-     public void funcVoid()
-     {
+    // Interface method — List types
+    @Override
+    public void funcVoid()
+    {
         Log.v(TAG, "Blocking callfuncVoid - should not be used ");
          mMessengerClient.funcVoid();
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncVoidResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -94,15 +103,16 @@ public class NoSignalsInterfaceJniClient extends AbstractNoSignalsInterface impl
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcVoidAsync();
     }
-     @Override
-     public boolean funcBool(boolean paramBool)
-     {
+    // Interface method — List types
+    @Override
+    public boolean funcBool(boolean paramBool)
+    {
         Log.v(TAG, "Blocking callfuncBool - should not be used ");
         return mMessengerClient.funcBool(paramBool);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncBoolResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -169,7 +179,7 @@ public class NoSignalsInterfaceJniClient extends AbstractNoSignalsInterface impl
         nativeIsReady(isReady);
     }
 
-    //Event listener
+    // Event listener — receives List from messenger client, converts to array for native
     @Override
     public void onPropBoolChanged(boolean newValue)
     {
@@ -182,6 +192,9 @@ public class NoSignalsInterfaceJniClient extends AbstractNoSignalsInterface impl
         Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
         nativeOnPropIntChanged(newValue);
     }
+
+
+    // Native declarations — array types for JNI compatibility
      private native void nativeOnPropBoolChanged(boolean propBool);
      private native void nativeOnPropIntChanged(int propInt);
     private native void nativeOnFuncVoidResult(String callId);

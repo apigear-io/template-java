@@ -6,6 +6,7 @@ import testbed1.testbed1_api.IStructInterfaceEventListener;
 import testbed1.testbed1_api.RemoteOperationException;
 
 import testbed1.testbed1_android_client.StructInterfaceClient;
+import testbed1.testbed1_android_messenger.Conversions;
 import testbed1.testbed1_api.StructBool;
 import testbed1.testbed1_android_messenger.StructBoolParcelable;
 import testbed1.testbed1_api.StructFloat;
@@ -17,6 +18,7 @@ import testbed1.testbed1_android_messenger.StructStringParcelable;
 import android.content.Context;
 
 import android.os.Bundle;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import android.util.Log;
 
@@ -38,67 +40,80 @@ public class StructInterfaceJniClient extends AbstractStructInterface implements
     {
         return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
+    // Interface method — List types
     @Override
     public void setPropBool(StructBool propBool)
     {
-        Log.i(TAG, "got request from ue, setPropBool" + (propBool));
+        Log.i(TAG, "got request setPropBool" + (propBool));
         mMessengerClient.setPropBool(propBool);
     }
     @Override
     public StructBool getPropBool()
     {
-        Log.i(TAG, "got request from ue, getPropBool");
+        Log.i(TAG, "got request getPropBool");
         return mMessengerClient.getPropBool();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setPropInt(StructInt propInt)
     {
-        Log.i(TAG, "got request from ue, setPropInt" + (propInt));
+        Log.i(TAG, "got request setPropInt" + (propInt));
         mMessengerClient.setPropInt(propInt);
     }
     @Override
     public StructInt getPropInt()
     {
-        Log.i(TAG, "got request from ue, getPropInt");
+        Log.i(TAG, "got request getPropInt");
         return mMessengerClient.getPropInt();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setPropFloat(StructFloat propFloat)
     {
-        Log.i(TAG, "got request from ue, setPropFloat" + (propFloat));
+        Log.i(TAG, "got request setPropFloat" + (propFloat));
         mMessengerClient.setPropFloat(propFloat);
     }
     @Override
     public StructFloat getPropFloat()
     {
-        Log.i(TAG, "got request from ue, getPropFloat");
+        Log.i(TAG, "got request getPropFloat");
         return mMessengerClient.getPropFloat();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setPropString(StructString propString)
     {
-        Log.i(TAG, "got request from ue, setPropString" + (propString));
+        Log.i(TAG, "got request setPropString" + (propString));
         mMessengerClient.setPropString(propString);
     }
     @Override
     public StructString getPropString()
     {
-        Log.i(TAG, "got request from ue, getPropString");
+        Log.i(TAG, "got request getPropString");
         return mMessengerClient.getPropString();
     }
+
+
     
-     @Override
-     public StructBool funcBool(StructBool paramBool)
-     {
+    // Interface method — List types
+    @Override
+    public StructBool funcBool(StructBool paramBool)
+    {
         Log.v(TAG, "Blocking callfuncBool - should not be used ");
         return mMessengerClient.funcBool(paramBool);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncBoolResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -128,15 +143,16 @@ public class StructInterfaceJniClient extends AbstractStructInterface implements
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcBoolAsync(paramBool);
     }
-     @Override
-     public StructInt funcInt(StructInt paramInt)
-     {
+    // Interface method — List types
+    @Override
+    public StructInt funcInt(StructInt paramInt)
+    {
         Log.v(TAG, "Blocking callfuncInt - should not be used ");
         return mMessengerClient.funcInt(paramInt);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncIntResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -166,15 +182,16 @@ public class StructInterfaceJniClient extends AbstractStructInterface implements
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcIntAsync(paramInt);
     }
-     @Override
-     public StructFloat funcFloat(StructFloat paramFloat)
-     {
+    // Interface method — List types
+    @Override
+    public StructFloat funcFloat(StructFloat paramFloat)
+    {
         Log.v(TAG, "Blocking callfuncFloat - should not be used ");
         return mMessengerClient.funcFloat(paramFloat);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncFloatResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -204,15 +221,16 @@ public class StructInterfaceJniClient extends AbstractStructInterface implements
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcFloatAsync(paramFloat);
     }
-     @Override
-     public StructString funcString(StructString paramString)
-     {
+    // Interface method — List types
+    @Override
+    public StructString funcString(StructString paramString)
+    {
         Log.v(TAG, "Blocking callfuncString - should not be used ");
         return mMessengerClient.funcString(paramString);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncStringResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -279,7 +297,7 @@ public class StructInterfaceJniClient extends AbstractStructInterface implements
         nativeIsReady(isReady);
     }
 
-    //Event listener
+    // Event listener — receives List from messenger client, converts to array for native
     @Override
     public void onPropBoolChanged(StructBool newValue)
     {
@@ -328,6 +346,9 @@ public class StructInterfaceJniClient extends AbstractStructInterface implements
         Log.i(TAG, "NOTIFICATION from messenger client Signal sigString "+ " " + paramString);
         nativeOnSigString(paramString);
     }
+
+
+    // Native declarations — array types for JNI compatibility
      private native void nativeOnPropBoolChanged(StructBool propBool);
      private native void nativeOnPropIntChanged(StructInt propInt);
      private native void nativeOnPropFloatChanged(StructFloat propFloat);

@@ -6,6 +6,7 @@ import tbEnum.tbEnum_api.IEnumInterfaceEventListener;
 import tbEnum.tbEnum_api.RemoteOperationException;
 
 import tbEnum.tbEnum_android_client.EnumInterfaceClient;
+import tbEnum.tbEnum_android_messenger.Conversions;
 import tbEnum.tbEnum_api.Enum0;
 import tbEnum.tbEnum_android_messenger.Enum0Parcelable;
 import tbEnum.tbEnum_api.Enum1;
@@ -17,6 +18,7 @@ import tbEnum.tbEnum_android_messenger.Enum3Parcelable;
 import android.content.Context;
 
 import android.os.Bundle;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import android.util.Log;
 
@@ -38,67 +40,80 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
     {
         return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
+    // Interface method — List types
     @Override
     public void setProp0(Enum0 prop0)
     {
-        Log.i(TAG, "got request from ue, setProp0" + (prop0));
+        Log.i(TAG, "got request setProp0" + (prop0));
         mMessengerClient.setProp0(prop0);
     }
     @Override
     public Enum0 getProp0()
     {
-        Log.i(TAG, "got request from ue, getProp0");
+        Log.i(TAG, "got request getProp0");
         return mMessengerClient.getProp0();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setProp1(Enum1 prop1)
     {
-        Log.i(TAG, "got request from ue, setProp1" + (prop1));
+        Log.i(TAG, "got request setProp1" + (prop1));
         mMessengerClient.setProp1(prop1);
     }
     @Override
     public Enum1 getProp1()
     {
-        Log.i(TAG, "got request from ue, getProp1");
+        Log.i(TAG, "got request getProp1");
         return mMessengerClient.getProp1();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setProp2(Enum2 prop2)
     {
-        Log.i(TAG, "got request from ue, setProp2" + (prop2));
+        Log.i(TAG, "got request setProp2" + (prop2));
         mMessengerClient.setProp2(prop2);
     }
     @Override
     public Enum2 getProp2()
     {
-        Log.i(TAG, "got request from ue, getProp2");
+        Log.i(TAG, "got request getProp2");
         return mMessengerClient.getProp2();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setProp3(Enum3 prop3)
     {
-        Log.i(TAG, "got request from ue, setProp3" + (prop3));
+        Log.i(TAG, "got request setProp3" + (prop3));
         mMessengerClient.setProp3(prop3);
     }
     @Override
     public Enum3 getProp3()
     {
-        Log.i(TAG, "got request from ue, getProp3");
+        Log.i(TAG, "got request getProp3");
         return mMessengerClient.getProp3();
     }
+
+
     
-     @Override
-     public Enum0 func0(Enum0 param0)
-     {
+    // Interface method — List types
+    @Override
+    public Enum0 func0(Enum0 param0)
+    {
         Log.v(TAG, "Blocking callfunc0 - should not be used ");
         return mMessengerClient.func0(param0);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFunc0Result with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -128,15 +143,16 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.func0Async(param0);
     }
-     @Override
-     public Enum1 func1(Enum1 param1)
-     {
+    // Interface method — List types
+    @Override
+    public Enum1 func1(Enum1 param1)
+    {
         Log.v(TAG, "Blocking callfunc1 - should not be used ");
         return mMessengerClient.func1(param1);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFunc1Result with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -166,15 +182,16 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.func1Async(param1);
     }
-     @Override
-     public Enum2 func2(Enum2 param2)
-     {
+    // Interface method — List types
+    @Override
+    public Enum2 func2(Enum2 param2)
+    {
         Log.v(TAG, "Blocking callfunc2 - should not be used ");
         return mMessengerClient.func2(param2);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFunc2Result with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -204,15 +221,16 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.func2Async(param2);
     }
-     @Override
-     public Enum3 func3(Enum3 param3)
-     {
+    // Interface method — List types
+    @Override
+    public Enum3 func3(Enum3 param3)
+    {
         Log.v(TAG, "Blocking callfunc3 - should not be used ");
         return mMessengerClient.func3(param3);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFunc3Result with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -279,7 +297,7 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
         nativeIsReady(isReady);
     }
 
-    //Event listener
+    // Event listener — receives List from messenger client, converts to array for native
     @Override
     public void onProp0Changed(Enum0 newValue)
     {
@@ -328,6 +346,9 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
         Log.i(TAG, "NOTIFICATION from messenger client Signal sig3 "+ " " + param3);
         nativeOnSig3(param3);
     }
+
+
+    // Native declarations — array types for JNI compatibility
      private native void nativeOnProp0Changed(Enum0 prop0);
      private native void nativeOnProp1Changed(Enum1 prop1);
      private native void nativeOnProp2Changed(Enum2 prop2);

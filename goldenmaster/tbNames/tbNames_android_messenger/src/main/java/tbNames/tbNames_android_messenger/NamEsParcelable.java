@@ -5,7 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import tbNames.tbNames_api.EnumWithUnderScores;
 
   public  class NamEsParcelable implements Parcelable {
@@ -67,7 +69,7 @@ import tbNames.tbNames_api.EnumWithUnderScores;
     }
 
     public static INamEs[] unwrapArray(NamEsParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new INamEs[0];
         return Arrays.stream(parcelables)
            .map(NamEsParcelable::getNamEs)
            .toArray(INamEs[]::new);

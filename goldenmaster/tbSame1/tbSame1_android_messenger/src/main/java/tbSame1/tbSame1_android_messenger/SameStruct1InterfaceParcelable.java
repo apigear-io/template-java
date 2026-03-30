@@ -5,7 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import tbSame1.tbSame1_api.Struct1;
 
   public  class SameStruct1InterfaceParcelable implements Parcelable {
@@ -64,7 +66,7 @@ import tbSame1.tbSame1_api.Struct1;
     }
 
     public static ISameStruct1Interface[] unwrapArray(SameStruct1InterfaceParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new ISameStruct1Interface[0];
         return Arrays.stream(parcelables)
            .map(SameStruct1InterfaceParcelable::getSameStruct1Interface)
            .toArray(ISameStruct1Interface[]::new);

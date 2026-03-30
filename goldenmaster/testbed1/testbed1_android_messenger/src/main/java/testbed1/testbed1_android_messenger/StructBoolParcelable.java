@@ -4,7 +4,9 @@ import testbed1.testbed1_api.StructBool;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
   public  class StructBoolParcelable implements Parcelable {
 
@@ -61,7 +63,7 @@ import java.util.Arrays;
     }
 
     public static StructBool[] unwrapArray(StructBoolParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new StructBool[0];
         return Arrays.stream(parcelables)
            .map(StructBoolParcelable::getStructBool)
            .toArray(StructBool[]::new);

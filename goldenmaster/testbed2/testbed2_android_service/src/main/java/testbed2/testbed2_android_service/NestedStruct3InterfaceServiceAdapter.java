@@ -27,7 +27,10 @@ import testbed2.testbed2_api.INestedStruct3Interface;
 import testbed2.testbed2_api.AbstractNestedStruct3Interface;
 import testbed2.testbed2_api.RemoteOperationException;
 import testbed2.testbed2_android_messenger.NestedStruct3InterfaceMessageType;
+import testbed2.testbed2_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 public class NestedStruct3InterfaceServiceAdapter extends Service

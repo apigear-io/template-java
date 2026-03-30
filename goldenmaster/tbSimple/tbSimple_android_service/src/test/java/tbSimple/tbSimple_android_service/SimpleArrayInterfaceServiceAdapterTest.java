@@ -90,8 +90,11 @@ import org.robolectric.annotation.Config;
 import org.robolectric.RuntimeEnvironment;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import tbSimple.tbSimple_android_messenger.Conversions;
 
 interface ISimpleArrayInterfaceMessageGetter
 {
@@ -156,37 +159,29 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
     void registerFakeActivityClient(Messenger messenger, String id)
     {
-        boolean init_elementpropBool = true;
-        // todo fill if is struct
-        boolean[] initpropBool = new boolean[]{ init_elementpropBool } ;
+        List<Boolean> initpropBool = new ArrayList<>();
+        initpropBool.add(true);
         when(backendServiceMock.getPropBool()).thenReturn(initpropBool);
-        int init_elementpropInt = 1;
-        // todo fill if is struct
-        int[] initpropInt = new int[]{ init_elementpropInt } ;
+        List<Integer> initpropInt = new ArrayList<>();
+        initpropInt.add(1);
         when(backendServiceMock.getPropInt()).thenReturn(initpropInt);
-        int init_elementpropInt32 = 1;
-        // todo fill if is struct
-        int[] initpropInt32 = new int[]{ init_elementpropInt32 } ;
+        List<Integer> initpropInt32 = new ArrayList<>();
+        initpropInt32.add(1);
         when(backendServiceMock.getPropInt32()).thenReturn(initpropInt32);
-        long init_elementpropInt64 = 1L;
-        // todo fill if is struct
-        long[] initpropInt64 = new long[]{ init_elementpropInt64 } ;
+        List<Long> initpropInt64 = new ArrayList<>();
+        initpropInt64.add(1L);
         when(backendServiceMock.getPropInt64()).thenReturn(initpropInt64);
-        float init_elementpropFloat = 1.0f;
-        // todo fill if is struct
-        float[] initpropFloat = new float[]{ init_elementpropFloat } ;
+        List<Float> initpropFloat = new ArrayList<>();
+        initpropFloat.add(1.0f);
         when(backendServiceMock.getPropFloat()).thenReturn(initpropFloat);
-        float init_elementpropFloat32 = 1.0f;
-        // todo fill if is struct
-        float[] initpropFloat32 = new float[]{ init_elementpropFloat32 } ;
+        List<Float> initpropFloat32 = new ArrayList<>();
+        initpropFloat32.add(1.0f);
         when(backendServiceMock.getPropFloat32()).thenReturn(initpropFloat32);
-        double init_elementpropFloat64 = 1.0;
-        // todo fill if is struct
-        double[] initpropFloat64 = new double[]{ init_elementpropFloat64 } ;
+        List<Double> initpropFloat64 = new ArrayList<>();
+        initpropFloat64.add(1.0);
         when(backendServiceMock.getPropFloat64()).thenReturn(initpropFloat64);
-        String init_elementpropString = new String("xyz");
-        // todo fill if is struct
-        String[] initpropString = new String[]{ init_elementpropString } ;
+        List<String> initpropString = new ArrayList<>();
+        initpropString.add(new String("xyz"));
         when(backendServiceMock.getPropString()).thenReturn(initpropString);
 		String initpropReadOnlyString = new String("xyz");
         when(backendServiceMock.getPropReadOnlyString()).thenReturn(initpropReadOnlyString);
@@ -218,21 +213,21 @@ public class SimpleArrayInterfaceServiceAdapterTest
         assertEquals(SimpleArrayInterfaceMessageType.INIT.getValue(), response.what);
         Bundle data = response.getData();
         
-			boolean[] receivedpropBool = data.getBooleanArray("propBool");
+			List<Boolean> receivedpropBool = Conversions.toList(data.getBooleanArray("propBool"));
         
-			int[] receivedpropInt = data.getIntArray("propInt");
+			List<Integer> receivedpropInt = Conversions.toList(data.getIntArray("propInt"));
         
-			int[] receivedpropInt32 = data.getIntArray("propInt32");
+			List<Integer> receivedpropInt32 = Conversions.toList(data.getIntArray("propInt32"));
         
-			long[] receivedpropInt64 = data.getLongArray("propInt64");
+			List<Long> receivedpropInt64 = Conversions.toList(data.getLongArray("propInt64"));
         
-			float[] receivedpropFloat = data.getFloatArray("propFloat");
+			List<Float> receivedpropFloat = Conversions.toList(data.getFloatArray("propFloat"));
         
-			float[] receivedpropFloat32 = data.getFloatArray("propFloat32");
+			List<Float> receivedpropFloat32 = Conversions.toList(data.getFloatArray("propFloat32"));
         
-			double[] receivedpropFloat64 = data.getDoubleArray("propFloat64");
+			List<Double> receivedpropFloat64 = Conversions.toList(data.getDoubleArray("propFloat64"));
         
-			String[] receivedpropString = data.getStringArray("propString");
+			List<String> receivedpropString = Conversions.toList(data.getStringArray("propString"));
         
 			String receivedpropReadOnlyString = data.getString("propReadOnlyString", new String());
         
@@ -287,9 +282,9 @@ public class SimpleArrayInterfaceServiceAdapterTest
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.PROP_PropBool.getValue());
         Bundle data = new Bundle();
-        boolean[] testpropBool = new boolean[1];
-        testpropBool[0] = true;
-		data.putBooleanArray("propBool", testpropBool);
+        List<Boolean> testpropBool = new java.util.ArrayList<>();
+        testpropBool.add(true);
+		data.putBooleanArray("propBool", Conversions.toArray(testpropBool, new boolean[0]));
 
         msg.setData(data);
         mServiceMessenger.send(msg);
@@ -301,8 +296,8 @@ public class SimpleArrayInterfaceServiceAdapterTest
     @Test
      public void whenNotifiedpropBool()
     {
-        boolean[] testpropBool = new boolean[1];
-        testpropBool[0] = true;
+        List<Boolean> testpropBool = new java.util.ArrayList<>();
+        testpropBool.add(true);
 
         testedAdapterAsEventListener.onPropBoolChanged(testpropBool);
         Robolectric.flushForegroundThreadScheduler();
@@ -314,7 +309,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
 
         
-			boolean[] receivedpropBool = data.getBooleanArray("propBool");
+			List<Boolean> receivedpropBool = Conversions.toList(data.getBooleanArray("propBool"));
 
         assertEquals(receivedpropBool, testpropBool);
     }
@@ -323,9 +318,9 @@ public class SimpleArrayInterfaceServiceAdapterTest
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.PROP_PropInt.getValue());
         Bundle data = new Bundle();
-        int[] testpropInt = new int[1];
-        testpropInt[0] = 1;
-		data.putIntArray("propInt", testpropInt);
+        List<Integer> testpropInt = new java.util.ArrayList<>();
+        testpropInt.add(1);
+		data.putIntArray("propInt", Conversions.toArray(testpropInt, new int[0]));
 
         msg.setData(data);
         mServiceMessenger.send(msg);
@@ -337,8 +332,8 @@ public class SimpleArrayInterfaceServiceAdapterTest
     @Test
      public void whenNotifiedpropInt()
     {
-        int[] testpropInt = new int[1];
-        testpropInt[0] = 1;
+        List<Integer> testpropInt = new java.util.ArrayList<>();
+        testpropInt.add(1);
 
         testedAdapterAsEventListener.onPropIntChanged(testpropInt);
         Robolectric.flushForegroundThreadScheduler();
@@ -350,7 +345,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
 
         
-			int[] receivedpropInt = data.getIntArray("propInt");
+			List<Integer> receivedpropInt = Conversions.toList(data.getIntArray("propInt"));
 
         assertEquals(receivedpropInt, testpropInt);
     }
@@ -359,9 +354,9 @@ public class SimpleArrayInterfaceServiceAdapterTest
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.PROP_PropInt32.getValue());
         Bundle data = new Bundle();
-        int[] testpropInt32 = new int[1];
-        testpropInt32[0] = 1;
-		data.putIntArray("propInt32", testpropInt32);
+        List<Integer> testpropInt32 = new java.util.ArrayList<>();
+        testpropInt32.add(1);
+		data.putIntArray("propInt32", Conversions.toArray(testpropInt32, new int[0]));
 
         msg.setData(data);
         mServiceMessenger.send(msg);
@@ -373,8 +368,8 @@ public class SimpleArrayInterfaceServiceAdapterTest
     @Test
      public void whenNotifiedpropInt32()
     {
-        int[] testpropInt32 = new int[1];
-        testpropInt32[0] = 1;
+        List<Integer> testpropInt32 = new java.util.ArrayList<>();
+        testpropInt32.add(1);
 
         testedAdapterAsEventListener.onPropInt32Changed(testpropInt32);
         Robolectric.flushForegroundThreadScheduler();
@@ -386,7 +381,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
 
         
-			int[] receivedpropInt32 = data.getIntArray("propInt32");
+			List<Integer> receivedpropInt32 = Conversions.toList(data.getIntArray("propInt32"));
 
         assertEquals(receivedpropInt32, testpropInt32);
     }
@@ -395,9 +390,9 @@ public class SimpleArrayInterfaceServiceAdapterTest
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.PROP_PropInt64.getValue());
         Bundle data = new Bundle();
-        long[] testpropInt64 = new long[1];
-        testpropInt64[0] = 1L;
-		data.putLongArray("propInt64", testpropInt64);
+        List<Long> testpropInt64 = new java.util.ArrayList<>();
+        testpropInt64.add(1L);
+		data.putLongArray("propInt64", Conversions.toArray(testpropInt64, new long[0]));
 
         msg.setData(data);
         mServiceMessenger.send(msg);
@@ -409,8 +404,8 @@ public class SimpleArrayInterfaceServiceAdapterTest
     @Test
      public void whenNotifiedpropInt64()
     {
-        long[] testpropInt64 = new long[1];
-        testpropInt64[0] = 1L;
+        List<Long> testpropInt64 = new java.util.ArrayList<>();
+        testpropInt64.add(1L);
 
         testedAdapterAsEventListener.onPropInt64Changed(testpropInt64);
         Robolectric.flushForegroundThreadScheduler();
@@ -422,7 +417,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
 
         
-			long[] receivedpropInt64 = data.getLongArray("propInt64");
+			List<Long> receivedpropInt64 = Conversions.toList(data.getLongArray("propInt64"));
 
         assertEquals(receivedpropInt64, testpropInt64);
     }
@@ -431,9 +426,9 @@ public class SimpleArrayInterfaceServiceAdapterTest
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.PROP_PropFloat.getValue());
         Bundle data = new Bundle();
-        float[] testpropFloat = new float[1];
-        testpropFloat[0] = 1.0f;
-		data.putFloatArray("propFloat", testpropFloat);
+        List<Float> testpropFloat = new java.util.ArrayList<>();
+        testpropFloat.add(1.0f);
+		data.putFloatArray("propFloat", Conversions.toArray(testpropFloat, new float[0]));
 
         msg.setData(data);
         mServiceMessenger.send(msg);
@@ -445,8 +440,8 @@ public class SimpleArrayInterfaceServiceAdapterTest
     @Test
      public void whenNotifiedpropFloat()
     {
-        float[] testpropFloat = new float[1];
-        testpropFloat[0] = 1.0f;
+        List<Float> testpropFloat = new java.util.ArrayList<>();
+        testpropFloat.add(1.0f);
 
         testedAdapterAsEventListener.onPropFloatChanged(testpropFloat);
         Robolectric.flushForegroundThreadScheduler();
@@ -458,7 +453,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
 
         
-			float[] receivedpropFloat = data.getFloatArray("propFloat");
+			List<Float> receivedpropFloat = Conversions.toList(data.getFloatArray("propFloat"));
 
         assertEquals(receivedpropFloat, testpropFloat);
     }
@@ -467,9 +462,9 @@ public class SimpleArrayInterfaceServiceAdapterTest
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.PROP_PropFloat32.getValue());
         Bundle data = new Bundle();
-        float[] testpropFloat32 = new float[1];
-        testpropFloat32[0] = 1.0f;
-		data.putFloatArray("propFloat32", testpropFloat32);
+        List<Float> testpropFloat32 = new java.util.ArrayList<>();
+        testpropFloat32.add(1.0f);
+		data.putFloatArray("propFloat32", Conversions.toArray(testpropFloat32, new float[0]));
 
         msg.setData(data);
         mServiceMessenger.send(msg);
@@ -481,8 +476,8 @@ public class SimpleArrayInterfaceServiceAdapterTest
     @Test
      public void whenNotifiedpropFloat32()
     {
-        float[] testpropFloat32 = new float[1];
-        testpropFloat32[0] = 1.0f;
+        List<Float> testpropFloat32 = new java.util.ArrayList<>();
+        testpropFloat32.add(1.0f);
 
         testedAdapterAsEventListener.onPropFloat32Changed(testpropFloat32);
         Robolectric.flushForegroundThreadScheduler();
@@ -494,7 +489,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
 
         
-			float[] receivedpropFloat32 = data.getFloatArray("propFloat32");
+			List<Float> receivedpropFloat32 = Conversions.toList(data.getFloatArray("propFloat32"));
 
         assertEquals(receivedpropFloat32, testpropFloat32);
     }
@@ -503,9 +498,9 @@ public class SimpleArrayInterfaceServiceAdapterTest
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.PROP_PropFloat64.getValue());
         Bundle data = new Bundle();
-        double[] testpropFloat64 = new double[1];
-        testpropFloat64[0] = 1.0;
-		data.putDoubleArray("propFloat64", testpropFloat64);
+        List<Double> testpropFloat64 = new java.util.ArrayList<>();
+        testpropFloat64.add(1.0);
+		data.putDoubleArray("propFloat64", Conversions.toArray(testpropFloat64, new double[0]));
 
         msg.setData(data);
         mServiceMessenger.send(msg);
@@ -517,8 +512,8 @@ public class SimpleArrayInterfaceServiceAdapterTest
     @Test
      public void whenNotifiedpropFloat64()
     {
-        double[] testpropFloat64 = new double[1];
-        testpropFloat64[0] = 1.0;
+        List<Double> testpropFloat64 = new java.util.ArrayList<>();
+        testpropFloat64.add(1.0);
 
         testedAdapterAsEventListener.onPropFloat64Changed(testpropFloat64);
         Robolectric.flushForegroundThreadScheduler();
@@ -530,7 +525,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
 
         
-			double[] receivedpropFloat64 = data.getDoubleArray("propFloat64");
+			List<Double> receivedpropFloat64 = Conversions.toList(data.getDoubleArray("propFloat64"));
 
         assertEquals(receivedpropFloat64, testpropFloat64);
     }
@@ -539,9 +534,9 @@ public class SimpleArrayInterfaceServiceAdapterTest
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.PROP_PropString.getValue());
         Bundle data = new Bundle();
-        String[] testpropString = new String[1];
-        testpropString[0] = new String("xyz");
-		data.putStringArray("propString", testpropString);
+        List<String> testpropString = new java.util.ArrayList<>();
+        testpropString.add(new String("xyz"));
+		data.putStringArray("propString", Conversions.toArray(testpropString, new String[0]));
 
         msg.setData(data);
         mServiceMessenger.send(msg);
@@ -553,8 +548,8 @@ public class SimpleArrayInterfaceServiceAdapterTest
     @Test
      public void whenNotifiedpropString()
     {
-        String[] testpropString = new String[1];
-        testpropString[0] = new String("xyz");
+        List<String> testpropString = new java.util.ArrayList<>();
+        testpropString.add(new String("xyz"));
 
         testedAdapterAsEventListener.onPropStringChanged(testpropString);
         Robolectric.flushForegroundThreadScheduler();
@@ -566,7 +561,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
 
         
-			String[] receivedpropString = data.getStringArray("propString");
+			List<String> receivedpropString = Conversions.toList(data.getStringArray("propString"));
 
         assertEquals(receivedpropString, testpropString);
     }
@@ -593,8 +588,8 @@ public class SimpleArrayInterfaceServiceAdapterTest
     @Test
     public void whenNotifiedsigBool()
     {
-        boolean[] testparamBool = new boolean[1];
-        testparamBool[0] = true;
+        List<Boolean> testparamBool = new java.util.ArrayList<>();
+        testparamBool.add(true);
 
         testedAdapterAsEventListener.onSigBool(testparamBool);
         Robolectric.flushForegroundThreadScheduler();
@@ -606,14 +601,14 @@ public class SimpleArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
         
         
-			boolean[] receivedparamBool = data.getBooleanArray("paramBool");
+			List<Boolean> receivedparamBool = Conversions.toList(data.getBooleanArray("paramBool"));
         assertEquals(receivedparamBool, testparamBool);
 }
     @Test
     public void whenNotifiedsigInt()
     {
-        int[] testparamInt = new int[1];
-        testparamInt[0] = 1;
+        List<Integer> testparamInt = new java.util.ArrayList<>();
+        testparamInt.add(1);
 
         testedAdapterAsEventListener.onSigInt(testparamInt);
         Robolectric.flushForegroundThreadScheduler();
@@ -625,14 +620,14 @@ public class SimpleArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
         
         
-			int[] receivedparamInt = data.getIntArray("paramInt");
+			List<Integer> receivedparamInt = Conversions.toList(data.getIntArray("paramInt"));
         assertEquals(receivedparamInt, testparamInt);
 }
     @Test
     public void whenNotifiedsigInt32()
     {
-        int[] testparamInt32 = new int[1];
-        testparamInt32[0] = 1;
+        List<Integer> testparamInt32 = new java.util.ArrayList<>();
+        testparamInt32.add(1);
 
         testedAdapterAsEventListener.onSigInt32(testparamInt32);
         Robolectric.flushForegroundThreadScheduler();
@@ -644,14 +639,14 @@ public class SimpleArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
         
         
-			int[] receivedparamInt32 = data.getIntArray("paramInt32");
+			List<Integer> receivedparamInt32 = Conversions.toList(data.getIntArray("paramInt32"));
         assertEquals(receivedparamInt32, testparamInt32);
 }
     @Test
     public void whenNotifiedsigInt64()
     {
-        long[] testparamInt64 = new long[1];
-        testparamInt64[0] = 1L;
+        List<Long> testparamInt64 = new java.util.ArrayList<>();
+        testparamInt64.add(1L);
 
         testedAdapterAsEventListener.onSigInt64(testparamInt64);
         Robolectric.flushForegroundThreadScheduler();
@@ -663,14 +658,14 @@ public class SimpleArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
         
         
-			long[] receivedparamInt64 = data.getLongArray("paramInt64");
+			List<Long> receivedparamInt64 = Conversions.toList(data.getLongArray("paramInt64"));
         assertEquals(receivedparamInt64, testparamInt64);
 }
     @Test
     public void whenNotifiedsigFloat()
     {
-        float[] testparamFloat = new float[1];
-        testparamFloat[0] = 1.0f;
+        List<Float> testparamFloat = new java.util.ArrayList<>();
+        testparamFloat.add(1.0f);
 
         testedAdapterAsEventListener.onSigFloat(testparamFloat);
         Robolectric.flushForegroundThreadScheduler();
@@ -682,14 +677,14 @@ public class SimpleArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
         
         
-			float[] receivedparamFloat = data.getFloatArray("paramFloat");
+			List<Float> receivedparamFloat = Conversions.toList(data.getFloatArray("paramFloat"));
         assertEquals(receivedparamFloat, testparamFloat);
 }
     @Test
     public void whenNotifiedsigFloat32()
     {
-        float[] testparamFloa32 = new float[1];
-        testparamFloa32[0] = 1.0f;
+        List<Float> testparamFloa32 = new java.util.ArrayList<>();
+        testparamFloa32.add(1.0f);
 
         testedAdapterAsEventListener.onSigFloat32(testparamFloa32);
         Robolectric.flushForegroundThreadScheduler();
@@ -701,14 +696,14 @@ public class SimpleArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
         
         
-			float[] receivedparamFloa32 = data.getFloatArray("paramFloa32");
+			List<Float> receivedparamFloa32 = Conversions.toList(data.getFloatArray("paramFloa32"));
         assertEquals(receivedparamFloa32, testparamFloa32);
 }
     @Test
     public void whenNotifiedsigFloat64()
     {
-        double[] testparamFloat64 = new double[1];
-        testparamFloat64[0] = 1.0;
+        List<Double> testparamFloat64 = new java.util.ArrayList<>();
+        testparamFloat64.add(1.0);
 
         testedAdapterAsEventListener.onSigFloat64(testparamFloat64);
         Robolectric.flushForegroundThreadScheduler();
@@ -720,14 +715,14 @@ public class SimpleArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
         
         
-			double[] receivedparamFloat64 = data.getDoubleArray("paramFloat64");
+			List<Double> receivedparamFloat64 = Conversions.toList(data.getDoubleArray("paramFloat64"));
         assertEquals(receivedparamFloat64, testparamFloat64);
 }
     @Test
     public void whenNotifiedsigString()
     {
-        String[] testparamString = new String[1];
-        testparamString[0] = new String("xyz");
+        List<String> testparamString = new java.util.ArrayList<>();
+        testparamString.add(new String("xyz"));
 
         testedAdapterAsEventListener.onSigString(testparamString);
         Robolectric.flushForegroundThreadScheduler();
@@ -739,7 +734,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
         
         
-			String[] receivedparamString = data.getStringArray("paramString");
+			List<String> receivedparamString = Conversions.toList(data.getStringArray("paramString"));
         assertEquals(receivedparamString, testparamString);
 }
 
@@ -751,11 +746,11 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         int callId = 99;
         data.putInt("callId", callId);
-        boolean[] testparamBool = new boolean[1];
-        testparamBool[0] = true;
-		data.putBooleanArray("paramBool", testparamBool);
-        boolean[] returnedValue = new boolean[1];
-        returnedValue[0] = true;
+        List<Boolean> testparamBool = new java.util.ArrayList<>();
+        testparamBool.add(true);
+		data.putBooleanArray("paramBool", Conversions.toArray(testparamBool, new boolean[0]));
+        List<Boolean> returnedValue = new ArrayList<>();
+        returnedValue.add(true);
 
 
         when(backendServiceMock.funcBool(testparamBool)).thenReturn(returnedValue);
@@ -772,7 +767,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(SimpleArrayInterfaceMessageType.RPC_FuncBoolResp.getValue(), response.what);
         Bundle resp_data = response.getData();
-		boolean[] receivedByClient = resp_data.getBooleanArray("result");
+		List<Boolean> receivedByClient = Conversions.toList(resp_data.getBooleanArray("result"));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));
@@ -786,11 +781,11 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         int callId = 99;
         data.putInt("callId", callId);
-        int[] testparamInt = new int[1];
-        testparamInt[0] = 1;
-		data.putIntArray("paramInt", testparamInt);
-        int[] returnedValue = new int[1];
-        returnedValue[0] = 1;
+        List<Integer> testparamInt = new java.util.ArrayList<>();
+        testparamInt.add(1);
+		data.putIntArray("paramInt", Conversions.toArray(testparamInt, new int[0]));
+        List<Integer> returnedValue = new ArrayList<>();
+        returnedValue.add(1);
 
 
         when(backendServiceMock.funcInt(testparamInt)).thenReturn(returnedValue);
@@ -807,7 +802,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(SimpleArrayInterfaceMessageType.RPC_FuncIntResp.getValue(), response.what);
         Bundle resp_data = response.getData();
-		int[] receivedByClient = resp_data.getIntArray("result");
+		List<Integer> receivedByClient = Conversions.toList(resp_data.getIntArray("result"));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));
@@ -821,11 +816,11 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         int callId = 99;
         data.putInt("callId", callId);
-        int[] testparamInt32 = new int[1];
-        testparamInt32[0] = 1;
-		data.putIntArray("paramInt32", testparamInt32);
-        int[] returnedValue = new int[1];
-        returnedValue[0] = 1;
+        List<Integer> testparamInt32 = new java.util.ArrayList<>();
+        testparamInt32.add(1);
+		data.putIntArray("paramInt32", Conversions.toArray(testparamInt32, new int[0]));
+        List<Integer> returnedValue = new ArrayList<>();
+        returnedValue.add(1);
 
 
         when(backendServiceMock.funcInt32(testparamInt32)).thenReturn(returnedValue);
@@ -842,7 +837,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(SimpleArrayInterfaceMessageType.RPC_FuncInt32Resp.getValue(), response.what);
         Bundle resp_data = response.getData();
-		int[] receivedByClient = resp_data.getIntArray("result");
+		List<Integer> receivedByClient = Conversions.toList(resp_data.getIntArray("result"));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));
@@ -856,11 +851,11 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         int callId = 99;
         data.putInt("callId", callId);
-        long[] testparamInt64 = new long[1];
-        testparamInt64[0] = 1L;
-		data.putLongArray("paramInt64", testparamInt64);
-        long[] returnedValue = new long[1];
-        returnedValue[0] = 1L;
+        List<Long> testparamInt64 = new java.util.ArrayList<>();
+        testparamInt64.add(1L);
+		data.putLongArray("paramInt64", Conversions.toArray(testparamInt64, new long[0]));
+        List<Long> returnedValue = new ArrayList<>();
+        returnedValue.add(1L);
 
 
         when(backendServiceMock.funcInt64(testparamInt64)).thenReturn(returnedValue);
@@ -877,7 +872,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(SimpleArrayInterfaceMessageType.RPC_FuncInt64Resp.getValue(), response.what);
         Bundle resp_data = response.getData();
-		long[] receivedByClient = resp_data.getLongArray("result");
+		List<Long> receivedByClient = Conversions.toList(resp_data.getLongArray("result"));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));
@@ -891,11 +886,11 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         int callId = 99;
         data.putInt("callId", callId);
-        float[] testparamFloat = new float[1];
-        testparamFloat[0] = 1.0f;
-		data.putFloatArray("paramFloat", testparamFloat);
-        float[] returnedValue = new float[1];
-        returnedValue[0] = 1.0f;
+        List<Float> testparamFloat = new java.util.ArrayList<>();
+        testparamFloat.add(1.0f);
+		data.putFloatArray("paramFloat", Conversions.toArray(testparamFloat, new float[0]));
+        List<Float> returnedValue = new ArrayList<>();
+        returnedValue.add(1.0f);
 
 
         when(backendServiceMock.funcFloat(testparamFloat)).thenReturn(returnedValue);
@@ -912,7 +907,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(SimpleArrayInterfaceMessageType.RPC_FuncFloatResp.getValue(), response.what);
         Bundle resp_data = response.getData();
-		float[] receivedByClient = resp_data.getFloatArray("result");
+		List<Float> receivedByClient = Conversions.toList(resp_data.getFloatArray("result"));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));
@@ -926,11 +921,11 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         int callId = 99;
         data.putInt("callId", callId);
-        float[] testparamFloat32 = new float[1];
-        testparamFloat32[0] = 1.0f;
-		data.putFloatArray("paramFloat32", testparamFloat32);
-        float[] returnedValue = new float[1];
-        returnedValue[0] = 1.0f;
+        List<Float> testparamFloat32 = new java.util.ArrayList<>();
+        testparamFloat32.add(1.0f);
+		data.putFloatArray("paramFloat32", Conversions.toArray(testparamFloat32, new float[0]));
+        List<Float> returnedValue = new ArrayList<>();
+        returnedValue.add(1.0f);
 
 
         when(backendServiceMock.funcFloat32(testparamFloat32)).thenReturn(returnedValue);
@@ -947,7 +942,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(SimpleArrayInterfaceMessageType.RPC_FuncFloat32Resp.getValue(), response.what);
         Bundle resp_data = response.getData();
-		float[] receivedByClient = resp_data.getFloatArray("result");
+		List<Float> receivedByClient = Conversions.toList(resp_data.getFloatArray("result"));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));
@@ -961,11 +956,11 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         int callId = 99;
         data.putInt("callId", callId);
-        double[] testparamFloat = new double[1];
-        testparamFloat[0] = 1.0;
-		data.putDoubleArray("paramFloat", testparamFloat);
-        double[] returnedValue = new double[1];
-        returnedValue[0] = 1.0;
+        List<Double> testparamFloat = new java.util.ArrayList<>();
+        testparamFloat.add(1.0);
+		data.putDoubleArray("paramFloat", Conversions.toArray(testparamFloat, new double[0]));
+        List<Double> returnedValue = new ArrayList<>();
+        returnedValue.add(1.0);
 
 
         when(backendServiceMock.funcFloat64(testparamFloat)).thenReturn(returnedValue);
@@ -982,7 +977,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(SimpleArrayInterfaceMessageType.RPC_FuncFloat64Resp.getValue(), response.what);
         Bundle resp_data = response.getData();
-		double[] receivedByClient = resp_data.getDoubleArray("result");
+		List<Double> receivedByClient = Conversions.toList(resp_data.getDoubleArray("result"));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));
@@ -996,11 +991,11 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         int callId = 99;
         data.putInt("callId", callId);
-        String[] testparamString = new String[1];
-        testparamString[0] = new String("xyz");
-		data.putStringArray("paramString", testparamString);
-        String[] returnedValue = new String[1];
-        returnedValue[0] = new String("xyz");
+        List<String> testparamString = new java.util.ArrayList<>();
+        testparamString.add(new String("xyz"));
+		data.putStringArray("paramString", Conversions.toArray(testparamString, new String[0]));
+        List<String> returnedValue = new ArrayList<>();
+        returnedValue.add(new String("xyz"));
 
 
         when(backendServiceMock.funcString(testparamString)).thenReturn(returnedValue);
@@ -1017,7 +1012,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
 
         assertEquals(SimpleArrayInterfaceMessageType.RPC_FuncStringResp.getValue(), response.what);
         Bundle resp_data = response.getData();
-		String[] receivedByClient = resp_data.getStringArray("result");
+		List<String> receivedByClient = Conversions.toList(resp_data.getStringArray("result"));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));

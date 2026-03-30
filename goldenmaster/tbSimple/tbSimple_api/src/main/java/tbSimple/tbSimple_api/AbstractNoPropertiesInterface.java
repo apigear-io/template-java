@@ -4,6 +4,7 @@ import tbSimple.tbSimple_api.INoPropertiesInterfaceEventListener;
 import tbSimple.tbSimple_api.INoPropertiesInterface;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractNoPropertiesInterface implements INoPropertiesInterface {
     private Collection<INoPropertiesInterfaceEventListener> listeners = ConcurrentHashMap.newKeySet();

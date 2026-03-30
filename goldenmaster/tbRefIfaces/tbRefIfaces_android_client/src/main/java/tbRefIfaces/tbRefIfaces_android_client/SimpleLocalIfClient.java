@@ -23,7 +23,10 @@ import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_api.AbstractSimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_api.RemoteOperationException;
 import tbRefIfaces.tbRefIfaces_android_messenger.SimpleLocalIfMessageType;
+import tbRefIfaces.tbRefIfaces_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
@@ -31,7 +34,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
 
 public class SimpleLocalIfClient extends AbstractSimpleLocalIf implements ServiceConnection
@@ -208,7 +210,7 @@ public class SimpleLocalIfClient extends AbstractSimpleLocalIf implements Servic
 				    onIntProperty(intProperty);
 				    break;
 			    }
-			    // TODO params may be different structs from different modules, there should be a custom class loader 
+			    // TODO params may be different structs from different modules, there should be a custom class loader
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 			    case SIG_IntSignal: {
@@ -283,7 +285,7 @@ public class SimpleLocalIfClient extends AbstractSimpleLocalIf implements Servic
   
     // methods
 
-   
+
     @Override
     public int intMethod(int param) {
         CompletableFuture<Integer> resFuture = intMethodAsync(param);
@@ -342,7 +344,7 @@ public class SimpleLocalIfClient extends AbstractSimpleLocalIf implements Servic
 		mClientHandler.sendToService(msg);
 
         return future;
-    }    
+    }
 
     @Override
     public boolean _isReady() {

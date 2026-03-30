@@ -1,19 +1,20 @@
 package tbSimple.tbSimple_api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Arrays;
 
 public class TbSimpleTestHelper
 {
 
-    static public IVoidInterface makeTestVoidInterface(IVoidInterface testObjToFill) 
+    static public IVoidInterface makeTestVoidInterface(IVoidInterface testObjToFill)
     {
         if (testObjToFill == null){return testObjToFill;}
         return testObjToFill;
     }
 
-    static public ISimpleInterface makeTestSimpleInterface(ISimpleInterface testObjToFill) 
+    static public ISimpleInterface makeTestSimpleInterface(ISimpleInterface testObjToFill)
     {
         if (testObjToFill == null){return testObjToFill;}
         testObjToFill.setPropBool(true);
@@ -27,52 +28,44 @@ public class TbSimpleTestHelper
         return testObjToFill;
     }
 
-    static public ISimpleArrayInterface makeTestSimpleArrayInterface(ISimpleArrayInterface testObjToFill) 
+    static public ISimpleArrayInterface makeTestSimpleArrayInterface(ISimpleArrayInterface testObjToFill)
     {
         if (testObjToFill == null){return testObjToFill;}
-        boolean[] localpropBool = new boolean[1];
-	    localpropBool[0] = true;
+        List<Boolean> localpropBool = new ArrayList<>();
+	    localpropBool.add(true);
         testObjToFill.setPropBool(localpropBool);
-        int[] localpropInt = new int[1];
-	    localpropInt[0] = 1;
+        List<Integer> localpropInt = new ArrayList<>();
+	    localpropInt.add(1);
         testObjToFill.setPropInt(localpropInt);
-        int[] localpropInt32 = new int[1];
-	    localpropInt32[0] = 1;
+        List<Integer> localpropInt32 = new ArrayList<>();
+	    localpropInt32.add(1);
         testObjToFill.setPropInt32(localpropInt32);
-        long[] localpropInt64 = new long[1];
-	    localpropInt64[0] = 1L;
+        List<Long> localpropInt64 = new ArrayList<>();
+	    localpropInt64.add(1L);
         testObjToFill.setPropInt64(localpropInt64);
-        float[] localpropFloat = new float[1];
-	    localpropFloat[0] = 1.0f;
+        List<Float> localpropFloat = new ArrayList<>();
+	    localpropFloat.add(1.0f);
         testObjToFill.setPropFloat(localpropFloat);
-        float[] localpropFloat32 = new float[1];
-	    localpropFloat32[0] = 1.0f;
+        List<Float> localpropFloat32 = new ArrayList<>();
+	    localpropFloat32.add(1.0f);
         testObjToFill.setPropFloat32(localpropFloat32);
-        double[] localpropFloat64 = new double[1];
-	    localpropFloat64[0] = 1.0;
+        List<Double> localpropFloat64 = new ArrayList<>();
+	    localpropFloat64.add(1.0);
         testObjToFill.setPropFloat64(localpropFloat64);
-        String[] localpropString = new String[1];
-	    localpropString[0] = new String("xyz");
+        List<String> localpropString = new ArrayList<>();
+	    localpropString.add(new String("xyz"));
         testObjToFill.setPropString(localpropString);
         testObjToFill.setPropReadOnlyString(new String("xyz"));
         return testObjToFill;
     }
 
-    static public INoPropertiesInterface makeTestNoPropertiesInterface(INoPropertiesInterface testObjToFill) 
+    static public INoPropertiesInterface makeTestNoPropertiesInterface(INoPropertiesInterface testObjToFill)
     {
         if (testObjToFill == null){return testObjToFill;}
         return testObjToFill;
     }
 
-    static public INoOperationsInterface makeTestNoOperationsInterface(INoOperationsInterface testObjToFill) 
-    {
-        if (testObjToFill == null){return testObjToFill;}
-        testObjToFill.setPropBool(true);
-        testObjToFill.setPropInt(1);
-        return testObjToFill;
-    }
-
-    static public INoSignalsInterface makeTestNoSignalsInterface(INoSignalsInterface testObjToFill) 
+    static public INoOperationsInterface makeTestNoOperationsInterface(INoOperationsInterface testObjToFill)
     {
         if (testObjToFill == null){return testObjToFill;}
         testObjToFill.setPropBool(true);
@@ -80,7 +73,15 @@ public class TbSimpleTestHelper
         return testObjToFill;
     }
 
-    static public IEmptyInterface makeTestEmptyInterface(IEmptyInterface testObjToFill) 
+    static public INoSignalsInterface makeTestNoSignalsInterface(INoSignalsInterface testObjToFill)
+    {
+        if (testObjToFill == null){return testObjToFill;}
+        testObjToFill.setPropBool(true);
+        testObjToFill.setPropInt(1);
+        return testObjToFill;
+    }
+
+    static public IEmptyInterface makeTestEmptyInterface(IEmptyInterface testObjToFill)
     {
         if (testObjToFill == null){return testObjToFill;}
         return testObjToFill;

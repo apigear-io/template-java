@@ -5,7 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import tbSame1.tbSame1_api.Struct1;
 import tbSame1.tbSame1_api.Struct2;
 
@@ -66,7 +68,7 @@ import tbSame1.tbSame1_api.Struct2;
     }
 
     public static ISameStruct2Interface[] unwrapArray(SameStruct2InterfaceParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new ISameStruct2Interface[0];
         return Arrays.stream(parcelables)
            .map(SameStruct2InterfaceParcelable::getSameStruct2Interface)
            .toArray(ISameStruct2Interface[]::new);

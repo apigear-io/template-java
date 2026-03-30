@@ -22,7 +22,10 @@ import tbSimple.tbSimple_api.INoOperationsInterfaceEventListener;
 import tbSimple.tbSimple_api.INoOperationsInterface;
 import tbSimple.tbSimple_api.AbstractNoOperationsInterface;
 import tbSimple.tbSimple_android_messenger.NoOperationsInterfaceMessageType;
+import tbSimple.tbSimple_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
@@ -30,7 +33,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
 
 public class NoOperationsInterfaceClient extends AbstractNoOperationsInterface implements ServiceConnection
@@ -221,7 +223,7 @@ public class NoOperationsInterfaceClient extends AbstractNoOperationsInterface i
 				    onPropInt(propInt);
 				    break;
 			    }
-			    // TODO params may be different structs from different modules, there should be a custom class loader 
+			    // TODO params may be different structs from different modules, there should be a custom class loader
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 			    case SIG_SigVoid: {
@@ -320,7 +322,7 @@ public class NoOperationsInterfaceClient extends AbstractNoOperationsInterface i
     }
 
   
-    // methods    
+    // methods
 
     @Override
     public boolean _isReady() {

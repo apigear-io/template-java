@@ -21,7 +21,10 @@ import tbSimple.tbSimple_api.ISimpleArrayInterface;
 import tbSimple.tbSimple_api.AbstractSimpleArrayInterface;
 import tbSimple.tbSimple_api.RemoteOperationException;
 import tbSimple.tbSimple_android_messenger.SimpleArrayInterfaceMessageType;
+import tbSimple.tbSimple_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 public class SimpleArrayInterfaceServiceAdapter extends Service
@@ -232,7 +235,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					{
 						Bundle data = msg.getData();
 						
-			        boolean[] propBool = data.getBooleanArray("propBool");
+			        List<Boolean> propBool = Conversions.toList(data.getBooleanArray("propBool"));
 						backend.setPropBool(propBool);
 						break;
 					}
@@ -240,7 +243,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					{
 						Bundle data = msg.getData();
 						
-			        int[] propInt = data.getIntArray("propInt");
+			        List<Integer> propInt = Conversions.toList(data.getIntArray("propInt"));
 						backend.setPropInt(propInt);
 						break;
 					}
@@ -248,7 +251,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					{
 						Bundle data = msg.getData();
 						
-			        int[] propInt32 = data.getIntArray("propInt32");
+			        List<Integer> propInt32 = Conversions.toList(data.getIntArray("propInt32"));
 						backend.setPropInt32(propInt32);
 						break;
 					}
@@ -256,7 +259,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					{
 						Bundle data = msg.getData();
 						
-			        long[] propInt64 = data.getLongArray("propInt64");
+			        List<Long> propInt64 = Conversions.toList(data.getLongArray("propInt64"));
 						backend.setPropInt64(propInt64);
 						break;
 					}
@@ -264,7 +267,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					{
 						Bundle data = msg.getData();
 						
-			        float[] propFloat = data.getFloatArray("propFloat");
+			        List<Float> propFloat = Conversions.toList(data.getFloatArray("propFloat"));
 						backend.setPropFloat(propFloat);
 						break;
 					}
@@ -272,7 +275,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					{
 						Bundle data = msg.getData();
 						
-			        float[] propFloat32 = data.getFloatArray("propFloat32");
+			        List<Float> propFloat32 = Conversions.toList(data.getFloatArray("propFloat32"));
 						backend.setPropFloat32(propFloat32);
 						break;
 					}
@@ -280,7 +283,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					{
 						Bundle data = msg.getData();
 						
-			        double[] propFloat64 = data.getDoubleArray("propFloat64");
+			        List<Double> propFloat64 = Conversions.toList(data.getDoubleArray("propFloat64"));
 						backend.setPropFloat64(propFloat64);
 						break;
 					}
@@ -288,7 +291,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					{
 						Bundle data = msg.getData();
 						
-			        String[] propString = data.getStringArray("propString");
+			        List<String> propString = Conversions.toList(data.getStringArray("propString"));
 						backend.setPropString(propString);
 						break;
 					}
@@ -309,7 +312,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					
 					int callId = data.getInt("callId");
 					
-			        boolean[] paramBool = data.getBooleanArray("paramBool");
+			        List<Boolean> paramBool = Conversions.toList(data.getBooleanArray("paramBool"));
 					Message respMsg = new Message();
 					respMsg.what = SimpleArrayInterfaceMessageType.RPC_FuncBoolResp.getValue();
 					Bundle resp_data = new Bundle();
@@ -320,9 +323,9 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						boolean[] result =  backend.funcBool(paramBool);
+						List<Boolean> result =  backend.funcBool(paramBool);
 						
-		        resp_data.putBooleanArray("result", result);
+		        resp_data.putBooleanArray("result", Conversions.toArray(result, new boolean[0]));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "funcBool failed: " + errorMessage);
@@ -365,7 +368,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					
 					int callId = data.getInt("callId");
 					
-			        int[] paramInt = data.getIntArray("paramInt");
+			        List<Integer> paramInt = Conversions.toList(data.getIntArray("paramInt"));
 					Message respMsg = new Message();
 					respMsg.what = SimpleArrayInterfaceMessageType.RPC_FuncIntResp.getValue();
 					Bundle resp_data = new Bundle();
@@ -376,9 +379,9 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						int[] result =  backend.funcInt(paramInt);
+						List<Integer> result =  backend.funcInt(paramInt);
 						
-		        resp_data.putIntArray("result", result);
+		        resp_data.putIntArray("result", Conversions.toArray(result, new int[0]));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "funcInt failed: " + errorMessage);
@@ -421,7 +424,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					
 					int callId = data.getInt("callId");
 					
-			        int[] paramInt32 = data.getIntArray("paramInt32");
+			        List<Integer> paramInt32 = Conversions.toList(data.getIntArray("paramInt32"));
 					Message respMsg = new Message();
 					respMsg.what = SimpleArrayInterfaceMessageType.RPC_FuncInt32Resp.getValue();
 					Bundle resp_data = new Bundle();
@@ -432,9 +435,9 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						int[] result =  backend.funcInt32(paramInt32);
+						List<Integer> result =  backend.funcInt32(paramInt32);
 						
-		        resp_data.putIntArray("result", result);
+		        resp_data.putIntArray("result", Conversions.toArray(result, new int[0]));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "funcInt32 failed: " + errorMessage);
@@ -477,7 +480,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					
 					int callId = data.getInt("callId");
 					
-			        long[] paramInt64 = data.getLongArray("paramInt64");
+			        List<Long> paramInt64 = Conversions.toList(data.getLongArray("paramInt64"));
 					Message respMsg = new Message();
 					respMsg.what = SimpleArrayInterfaceMessageType.RPC_FuncInt64Resp.getValue();
 					Bundle resp_data = new Bundle();
@@ -488,9 +491,9 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						long[] result =  backend.funcInt64(paramInt64);
+						List<Long> result =  backend.funcInt64(paramInt64);
 						
-		        resp_data.putLongArray("result", result);
+		        resp_data.putLongArray("result", Conversions.toArray(result, new long[0]));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "funcInt64 failed: " + errorMessage);
@@ -533,7 +536,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					
 					int callId = data.getInt("callId");
 					
-			        float[] paramFloat = data.getFloatArray("paramFloat");
+			        List<Float> paramFloat = Conversions.toList(data.getFloatArray("paramFloat"));
 					Message respMsg = new Message();
 					respMsg.what = SimpleArrayInterfaceMessageType.RPC_FuncFloatResp.getValue();
 					Bundle resp_data = new Bundle();
@@ -544,9 +547,9 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						float[] result =  backend.funcFloat(paramFloat);
+						List<Float> result =  backend.funcFloat(paramFloat);
 						
-		        resp_data.putFloatArray("result", result);
+		        resp_data.putFloatArray("result", Conversions.toArray(result, new float[0]));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "funcFloat failed: " + errorMessage);
@@ -589,7 +592,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					
 					int callId = data.getInt("callId");
 					
-			        float[] paramFloat32 = data.getFloatArray("paramFloat32");
+			        List<Float> paramFloat32 = Conversions.toList(data.getFloatArray("paramFloat32"));
 					Message respMsg = new Message();
 					respMsg.what = SimpleArrayInterfaceMessageType.RPC_FuncFloat32Resp.getValue();
 					Bundle resp_data = new Bundle();
@@ -600,9 +603,9 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						float[] result =  backend.funcFloat32(paramFloat32);
+						List<Float> result =  backend.funcFloat32(paramFloat32);
 						
-		        resp_data.putFloatArray("result", result);
+		        resp_data.putFloatArray("result", Conversions.toArray(result, new float[0]));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "funcFloat32 failed: " + errorMessage);
@@ -645,7 +648,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					
 					int callId = data.getInt("callId");
 					
-			        double[] paramFloat = data.getDoubleArray("paramFloat");
+			        List<Double> paramFloat = Conversions.toList(data.getDoubleArray("paramFloat"));
 					Message respMsg = new Message();
 					respMsg.what = SimpleArrayInterfaceMessageType.RPC_FuncFloat64Resp.getValue();
 					Bundle resp_data = new Bundle();
@@ -656,9 +659,9 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						double[] result =  backend.funcFloat64(paramFloat);
+						List<Double> result =  backend.funcFloat64(paramFloat);
 						
-		        resp_data.putDoubleArray("result", result);
+		        resp_data.putDoubleArray("result", Conversions.toArray(result, new double[0]));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "funcFloat64 failed: " + errorMessage);
@@ -701,7 +704,7 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 					
 					int callId = data.getInt("callId");
 					
-			        String[] paramString = data.getStringArray("paramString");
+			        List<String> paramString = Conversions.toList(data.getStringArray("paramString"));
 					Message respMsg = new Message();
 					respMsg.what = SimpleArrayInterfaceMessageType.RPC_FuncStringResp.getValue();
 					Bundle resp_data = new Bundle();
@@ -712,9 +715,9 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						String[] result =  backend.funcString(paramString);
+						List<String> result =  backend.funcString(paramString);
 						
-		        resp_data.putStringArray("result", result);
+		        resp_data.putStringArray("result", Conversions.toArray(result, new String[0]));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "funcString failed: " + errorMessage);
@@ -783,30 +786,30 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 			if (backend != null && backend._isReady())
 			{
 				
-				boolean[] propBool = backend.getPropBool();
+				List<Boolean> propBool = backend.getPropBool();
 				
-		        data.putBooleanArray("propBool", propBool);
-				int[] propInt = backend.getPropInt();
+		        data.putBooleanArray("propBool", Conversions.toArray(propBool, new boolean[0]));
+				List<Integer> propInt = backend.getPropInt();
 				
-		        data.putIntArray("propInt", propInt);
-				int[] propInt32 = backend.getPropInt32();
+		        data.putIntArray("propInt", Conversions.toArray(propInt, new int[0]));
+				List<Integer> propInt32 = backend.getPropInt32();
 				
-		        data.putIntArray("propInt32", propInt32);
-				long[] propInt64 = backend.getPropInt64();
+		        data.putIntArray("propInt32", Conversions.toArray(propInt32, new int[0]));
+				List<Long> propInt64 = backend.getPropInt64();
 				
-		        data.putLongArray("propInt64", propInt64);
-				float[] propFloat = backend.getPropFloat();
+		        data.putLongArray("propInt64", Conversions.toArray(propInt64, new long[0]));
+				List<Float> propFloat = backend.getPropFloat();
 				
-		        data.putFloatArray("propFloat", propFloat);
-				float[] propFloat32 = backend.getPropFloat32();
+		        data.putFloatArray("propFloat", Conversions.toArray(propFloat, new float[0]));
+				List<Float> propFloat32 = backend.getPropFloat32();
 				
-		        data.putFloatArray("propFloat32", propFloat32);
-				double[] propFloat64 = backend.getPropFloat64();
+		        data.putFloatArray("propFloat32", Conversions.toArray(propFloat32, new float[0]));
+				List<Double> propFloat64 = backend.getPropFloat64();
 				
-		        data.putDoubleArray("propFloat64", propFloat64);
-				String[] propString = backend.getPropString();
+		        data.putDoubleArray("propFloat64", Conversions.toArray(propFloat64, new double[0]));
+				List<String> propString = backend.getPropString();
 				
-		        data.putStringArray("propString", propString);
+		        data.putStringArray("propString", Conversions.toArray(propString, new String[0]));
 				String propReadOnlyString = backend.getPropReadOnlyString();
 				
 		        data.putString("propReadOnlyString", propReadOnlyString);
@@ -815,98 +818,98 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 			}
 		}
 		@Override
-		public void onPropBoolChanged(boolean[] propBool){
+		public void onPropBoolChanged(List<Boolean> propBool){
 			Log.i(TAG, "New value for PropBool from backend" + propBool);
 
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.SET_PropBool.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putBooleanArray("propBool", propBool);
+		        data.putBooleanArray("propBool", Conversions.toArray(propBool, new boolean[0]));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onPropIntChanged(int[] propInt){
+		public void onPropIntChanged(List<Integer> propInt){
 			Log.i(TAG, "New value for PropInt from backend" + propInt);
 
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.SET_PropInt.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putIntArray("propInt", propInt);
+		        data.putIntArray("propInt", Conversions.toArray(propInt, new int[0]));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onPropInt32Changed(int[] propInt32){
+		public void onPropInt32Changed(List<Integer> propInt32){
 			Log.i(TAG, "New value for PropInt32 from backend" + propInt32);
 
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.SET_PropInt32.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putIntArray("propInt32", propInt32);
+		        data.putIntArray("propInt32", Conversions.toArray(propInt32, new int[0]));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onPropInt64Changed(long[] propInt64){
+		public void onPropInt64Changed(List<Long> propInt64){
 			Log.i(TAG, "New value for PropInt64 from backend" + propInt64);
 
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.SET_PropInt64.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putLongArray("propInt64", propInt64);
+		        data.putLongArray("propInt64", Conversions.toArray(propInt64, new long[0]));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onPropFloatChanged(float[] propFloat){
+		public void onPropFloatChanged(List<Float> propFloat){
 			Log.i(TAG, "New value for PropFloat from backend" + propFloat);
 
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.SET_PropFloat.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putFloatArray("propFloat", propFloat);
+		        data.putFloatArray("propFloat", Conversions.toArray(propFloat, new float[0]));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onPropFloat32Changed(float[] propFloat32){
+		public void onPropFloat32Changed(List<Float> propFloat32){
 			Log.i(TAG, "New value for PropFloat32 from backend" + propFloat32);
 
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.SET_PropFloat32.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putFloatArray("propFloat32", propFloat32);
+		        data.putFloatArray("propFloat32", Conversions.toArray(propFloat32, new float[0]));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onPropFloat64Changed(double[] propFloat64){
+		public void onPropFloat64Changed(List<Double> propFloat64){
 			Log.i(TAG, "New value for PropFloat64 from backend" + propFloat64);
 
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.SET_PropFloat64.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putDoubleArray("propFloat64", propFloat64);
+		        data.putDoubleArray("propFloat64", Conversions.toArray(propFloat64, new double[0]));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onPropStringChanged(String[] propString){
+		public void onPropStringChanged(List<String> propString){
 			Log.i(TAG, "New value for PropString from backend" + propString);
 
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.SET_PropString.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putStringArray("propString", propString);
+		        data.putStringArray("propString", Conversions.toArray(propString, new String[0]));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
@@ -923,90 +926,90 @@ public class SimpleArrayInterfaceServiceAdapter extends Service
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onSigBool(boolean[] paramBool){
+		public void onSigBool(List<Boolean> paramBool){
 			Log.i(TAG, "New singal for SigBool = "+ " " + paramBool);
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.SIG_SigBool.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putBooleanArray("paramBool", paramBool);
+		        data.putBooleanArray("paramBool", Conversions.toArray(paramBool, new boolean[0]));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onSigInt(int[] paramInt){
+		public void onSigInt(List<Integer> paramInt){
 			Log.i(TAG, "New singal for SigInt = "+ " " + paramInt);
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.SIG_SigInt.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putIntArray("paramInt", paramInt);
+		        data.putIntArray("paramInt", Conversions.toArray(paramInt, new int[0]));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onSigInt32(int[] paramInt32){
+		public void onSigInt32(List<Integer> paramInt32){
 			Log.i(TAG, "New singal for SigInt32 = "+ " " + paramInt32);
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.SIG_SigInt32.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putIntArray("paramInt32", paramInt32);
+		        data.putIntArray("paramInt32", Conversions.toArray(paramInt32, new int[0]));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onSigInt64(long[] paramInt64){
+		public void onSigInt64(List<Long> paramInt64){
 			Log.i(TAG, "New singal for SigInt64 = "+ " " + paramInt64);
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.SIG_SigInt64.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putLongArray("paramInt64", paramInt64);
+		        data.putLongArray("paramInt64", Conversions.toArray(paramInt64, new long[0]));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onSigFloat(float[] paramFloat){
+		public void onSigFloat(List<Float> paramFloat){
 			Log.i(TAG, "New singal for SigFloat = "+ " " + paramFloat);
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.SIG_SigFloat.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putFloatArray("paramFloat", paramFloat);
+		        data.putFloatArray("paramFloat", Conversions.toArray(paramFloat, new float[0]));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onSigFloat32(float[] paramFloa32){
+		public void onSigFloat32(List<Float> paramFloa32){
 			Log.i(TAG, "New singal for SigFloat32 = "+ " " + paramFloa32);
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.SIG_SigFloat32.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putFloatArray("paramFloa32", paramFloa32);
+		        data.putFloatArray("paramFloa32", Conversions.toArray(paramFloa32, new float[0]));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onSigFloat64(double[] paramFloat64){
+		public void onSigFloat64(List<Double> paramFloat64){
 			Log.i(TAG, "New singal for SigFloat64 = "+ " " + paramFloat64);
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.SIG_SigFloat64.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putDoubleArray("paramFloat64", paramFloat64);
+		        data.putDoubleArray("paramFloat64", Conversions.toArray(paramFloat64, new double[0]));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onSigString(String[] paramString){
+		public void onSigString(List<String> paramString){
 			Log.i(TAG, "New singal for SigString = "+ " " + paramString);
 			Message msg = new Message();
 			msg.what = SimpleArrayInterfaceMessageType.SIG_SigString.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putStringArray("paramString", paramString);
+		        data.putStringArray("paramString", Conversions.toArray(paramString, new String[0]));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}

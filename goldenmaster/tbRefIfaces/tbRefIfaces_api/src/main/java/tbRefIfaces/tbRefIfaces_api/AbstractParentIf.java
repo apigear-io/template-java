@@ -4,6 +4,7 @@ import tbRefIfaces.tbRefIfaces_api.IParentIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.IParentIf;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractParentIf implements IParentIf {
     private Collection<IParentIfEventListener> listeners = ConcurrentHashMap.newKeySet();
@@ -24,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
     }
   
     @Override
-    public void fireLocalIfListChanged(ISimpleLocalIf[] newValue) {
+    public void fireLocalIfListChanged(List<ISimpleLocalIf> newValue) {
       for (IParentIfEventListener listener : listeners) {
         listener.onLocalIfListChanged(newValue);
       }
@@ -38,7 +39,7 @@ import java.util.concurrent.ConcurrentHashMap;
     }
   
     @Override
-    public void fireImportedIfListChanged(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] newValue) {
+    public void fireImportedIfListChanged(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> newValue) {
       for (IParentIfEventListener listener : listeners) {
         listener.onImportedIfListChanged(newValue);
       }
@@ -52,7 +53,7 @@ import java.util.concurrent.ConcurrentHashMap;
     }
   
     @Override
-    public void fireLocalIfSignalList(ISimpleLocalIf[] param) {
+    public void fireLocalIfSignalList(List<ISimpleLocalIf> param) {
       for (IParentIfEventListener listener : listeners) {
         listener.onLocalIfSignalList(param);
       }
@@ -66,7 +67,7 @@ import java.util.concurrent.ConcurrentHashMap;
     }
   
     @Override
-    public void fireImportedIfSignalList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param) {
+    public void fireImportedIfSignalList(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> param) {
       for (IParentIfEventListener listener : listeners) {
         listener.onImportedIfSignalList(param);
       }

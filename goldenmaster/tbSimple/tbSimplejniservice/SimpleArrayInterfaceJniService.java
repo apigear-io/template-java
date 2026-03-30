@@ -1,21 +1,18 @@
 package tbSimple.tbSimplejniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import tbSimple.tbSimple_api.ISimpleArrayInterface;
 import tbSimple.tbSimple_api.AbstractSimpleArrayInterface;
 import tbSimple.tbSimple_api.ISimpleArrayInterfaceEventListener;
+import tbSimple.tbSimple_android_messenger.Conversions;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 
 public class SimpleArrayInterfaceJniService extends AbstractSimpleArrayInterface {
@@ -30,122 +27,122 @@ public class SimpleArrayInterfaceJniService extends AbstractSimpleArrayInterface
         fire_readyStatusChanged(true);
     }
     @Override
-    public void setPropBool(boolean[] propBool)
+    public void setPropBool(List<Boolean> propBool)
     {
         Log.i(TAG, "request setPropBool called, will call native ");
-        nativeSetPropBool(propBool);
+        nativeSetPropBool(Conversions.toArray(propBool, new boolean[0]));
     }
 
     @Override
-    public boolean[] getPropBool()
+    public List<Boolean> getPropBool()
     {
         Log.i(TAG, "request getPropBool called, will call native ");
-        return nativeGetPropBool();
+        return Conversions.toList(nativeGetPropBool());
     }
 
   
     @Override
-    public void setPropInt(int[] propInt)
+    public void setPropInt(List<Integer> propInt)
     {
         Log.i(TAG, "request setPropInt called, will call native ");
-        nativeSetPropInt(propInt);
+        nativeSetPropInt(Conversions.toArray(propInt, new int[0]));
     }
 
     @Override
-    public int[] getPropInt()
+    public List<Integer> getPropInt()
     {
         Log.i(TAG, "request getPropInt called, will call native ");
-        return nativeGetPropInt();
+        return Conversions.toList(nativeGetPropInt());
     }
 
   
     @Override
-    public void setPropInt32(int[] propInt32)
+    public void setPropInt32(List<Integer> propInt32)
     {
         Log.i(TAG, "request setPropInt32 called, will call native ");
-        nativeSetPropInt32(propInt32);
+        nativeSetPropInt32(Conversions.toArray(propInt32, new int[0]));
     }
 
     @Override
-    public int[] getPropInt32()
+    public List<Integer> getPropInt32()
     {
         Log.i(TAG, "request getPropInt32 called, will call native ");
-        return nativeGetPropInt32();
+        return Conversions.toList(nativeGetPropInt32());
     }
 
   
     @Override
-    public void setPropInt64(long[] propInt64)
+    public void setPropInt64(List<Long> propInt64)
     {
         Log.i(TAG, "request setPropInt64 called, will call native ");
-        nativeSetPropInt64(propInt64);
+        nativeSetPropInt64(Conversions.toArray(propInt64, new long[0]));
     }
 
     @Override
-    public long[] getPropInt64()
+    public List<Long> getPropInt64()
     {
         Log.i(TAG, "request getPropInt64 called, will call native ");
-        return nativeGetPropInt64();
+        return Conversions.toList(nativeGetPropInt64());
     }
 
   
     @Override
-    public void setPropFloat(float[] propFloat)
+    public void setPropFloat(List<Float> propFloat)
     {
         Log.i(TAG, "request setPropFloat called, will call native ");
-        nativeSetPropFloat(propFloat);
+        nativeSetPropFloat(Conversions.toArray(propFloat, new float[0]));
     }
 
     @Override
-    public float[] getPropFloat()
+    public List<Float> getPropFloat()
     {
         Log.i(TAG, "request getPropFloat called, will call native ");
-        return nativeGetPropFloat();
+        return Conversions.toList(nativeGetPropFloat());
     }
 
   
     @Override
-    public void setPropFloat32(float[] propFloat32)
+    public void setPropFloat32(List<Float> propFloat32)
     {
         Log.i(TAG, "request setPropFloat32 called, will call native ");
-        nativeSetPropFloat32(propFloat32);
+        nativeSetPropFloat32(Conversions.toArray(propFloat32, new float[0]));
     }
 
     @Override
-    public float[] getPropFloat32()
+    public List<Float> getPropFloat32()
     {
         Log.i(TAG, "request getPropFloat32 called, will call native ");
-        return nativeGetPropFloat32();
+        return Conversions.toList(nativeGetPropFloat32());
     }
 
   
     @Override
-    public void setPropFloat64(double[] propFloat64)
+    public void setPropFloat64(List<Double> propFloat64)
     {
         Log.i(TAG, "request setPropFloat64 called, will call native ");
-        nativeSetPropFloat64(propFloat64);
+        nativeSetPropFloat64(Conversions.toArray(propFloat64, new double[0]));
     }
 
     @Override
-    public double[] getPropFloat64()
+    public List<Double> getPropFloat64()
     {
         Log.i(TAG, "request getPropFloat64 called, will call native ");
-        return nativeGetPropFloat64();
+        return Conversions.toList(nativeGetPropFloat64());
     }
 
   
     @Override
-    public void setPropString(String[] propString)
+    public void setPropString(List<String> propString)
     {
         Log.i(TAG, "request setPropString called, will call native ");
-        nativeSetPropString(propString);
+        nativeSetPropString(Conversions.toArray(propString, new String[0]));
     }
 
     @Override
-    public String[] getPropString()
+    public List<String> getPropString()
     {
         Log.i(TAG, "request getPropString called, will call native ");
-        return nativeGetPropString();
+        return Conversions.toList(nativeGetPropString());
     }
 
   
@@ -167,156 +164,156 @@ public class SimpleArrayInterfaceJniService extends AbstractSimpleArrayInterface
     // methods
 
     @Override
-    public boolean[] funcBool(boolean[] paramBool) {
+    public List<Boolean> funcBool(List<Boolean> paramBool) {
         Log.i(TAG, "request method funcBool called, will call native");
-        return nativeFuncBool(paramBool);
+        return Conversions.toList(nativeFuncBool(Conversions.toArray(paramBool, new boolean[0])));
     }
 
     @Override
-    public  CompletableFuture<boolean[]> funcBoolAsync(boolean[] paramBool) {
+    public  CompletableFuture<List<Boolean>> funcBoolAsync(List<Boolean> paramBool) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcBool(paramBool); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<boolean[]> f = new CompletableFuture<>();
+            CompletableFuture<List<Boolean>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public int[] funcInt(int[] paramInt) {
+    public List<Integer> funcInt(List<Integer> paramInt) {
         Log.i(TAG, "request method funcInt called, will call native");
-        return nativeFuncInt(paramInt);
+        return Conversions.toList(nativeFuncInt(Conversions.toArray(paramInt, new int[0])));
     }
 
     @Override
-    public  CompletableFuture<int[]> funcIntAsync(int[] paramInt) {
+    public  CompletableFuture<List<Integer>> funcIntAsync(List<Integer> paramInt) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcInt(paramInt); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<int[]> f = new CompletableFuture<>();
+            CompletableFuture<List<Integer>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public int[] funcInt32(int[] paramInt32) {
+    public List<Integer> funcInt32(List<Integer> paramInt32) {
         Log.i(TAG, "request method funcInt32 called, will call native");
-        return nativeFuncInt32(paramInt32);
+        return Conversions.toList(nativeFuncInt32(Conversions.toArray(paramInt32, new int[0])));
     }
 
     @Override
-    public  CompletableFuture<int[]> funcInt32Async(int[] paramInt32) {
+    public  CompletableFuture<List<Integer>> funcInt32Async(List<Integer> paramInt32) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcInt32(paramInt32); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<int[]> f = new CompletableFuture<>();
+            CompletableFuture<List<Integer>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public long[] funcInt64(long[] paramInt64) {
+    public List<Long> funcInt64(List<Long> paramInt64) {
         Log.i(TAG, "request method funcInt64 called, will call native");
-        return nativeFuncInt64(paramInt64);
+        return Conversions.toList(nativeFuncInt64(Conversions.toArray(paramInt64, new long[0])));
     }
 
     @Override
-    public  CompletableFuture<long[]> funcInt64Async(long[] paramInt64) {
+    public  CompletableFuture<List<Long>> funcInt64Async(List<Long> paramInt64) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcInt64(paramInt64); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<long[]> f = new CompletableFuture<>();
+            CompletableFuture<List<Long>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public float[] funcFloat(float[] paramFloat) {
+    public List<Float> funcFloat(List<Float> paramFloat) {
         Log.i(TAG, "request method funcFloat called, will call native");
-        return nativeFuncFloat(paramFloat);
+        return Conversions.toList(nativeFuncFloat(Conversions.toArray(paramFloat, new float[0])));
     }
 
     @Override
-    public  CompletableFuture<float[]> funcFloatAsync(float[] paramFloat) {
+    public  CompletableFuture<List<Float>> funcFloatAsync(List<Float> paramFloat) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcFloat(paramFloat); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<float[]> f = new CompletableFuture<>();
+            CompletableFuture<List<Float>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public float[] funcFloat32(float[] paramFloat32) {
+    public List<Float> funcFloat32(List<Float> paramFloat32) {
         Log.i(TAG, "request method funcFloat32 called, will call native");
-        return nativeFuncFloat32(paramFloat32);
+        return Conversions.toList(nativeFuncFloat32(Conversions.toArray(paramFloat32, new float[0])));
     }
 
     @Override
-    public  CompletableFuture<float[]> funcFloat32Async(float[] paramFloat32) {
+    public  CompletableFuture<List<Float>> funcFloat32Async(List<Float> paramFloat32) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcFloat32(paramFloat32); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<float[]> f = new CompletableFuture<>();
+            CompletableFuture<List<Float>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public double[] funcFloat64(double[] paramFloat) {
+    public List<Double> funcFloat64(List<Double> paramFloat) {
         Log.i(TAG, "request method funcFloat64 called, will call native");
-        return nativeFuncFloat64(paramFloat);
+        return Conversions.toList(nativeFuncFloat64(Conversions.toArray(paramFloat, new double[0])));
     }
 
     @Override
-    public  CompletableFuture<double[]> funcFloat64Async(double[] paramFloat) {
+    public  CompletableFuture<List<Double>> funcFloat64Async(List<Double> paramFloat) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcFloat64(paramFloat); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<double[]> f = new CompletableFuture<>();
+            CompletableFuture<List<Double>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public String[] funcString(String[] paramString) {
+    public List<String> funcString(List<String> paramString) {
         Log.i(TAG, "request method funcString called, will call native");
-        return nativeFuncString(paramString);
+        return Conversions.toList(nativeFuncString(Conversions.toArray(paramString, new String[0])));
     }
 
     @Override
-    public  CompletableFuture<String[]> funcStringAsync(String[] paramString) {
+    public  CompletableFuture<List<String>> funcStringAsync(List<String> paramString) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcString(paramString); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<String[]> f = new CompletableFuture<>();
+            CompletableFuture<List<String>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -338,7 +335,7 @@ public class SimpleArrayInterfaceJniService extends AbstractSimpleArrayInterface
         }
     }
 
-    // Called on Native Impl Service
+    // Native methods — use array types for JNI compatibility
     private native void nativeSetPropBool(boolean[] propBool);
     private native boolean[] nativeGetPropBool();
   
@@ -366,7 +363,6 @@ public class SimpleArrayInterfaceJniService extends AbstractSimpleArrayInterface
     private native void nativeSetPropReadOnlyString(String propReadOnlyString);
     private native String nativeGetPropReadOnlyString();
   
-    // methods
     private native boolean[] nativeFuncBool(boolean[] paramBool);
     private native int[] nativeFuncInt(int[] paramInt);
     private native int[] nativeFuncInt32(int[] paramInt32);
@@ -381,46 +377,46 @@ public class SimpleArrayInterfaceJniService extends AbstractSimpleArrayInterface
         isServiceReady = value;
     }
 
-    //In theory event listener interface
+    // Callbacks from native — receive arrays, convert to List and fire events
     public void onPropBoolChanged(boolean[] newValue)
     {
          Log.i(TAG, "onPropBoolChanged, will pass notification to all listeners");
-         firePropBoolChanged(newValue);
+         firePropBoolChanged(Conversions.toList(newValue));
     }
     public void onPropIntChanged(int[] newValue)
     {
          Log.i(TAG, "onPropIntChanged, will pass notification to all listeners");
-         firePropIntChanged(newValue);
+         firePropIntChanged(Conversions.toList(newValue));
     }
     public void onPropInt32Changed(int[] newValue)
     {
          Log.i(TAG, "onPropInt32Changed, will pass notification to all listeners");
-         firePropInt32Changed(newValue);
+         firePropInt32Changed(Conversions.toList(newValue));
     }
     public void onPropInt64Changed(long[] newValue)
     {
          Log.i(TAG, "onPropInt64Changed, will pass notification to all listeners");
-         firePropInt64Changed(newValue);
+         firePropInt64Changed(Conversions.toList(newValue));
     }
     public void onPropFloatChanged(float[] newValue)
     {
          Log.i(TAG, "onPropFloatChanged, will pass notification to all listeners");
-         firePropFloatChanged(newValue);
+         firePropFloatChanged(Conversions.toList(newValue));
     }
     public void onPropFloat32Changed(float[] newValue)
     {
          Log.i(TAG, "onPropFloat32Changed, will pass notification to all listeners");
-         firePropFloat32Changed(newValue);
+         firePropFloat32Changed(Conversions.toList(newValue));
     }
     public void onPropFloat64Changed(double[] newValue)
     {
          Log.i(TAG, "onPropFloat64Changed, will pass notification to all listeners");
-         firePropFloat64Changed(newValue);
+         firePropFloat64Changed(Conversions.toList(newValue));
     }
     public void onPropStringChanged(String[] newValue)
     {
          Log.i(TAG, "onPropStringChanged, will pass notification to all listeners");
-         firePropStringChanged(newValue);
+         firePropStringChanged(Conversions.toList(newValue));
     }
     public void onPropReadOnlyStringChanged(String newValue)
     {
@@ -430,42 +426,42 @@ public class SimpleArrayInterfaceJniService extends AbstractSimpleArrayInterface
     public void onSigBool(boolean[] paramBool)
     {
         Log.i(TAG, "onSigBool, will pass notification to all listeners");
-        fireSigBool(paramBool);
+        fireSigBool(Conversions.toList(paramBool));
     }
     public void onSigInt(int[] paramInt)
     {
         Log.i(TAG, "onSigInt, will pass notification to all listeners");
-        fireSigInt(paramInt);
+        fireSigInt(Conversions.toList(paramInt));
     }
     public void onSigInt32(int[] paramInt32)
     {
         Log.i(TAG, "onSigInt32, will pass notification to all listeners");
-        fireSigInt32(paramInt32);
+        fireSigInt32(Conversions.toList(paramInt32));
     }
     public void onSigInt64(long[] paramInt64)
     {
         Log.i(TAG, "onSigInt64, will pass notification to all listeners");
-        fireSigInt64(paramInt64);
+        fireSigInt64(Conversions.toList(paramInt64));
     }
     public void onSigFloat(float[] paramFloat)
     {
         Log.i(TAG, "onSigFloat, will pass notification to all listeners");
-        fireSigFloat(paramFloat);
+        fireSigFloat(Conversions.toList(paramFloat));
     }
     public void onSigFloat32(float[] paramFloa32)
     {
         Log.i(TAG, "onSigFloat32, will pass notification to all listeners");
-        fireSigFloat32(paramFloa32);
+        fireSigFloat32(Conversions.toList(paramFloa32));
     }
     public void onSigFloat64(double[] paramFloat64)
     {
         Log.i(TAG, "onSigFloat64, will pass notification to all listeners");
-        fireSigFloat64(paramFloat64);
+        fireSigFloat64(Conversions.toList(paramFloat64));
     }
     public void onSigString(String[] paramString)
     {
         Log.i(TAG, "onSigString, will pass notification to all listeners");
-        fireSigString(paramString);
+        fireSigString(Conversions.toList(paramString));
     }
 
 }

@@ -17,6 +17,7 @@ import testbed1.testbed1_api.StructEnumWithArray;
 import testbed1.testbed1_api.Enum0;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractStructInterface implements IStructInterface {
     private Collection<IStructInterfaceEventListener> listeners = ConcurrentHashMap.newKeySet();

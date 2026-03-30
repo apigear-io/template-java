@@ -4,7 +4,9 @@ import testbed2.testbed2_api.Struct3;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
   public  class Struct3Parcelable implements Parcelable {
 
@@ -65,7 +67,7 @@ import java.util.Arrays;
     }
 
     public static Struct3[] unwrapArray(Struct3Parcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new Struct3[0];
         return Arrays.stream(parcelables)
            .map(Struct3Parcelable::getStruct3)
            .toArray(Struct3[]::new);

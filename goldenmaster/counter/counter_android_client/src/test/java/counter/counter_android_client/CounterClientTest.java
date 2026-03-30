@@ -24,8 +24,11 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import counter.counter_android_messenger.Conversions;
 import android.content.ComponentName;
 
 import static org.junit.Assert.assertEquals;
@@ -143,12 +146,12 @@ public class CounterClientTest
 		data.putParcelable("vector", new customTypes.customTypes_android_messenger.Vector3DParcelable(testvector));
 		org.apache.commons.math3.geometry.euclidean.threed.Vector3D testextern_vector = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0);
 		data.putParcelable("extern_vector", new externTypes.externTypes_android_messenger.MyVector3DParcelable(testextern_vector));
-        customTypes.customTypes_api.Vector3D[] testvectorArray = new customTypes.customTypes_api.Vector3D[1];
-        testvectorArray[0] = customTypes.customTypes_api.CustomTypesTestHelper.makeTestVector3D();
-		data.putParcelableArray("vectorArray", customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(testvectorArray));
-        org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] testextern_vectorArray = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[1];
-		testextern_vectorArray[0] = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0);
-		data.putParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(testextern_vectorArray));
+        List<customTypes.customTypes_api.Vector3D> testvectorArray = new java.util.ArrayList<>();
+        testvectorArray.add(customTypes.customTypes_api.CustomTypesTestHelper.makeTestVector3D());
+		data.putParcelableArray("vectorArray", customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(Conversions.toArray(testvectorArray, new customTypes.customTypes_api.Vector3D[0])));
+        List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> testextern_vectorArray = new java.util.ArrayList<>();
+		testextern_vectorArray.add(new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0));
+		data.putParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(Conversions.toArray(testextern_vectorArray, new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[0])));
 
     //setup mock expectations
         msg.setData(data);
@@ -158,10 +161,10 @@ public class CounterClientTest
         
         // Make sure test data is properly filled and in case of extern serialization is in place.
         //inOrderEventListener.verify(listenerMock,times(1)).onExternVectorChanged(any(org.apache.commons.math3.geometry.euclidean.threed.Vector3D.class));
-        inOrderEventListener.verify(listenerMock,times(1)).onVectorArrayChanged(any(customTypes.customTypes_api.Vector3D[].class));
+        inOrderEventListener.verify(listenerMock,times(1)).onVectorArrayChanged(any(List<customTypes.customTypes_api.Vector3D>.class));
         
         // Make sure test data is properly filled and in case of extern serialization is in place.
-        //inOrderEventListener.verify(listenerMock,times(1)).onExternVectorArrayChanged(any(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[].class));
+        //inOrderEventListener.verify(listenerMock,times(1)).onExternVectorArrayChanged(any(List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D>.class));
     }
     @Test
     public void onReceivevectorPropertyChangeTest() throws RemoteException {
@@ -236,21 +239,21 @@ public class CounterClientTest
         // Create and send message
         Message msg = Message.obtain(null, CounterMessageType.SET_VectorArray.getValue());
         Bundle data = new Bundle();
-        customTypes.customTypes_api.Vector3D[] testvectorArray = new customTypes.customTypes_api.Vector3D[1];
-        testvectorArray[0] = customTypes.customTypes_api.CustomTypesTestHelper.makeTestVector3D();
-		data.putParcelableArray("vectorArray", customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(testvectorArray));
+        List<customTypes.customTypes_api.Vector3D> testvectorArray = new java.util.ArrayList<>();
+        testvectorArray.add(customTypes.customTypes_api.CustomTypesTestHelper.makeTestVector3D());
+		data.putParcelableArray("vectorArray", customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(Conversions.toArray(testvectorArray, new customTypes.customTypes_api.Vector3D[0])));
 
         msg.setData(data);
         mClientMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        inOrderEventListener.verify(listenerMock,times(1)).onVectorArrayChanged(any(customTypes.customTypes_api.Vector3D[].class));	    
+        inOrderEventListener.verify(listenerMock,times(1)).onVectorArrayChanged(any(List<customTypes.customTypes_api.Vector3D>.class));	    
     }
     
     @Test
      public void setPropertyRequestvectorArray()
     {
-        customTypes.customTypes_api.Vector3D[] testvectorArray = new customTypes.customTypes_api.Vector3D[1];
-        testvectorArray[0] = customTypes.customTypes_api.CustomTypesTestHelper.makeTestVector3D();
+        List<customTypes.customTypes_api.Vector3D> testvectorArray = new java.util.ArrayList<>();
+        testvectorArray.add(customTypes.customTypes_api.CustomTypesTestHelper.makeTestVector3D());
 
         testedClient.setVectorArray(testvectorArray);
         Robolectric.flushForegroundThreadScheduler();
@@ -261,7 +264,7 @@ public class CounterClientTest
         Bundle data = response.getData();
 		data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
         
-            customTypes.customTypes_api.Vector3D[] receivedvectorArray =  customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray((customTypes.customTypes_android_messenger.Vector3DParcelable[])data.getParcelableArray("vectorArray", customTypes.customTypes_android_messenger.Vector3DParcelable.class));
+            List<customTypes.customTypes_api.Vector3D> receivedvectorArray = Conversions.toList(customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray((customTypes.customTypes_android_messenger.Vector3DParcelable[])data.getParcelableArray("vectorArray", customTypes.customTypes_android_messenger.Vector3DParcelable.class)));
         assertEquals(receivedvectorArray, testvectorArray);
     }
     
@@ -270,24 +273,24 @@ public class CounterClientTest
         // Create and send message
         Message msg = Message.obtain(null, CounterMessageType.SET_ExternVectorArray.getValue());
         Bundle data = new Bundle();
-        org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] testextern_vectorArray = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[1];
-		testextern_vectorArray[0] = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0);
-		data.putParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(testextern_vectorArray));
+        List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> testextern_vectorArray = new java.util.ArrayList<>();
+		testextern_vectorArray.add(new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0));
+		data.putParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(Conversions.toArray(testextern_vectorArray, new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[0])));
 
         msg.setData(data);
         mClientMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         
         // Make sure test data is properly filled and in case of extern serialization is in place.
-        //inOrderEventListener.verify(listenerMock,times(1)).onExternVectorArrayChanged(any(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[].class));	    
+        //inOrderEventListener.verify(listenerMock,times(1)).onExternVectorArrayChanged(any(List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D>.class));	    
     }
     
     /*
     @Test
      public void setPropertyRequestextern_vectorArray()
     {
-        org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] testextern_vectorArray = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[1];
-		testextern_vectorArray[0] = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0);
+        List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> testextern_vectorArray = new java.util.ArrayList<>();
+		testextern_vectorArray.add(new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0));
 
         testedClient.setExternVectorArray(testextern_vectorArray);
         Robolectric.flushForegroundThreadScheduler();
@@ -298,7 +301,7 @@ public class CounterClientTest
         Bundle data = response.getData();
 		data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
         
-            org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] receivedextern_vectorArray =  externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])data.getParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.class));
+            List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> receivedextern_vectorArray = Conversions.toList(externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])data.getParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.class)));
         assertEquals(receivedextern_vectorArray, testextern_vectorArray);
     }
     
@@ -313,18 +316,18 @@ public class CounterClientTest
 		data.putParcelable("vector", new customTypes.customTypes_android_messenger.Vector3DParcelable(testvector));
 		org.apache.commons.math3.geometry.euclidean.threed.Vector3D testextern_vector = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0);
 		data.putParcelable("extern_vector", new externTypes.externTypes_android_messenger.MyVector3DParcelable(testextern_vector));
-        customTypes.customTypes_api.Vector3D[] testvectorArray = new customTypes.customTypes_api.Vector3D[1];
-        testvectorArray[0] = customTypes.customTypes_api.CustomTypesTestHelper.makeTestVector3D();
-		data.putParcelableArray("vectorArray", customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(testvectorArray));
-        org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] testextern_vectorArray = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[1];
-		testextern_vectorArray[0] = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0);
-		data.putParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(testextern_vectorArray));
+        List<customTypes.customTypes_api.Vector3D> testvectorArray = new java.util.ArrayList<>();
+        testvectorArray.add(customTypes.customTypes_api.CustomTypesTestHelper.makeTestVector3D());
+		data.putParcelableArray("vectorArray", customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(Conversions.toArray(testvectorArray, new customTypes.customTypes_api.Vector3D[0])));
+        List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> testextern_vectorArray = new java.util.ArrayList<>();
+		testextern_vectorArray.add(new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0));
+		data.putParcelableArray("extern_vectorArray", externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(Conversions.toArray(testextern_vectorArray, new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[0])));
 
         msg.setData(data);
         mClientMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         
-        inOrderEventListener.verify(listenerMock,times(1)).onValueChanged( any(customTypes.customTypes_api.Vector3D.class),  any(org.apache.commons.math3.geometry.euclidean.threed.Vector3D.class),  any(customTypes.customTypes_api.Vector3D[].class),  any(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[].class));
+        inOrderEventListener.verify(listenerMock,times(1)).onValueChanged( any(customTypes.customTypes_api.Vector3D.class),  any(org.apache.commons.math3.geometry.euclidean.threed.Vector3D.class),  any(List<customTypes.customTypes_api.Vector3D>.class),  any(List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D>.class));
 
 }
 
@@ -378,13 +381,13 @@ public class CounterClientTest
     public void onincrementArrayRequest() throws RemoteException {
 
         // Execute method
-        org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] testvec = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[1];
-		testvec[0] = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0);
-        org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] expectedResult = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[1];
-		expectedResult[0] = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0);
+        List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> testvec = new java.util.ArrayList<>();
+		testvec.add(new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0));
+        List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> expectedResult = new ArrayList<>();
+        expectedResult.add(new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0));
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
-        CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]> resFuture = testedClient.incrementArrayAsync(testvec);
+        CompletableFuture<List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D>> resFuture = testedClient.incrementArrayAsync(testvec);
 
         resFuture.thenAccept(result -> {
             assertEquals(expectedResult, result);
@@ -402,7 +405,7 @@ public class CounterClientTest
         
         data.setClassLoader(externTypes.externTypes_android_messenger.MyVector3DParcelable.class.getClassLoader());
         
-            org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] receivedvec =  externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])data.getParcelableArray("vec", externTypes.externTypes_android_messenger.MyVector3DParcelable.class));
+            List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> receivedvec = Conversions.toList(externTypes.externTypes_android_messenger.MyVector3DParcelable.unwrapArray((externTypes.externTypes_android_messenger.MyVector3DParcelable[])data.getParcelableArray("vec", externTypes.externTypes_android_messenger.MyVector3DParcelable.class)));
         assertEquals(receivedvec, testvec);
         int returnedCallId = data.getInt("callId", -1);
 
@@ -412,7 +415,7 @@ public class CounterClientTest
 
         Bundle result_data = new Bundle();
 		result_data.putInt("callId", returnedCallId);
-		result_data.putParcelableArray("result", externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(expectedResult));
+		result_data.putParcelableArray("result", externTypes.externTypes_android_messenger.MyVector3DParcelable.wrapArray(Conversions.toArray(expectedResult, new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[0])));
 
         msg.setData(result_data);
         method_request.replyTo.send(msg);
@@ -472,13 +475,13 @@ public class CounterClientTest
     public void ondecrementArrayRequest() throws RemoteException {
 
         // Execute method
-        customTypes.customTypes_api.Vector3D[] testvec = new customTypes.customTypes_api.Vector3D[1];
-        testvec[0] = customTypes.customTypes_api.CustomTypesTestHelper.makeTestVector3D();
-        customTypes.customTypes_api.Vector3D[] expectedResult = new customTypes.customTypes_api.Vector3D[1];
-        expectedResult[0] = customTypes.customTypes_api.CustomTypesTestHelper.makeTestVector3D();
+        List<customTypes.customTypes_api.Vector3D> testvec = new java.util.ArrayList<>();
+        testvec.add(customTypes.customTypes_api.CustomTypesTestHelper.makeTestVector3D());
+        List<customTypes.customTypes_api.Vector3D> expectedResult = new ArrayList<>();
+        expectedResult.add(customTypes.customTypes_api.CustomTypesTestHelper.makeTestVector3D());
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
-        CompletableFuture<customTypes.customTypes_api.Vector3D[]> resFuture = testedClient.decrementArrayAsync(testvec);
+        CompletableFuture<List<customTypes.customTypes_api.Vector3D>> resFuture = testedClient.decrementArrayAsync(testvec);
 
         resFuture.thenAccept(result -> {
             assertEquals(expectedResult, result);
@@ -496,7 +499,7 @@ public class CounterClientTest
         
         data.setClassLoader(customTypes.customTypes_android_messenger.Vector3DParcelable.class.getClassLoader());
         
-            customTypes.customTypes_api.Vector3D[] receivedvec =  customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray((customTypes.customTypes_android_messenger.Vector3DParcelable[])data.getParcelableArray("vec", customTypes.customTypes_android_messenger.Vector3DParcelable.class));
+            List<customTypes.customTypes_api.Vector3D> receivedvec = Conversions.toList(customTypes.customTypes_android_messenger.Vector3DParcelable.unwrapArray((customTypes.customTypes_android_messenger.Vector3DParcelable[])data.getParcelableArray("vec", customTypes.customTypes_android_messenger.Vector3DParcelable.class)));
         assertEquals(receivedvec, testvec);
         int returnedCallId = data.getInt("callId", -1);
 
@@ -506,7 +509,7 @@ public class CounterClientTest
 
         Bundle result_data = new Bundle();
 		result_data.putInt("callId", returnedCallId);
-		result_data.putParcelableArray("result", customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(expectedResult));
+		result_data.putParcelableArray("result", customTypes.customTypes_android_messenger.Vector3DParcelable.wrapArray(Conversions.toArray(expectedResult, new customTypes.customTypes_api.Vector3D[0])));
 
         msg.setData(result_data);
         method_request.replyTo.send(msg);

@@ -5,9 +5,11 @@ import tbSimple.tbSimple_api.AbstractEmptyInterface;
 import tbSimple.tbSimple_api.IEmptyInterfaceEventListener;
 
 import tbSimple.tbSimple_android_client.EmptyInterfaceClient;
+import tbSimple.tbSimple_android_messenger.Conversions;
 import android.content.Context;
 
 import android.os.Bundle;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import android.util.Log;
 
@@ -66,6 +68,9 @@ public class EmptyInterfaceJniClient extends AbstractEmptyInterface implements I
         nativeIsReady(isReady);
     }
 
-    //Event listener
+    // Event listener — receives List from messenger client, converts to array for native
+
+
+    // Native declarations — array types for JNI compatibility
     private native void nativeIsReady(boolean isReady);
 }

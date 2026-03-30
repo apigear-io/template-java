@@ -17,6 +17,7 @@ import testbed1.testbed1_api.StructEnumWithArray;
 import testbed1.testbed1_api.Enum0;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractStructArrayInterface implements IStructArrayInterface {
     private Collection<IStructArrayInterfaceEventListener> listeners = ConcurrentHashMap.newKeySet();
@@ -30,70 +31,70 @@ import java.util.concurrent.ConcurrentHashMap;
       listeners.remove(listener);
     }
     @Override
-    public void firePropBoolChanged(StructBool[] newValue) {
+    public void firePropBoolChanged(List<StructBool> newValue) {
       for (IStructArrayInterfaceEventListener listener : listeners) {
         listener.onPropBoolChanged(newValue);
       }
     }
   
     @Override
-    public void firePropIntChanged(StructInt[] newValue) {
+    public void firePropIntChanged(List<StructInt> newValue) {
       for (IStructArrayInterfaceEventListener listener : listeners) {
         listener.onPropIntChanged(newValue);
       }
     }
   
     @Override
-    public void firePropFloatChanged(StructFloat[] newValue) {
+    public void firePropFloatChanged(List<StructFloat> newValue) {
       for (IStructArrayInterfaceEventListener listener : listeners) {
         listener.onPropFloatChanged(newValue);
       }
     }
   
     @Override
-    public void firePropStringChanged(StructString[] newValue) {
+    public void firePropStringChanged(List<StructString> newValue) {
       for (IStructArrayInterfaceEventListener listener : listeners) {
         listener.onPropStringChanged(newValue);
       }
     }
   
     @Override
-    public void firePropEnumChanged(Enum0[] newValue) {
+    public void firePropEnumChanged(List<Enum0> newValue) {
       for (IStructArrayInterfaceEventListener listener : listeners) {
         listener.onPropEnumChanged(newValue);
       }
     }
   
     @Override
-    public void fireSigBool(StructBool[] paramBool) {
+    public void fireSigBool(List<StructBool> paramBool) {
       for (IStructArrayInterfaceEventListener listener : listeners) {
         listener.onSigBool(paramBool);
       }
     }
   
     @Override
-    public void fireSigInt(StructInt[] paramInt) {
+    public void fireSigInt(List<StructInt> paramInt) {
       for (IStructArrayInterfaceEventListener listener : listeners) {
         listener.onSigInt(paramInt);
       }
     }
   
     @Override
-    public void fireSigFloat(StructFloat[] paramFloat) {
+    public void fireSigFloat(List<StructFloat> paramFloat) {
       for (IStructArrayInterfaceEventListener listener : listeners) {
         listener.onSigFloat(paramFloat);
       }
     }
   
     @Override
-    public void fireSigString(StructString[] paramString) {
+    public void fireSigString(List<StructString> paramString) {
       for (IStructArrayInterfaceEventListener listener : listeners) {
         listener.onSigString(paramString);
       }
     }
   
     @Override
-    public void fireSigEnum(Enum0[] paramEnum) {
+    public void fireSigEnum(List<Enum0> paramEnum) {
       for (IStructArrayInterfaceEventListener listener : listeners) {
         listener.onSigEnum(paramEnum);
       }

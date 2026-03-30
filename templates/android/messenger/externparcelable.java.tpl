@@ -63,7 +63,7 @@ import java.util.Arrays;
     }
 
     public static {{$externInfo.Name}}[] unwrapArray({{Camel .Extern.Name}}Parcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new {{$externInfo.Name}}[0];
         return Arrays.stream(parcelables)
            .map({{Camel .Extern.Name}}Parcelable::get{{Camel .Extern.Name}})
            .toArray({{$externInfo.Name}}[]::new);

@@ -1,21 +1,18 @@
 package tbSimple.tbSimplejniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import tbSimple.tbSimple_api.INoOperationsInterface;
 import tbSimple.tbSimple_api.AbstractNoOperationsInterface;
 import tbSimple.tbSimple_api.INoOperationsInterfaceEventListener;
+import tbSimple.tbSimple_android_messenger.Conversions;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 
 public class NoOperationsInterfaceJniService extends AbstractNoOperationsInterface {
@@ -59,7 +56,7 @@ public class NoOperationsInterfaceJniService extends AbstractNoOperationsInterfa
     }
 
   
-    // methods    
+    // methods
 
     @Override
     public boolean _isReady() {
@@ -81,21 +78,20 @@ public class NoOperationsInterfaceJniService extends AbstractNoOperationsInterfa
         }
     }
 
-    // Called on Native Impl Service
+    // Native methods — use array types for JNI compatibility
     private native void nativeSetPropBool(boolean propBool);
     private native boolean nativeGetPropBool();
   
     private native void nativeSetPropInt(int propInt);
     private native int nativeGetPropInt();
   
-    // methods
 
     // Called by Native Impl Service
     public void nativeServiceReady(boolean value) {
         isServiceReady = value;
     }
 
-    //In theory event listener interface
+    // Callbacks from native — receive arrays, convert to List and fire events
     public void onPropBoolChanged(boolean newValue)
     {
          Log.i(TAG, "onPropBoolChanged, will pass notification to all listeners");

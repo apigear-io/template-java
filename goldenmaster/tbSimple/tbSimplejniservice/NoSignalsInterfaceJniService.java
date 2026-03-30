@@ -1,21 +1,18 @@
 package tbSimple.tbSimplejniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import tbSimple.tbSimple_api.INoSignalsInterface;
 import tbSimple.tbSimple_api.AbstractNoSignalsInterface;
 import tbSimple.tbSimple_api.INoSignalsInterfaceEventListener;
+import tbSimple.tbSimple_android_messenger.Conversions;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 
 public class NoSignalsInterfaceJniService extends AbstractNoSignalsInterface {
@@ -64,7 +61,7 @@ public class NoSignalsInterfaceJniService extends AbstractNoSignalsInterface {
     @Override
     public void funcVoid() {
         Log.i(TAG, "request method funcVoid called, will call native");
-         nativeFuncVoid();
+        nativeFuncVoid();
     }
 
     @Override
@@ -97,7 +94,7 @@ public class NoSignalsInterfaceJniService extends AbstractNoSignalsInterface {
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -119,14 +116,13 @@ public class NoSignalsInterfaceJniService extends AbstractNoSignalsInterface {
         }
     }
 
-    // Called on Native Impl Service
+    // Native methods — use array types for JNI compatibility
     private native void nativeSetPropBool(boolean propBool);
     private native boolean nativeGetPropBool();
   
     private native void nativeSetPropInt(int propInt);
     private native int nativeGetPropInt();
   
-    // methods
     private native void nativeFuncVoid();
     private native boolean nativeFuncBool(boolean paramBool);
 
@@ -135,7 +131,7 @@ public class NoSignalsInterfaceJniService extends AbstractNoSignalsInterface {
         isServiceReady = value;
     }
 
-    //In theory event listener interface
+    // Callbacks from native — receive arrays, convert to List and fire events
     public void onPropBoolChanged(boolean newValue)
     {
          Log.i(TAG, "onPropBoolChanged, will pass notification to all listeners");

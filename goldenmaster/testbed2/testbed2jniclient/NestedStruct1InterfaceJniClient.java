@@ -6,11 +6,13 @@ import testbed2.testbed2_api.INestedStruct1InterfaceEventListener;
 import testbed2.testbed2_api.RemoteOperationException;
 
 import testbed2.testbed2_android_client.NestedStruct1InterfaceClient;
+import testbed2.testbed2_android_messenger.Conversions;
 import testbed2.testbed2_api.NestedStruct1;
 import testbed2.testbed2_android_messenger.NestedStruct1Parcelable;
 import android.content.Context;
 
 import android.os.Bundle;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import android.util.Log;
 
@@ -32,28 +34,32 @@ public class NestedStruct1InterfaceJniClient extends AbstractNestedStruct1Interf
     {
         return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
+    // Interface method — List types
     @Override
     public void setProp1(NestedStruct1 prop1)
     {
-        Log.i(TAG, "got request from ue, setProp1" + (prop1));
+        Log.i(TAG, "got request setProp1" + (prop1));
         mMessengerClient.setProp1(prop1);
     }
     @Override
     public NestedStruct1 getProp1()
     {
-        Log.i(TAG, "got request from ue, getProp1");
+        Log.i(TAG, "got request getProp1");
         return mMessengerClient.getProp1();
     }
+
+
     
-     @Override
-     public void funcNoReturnValue(NestedStruct1 param1)
-     {
+    // Interface method — List types
+    @Override
+    public void funcNoReturnValue(NestedStruct1 param1)
+    {
         Log.v(TAG, "Blocking callfuncNoReturnValue - should not be used ");
          mMessengerClient.funcNoReturnValue(param1);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncNoReturnValueResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -83,15 +89,16 @@ public class NestedStruct1InterfaceJniClient extends AbstractNestedStruct1Interf
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcNoReturnValueAsync(param1);
     }
-     @Override
-     public NestedStruct1 funcNoParams()
-     {
+    // Interface method — List types
+    @Override
+    public NestedStruct1 funcNoParams()
+    {
         Log.v(TAG, "Blocking callfuncNoParams - should not be used ");
         return mMessengerClient.funcNoParams();
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncNoParamsResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -121,15 +128,16 @@ public class NestedStruct1InterfaceJniClient extends AbstractNestedStruct1Interf
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcNoParamsAsync();
     }
-     @Override
-     public NestedStruct1 func1(NestedStruct1 param1)
-     {
+    // Interface method — List types
+    @Override
+    public NestedStruct1 func1(NestedStruct1 param1)
+    {
         Log.v(TAG, "Blocking callfunc1 - should not be used ");
         return mMessengerClient.func1(param1);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFunc1Result with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -196,7 +204,7 @@ public class NestedStruct1InterfaceJniClient extends AbstractNestedStruct1Interf
         nativeIsReady(isReady);
     }
 
-    //Event listener
+    // Event listener — receives List from messenger client, converts to array for native
     @Override
     public void onProp1Changed(NestedStruct1 newValue)
     {
@@ -209,6 +217,9 @@ public class NestedStruct1InterfaceJniClient extends AbstractNestedStruct1Interf
         Log.i(TAG, "NOTIFICATION from messenger client Signal sig1 "+ " " + param1);
         nativeOnSig1(param1);
     }
+
+
+    // Native declarations — array types for JNI compatibility
      private native void nativeOnProp1Changed(NestedStruct1 prop1);
     private native void nativeOnSig1(NestedStruct1 param1);
     private native void nativeOnFuncNoReturnValueResult(String callId);

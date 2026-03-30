@@ -1,11 +1,11 @@
 package tbEnum.tbEnumjniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import tbEnum.tbEnum_api.IEnumInterface;
 import tbEnum.tbEnum_api.AbstractEnumInterface;
 import tbEnum.tbEnum_api.IEnumInterfaceEventListener;
+import tbEnum.tbEnum_android_messenger.Conversions;
 import tbEnum.tbEnum_api.Enum0;
 import tbEnum.tbEnum_android_messenger.Enum0Parcelable;
 import tbEnum.tbEnum_api.Enum1;
@@ -15,15 +15,12 @@ import tbEnum.tbEnum_android_messenger.Enum2Parcelable;
 import tbEnum.tbEnum_api.Enum3;
 import tbEnum.tbEnum_android_messenger.Enum3Parcelable;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 
 public class EnumInterfaceJniService extends AbstractEnumInterface {
@@ -173,7 +170,7 @@ public class EnumInterfaceJniService extends AbstractEnumInterface {
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -195,7 +192,7 @@ public class EnumInterfaceJniService extends AbstractEnumInterface {
         }
     }
 
-    // Called on Native Impl Service
+    // Native methods — use array types for JNI compatibility
     private native void nativeSetProp0(Enum0 prop0);
     private native Enum0 nativeGetProp0();
   
@@ -208,7 +205,6 @@ public class EnumInterfaceJniService extends AbstractEnumInterface {
     private native void nativeSetProp3(Enum3 prop3);
     private native Enum3 nativeGetProp3();
   
-    // methods
     private native Enum0 nativeFunc0(Enum0 param0);
     private native Enum1 nativeFunc1(Enum1 param1);
     private native Enum2 nativeFunc2(Enum2 param2);
@@ -219,7 +215,7 @@ public class EnumInterfaceJniService extends AbstractEnumInterface {
         isServiceReady = value;
     }
 
-    //In theory event listener interface
+    // Callbacks from native — receive arrays, convert to List and fire events
     public void onProp0Changed(Enum0 newValue)
     {
          Log.i(TAG, "onProp0Changed, will pass notification to all listeners");

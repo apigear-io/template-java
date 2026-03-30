@@ -4,6 +4,7 @@ import counter.counter_api.ICounterEventListener;
 import counter.counter_api.ICounter;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractCounter implements ICounter {
     private Collection<ICounterEventListener> listeners = ConcurrentHashMap.newKeySet();
@@ -31,21 +32,21 @@ import java.util.concurrent.ConcurrentHashMap;
     }
   
     @Override
-    public void fireVectorArrayChanged(customTypes.customTypes_api.Vector3D[] newValue) {
+    public void fireVectorArrayChanged(List<customTypes.customTypes_api.Vector3D> newValue) {
       for (ICounterEventListener listener : listeners) {
         listener.onVectorArrayChanged(newValue);
       }
     }
   
     @Override
-    public void fireExternVectorArrayChanged(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] newValue) {
+    public void fireExternVectorArrayChanged(List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> newValue) {
       for (ICounterEventListener listener : listeners) {
         listener.onExternVectorArrayChanged(newValue);
       }
     }
   
     @Override
-    public void fireValueChanged(customTypes.customTypes_api.Vector3D vector, org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector, customTypes.customTypes_api.Vector3D[] vectorArray, org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] extern_vectorArray) {
+    public void fireValueChanged(customTypes.customTypes_api.Vector3D vector, org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector, List<customTypes.customTypes_api.Vector3D> vectorArray, List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> extern_vectorArray) {
       for (ICounterEventListener listener : listeners) {
         listener.onValueChanged(vector, extern_vector, vectorArray, extern_vectorArray);
       }

@@ -4,7 +4,9 @@ import testbed1.testbed1_api.StructEnum;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import testbed1.testbed1_api.Enum0;
 
   public  class StructEnumParcelable implements Parcelable {
@@ -63,7 +65,7 @@ import testbed1.testbed1_api.Enum0;
     }
 
     public static StructEnum[] unwrapArray(StructEnumParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new StructEnum[0];
         return Arrays.stream(parcelables)
            .map(StructEnumParcelable::getStructEnum)
            .toArray(StructEnum[]::new);

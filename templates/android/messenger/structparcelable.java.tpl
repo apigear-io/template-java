@@ -4,7 +4,9 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Struct.Name}};
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 {{- template "importApiForStructTypes" .}}
 
@@ -32,10 +34,9 @@ import java.util.Arrays;
 {{- range .Struct.Fields }}
 {{- if .IsArray}}
 {{- if .IsPrimitive }}
-        data.{{camel .Name}} = in.create{{ ( Camel  (javaElementType "" .) ) }}Array();
+        data.{{camel .Name}} = Conversions.toList(in.create{{ ( Camel  (javaElementType "" .) ) }}Array());
 {{- else }}
-        {{javaElementType "" . }}Parcelable[] l_parcelable{{camel .Name}} = in.createTypedArray({{javaElementType "" . }}Parcelable.CREATOR);
-        data.{{camel .Name}} = {{javaElementType "" . }}Parcelable.unwrapArray(l_parcelable{{camel .Name}});
+        data.{{camel .Name}} = Conversions.toList({{javaElementType "" . }}Parcelable.unwrapArray(in.createTypedArray({{javaElementType "" . }}Parcelable.CREATOR)));
 {{- end }}
 {{- else }}
 {{- if .IsPrimitive }}
@@ -71,9 +72,9 @@ import java.util.Arrays;
     {{- range .Struct.Fields }}
 {{- if .IsArray}}
 {{- if .IsPrimitive }}
-        dest.write{{ ( Camel  (javaElementType "" .) ) }}Array(data.{{camel .Name}});
+        dest.write{{ ( Camel  (javaElementType "" .) ) }}Array(Conversions.toArray(data.{{camel .Name}}, new {{javaElementType "" .}}[0]));
 {{- else }}
-        dest.writeTypedArray({{javaElementType "" . }}Parcelable.wrapArray(data.{{camel .Name}}), flags);
+        dest.writeTypedArray({{javaElementType "" . }}Parcelable.wrapArray(Conversions.toArray(data.{{camel .Name}}, new {{javaElementType "" .}}[0])), flags);
 {{- end }}
 {{- else }}
 {{- if .IsPrimitive }}
@@ -95,7 +96,7 @@ import java.util.Arrays;
     }
 
     public static {{Camel .Struct.Name}}[] unwrapArray({{Camel .Struct.Name}}Parcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new {{Camel .Struct.Name}}[0];
         return Arrays.stream(parcelables)
            .map({{Camel .Struct.Name}}Parcelable::get{{Camel .Struct.Name}})
            .toArray({{Camel .Struct.Name}}[]::new);

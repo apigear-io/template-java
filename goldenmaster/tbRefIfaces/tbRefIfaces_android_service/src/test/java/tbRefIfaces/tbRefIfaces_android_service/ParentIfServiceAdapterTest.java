@@ -75,8 +75,11 @@ import org.robolectric.annotation.Config;
 import org.robolectric.RuntimeEnvironment;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import tbRefIfaces.tbRefIfaces_android_messenger.Conversions;
 
 interface IParentIfMessageGetter
 {
@@ -144,16 +147,14 @@ public class ParentIfServiceAdapterTest
         ISimpleLocalIf initlocalIf = new SimpleLocalIfService();
         //TODO fill fields
         when(backendServiceMock.getLocalIf()).thenReturn(initlocalIf);
-        ISimpleLocalIf init_elementlocalIfList = new SimpleLocalIfService();
-        // todo fill if is struct
-        ISimpleLocalIf[] initlocalIfList = new ISimpleLocalIf[]{ init_elementlocalIfList } ;
+        List<ISimpleLocalIf> initlocalIfList = new ArrayList<>();
+        initlocalIfList.add(new SimpleLocalIfService());
         when(backendServiceMock.getLocalIfList()).thenReturn(initlocalIfList);
         tbIfaceimport.tbIfaceimport_api.IEmptyIf initimportedIf = new tbIfaceimport.tbIfaceimport_impl.EmptyIfService();
         //TODO fill fields
         when(backendServiceMock.getImportedIf()).thenReturn(initimportedIf);
-        tbIfaceimport.tbIfaceimport_api.IEmptyIf init_elementimportedIfList = new tbIfaceimport.tbIfaceimport_impl.EmptyIfService();
-        // todo fill if is struct
-        tbIfaceimport.tbIfaceimport_api.IEmptyIf[] initimportedIfList = new tbIfaceimport.tbIfaceimport_api.IEmptyIf[]{ init_elementimportedIfList } ;
+        List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> initimportedIfList = new ArrayList<>();
+        initimportedIfList.add(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService());
         when(backendServiceMock.getImportedIfList()).thenReturn(initimportedIfList);
 
 
@@ -180,11 +181,11 @@ public class ParentIfServiceAdapterTest
         
 			ISimpleLocalIf receivedlocalIf = data.getParcelable("localIf", SimpleLocalIfParcelable.class).getSimpleLocalIf();
         
-            ISimpleLocalIf[] receivedlocalIfList =  SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("localIfList", SimpleLocalIfParcelable.class));
+            List<ISimpleLocalIf> receivedlocalIfList = Conversions.toList(SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("localIfList", SimpleLocalIfParcelable.class)));
         
 			tbIfaceimport.tbIfaceimport_api.IEmptyIf receivedimportedIf = data.getParcelable("importedIf", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class).getEmptyIf();
         
-            tbIfaceimport.tbIfaceimport_api.IEmptyIf[] receivedimportedIfList =  tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class));
+            List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> receivedimportedIfList = Conversions.toList(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class)));
         
     // all structs, even from other modules, are known at compile time (see gradle files) and share the same PathClassLoader,
     // therefore, any class loader provide access to the same PathClassLoader.
@@ -269,22 +270,22 @@ public class ParentIfServiceAdapterTest
         // Create and send message
         Message msg = Message.obtain(null, ParentIfMessageType.PROP_LocalIfList.getValue());
         Bundle data = new Bundle();
-        ISimpleLocalIf[] testlocalIfList = new ISimpleLocalIf[1];
-        testlocalIfList[0] = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService());
-		data.putParcelableArray("localIfList", SimpleLocalIfParcelable.wrapArray(testlocalIfList));
+        List<ISimpleLocalIf> testlocalIfList = new java.util.ArrayList<>();
+        testlocalIfList.add(TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService()));
+		data.putParcelableArray("localIfList", SimpleLocalIfParcelable.wrapArray(Conversions.toArray(testlocalIfList, new ISimpleLocalIf[0])));
 
         msg.setData(data);
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        inOrderBackendService.verify(backendServiceMock,times(1)).setLocalIfList( any(ISimpleLocalIf[].class));
+        inOrderBackendService.verify(backendServiceMock,times(1)).setLocalIfList( any(List<ISimpleLocalIf>.class));
 	    
     }
 
     @Test
      public void whenNotifiedlocalIfList()
     {
-        ISimpleLocalIf[] testlocalIfList = new ISimpleLocalIf[1];
-        testlocalIfList[0] = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService());
+        List<ISimpleLocalIf> testlocalIfList = new java.util.ArrayList<>();
+        testlocalIfList.add(TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService()));
 
         testedAdapterAsEventListener.onLocalIfListChanged(testlocalIfList);
         Robolectric.flushForegroundThreadScheduler();
@@ -296,7 +297,7 @@ public class ParentIfServiceAdapterTest
         Bundle data = response.getData();
 
         
-            ISimpleLocalIf[] receivedlocalIfList =  SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("localIfList", SimpleLocalIfParcelable.class));
+            List<ISimpleLocalIf> receivedlocalIfList = Conversions.toList(SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("localIfList", SimpleLocalIfParcelable.class)));
 
         assertEquals(receivedlocalIfList, testlocalIfList);
     }
@@ -339,22 +340,22 @@ public class ParentIfServiceAdapterTest
         // Create and send message
         Message msg = Message.obtain(null, ParentIfMessageType.PROP_ImportedIfList.getValue());
         Bundle data = new Bundle();
-        tbIfaceimport.tbIfaceimport_api.IEmptyIf[] testimportedIfList = new tbIfaceimport.tbIfaceimport_api.IEmptyIf[1];
-        testimportedIfList[0] = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService());
-		data.putParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(testimportedIfList));
+        List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> testimportedIfList = new java.util.ArrayList<>();
+        testimportedIfList.add(tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService()));
+		data.putParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(Conversions.toArray(testimportedIfList, new tbIfaceimport.tbIfaceimport_api.IEmptyIf[0])));
 
         msg.setData(data);
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        inOrderBackendService.verify(backendServiceMock,times(1)).setImportedIfList( any(tbIfaceimport.tbIfaceimport_api.IEmptyIf[].class));
+        inOrderBackendService.verify(backendServiceMock,times(1)).setImportedIfList( any(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf>.class));
 	    
     }
 
     @Test
      public void whenNotifiedimportedIfList()
     {
-        tbIfaceimport.tbIfaceimport_api.IEmptyIf[] testimportedIfList = new tbIfaceimport.tbIfaceimport_api.IEmptyIf[1];
-        testimportedIfList[0] = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService());
+        List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> testimportedIfList = new java.util.ArrayList<>();
+        testimportedIfList.add(tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService()));
 
         testedAdapterAsEventListener.onImportedIfListChanged(testimportedIfList);
         Robolectric.flushForegroundThreadScheduler();
@@ -366,7 +367,7 @@ public class ParentIfServiceAdapterTest
         Bundle data = response.getData();
 
         
-            tbIfaceimport.tbIfaceimport_api.IEmptyIf[] receivedimportedIfList =  tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class));
+            List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> receivedimportedIfList = Conversions.toList(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class)));
 
         assertEquals(receivedimportedIfList, testimportedIfList);
     }
@@ -392,8 +393,8 @@ public class ParentIfServiceAdapterTest
     @Test
     public void whenNotifiedlocalIfSignalList()
     {
-        ISimpleLocalIf[] testparam = new ISimpleLocalIf[1];
-        testparam[0] = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService());
+        List<ISimpleLocalIf> testparam = new java.util.ArrayList<>();
+        testparam.add(TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService()));
 
         testedAdapterAsEventListener.onLocalIfSignalList(testparam);
         Robolectric.flushForegroundThreadScheduler();
@@ -406,7 +407,7 @@ public class ParentIfServiceAdapterTest
         
         data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
         
-            ISimpleLocalIf[] receivedparam =  SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("param", SimpleLocalIfParcelable.class));
+            List<ISimpleLocalIf> receivedparam = Conversions.toList(SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("param", SimpleLocalIfParcelable.class)));
         assertEquals(receivedparam, testparam);
 }
     @Test
@@ -431,8 +432,8 @@ public class ParentIfServiceAdapterTest
     @Test
     public void whenNotifiedimportedIfSignalList()
     {
-        tbIfaceimport.tbIfaceimport_api.IEmptyIf[] testparam = new tbIfaceimport.tbIfaceimport_api.IEmptyIf[1];
-        testparam[0] = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService());
+        List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> testparam = new java.util.ArrayList<>();
+        testparam.add(tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService()));
 
         testedAdapterAsEventListener.onImportedIfSignalList(testparam);
         Robolectric.flushForegroundThreadScheduler();
@@ -445,7 +446,7 @@ public class ParentIfServiceAdapterTest
         
         data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
         
-            tbIfaceimport.tbIfaceimport_api.IEmptyIf[] receivedparam =  tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class));
+            List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> receivedparam = Conversions.toList(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class)));
         assertEquals(receivedparam, testparam);
 }
 
@@ -491,19 +492,19 @@ public class ParentIfServiceAdapterTest
 
         int callId = 99;
         data.putInt("callId", callId);
-        ISimpleLocalIf[] testparam = new ISimpleLocalIf[1];
-        testparam[0] = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService());
-		data.putParcelableArray("param", SimpleLocalIfParcelable.wrapArray(testparam));
-        ISimpleLocalIf[] returnedValue = new ISimpleLocalIf[1];
-        returnedValue[0] = TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService());
+        List<ISimpleLocalIf> testparam = new java.util.ArrayList<>();
+        testparam.add(TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService()));
+		data.putParcelableArray("param", SimpleLocalIfParcelable.wrapArray(Conversions.toArray(testparam, new ISimpleLocalIf[0])));
+        List<ISimpleLocalIf> returnedValue = new ArrayList<>();
+        returnedValue.add(TbRefIfacesTestHelper.makeTestSimpleLocalIf(new SimpleLocalIfService()));
 
 
-        when(backendServiceMock.localIfMethodList( any(ISimpleLocalIf[].class))).thenReturn(returnedValue);
+        when(backendServiceMock.localIfMethodList( any(List<ISimpleLocalIf>.class))).thenReturn(returnedValue);
 
         msg.setData(data);
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        inOrderBackendService.verify(backendServiceMock,times(1)).localIfMethodList( any(ISimpleLocalIf[].class));
+        inOrderBackendService.verify(backendServiceMock,times(1)).localIfMethodList( any(List<ISimpleLocalIf>.class));
 
         //Now verify it was sent back to caller
         Robolectric.flushForegroundThreadScheduler();
@@ -513,7 +514,7 @@ public class ParentIfServiceAdapterTest
         assertEquals(ParentIfMessageType.RPC_LocalIfMethodListResp.getValue(), response.what);
         Bundle resp_data = response.getData();
         resp_data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
-        ISimpleLocalIf[] receivedByClient =  SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])resp_data.getParcelableArray("result", SimpleLocalIfParcelable.class));
+        List<ISimpleLocalIf> receivedByClient = Conversions.toList(SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])resp_data.getParcelableArray("result", SimpleLocalIfParcelable.class)));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));
@@ -561,19 +562,19 @@ public class ParentIfServiceAdapterTest
 
         int callId = 99;
         data.putInt("callId", callId);
-        tbIfaceimport.tbIfaceimport_api.IEmptyIf[] testparam = new tbIfaceimport.tbIfaceimport_api.IEmptyIf[1];
-        testparam[0] = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService());
-		data.putParcelableArray("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(testparam));
-        tbIfaceimport.tbIfaceimport_api.IEmptyIf[] returnedValue = new tbIfaceimport.tbIfaceimport_api.IEmptyIf[1];
-        returnedValue[0] = tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService());
+        List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> testparam = new java.util.ArrayList<>();
+        testparam.add(tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService()));
+		data.putParcelableArray("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(Conversions.toArray(testparam, new tbIfaceimport.tbIfaceimport_api.IEmptyIf[0])));
+        List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> returnedValue = new ArrayList<>();
+        returnedValue.add(tbIfaceimport.tbIfaceimport_api.TbIfaceimportTestHelper.makeTestEmptyIf(new tbIfaceimport.tbIfaceimport_impl.EmptyIfService()));
 
 
-        when(backendServiceMock.importedIfMethodList( any(tbIfaceimport.tbIfaceimport_api.IEmptyIf[].class))).thenReturn(returnedValue);
+        when(backendServiceMock.importedIfMethodList( any(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf>.class))).thenReturn(returnedValue);
 
         msg.setData(data);
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        inOrderBackendService.verify(backendServiceMock,times(1)).importedIfMethodList( any(tbIfaceimport.tbIfaceimport_api.IEmptyIf[].class));
+        inOrderBackendService.verify(backendServiceMock,times(1)).importedIfMethodList( any(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf>.class));
 
         //Now verify it was sent back to caller
         Robolectric.flushForegroundThreadScheduler();
@@ -583,7 +584,7 @@ public class ParentIfServiceAdapterTest
         assertEquals(ParentIfMessageType.RPC_ImportedIfMethodListResp.getValue(), response.what);
         Bundle resp_data = response.getData();
         resp_data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
-        tbIfaceimport.tbIfaceimport_api.IEmptyIf[] receivedByClient =  tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])resp_data.getParcelableArray("result", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class));
+        List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> receivedByClient = Conversions.toList(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])resp_data.getParcelableArray("result", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class)));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));

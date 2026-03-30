@@ -83,8 +83,11 @@ import org.robolectric.annotation.Config;
 import org.robolectric.RuntimeEnvironment;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import {{camel .Module.Name}}.{{camel .Module.Name}}_android_messenger.Conversions;
 
 interface I{{Camel .Interface.Name }}MessageGetter
 {
@@ -94,15 +97,14 @@ interface I{{Camel .Interface.Name }}MessageGetter
 
 {{- define "prepareInitValue"}}
         {{- if .IsArray }}
-        {{javaElementType "" .}} init_element{{ javaVar .}} = {{javaTestValue "" . }};
-        // todo fill if is struct
-        {{javaReturn "" . }} init{{ javaVar .}} = new {{javaReturn "" . }}{ init_element{{ javaVar .}} } ;
+        {{javaListType "" .}} init{{ javaVar .}} = new ArrayList<>();
+        init{{ javaVar .}}.add({{javaTestValue "" . }});
 		{{- else if (.IsPrimitive) }}
-		{{javaReturn "" . }} init{{ javaVar .}} = {{javaTestValue "" . }};
+		{{javaListReturn "" . }} init{{ javaVar .}} = {{javaTestValue "" . }};
         {{- else if eq .KindType "enum"}}
-        {{javaReturn "" . }} init{{ javaVar .}} = {{javaTestValue "" . }};
+        {{javaListReturn "" . }} init{{ javaVar .}} = {{javaTestValue "" . }};
 		{{- else }}
-        {{javaReturn "" . }} init{{ javaVar .}} = {{javaTestValue "" . }};
+        {{javaListReturn "" . }} init{{ javaVar .}} = {{javaTestValue "" . }};
         //TODO fill fields
 		{{- end }}
 {{- end }}
@@ -263,7 +265,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         msg.setData(data);
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        inOrderBackendService.verify(backendServiceMock,times(1)).set{{Camel .Name}}({{- if or (.IsPrimitive) (eq .KindType "enum") }}test{{javaVar .}}{{- else }} any({{javaReturn "" . }}.class) {{- end -}});
+        inOrderBackendService.verify(backendServiceMock,times(1)).set{{Camel .Name}}({{- if or (.IsPrimitive) (eq .KindType "enum") }}test{{javaVar .}}{{- else }} any({{javaListReturn "" . }}.class) {{- end -}});
 	    
     }
     {{- end }}
@@ -336,28 +338,25 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
 
         {{- if not .Return.IsVoid }}
         {{- if .Return.IsArray }}
-            {{- if or  (.Return.IsPrimitive) (eq .Return.KindType "enum")}}
-        {{javaType "" .Return }} returnedValue = new {{javaElementType "" .Return }}[1];
-        returnedValue[0] = {{javaTestValue "" .Return }};
+        {{javaListReturn "" .Return}} returnedValue = new ArrayList<>();
+            {{- if or (.Return.IsPrimitive) (eq .Return.KindType "enum") }}
+        returnedValue.add({{javaTestValue "" .Return }});
+            {{- else if (eq .Return.KindType "extern") }}
+        returnedValue.add({{javaTestValue "" .Return}});
             {{- else }}
-        {{javaElementType "" .Return }}[] returnedValue = new {{javaElementType "" .Return }}[1];
-                {{- if (eq .Return.KindType "extern") }}
-		returnedValue[0] = {{javaTestValue "" .Return}};
-                {{- else }}
-        returnedValue[0] = {{template "getMakeTestHelper" .Return }}({{-  if (eq .Return.KindType "interface")}}{{javaTestValue "" .Return}}{{end}});
-                {{- end }}
+        returnedValue.add({{template "getMakeTestHelper" .Return }}({{-  if (eq .Return.KindType "interface")}}{{javaTestValue "" .Return}}{{end}}));
             {{- end}}
 		{{- else if or  ( .Return.IsPrimitive) (eq .Return.KindType "enum") }}
-        {{javaReturn "" .Return }} returnedValue = {{javaTestValue "" .Return }};
+        {{javaListReturn "" .Return }} returnedValue = {{javaTestValue "" .Return }};
         {{- else if (eq .Return.KindType "extern") }}
-		{{javaReturn "" .Return }} returnedValue = {{javaTestValue "" .Return}};
+		{{javaListReturn "" .Return }} returnedValue = {{javaTestValue "" .Return}};
         {{- else }}
-        {{javaReturn "" .Return }} returnedValue = {{template "getMakeTestHelper" .Return }}({{-  if (eq .Return.KindType "interface")}}{{javaDefault "" .Return}}{{end}});
+        {{javaListReturn "" .Return }} returnedValue = {{template "getMakeTestHelper" .Return }}({{-  if (eq .Return.KindType "interface")}}{{javaDefault "" .Return}}{{end}});
 		{{- end }}
 
 
         when(backendServiceMock.{{camel .Name}}({{- range $idx, $p :=.Params }}{{- if $idx}}, {{ end -}}
-        {{- if or (.IsPrimitive) (eq .KindType "enum") }}test{{javaVar $p}}{{- else }} any({{javaReturn "" . }}.class) {{- end -}}{{- end -}}
+        {{- if or (.IsPrimitive) (eq .KindType "enum") }}test{{javaVar $p}}{{- else }} any({{javaListReturn "" . }}.class) {{- end -}}{{- end -}}
         )).thenReturn(returnedValue);
         {{- end}}
 
@@ -365,7 +364,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).{{camel .Name}}({{- range $idx, $p :=.Params }}{{- if $idx}}, {{ end -}}
-        {{- if or (.IsPrimitive) (eq .KindType "enum") }}test{{javaVar $p}}{{- else }} any({{javaReturn "" . }}.class) {{- end -}}{{- end -}}
+        {{- if or (.IsPrimitive) (eq .KindType "enum") }}test{{javaVar $p}}{{- else }} any({{javaListReturn "" . }}.class) {{- end -}}{{- end -}}
         );
 
         //Now verify it was sent back to caller
@@ -377,14 +376,16 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         Bundle resp_data = response.getData();
 
     {{- if not .Return.IsVoid }}
-	{{- if .Return.IsPrimitive }}
-		{{javaReturn "" .Return }} receivedByClient = resp_data.get{{ ( Camel  (javaElementType "" .Return) ) }}{{if .Return.IsArray}}Array{{end}}("result"{{if not .Return.IsArray}}, {{javaDefault "" .Return}}{{end}});
+	{{- if and .Return.IsPrimitive (not .Return.IsArray) }}
+		{{javaListReturn "" .Return }} receivedByClient = resp_data.get{{ ( Camel  (javaElementType "" .Return) ) }}("result", {{javaDefault "" .Return}});
+	{{- else if and .Return.IsPrimitive .Return.IsArray }}
+		{{javaListReturn "" .Return}} receivedByClient = Conversions.toList(resp_data.get{{ ( Camel  (javaElementType "" .Return) ) }}Array("result"));
 	{{- else if .Return.IsArray }}
         resp_data.setClassLoader({{template "getParcelable" .Return }}.class.getClassLoader());
-        {{javaReturn "" .Return }} receivedByClient =  {{template "getParcelable" .Return }}.unwrapArray(({{template "getParcelable" .Return }}[])resp_data.getParcelableArray("result", {{template "getParcelable" .Return }}.class));
+        {{javaListReturn "" .Return }} receivedByClient = Conversions.toList({{template "getParcelable" .Return }}.unwrapArray(({{template "getParcelable" .Return }}[])resp_data.getParcelableArray("result", {{template "getParcelable" .Return }}.class)));
     {{- else }}
 		resp_data.setClassLoader({{template "getParcelable" .Return }}.class.getClassLoader());
-		{{javaReturn "" .Return }} receivedByClient = resp_data.getParcelable("result", {{template "getParcelable" .Return }}.class).get{{Camel .Return.Type }}();
+		{{javaListReturn "" .Return }} receivedByClient = resp_data.getParcelable("result", {{template "getParcelable" .Return }}.class).get{{Camel .Return.Type }}();
 	{{- end }}
 
         assertEquals(receivedByClient, returnedValue

@@ -29,7 +29,10 @@ import testbed2.testbed2_api.INestedStruct3Interface;
 import testbed2.testbed2_api.AbstractNestedStruct3Interface;
 import testbed2.testbed2_api.RemoteOperationException;
 import testbed2.testbed2_android_messenger.NestedStruct3InterfaceMessageType;
+import testbed2.testbed2_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
@@ -37,7 +40,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
 
 public class NestedStruct3InterfaceClient extends AbstractNestedStruct3Interface implements ServiceConnection
@@ -248,7 +250,7 @@ public class NestedStruct3InterfaceClient extends AbstractNestedStruct3Interface
 				    onProp3(prop3);
 				    break;
 			    }
-			    // TODO params may be different structs from different modules, there should be a custom class loader 
+			    // TODO params may be different structs from different modules, there should be a custom class loader
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 			    case SIG_Sig1: {
@@ -469,7 +471,7 @@ public class NestedStruct3InterfaceClient extends AbstractNestedStruct3Interface
   
     // methods
 
-   
+
     @Override
     public NestedStruct1 func1(NestedStruct1 param1) {
         CompletableFuture<NestedStruct1> resFuture = func1Async(param1);
@@ -530,7 +532,7 @@ public class NestedStruct3InterfaceClient extends AbstractNestedStruct3Interface
         return future;
     }
 
-   
+
     @Override
     public NestedStruct1 func2(NestedStruct1 param1, NestedStruct2 param2) {
         CompletableFuture<NestedStruct1> resFuture = func2Async(param1, param2);
@@ -593,7 +595,7 @@ public class NestedStruct3InterfaceClient extends AbstractNestedStruct3Interface
         return future;
     }
 
-   
+
     @Override
     public NestedStruct1 func3(NestedStruct1 param1, NestedStruct2 param2, NestedStruct3 param3) {
         CompletableFuture<NestedStruct1> resFuture = func3Async(param1, param2, param3);
@@ -656,7 +658,7 @@ public class NestedStruct3InterfaceClient extends AbstractNestedStruct3Interface
 		mClientHandler.sendToService(msg);
 
         return future;
-    }    
+    }
 
     @Override
     public boolean _isReady() {

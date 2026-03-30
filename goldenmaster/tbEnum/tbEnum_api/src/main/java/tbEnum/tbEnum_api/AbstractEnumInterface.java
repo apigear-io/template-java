@@ -8,6 +8,7 @@ import tbEnum.tbEnum_api.Enum2;
 import tbEnum.tbEnum_api.Enum3;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractEnumInterface implements IEnumInterface {
     private Collection<IEnumInterfaceEventListener> listeners = ConcurrentHashMap.newKeySet();

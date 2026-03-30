@@ -23,7 +23,10 @@ import tbSimple.tbSimple_api.INoPropertiesInterface;
 import tbSimple.tbSimple_api.AbstractNoPropertiesInterface;
 import tbSimple.tbSimple_api.RemoteOperationException;
 import tbSimple.tbSimple_android_messenger.NoPropertiesInterfaceMessageType;
+import tbSimple.tbSimple_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
@@ -31,7 +34,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
 
 public class NoPropertiesInterfaceClient extends AbstractNoPropertiesInterface implements ServiceConnection
@@ -194,7 +196,7 @@ public class NoPropertiesInterfaceClient extends AbstractNoPropertiesInterface i
 
                     break;
                 }
-			    // TODO params may be different structs from different modules, there should be a custom class loader 
+			    // TODO params may be different structs from different modules, there should be a custom class loader
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 			    case SIG_SigVoid: {
@@ -257,7 +259,7 @@ public class NoPropertiesInterfaceClient extends AbstractNoPropertiesInterface i
     };
     // methods
 
-   
+
     @Override
     public void funcVoid() {
         CompletableFuture<Void> resFuture = funcVoidAsync();
@@ -315,7 +317,7 @@ public class NoPropertiesInterfaceClient extends AbstractNoPropertiesInterface i
         return future;
     }
 
-   
+
     @Override
     public boolean funcBool(boolean paramBool) {
         CompletableFuture<Boolean> resFuture = funcBoolAsync(paramBool);
@@ -374,7 +376,7 @@ public class NoPropertiesInterfaceClient extends AbstractNoPropertiesInterface i
 		mClientHandler.sendToService(msg);
 
         return future;
-    }    
+    }
 
     @Override
     public boolean _isReady() {

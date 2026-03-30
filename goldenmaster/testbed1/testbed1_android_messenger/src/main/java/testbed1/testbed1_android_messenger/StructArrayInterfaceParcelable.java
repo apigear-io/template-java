@@ -5,7 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import testbed1.testbed1_api.Enum0;
 import testbed1.testbed1_api.StructBool;
 import testbed1.testbed1_api.StructFloat;
@@ -56,11 +58,11 @@ import testbed1.testbed1_api.StructString;
         if (data == null) {
             return;
         }
-        dest.writeTypedArray(StructBoolParcelable.wrapArray(data.getPropBool()), flags);
-        dest.writeTypedArray(StructIntParcelable.wrapArray(data.getPropInt()), flags);
-        dest.writeTypedArray(StructFloatParcelable.wrapArray(data.getPropFloat()), flags);
-        dest.writeTypedArray(StructStringParcelable.wrapArray(data.getPropString()), flags);
-        dest.writeTypedArray(Enum0Parcelable.wrapArray(data.getPropEnum()), flags);
+        dest.writeTypedArray(StructBoolParcelable.wrapArray(Conversions.toArray(data.getPropBool(), new StructBool[0])), flags);
+        dest.writeTypedArray(StructIntParcelable.wrapArray(Conversions.toArray(data.getPropInt(), new StructInt[0])), flags);
+        dest.writeTypedArray(StructFloatParcelable.wrapArray(Conversions.toArray(data.getPropFloat(), new StructFloat[0])), flags);
+        dest.writeTypedArray(StructStringParcelable.wrapArray(Conversions.toArray(data.getPropString(), new StructString[0])), flags);
+        dest.writeTypedArray(Enum0Parcelable.wrapArray(Conversions.toArray(data.getPropEnum(), new Enum0[0])), flags);
 
 
     }
@@ -72,7 +74,7 @@ import testbed1.testbed1_api.StructString;
     }
 
     public static IStructArrayInterface[] unwrapArray(StructArrayInterfaceParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new IStructArrayInterface[0];
         return Arrays.stream(parcelables)
            .map(StructArrayInterfaceParcelable::getStructArrayInterface)
            .toArray(IStructArrayInterface[]::new);

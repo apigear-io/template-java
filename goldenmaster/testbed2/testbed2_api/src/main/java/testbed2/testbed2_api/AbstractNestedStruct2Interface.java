@@ -14,6 +14,7 @@ import testbed2.testbed2_api.Enum2;
 import testbed2.testbed2_api.Enum3;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractNestedStruct2Interface implements INestedStruct2Interface {
     private Collection<INestedStruct2InterfaceEventListener> listeners = ConcurrentHashMap.newKeySet();

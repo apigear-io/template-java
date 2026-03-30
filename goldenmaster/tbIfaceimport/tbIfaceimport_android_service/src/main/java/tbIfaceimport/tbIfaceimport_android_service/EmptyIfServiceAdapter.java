@@ -20,7 +20,10 @@ import tbIfaceimport.tbIfaceimport_android_service.IEmptyIfServiceProvider;
 import tbIfaceimport.tbIfaceimport_api.IEmptyIf;
 import tbIfaceimport.tbIfaceimport_api.AbstractEmptyIf;
 import tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfMessageType;
+import tbIfaceimport.tbIfaceimport_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 public class EmptyIfServiceAdapter extends Service

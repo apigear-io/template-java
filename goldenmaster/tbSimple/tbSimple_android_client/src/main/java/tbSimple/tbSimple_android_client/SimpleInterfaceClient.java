@@ -23,7 +23,10 @@ import tbSimple.tbSimple_api.ISimpleInterface;
 import tbSimple.tbSimple_api.AbstractSimpleInterface;
 import tbSimple.tbSimple_api.RemoteOperationException;
 import tbSimple.tbSimple_android_messenger.SimpleInterfaceMessageType;
+import tbSimple.tbSimple_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
@@ -31,7 +34,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
 
 public class SimpleInterfaceClient extends AbstractSimpleInterface implements ServiceConnection
@@ -306,7 +308,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 				    onPropString(propString);
 				    break;
 			    }
-			    // TODO params may be different structs from different modules, there should be a custom class loader 
+			    // TODO params may be different structs from different modules, there should be a custom class loader
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 			    case SIG_SigBool: {
@@ -849,7 +851,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
   
     // methods
 
-   
+
     @Override
     public void funcNoReturnValue(boolean paramBool) {
         CompletableFuture<Void> resFuture = funcNoReturnValueAsync(paramBool);
@@ -909,7 +911,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
         return future;
     }
 
-   
+
     @Override
     public boolean funcNoParams() {
         CompletableFuture<Boolean> resFuture = funcNoParamsAsync();
@@ -968,7 +970,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
         return future;
     }
 
-   
+
     @Override
     public boolean funcBool(boolean paramBool) {
         CompletableFuture<Boolean> resFuture = funcBoolAsync(paramBool);
@@ -1029,7 +1031,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
         return future;
     }
 
-   
+
     @Override
     public int funcInt(int paramInt) {
         CompletableFuture<Integer> resFuture = funcIntAsync(paramInt);
@@ -1090,7 +1092,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
         return future;
     }
 
-   
+
     @Override
     public int funcInt32(int paramInt32) {
         CompletableFuture<Integer> resFuture = funcInt32Async(paramInt32);
@@ -1151,7 +1153,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
         return future;
     }
 
-   
+
     @Override
     public long funcInt64(long paramInt64) {
         CompletableFuture<Long> resFuture = funcInt64Async(paramInt64);
@@ -1212,7 +1214,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
         return future;
     }
 
-   
+
     @Override
     public float funcFloat(float paramFloat) {
         CompletableFuture<Float> resFuture = funcFloatAsync(paramFloat);
@@ -1273,7 +1275,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
         return future;
     }
 
-   
+
     @Override
     public float funcFloat32(float paramFloat32) {
         CompletableFuture<Float> resFuture = funcFloat32Async(paramFloat32);
@@ -1334,7 +1336,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
         return future;
     }
 
-   
+
     @Override
     public double funcFloat64(double paramFloat) {
         CompletableFuture<Double> resFuture = funcFloat64Async(paramFloat);
@@ -1395,7 +1397,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
         return future;
     }
 
-   
+
     @Override
     public String funcString(String paramString) {
         CompletableFuture<String> resFuture = funcStringAsync(paramString);
@@ -1454,7 +1456,7 @@ public class SimpleInterfaceClient extends AbstractSimpleInterface implements Se
 		mClientHandler.sendToService(msg);
 
         return future;
-    }    
+    }
 
     @Override
     public boolean _isReady() {

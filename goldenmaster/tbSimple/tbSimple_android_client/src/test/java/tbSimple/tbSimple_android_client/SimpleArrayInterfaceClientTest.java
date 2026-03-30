@@ -42,8 +42,11 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import tbSimple.tbSimple_android_messenger.Conversions;
 import android.content.ComponentName;
 
 import static org.junit.Assert.assertEquals;
@@ -157,30 +160,30 @@ public class SimpleArrayInterfaceClientTest
 
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.INIT.getValue());
         Bundle data = new Bundle();
-        boolean[] testpropBool = new boolean[1];
-        testpropBool[0] = true;
-		data.putBooleanArray("propBool", testpropBool);
-        int[] testpropInt = new int[1];
-        testpropInt[0] = 1;
-		data.putIntArray("propInt", testpropInt);
-        int[] testpropInt32 = new int[1];
-        testpropInt32[0] = 1;
-		data.putIntArray("propInt32", testpropInt32);
-        long[] testpropInt64 = new long[1];
-        testpropInt64[0] = 1L;
-		data.putLongArray("propInt64", testpropInt64);
-        float[] testpropFloat = new float[1];
-        testpropFloat[0] = 1.0f;
-		data.putFloatArray("propFloat", testpropFloat);
-        float[] testpropFloat32 = new float[1];
-        testpropFloat32[0] = 1.0f;
-		data.putFloatArray("propFloat32", testpropFloat32);
-        double[] testpropFloat64 = new double[1];
-        testpropFloat64[0] = 1.0;
-		data.putDoubleArray("propFloat64", testpropFloat64);
-        String[] testpropString = new String[1];
-        testpropString[0] = new String("xyz");
-		data.putStringArray("propString", testpropString);
+        List<Boolean> testpropBool = new java.util.ArrayList<>();
+        testpropBool.add(true);
+		data.putBooleanArray("propBool", Conversions.toArray(testpropBool, new boolean[0]));
+        List<Integer> testpropInt = new java.util.ArrayList<>();
+        testpropInt.add(1);
+		data.putIntArray("propInt", Conversions.toArray(testpropInt, new int[0]));
+        List<Integer> testpropInt32 = new java.util.ArrayList<>();
+        testpropInt32.add(1);
+		data.putIntArray("propInt32", Conversions.toArray(testpropInt32, new int[0]));
+        List<Long> testpropInt64 = new java.util.ArrayList<>();
+        testpropInt64.add(1L);
+		data.putLongArray("propInt64", Conversions.toArray(testpropInt64, new long[0]));
+        List<Float> testpropFloat = new java.util.ArrayList<>();
+        testpropFloat.add(1.0f);
+		data.putFloatArray("propFloat", Conversions.toArray(testpropFloat, new float[0]));
+        List<Float> testpropFloat32 = new java.util.ArrayList<>();
+        testpropFloat32.add(1.0f);
+		data.putFloatArray("propFloat32", Conversions.toArray(testpropFloat32, new float[0]));
+        List<Double> testpropFloat64 = new java.util.ArrayList<>();
+        testpropFloat64.add(1.0);
+		data.putDoubleArray("propFloat64", Conversions.toArray(testpropFloat64, new double[0]));
+        List<String> testpropString = new java.util.ArrayList<>();
+        testpropString.add(new String("xyz"));
+		data.putStringArray("propString", Conversions.toArray(testpropString, new String[0]));
 		String testpropReadOnlyString = new String("xyz");
 		data.putString("propReadOnlyString", testpropReadOnlyString);
 
@@ -203,9 +206,9 @@ public class SimpleArrayInterfaceClientTest
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.SET_PropBool.getValue());
         Bundle data = new Bundle();
-        boolean[] testpropBool = new boolean[1];
-        testpropBool[0] = true;
-		data.putBooleanArray("propBool", testpropBool);
+        List<Boolean> testpropBool = new java.util.ArrayList<>();
+        testpropBool.add(true);
+		data.putBooleanArray("propBool", Conversions.toArray(testpropBool, new boolean[0]));
 
         msg.setData(data);
         mClientMessenger.send(msg);
@@ -216,8 +219,8 @@ public class SimpleArrayInterfaceClientTest
     @Test
      public void setPropertyRequestpropBool()
     {
-        boolean[] testpropBool = new boolean[1];
-        testpropBool[0] = true;
+        List<Boolean> testpropBool = new java.util.ArrayList<>();
+        testpropBool.add(true);
 
         testedClient.setPropBool(testpropBool);
         Robolectric.flushForegroundThreadScheduler();
@@ -227,7 +230,7 @@ public class SimpleArrayInterfaceClientTest
         assertEquals(SimpleArrayInterfaceMessageType.PROP_PropBool.getValue(), response.what);
         Bundle data = response.getData();
         
-			boolean[] receivedpropBool = data.getBooleanArray("propBool");
+			List<Boolean> receivedpropBool = Conversions.toList(data.getBooleanArray("propBool"));
         assertEquals(receivedpropBool, testpropBool);
     }
     
@@ -236,9 +239,9 @@ public class SimpleArrayInterfaceClientTest
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.SET_PropInt.getValue());
         Bundle data = new Bundle();
-        int[] testpropInt = new int[1];
-        testpropInt[0] = 1;
-		data.putIntArray("propInt", testpropInt);
+        List<Integer> testpropInt = new java.util.ArrayList<>();
+        testpropInt.add(1);
+		data.putIntArray("propInt", Conversions.toArray(testpropInt, new int[0]));
 
         msg.setData(data);
         mClientMessenger.send(msg);
@@ -249,8 +252,8 @@ public class SimpleArrayInterfaceClientTest
     @Test
      public void setPropertyRequestpropInt()
     {
-        int[] testpropInt = new int[1];
-        testpropInt[0] = 1;
+        List<Integer> testpropInt = new java.util.ArrayList<>();
+        testpropInt.add(1);
 
         testedClient.setPropInt(testpropInt);
         Robolectric.flushForegroundThreadScheduler();
@@ -260,7 +263,7 @@ public class SimpleArrayInterfaceClientTest
         assertEquals(SimpleArrayInterfaceMessageType.PROP_PropInt.getValue(), response.what);
         Bundle data = response.getData();
         
-			int[] receivedpropInt = data.getIntArray("propInt");
+			List<Integer> receivedpropInt = Conversions.toList(data.getIntArray("propInt"));
         assertEquals(receivedpropInt, testpropInt);
     }
     
@@ -269,9 +272,9 @@ public class SimpleArrayInterfaceClientTest
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.SET_PropInt32.getValue());
         Bundle data = new Bundle();
-        int[] testpropInt32 = new int[1];
-        testpropInt32[0] = 1;
-		data.putIntArray("propInt32", testpropInt32);
+        List<Integer> testpropInt32 = new java.util.ArrayList<>();
+        testpropInt32.add(1);
+		data.putIntArray("propInt32", Conversions.toArray(testpropInt32, new int[0]));
 
         msg.setData(data);
         mClientMessenger.send(msg);
@@ -282,8 +285,8 @@ public class SimpleArrayInterfaceClientTest
     @Test
      public void setPropertyRequestpropInt32()
     {
-        int[] testpropInt32 = new int[1];
-        testpropInt32[0] = 1;
+        List<Integer> testpropInt32 = new java.util.ArrayList<>();
+        testpropInt32.add(1);
 
         testedClient.setPropInt32(testpropInt32);
         Robolectric.flushForegroundThreadScheduler();
@@ -293,7 +296,7 @@ public class SimpleArrayInterfaceClientTest
         assertEquals(SimpleArrayInterfaceMessageType.PROP_PropInt32.getValue(), response.what);
         Bundle data = response.getData();
         
-			int[] receivedpropInt32 = data.getIntArray("propInt32");
+			List<Integer> receivedpropInt32 = Conversions.toList(data.getIntArray("propInt32"));
         assertEquals(receivedpropInt32, testpropInt32);
     }
     
@@ -302,9 +305,9 @@ public class SimpleArrayInterfaceClientTest
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.SET_PropInt64.getValue());
         Bundle data = new Bundle();
-        long[] testpropInt64 = new long[1];
-        testpropInt64[0] = 1L;
-		data.putLongArray("propInt64", testpropInt64);
+        List<Long> testpropInt64 = new java.util.ArrayList<>();
+        testpropInt64.add(1L);
+		data.putLongArray("propInt64", Conversions.toArray(testpropInt64, new long[0]));
 
         msg.setData(data);
         mClientMessenger.send(msg);
@@ -315,8 +318,8 @@ public class SimpleArrayInterfaceClientTest
     @Test
      public void setPropertyRequestpropInt64()
     {
-        long[] testpropInt64 = new long[1];
-        testpropInt64[0] = 1L;
+        List<Long> testpropInt64 = new java.util.ArrayList<>();
+        testpropInt64.add(1L);
 
         testedClient.setPropInt64(testpropInt64);
         Robolectric.flushForegroundThreadScheduler();
@@ -326,7 +329,7 @@ public class SimpleArrayInterfaceClientTest
         assertEquals(SimpleArrayInterfaceMessageType.PROP_PropInt64.getValue(), response.what);
         Bundle data = response.getData();
         
-			long[] receivedpropInt64 = data.getLongArray("propInt64");
+			List<Long> receivedpropInt64 = Conversions.toList(data.getLongArray("propInt64"));
         assertEquals(receivedpropInt64, testpropInt64);
     }
     
@@ -335,9 +338,9 @@ public class SimpleArrayInterfaceClientTest
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.SET_PropFloat.getValue());
         Bundle data = new Bundle();
-        float[] testpropFloat = new float[1];
-        testpropFloat[0] = 1.0f;
-		data.putFloatArray("propFloat", testpropFloat);
+        List<Float> testpropFloat = new java.util.ArrayList<>();
+        testpropFloat.add(1.0f);
+		data.putFloatArray("propFloat", Conversions.toArray(testpropFloat, new float[0]));
 
         msg.setData(data);
         mClientMessenger.send(msg);
@@ -348,8 +351,8 @@ public class SimpleArrayInterfaceClientTest
     @Test
      public void setPropertyRequestpropFloat()
     {
-        float[] testpropFloat = new float[1];
-        testpropFloat[0] = 1.0f;
+        List<Float> testpropFloat = new java.util.ArrayList<>();
+        testpropFloat.add(1.0f);
 
         testedClient.setPropFloat(testpropFloat);
         Robolectric.flushForegroundThreadScheduler();
@@ -359,7 +362,7 @@ public class SimpleArrayInterfaceClientTest
         assertEquals(SimpleArrayInterfaceMessageType.PROP_PropFloat.getValue(), response.what);
         Bundle data = response.getData();
         
-			float[] receivedpropFloat = data.getFloatArray("propFloat");
+			List<Float> receivedpropFloat = Conversions.toList(data.getFloatArray("propFloat"));
         assertEquals(receivedpropFloat, testpropFloat);
     }
     
@@ -368,9 +371,9 @@ public class SimpleArrayInterfaceClientTest
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.SET_PropFloat32.getValue());
         Bundle data = new Bundle();
-        float[] testpropFloat32 = new float[1];
-        testpropFloat32[0] = 1.0f;
-		data.putFloatArray("propFloat32", testpropFloat32);
+        List<Float> testpropFloat32 = new java.util.ArrayList<>();
+        testpropFloat32.add(1.0f);
+		data.putFloatArray("propFloat32", Conversions.toArray(testpropFloat32, new float[0]));
 
         msg.setData(data);
         mClientMessenger.send(msg);
@@ -381,8 +384,8 @@ public class SimpleArrayInterfaceClientTest
     @Test
      public void setPropertyRequestpropFloat32()
     {
-        float[] testpropFloat32 = new float[1];
-        testpropFloat32[0] = 1.0f;
+        List<Float> testpropFloat32 = new java.util.ArrayList<>();
+        testpropFloat32.add(1.0f);
 
         testedClient.setPropFloat32(testpropFloat32);
         Robolectric.flushForegroundThreadScheduler();
@@ -392,7 +395,7 @@ public class SimpleArrayInterfaceClientTest
         assertEquals(SimpleArrayInterfaceMessageType.PROP_PropFloat32.getValue(), response.what);
         Bundle data = response.getData();
         
-			float[] receivedpropFloat32 = data.getFloatArray("propFloat32");
+			List<Float> receivedpropFloat32 = Conversions.toList(data.getFloatArray("propFloat32"));
         assertEquals(receivedpropFloat32, testpropFloat32);
     }
     
@@ -401,9 +404,9 @@ public class SimpleArrayInterfaceClientTest
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.SET_PropFloat64.getValue());
         Bundle data = new Bundle();
-        double[] testpropFloat64 = new double[1];
-        testpropFloat64[0] = 1.0;
-		data.putDoubleArray("propFloat64", testpropFloat64);
+        List<Double> testpropFloat64 = new java.util.ArrayList<>();
+        testpropFloat64.add(1.0);
+		data.putDoubleArray("propFloat64", Conversions.toArray(testpropFloat64, new double[0]));
 
         msg.setData(data);
         mClientMessenger.send(msg);
@@ -414,8 +417,8 @@ public class SimpleArrayInterfaceClientTest
     @Test
      public void setPropertyRequestpropFloat64()
     {
-        double[] testpropFloat64 = new double[1];
-        testpropFloat64[0] = 1.0;
+        List<Double> testpropFloat64 = new java.util.ArrayList<>();
+        testpropFloat64.add(1.0);
 
         testedClient.setPropFloat64(testpropFloat64);
         Robolectric.flushForegroundThreadScheduler();
@@ -425,7 +428,7 @@ public class SimpleArrayInterfaceClientTest
         assertEquals(SimpleArrayInterfaceMessageType.PROP_PropFloat64.getValue(), response.what);
         Bundle data = response.getData();
         
-			double[] receivedpropFloat64 = data.getDoubleArray("propFloat64");
+			List<Double> receivedpropFloat64 = Conversions.toList(data.getDoubleArray("propFloat64"));
         assertEquals(receivedpropFloat64, testpropFloat64);
     }
     
@@ -434,9 +437,9 @@ public class SimpleArrayInterfaceClientTest
         // Create and send message
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.SET_PropString.getValue());
         Bundle data = new Bundle();
-        String[] testpropString = new String[1];
-        testpropString[0] = new String("xyz");
-		data.putStringArray("propString", testpropString);
+        List<String> testpropString = new java.util.ArrayList<>();
+        testpropString.add(new String("xyz"));
+		data.putStringArray("propString", Conversions.toArray(testpropString, new String[0]));
 
         msg.setData(data);
         mClientMessenger.send(msg);
@@ -447,8 +450,8 @@ public class SimpleArrayInterfaceClientTest
     @Test
      public void setPropertyRequestpropString()
     {
-        String[] testpropString = new String[1];
-        testpropString[0] = new String("xyz");
+        List<String> testpropString = new java.util.ArrayList<>();
+        testpropString.add(new String("xyz"));
 
         testedClient.setPropString(testpropString);
         Robolectric.flushForegroundThreadScheduler();
@@ -458,7 +461,7 @@ public class SimpleArrayInterfaceClientTest
         assertEquals(SimpleArrayInterfaceMessageType.PROP_PropString.getValue(), response.what);
         Bundle data = response.getData();
         
-			String[] receivedpropString = data.getStringArray("propString");
+			List<String> receivedpropString = Conversions.toList(data.getStringArray("propString"));
         assertEquals(receivedpropString, testpropString);
     }
     
@@ -481,9 +484,9 @@ public class SimpleArrayInterfaceClientTest
 
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.SIG_SigBool.getValue());
         Bundle data = new Bundle();
-        boolean[] testparamBool = new boolean[1];
-        testparamBool[0] = true;
-		data.putBooleanArray("paramBool", testparamBool);
+        List<Boolean> testparamBool = new java.util.ArrayList<>();
+        testparamBool.add(true);
+		data.putBooleanArray("paramBool", Conversions.toArray(testparamBool, new boolean[0]));
 
         msg.setData(data);
         mClientMessenger.send(msg);
@@ -498,9 +501,9 @@ public class SimpleArrayInterfaceClientTest
 
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.SIG_SigInt.getValue());
         Bundle data = new Bundle();
-        int[] testparamInt = new int[1];
-        testparamInt[0] = 1;
-		data.putIntArray("paramInt", testparamInt);
+        List<Integer> testparamInt = new java.util.ArrayList<>();
+        testparamInt.add(1);
+		data.putIntArray("paramInt", Conversions.toArray(testparamInt, new int[0]));
 
         msg.setData(data);
         mClientMessenger.send(msg);
@@ -515,9 +518,9 @@ public class SimpleArrayInterfaceClientTest
 
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.SIG_SigInt32.getValue());
         Bundle data = new Bundle();
-        int[] testparamInt32 = new int[1];
-        testparamInt32[0] = 1;
-		data.putIntArray("paramInt32", testparamInt32);
+        List<Integer> testparamInt32 = new java.util.ArrayList<>();
+        testparamInt32.add(1);
+		data.putIntArray("paramInt32", Conversions.toArray(testparamInt32, new int[0]));
 
         msg.setData(data);
         mClientMessenger.send(msg);
@@ -532,9 +535,9 @@ public class SimpleArrayInterfaceClientTest
 
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.SIG_SigInt64.getValue());
         Bundle data = new Bundle();
-        long[] testparamInt64 = new long[1];
-        testparamInt64[0] = 1L;
-		data.putLongArray("paramInt64", testparamInt64);
+        List<Long> testparamInt64 = new java.util.ArrayList<>();
+        testparamInt64.add(1L);
+		data.putLongArray("paramInt64", Conversions.toArray(testparamInt64, new long[0]));
 
         msg.setData(data);
         mClientMessenger.send(msg);
@@ -549,9 +552,9 @@ public class SimpleArrayInterfaceClientTest
 
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.SIG_SigFloat.getValue());
         Bundle data = new Bundle();
-        float[] testparamFloat = new float[1];
-        testparamFloat[0] = 1.0f;
-		data.putFloatArray("paramFloat", testparamFloat);
+        List<Float> testparamFloat = new java.util.ArrayList<>();
+        testparamFloat.add(1.0f);
+		data.putFloatArray("paramFloat", Conversions.toArray(testparamFloat, new float[0]));
 
         msg.setData(data);
         mClientMessenger.send(msg);
@@ -566,9 +569,9 @@ public class SimpleArrayInterfaceClientTest
 
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.SIG_SigFloat32.getValue());
         Bundle data = new Bundle();
-        float[] testparamFloa32 = new float[1];
-        testparamFloa32[0] = 1.0f;
-		data.putFloatArray("paramFloa32", testparamFloa32);
+        List<Float> testparamFloa32 = new java.util.ArrayList<>();
+        testparamFloa32.add(1.0f);
+		data.putFloatArray("paramFloa32", Conversions.toArray(testparamFloa32, new float[0]));
 
         msg.setData(data);
         mClientMessenger.send(msg);
@@ -583,9 +586,9 @@ public class SimpleArrayInterfaceClientTest
 
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.SIG_SigFloat64.getValue());
         Bundle data = new Bundle();
-        double[] testparamFloat64 = new double[1];
-        testparamFloat64[0] = 1.0;
-		data.putDoubleArray("paramFloat64", testparamFloat64);
+        List<Double> testparamFloat64 = new java.util.ArrayList<>();
+        testparamFloat64.add(1.0);
+		data.putDoubleArray("paramFloat64", Conversions.toArray(testparamFloat64, new double[0]));
 
         msg.setData(data);
         mClientMessenger.send(msg);
@@ -600,9 +603,9 @@ public class SimpleArrayInterfaceClientTest
 
         Message msg = Message.obtain(null, SimpleArrayInterfaceMessageType.SIG_SigString.getValue());
         Bundle data = new Bundle();
-        String[] testparamString = new String[1];
-        testparamString[0] = new String("xyz");
-		data.putStringArray("paramString", testparamString);
+        List<String> testparamString = new java.util.ArrayList<>();
+        testparamString.add(new String("xyz"));
+		data.putStringArray("paramString", Conversions.toArray(testparamString, new String[0]));
 
         msg.setData(data);
         mClientMessenger.send(msg);
@@ -616,13 +619,13 @@ public class SimpleArrayInterfaceClientTest
     public void onfuncBoolRequest() throws RemoteException {
 
         // Execute method
-        boolean[] testparamBool = new boolean[1];
-        testparamBool[0] = true;
-        boolean[] expectedResult = new boolean[1];
-        expectedResult[0] = true;
+        List<Boolean> testparamBool = new java.util.ArrayList<>();
+        testparamBool.add(true);
+        List<Boolean> expectedResult = new ArrayList<>();
+        expectedResult.add(true);
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
-        CompletableFuture<boolean[]> resFuture = testedClient.funcBoolAsync(testparamBool);
+        CompletableFuture<List<Boolean>> resFuture = testedClient.funcBoolAsync(testparamBool);
 
         resFuture.thenAccept(result -> {
             assertEquals(expectedResult, result);
@@ -639,7 +642,7 @@ public class SimpleArrayInterfaceClientTest
         Bundle data = method_request.getData();
         
         
-			boolean[] receivedparamBool = data.getBooleanArray("paramBool");
+			List<Boolean> receivedparamBool = Conversions.toList(data.getBooleanArray("paramBool"));
         assertEquals(receivedparamBool, testparamBool);
         int returnedCallId = data.getInt("callId", -1);
 
@@ -649,7 +652,7 @@ public class SimpleArrayInterfaceClientTest
 
         Bundle result_data = new Bundle();
 		result_data.putInt("callId", returnedCallId);
-		result_data.putBooleanArray("result", expectedResult);
+		result_data.putBooleanArray("result", Conversions.toArray(expectedResult, new boolean[0]));
 
         msg.setData(result_data);
         method_request.replyTo.send(msg);
@@ -663,13 +666,13 @@ public class SimpleArrayInterfaceClientTest
     public void onfuncIntRequest() throws RemoteException {
 
         // Execute method
-        int[] testparamInt = new int[1];
-        testparamInt[0] = 1;
-        int[] expectedResult = new int[1];
-        expectedResult[0] = 1;
+        List<Integer> testparamInt = new java.util.ArrayList<>();
+        testparamInt.add(1);
+        List<Integer> expectedResult = new ArrayList<>();
+        expectedResult.add(1);
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
-        CompletableFuture<int[]> resFuture = testedClient.funcIntAsync(testparamInt);
+        CompletableFuture<List<Integer>> resFuture = testedClient.funcIntAsync(testparamInt);
 
         resFuture.thenAccept(result -> {
             assertEquals(expectedResult, result);
@@ -686,7 +689,7 @@ public class SimpleArrayInterfaceClientTest
         Bundle data = method_request.getData();
         
         
-			int[] receivedparamInt = data.getIntArray("paramInt");
+			List<Integer> receivedparamInt = Conversions.toList(data.getIntArray("paramInt"));
         assertEquals(receivedparamInt, testparamInt);
         int returnedCallId = data.getInt("callId", -1);
 
@@ -696,7 +699,7 @@ public class SimpleArrayInterfaceClientTest
 
         Bundle result_data = new Bundle();
 		result_data.putInt("callId", returnedCallId);
-		result_data.putIntArray("result", expectedResult);
+		result_data.putIntArray("result", Conversions.toArray(expectedResult, new int[0]));
 
         msg.setData(result_data);
         method_request.replyTo.send(msg);
@@ -710,13 +713,13 @@ public class SimpleArrayInterfaceClientTest
     public void onfuncInt32Request() throws RemoteException {
 
         // Execute method
-        int[] testparamInt32 = new int[1];
-        testparamInt32[0] = 1;
-        int[] expectedResult = new int[1];
-        expectedResult[0] = 1;
+        List<Integer> testparamInt32 = new java.util.ArrayList<>();
+        testparamInt32.add(1);
+        List<Integer> expectedResult = new ArrayList<>();
+        expectedResult.add(1);
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
-        CompletableFuture<int[]> resFuture = testedClient.funcInt32Async(testparamInt32);
+        CompletableFuture<List<Integer>> resFuture = testedClient.funcInt32Async(testparamInt32);
 
         resFuture.thenAccept(result -> {
             assertEquals(expectedResult, result);
@@ -733,7 +736,7 @@ public class SimpleArrayInterfaceClientTest
         Bundle data = method_request.getData();
         
         
-			int[] receivedparamInt32 = data.getIntArray("paramInt32");
+			List<Integer> receivedparamInt32 = Conversions.toList(data.getIntArray("paramInt32"));
         assertEquals(receivedparamInt32, testparamInt32);
         int returnedCallId = data.getInt("callId", -1);
 
@@ -743,7 +746,7 @@ public class SimpleArrayInterfaceClientTest
 
         Bundle result_data = new Bundle();
 		result_data.putInt("callId", returnedCallId);
-		result_data.putIntArray("result", expectedResult);
+		result_data.putIntArray("result", Conversions.toArray(expectedResult, new int[0]));
 
         msg.setData(result_data);
         method_request.replyTo.send(msg);
@@ -757,13 +760,13 @@ public class SimpleArrayInterfaceClientTest
     public void onfuncInt64Request() throws RemoteException {
 
         // Execute method
-        long[] testparamInt64 = new long[1];
-        testparamInt64[0] = 1L;
-        long[] expectedResult = new long[1];
-        expectedResult[0] = 1L;
+        List<Long> testparamInt64 = new java.util.ArrayList<>();
+        testparamInt64.add(1L);
+        List<Long> expectedResult = new ArrayList<>();
+        expectedResult.add(1L);
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
-        CompletableFuture<long[]> resFuture = testedClient.funcInt64Async(testparamInt64);
+        CompletableFuture<List<Long>> resFuture = testedClient.funcInt64Async(testparamInt64);
 
         resFuture.thenAccept(result -> {
             assertEquals(expectedResult, result);
@@ -780,7 +783,7 @@ public class SimpleArrayInterfaceClientTest
         Bundle data = method_request.getData();
         
         
-			long[] receivedparamInt64 = data.getLongArray("paramInt64");
+			List<Long> receivedparamInt64 = Conversions.toList(data.getLongArray("paramInt64"));
         assertEquals(receivedparamInt64, testparamInt64);
         int returnedCallId = data.getInt("callId", -1);
 
@@ -790,7 +793,7 @@ public class SimpleArrayInterfaceClientTest
 
         Bundle result_data = new Bundle();
 		result_data.putInt("callId", returnedCallId);
-		result_data.putLongArray("result", expectedResult);
+		result_data.putLongArray("result", Conversions.toArray(expectedResult, new long[0]));
 
         msg.setData(result_data);
         method_request.replyTo.send(msg);
@@ -804,13 +807,13 @@ public class SimpleArrayInterfaceClientTest
     public void onfuncFloatRequest() throws RemoteException {
 
         // Execute method
-        float[] testparamFloat = new float[1];
-        testparamFloat[0] = 1.0f;
-        float[] expectedResult = new float[1];
-        expectedResult[0] = 1.0f;
+        List<Float> testparamFloat = new java.util.ArrayList<>();
+        testparamFloat.add(1.0f);
+        List<Float> expectedResult = new ArrayList<>();
+        expectedResult.add(1.0f);
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
-        CompletableFuture<float[]> resFuture = testedClient.funcFloatAsync(testparamFloat);
+        CompletableFuture<List<Float>> resFuture = testedClient.funcFloatAsync(testparamFloat);
 
         resFuture.thenAccept(result -> {
             assertEquals(expectedResult, result);
@@ -827,7 +830,7 @@ public class SimpleArrayInterfaceClientTest
         Bundle data = method_request.getData();
         
         
-			float[] receivedparamFloat = data.getFloatArray("paramFloat");
+			List<Float> receivedparamFloat = Conversions.toList(data.getFloatArray("paramFloat"));
         assertEquals(receivedparamFloat, testparamFloat);
         int returnedCallId = data.getInt("callId", -1);
 
@@ -837,7 +840,7 @@ public class SimpleArrayInterfaceClientTest
 
         Bundle result_data = new Bundle();
 		result_data.putInt("callId", returnedCallId);
-		result_data.putFloatArray("result", expectedResult);
+		result_data.putFloatArray("result", Conversions.toArray(expectedResult, new float[0]));
 
         msg.setData(result_data);
         method_request.replyTo.send(msg);
@@ -851,13 +854,13 @@ public class SimpleArrayInterfaceClientTest
     public void onfuncFloat32Request() throws RemoteException {
 
         // Execute method
-        float[] testparamFloat32 = new float[1];
-        testparamFloat32[0] = 1.0f;
-        float[] expectedResult = new float[1];
-        expectedResult[0] = 1.0f;
+        List<Float> testparamFloat32 = new java.util.ArrayList<>();
+        testparamFloat32.add(1.0f);
+        List<Float> expectedResult = new ArrayList<>();
+        expectedResult.add(1.0f);
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
-        CompletableFuture<float[]> resFuture = testedClient.funcFloat32Async(testparamFloat32);
+        CompletableFuture<List<Float>> resFuture = testedClient.funcFloat32Async(testparamFloat32);
 
         resFuture.thenAccept(result -> {
             assertEquals(expectedResult, result);
@@ -874,7 +877,7 @@ public class SimpleArrayInterfaceClientTest
         Bundle data = method_request.getData();
         
         
-			float[] receivedparamFloat32 = data.getFloatArray("paramFloat32");
+			List<Float> receivedparamFloat32 = Conversions.toList(data.getFloatArray("paramFloat32"));
         assertEquals(receivedparamFloat32, testparamFloat32);
         int returnedCallId = data.getInt("callId", -1);
 
@@ -884,7 +887,7 @@ public class SimpleArrayInterfaceClientTest
 
         Bundle result_data = new Bundle();
 		result_data.putInt("callId", returnedCallId);
-		result_data.putFloatArray("result", expectedResult);
+		result_data.putFloatArray("result", Conversions.toArray(expectedResult, new float[0]));
 
         msg.setData(result_data);
         method_request.replyTo.send(msg);
@@ -898,13 +901,13 @@ public class SimpleArrayInterfaceClientTest
     public void onfuncFloat64Request() throws RemoteException {
 
         // Execute method
-        double[] testparamFloat = new double[1];
-        testparamFloat[0] = 1.0;
-        double[] expectedResult = new double[1];
-        expectedResult[0] = 1.0;
+        List<Double> testparamFloat = new java.util.ArrayList<>();
+        testparamFloat.add(1.0);
+        List<Double> expectedResult = new ArrayList<>();
+        expectedResult.add(1.0);
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
-        CompletableFuture<double[]> resFuture = testedClient.funcFloat64Async(testparamFloat);
+        CompletableFuture<List<Double>> resFuture = testedClient.funcFloat64Async(testparamFloat);
 
         resFuture.thenAccept(result -> {
             assertEquals(expectedResult, result);
@@ -921,7 +924,7 @@ public class SimpleArrayInterfaceClientTest
         Bundle data = method_request.getData();
         
         
-			double[] receivedparamFloat = data.getDoubleArray("paramFloat");
+			List<Double> receivedparamFloat = Conversions.toList(data.getDoubleArray("paramFloat"));
         assertEquals(receivedparamFloat, testparamFloat);
         int returnedCallId = data.getInt("callId", -1);
 
@@ -931,7 +934,7 @@ public class SimpleArrayInterfaceClientTest
 
         Bundle result_data = new Bundle();
 		result_data.putInt("callId", returnedCallId);
-		result_data.putDoubleArray("result", expectedResult);
+		result_data.putDoubleArray("result", Conversions.toArray(expectedResult, new double[0]));
 
         msg.setData(result_data);
         method_request.replyTo.send(msg);
@@ -945,13 +948,13 @@ public class SimpleArrayInterfaceClientTest
     public void onfuncStringRequest() throws RemoteException {
 
         // Execute method
-        String[] testparamString = new String[1];
-        testparamString[0] = new String("xyz");
-        String[] expectedResult = new String[1];
-        expectedResult[0] = new String("xyz");
+        List<String> testparamString = new java.util.ArrayList<>();
+        testparamString.add(new String("xyz"));
+        List<String> expectedResult = new ArrayList<>();
+        expectedResult.add(new String("xyz"));
 
         AtomicBoolean receivedResp = new AtomicBoolean(false);
-        CompletableFuture<String[]> resFuture = testedClient.funcStringAsync(testparamString);
+        CompletableFuture<List<String>> resFuture = testedClient.funcStringAsync(testparamString);
 
         resFuture.thenAccept(result -> {
             assertEquals(expectedResult, result);
@@ -968,7 +971,7 @@ public class SimpleArrayInterfaceClientTest
         Bundle data = method_request.getData();
         
         
-			String[] receivedparamString = data.getStringArray("paramString");
+			List<String> receivedparamString = Conversions.toList(data.getStringArray("paramString"));
         assertEquals(receivedparamString, testparamString);
         int returnedCallId = data.getInt("callId", -1);
 
@@ -978,7 +981,7 @@ public class SimpleArrayInterfaceClientTest
 
         Bundle result_data = new Bundle();
 		result_data.putInt("callId", returnedCallId);
-		result_data.putStringArray("result", expectedResult);
+		result_data.putStringArray("result", Conversions.toArray(expectedResult, new String[0]));
 
         msg.setData(result_data);
         method_request.replyTo.send(msg);

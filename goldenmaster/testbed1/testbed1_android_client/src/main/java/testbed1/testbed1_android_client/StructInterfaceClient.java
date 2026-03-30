@@ -31,7 +31,10 @@ import testbed1.testbed1_api.IStructInterface;
 import testbed1.testbed1_api.AbstractStructInterface;
 import testbed1.testbed1_api.RemoteOperationException;
 import testbed1.testbed1_android_messenger.StructInterfaceMessageType;
+import testbed1.testbed1_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
@@ -39,7 +42,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
 
 public class StructInterfaceClient extends AbstractStructInterface implements ServiceConnection
@@ -265,7 +267,7 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 				    onPropString(propString);
 				    break;
 			    }
-			    // TODO params may be different structs from different modules, there should be a custom class loader 
+			    // TODO params may be different structs from different modules, there should be a custom class loader
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 			    case SIG_SigBool: {
@@ -542,7 +544,7 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
   
     // methods
 
-   
+
     @Override
     public StructBool funcBool(StructBool paramBool) {
         CompletableFuture<StructBool> resFuture = funcBoolAsync(paramBool);
@@ -603,7 +605,7 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
         return future;
     }
 
-   
+
     @Override
     public StructInt funcInt(StructInt paramInt) {
         CompletableFuture<StructInt> resFuture = funcIntAsync(paramInt);
@@ -664,7 +666,7 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
         return future;
     }
 
-   
+
     @Override
     public StructFloat funcFloat(StructFloat paramFloat) {
         CompletableFuture<StructFloat> resFuture = funcFloatAsync(paramFloat);
@@ -725,7 +727,7 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
         return future;
     }
 
-   
+
     @Override
     public StructString funcString(StructString paramString) {
         CompletableFuture<StructString> resFuture = funcStringAsync(paramString);
@@ -784,7 +786,7 @@ public class StructInterfaceClient extends AbstractStructInterface implements Se
 		mClientHandler.sendToService(msg);
 
         return future;
-    }    
+    }
 
     @Override
     public boolean _isReady() {

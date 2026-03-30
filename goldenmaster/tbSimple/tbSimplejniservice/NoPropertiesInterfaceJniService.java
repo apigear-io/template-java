@@ -1,21 +1,18 @@
 package tbSimple.tbSimplejniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import tbSimple.tbSimple_api.INoPropertiesInterface;
 import tbSimple.tbSimple_api.AbstractNoPropertiesInterface;
 import tbSimple.tbSimple_api.INoPropertiesInterfaceEventListener;
+import tbSimple.tbSimple_android_messenger.Conversions;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 
 public class NoPropertiesInterfaceJniService extends AbstractNoPropertiesInterface {
@@ -34,7 +31,7 @@ public class NoPropertiesInterfaceJniService extends AbstractNoPropertiesInterfa
     @Override
     public void funcVoid() {
         Log.i(TAG, "request method funcVoid called, will call native");
-         nativeFuncVoid();
+        nativeFuncVoid();
     }
 
     @Override
@@ -67,7 +64,7 @@ public class NoPropertiesInterfaceJniService extends AbstractNoPropertiesInterfa
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -89,8 +86,7 @@ public class NoPropertiesInterfaceJniService extends AbstractNoPropertiesInterfa
         }
     }
 
-    // Called on Native Impl Service
-    // methods
+    // Native methods — use array types for JNI compatibility
     private native void nativeFuncVoid();
     private native boolean nativeFuncBool(boolean paramBool);
 
@@ -99,7 +95,7 @@ public class NoPropertiesInterfaceJniService extends AbstractNoPropertiesInterfa
         isServiceReady = value;
     }
 
-    //In theory event listener interface
+    // Callbacks from native — receive arrays, convert to List and fire events
     public void onSigVoid()
     {
         Log.i(TAG, "onSigVoid, will pass notification to all listeners");

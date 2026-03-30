@@ -5,7 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import testbed2.testbed2_api.NestedStruct1;
 
   public  class NestedStruct1InterfaceParcelable implements Parcelable {
@@ -64,7 +66,7 @@ import testbed2.testbed2_api.NestedStruct1;
     }
 
     public static INestedStruct1Interface[] unwrapArray(NestedStruct1InterfaceParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new INestedStruct1Interface[0];
         return Arrays.stream(parcelables)
            .map(NestedStruct1InterfaceParcelable::getNestedStruct1Interface)
            .toArray(INestedStruct1Interface[]::new);

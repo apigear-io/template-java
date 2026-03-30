@@ -27,7 +27,10 @@ import testbed2.testbed2_api.INestedStruct2Interface;
 import testbed2.testbed2_api.AbstractNestedStruct2Interface;
 import testbed2.testbed2_api.RemoteOperationException;
 import testbed2.testbed2_android_messenger.NestedStruct2InterfaceMessageType;
+import testbed2.testbed2_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
@@ -35,7 +38,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
 
 public class NestedStruct2InterfaceClient extends AbstractNestedStruct2Interface implements ServiceConnection
@@ -231,7 +233,7 @@ public class NestedStruct2InterfaceClient extends AbstractNestedStruct2Interface
 				    onProp2(prop2);
 				    break;
 			    }
-			    // TODO params may be different structs from different modules, there should be a custom class loader 
+			    // TODO params may be different structs from different modules, there should be a custom class loader
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 			    case SIG_Sig1: {
@@ -380,7 +382,7 @@ public class NestedStruct2InterfaceClient extends AbstractNestedStruct2Interface
   
     // methods
 
-   
+
     @Override
     public NestedStruct1 func1(NestedStruct1 param1) {
         CompletableFuture<NestedStruct1> resFuture = func1Async(param1);
@@ -441,7 +443,7 @@ public class NestedStruct2InterfaceClient extends AbstractNestedStruct2Interface
         return future;
     }
 
-   
+
     @Override
     public NestedStruct1 func2(NestedStruct1 param1, NestedStruct2 param2) {
         CompletableFuture<NestedStruct1> resFuture = func2Async(param1, param2);
@@ -502,7 +504,7 @@ public class NestedStruct2InterfaceClient extends AbstractNestedStruct2Interface
 		mClientHandler.sendToService(msg);
 
         return future;
-    }    
+    }
 
     @Override
     public boolean _isReady() {

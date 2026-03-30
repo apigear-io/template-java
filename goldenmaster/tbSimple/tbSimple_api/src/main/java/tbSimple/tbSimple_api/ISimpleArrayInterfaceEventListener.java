@@ -1,22 +1,24 @@
 package tbSimple.tbSimple_api;
 
+import java.util.List;
+
   public interface ISimpleArrayInterfaceEventListener {
-    void onPropBoolChanged(boolean[] newValue);
-    void onPropIntChanged(int[] newValue);
-    void onPropInt32Changed(int[] newValue);
-    void onPropInt64Changed(long[] newValue);
-    void onPropFloatChanged(float[] newValue);
-    void onPropFloat32Changed(float[] newValue);
-    void onPropFloat64Changed(double[] newValue);
-    void onPropStringChanged(String[] newValue);
+    void onPropBoolChanged(List<Boolean> newValue);
+    void onPropIntChanged(List<Integer> newValue);
+    void onPropInt32Changed(List<Integer> newValue);
+    void onPropInt64Changed(List<Long> newValue);
+    void onPropFloatChanged(List<Float> newValue);
+    void onPropFloat32Changed(List<Float> newValue);
+    void onPropFloat64Changed(List<Double> newValue);
+    void onPropStringChanged(List<String> newValue);
     void onPropReadOnlyStringChanged(String newValue);
-    void onSigBool(boolean[] paramBool);
-    void onSigInt(int[] paramInt);
-    void onSigInt32(int[] paramInt32);
-    void onSigInt64(long[] paramInt64);
-    void onSigFloat(float[] paramFloat);
-    void onSigFloat32(float[] paramFloa32);
-    void onSigFloat64(double[] paramFloat64);
-    void onSigString(String[] paramString);
+    void onSigBool(List<Boolean> paramBool);
+    void onSigInt(List<Integer> paramInt);
+    void onSigInt32(List<Integer> paramInt32);
+    void onSigInt64(List<Long> paramInt64);
+    void onSigFloat(List<Float> paramFloat);
+    void onSigFloat32(List<Float> paramFloa32);
+    void onSigFloat64(List<Double> paramFloat64);
+    void onSigString(List<String> paramString);
   void on_readyStatusChanged(boolean isReady);
   }

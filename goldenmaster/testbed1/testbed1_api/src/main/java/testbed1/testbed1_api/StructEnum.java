@@ -1,17 +1,19 @@
 package testbed1.testbed1_api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public  class StructEnum {
 
     public StructEnum(Enum0 fieldEnum)
     {
       this.fieldEnum = fieldEnum;
-    }  
+    }
 
-    public StructEnum() 
+    public StructEnum()
     {
         this.fieldEnum = Enum0.values()[0];
     }

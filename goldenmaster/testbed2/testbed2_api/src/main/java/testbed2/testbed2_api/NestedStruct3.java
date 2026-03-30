@@ -1,8 +1,10 @@
 package testbed2.testbed2_api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public  class NestedStruct3 {
 
@@ -11,9 +13,9 @@ public  class NestedStruct3 {
       this.field1 = field1;
       this.field2 = field2;
       this.field3 = field3;
-    }  
+    }
 
-    public NestedStruct3() 
+    public NestedStruct3()
     {
         this.field1 = new Struct1();
         this.field2 = new Struct2();

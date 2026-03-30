@@ -5,7 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import testbed1.testbed1_api.StructBool;
 import testbed1.testbed1_api.StructFloat;
 import testbed1.testbed1_api.StructInt;
@@ -70,7 +72,7 @@ import testbed1.testbed1_api.StructString;
     }
 
     public static IStructInterface[] unwrapArray(StructInterfaceParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new IStructInterface[0];
         return Arrays.stream(parcelables)
            .map(StructInterfaceParcelable::getStructInterface)
            .toArray(IStructInterface[]::new);

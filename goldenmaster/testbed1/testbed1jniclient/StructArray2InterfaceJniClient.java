@@ -6,6 +6,7 @@ import testbed1.testbed1_api.IStructArray2InterfaceEventListener;
 import testbed1.testbed1_api.RemoteOperationException;
 
 import testbed1.testbed1_android_client.StructArray2InterfaceClient;
+import testbed1.testbed1_android_messenger.Conversions;
 import testbed1.testbed1_api.Enum0;
 import testbed1.testbed1_android_messenger.Enum0Parcelable;
 import testbed1.testbed1_api.StructBool;
@@ -29,6 +30,7 @@ import testbed1.testbed1_android_messenger.StructStringWithArrayParcelable;
 import android.content.Context;
 
 import android.os.Bundle;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import android.util.Log;
 
@@ -50,80 +52,96 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
     {
         return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
+    // Interface method — List types
     @Override
     public void setPropBool(StructBoolWithArray propBool)
     {
-        Log.i(TAG, "got request from ue, setPropBool" + (propBool));
+        Log.i(TAG, "got request setPropBool" + (propBool));
         mMessengerClient.setPropBool(propBool);
     }
     @Override
     public StructBoolWithArray getPropBool()
     {
-        Log.i(TAG, "got request from ue, getPropBool");
+        Log.i(TAG, "got request getPropBool");
         return mMessengerClient.getPropBool();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setPropInt(StructIntWithArray propInt)
     {
-        Log.i(TAG, "got request from ue, setPropInt" + (propInt));
+        Log.i(TAG, "got request setPropInt" + (propInt));
         mMessengerClient.setPropInt(propInt);
     }
     @Override
     public StructIntWithArray getPropInt()
     {
-        Log.i(TAG, "got request from ue, getPropInt");
+        Log.i(TAG, "got request getPropInt");
         return mMessengerClient.getPropInt();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setPropFloat(StructFloatWithArray propFloat)
     {
-        Log.i(TAG, "got request from ue, setPropFloat" + (propFloat));
+        Log.i(TAG, "got request setPropFloat" + (propFloat));
         mMessengerClient.setPropFloat(propFloat);
     }
     @Override
     public StructFloatWithArray getPropFloat()
     {
-        Log.i(TAG, "got request from ue, getPropFloat");
+        Log.i(TAG, "got request getPropFloat");
         return mMessengerClient.getPropFloat();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setPropString(StructStringWithArray propString)
     {
-        Log.i(TAG, "got request from ue, setPropString" + (propString));
+        Log.i(TAG, "got request setPropString" + (propString));
         mMessengerClient.setPropString(propString);
     }
     @Override
     public StructStringWithArray getPropString()
     {
-        Log.i(TAG, "got request from ue, getPropString");
+        Log.i(TAG, "got request getPropString");
         return mMessengerClient.getPropString();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setPropEnum(StructEnumWithArray propEnum)
     {
-        Log.i(TAG, "got request from ue, setPropEnum" + (propEnum));
+        Log.i(TAG, "got request setPropEnum" + (propEnum));
         mMessengerClient.setPropEnum(propEnum);
     }
     @Override
     public StructEnumWithArray getPropEnum()
     {
-        Log.i(TAG, "got request from ue, getPropEnum");
+        Log.i(TAG, "got request getPropEnum");
         return mMessengerClient.getPropEnum();
     }
+
+
     
-     @Override
-     public StructBool[] funcBool(StructBoolWithArray paramBool)
-     {
+    // Interface method — List types
+    @Override
+    public List<StructBool> funcBool(StructBoolWithArray paramBool)
+    {
         Log.v(TAG, "Blocking callfuncBool - should not be used ");
         return mMessengerClient.funcBool(paramBool);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncBoolResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -142,26 +160,27 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
                 Log.w(TAG, "funcBool async failed: " + errorMessage);
                 nativeAsyncOperationFailed(callId, errorMessage, errorCode);
             } else {
-                nativeOnFuncBoolResult(result, callId);
+                nativeOnFuncBoolResult(Conversions.toArray(result, new StructBool[0]), callId);
             }
         });
     }
 
     @Override
-    public CompletableFuture<StructBool[]> funcBoolAsync(StructBoolWithArray paramBool)
+    public CompletableFuture<List<StructBool>> funcBoolAsync(StructBoolWithArray paramBool)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcBoolAsync(paramBool);
     }
-     @Override
-     public StructInt[] funcInt(StructIntWithArray paramInt)
-     {
+    // Interface method — List types
+    @Override
+    public List<StructInt> funcInt(StructIntWithArray paramInt)
+    {
         Log.v(TAG, "Blocking callfuncInt - should not be used ");
         return mMessengerClient.funcInt(paramInt);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncIntResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -180,26 +199,27 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
                 Log.w(TAG, "funcInt async failed: " + errorMessage);
                 nativeAsyncOperationFailed(callId, errorMessage, errorCode);
             } else {
-                nativeOnFuncIntResult(result, callId);
+                nativeOnFuncIntResult(Conversions.toArray(result, new StructInt[0]), callId);
             }
         });
     }
 
     @Override
-    public CompletableFuture<StructInt[]> funcIntAsync(StructIntWithArray paramInt)
+    public CompletableFuture<List<StructInt>> funcIntAsync(StructIntWithArray paramInt)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcIntAsync(paramInt);
     }
-     @Override
-     public StructFloat[] funcFloat(StructFloatWithArray paramFloat)
-     {
+    // Interface method — List types
+    @Override
+    public List<StructFloat> funcFloat(StructFloatWithArray paramFloat)
+    {
         Log.v(TAG, "Blocking callfuncFloat - should not be used ");
         return mMessengerClient.funcFloat(paramFloat);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncFloatResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -218,26 +238,27 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
                 Log.w(TAG, "funcFloat async failed: " + errorMessage);
                 nativeAsyncOperationFailed(callId, errorMessage, errorCode);
             } else {
-                nativeOnFuncFloatResult(result, callId);
+                nativeOnFuncFloatResult(Conversions.toArray(result, new StructFloat[0]), callId);
             }
         });
     }
 
     @Override
-    public CompletableFuture<StructFloat[]> funcFloatAsync(StructFloatWithArray paramFloat)
+    public CompletableFuture<List<StructFloat>> funcFloatAsync(StructFloatWithArray paramFloat)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcFloatAsync(paramFloat);
     }
-     @Override
-     public StructString[] funcString(StructStringWithArray paramString)
-     {
+    // Interface method — List types
+    @Override
+    public List<StructString> funcString(StructStringWithArray paramString)
+    {
         Log.v(TAG, "Blocking callfuncString - should not be used ");
         return mMessengerClient.funcString(paramString);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncStringResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -256,26 +277,27 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
                 Log.w(TAG, "funcString async failed: " + errorMessage);
                 nativeAsyncOperationFailed(callId, errorMessage, errorCode);
             } else {
-                nativeOnFuncStringResult(result, callId);
+                nativeOnFuncStringResult(Conversions.toArray(result, new StructString[0]), callId);
             }
         });
     }
 
     @Override
-    public CompletableFuture<StructString[]> funcStringAsync(StructStringWithArray paramString)
+    public CompletableFuture<List<StructString>> funcStringAsync(StructStringWithArray paramString)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcStringAsync(paramString);
     }
-     @Override
-     public Enum0[] funcEnum(StructEnumWithArray paramEnum)
-     {
+    // Interface method — List types
+    @Override
+    public List<Enum0> funcEnum(StructEnumWithArray paramEnum)
+    {
         Log.v(TAG, "Blocking callfuncEnum - should not be used ");
         return mMessengerClient.funcEnum(paramEnum);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFuncEnumResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -294,13 +316,13 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
                 Log.w(TAG, "funcEnum async failed: " + errorMessage);
                 nativeAsyncOperationFailed(callId, errorMessage, errorCode);
             } else {
-                nativeOnFuncEnumResult(result, callId);
+                nativeOnFuncEnumResult(Conversions.toArray(result, new Enum0[0]), callId);
             }
         });
     }
 
     @Override
-    public CompletableFuture<Enum0[]> funcEnumAsync(StructEnumWithArray paramEnum)
+    public CompletableFuture<List<Enum0>> funcEnumAsync(StructEnumWithArray paramEnum)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.funcEnumAsync(paramEnum);
@@ -342,7 +364,7 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
         nativeIsReady(isReady);
     }
 
-    //Event listener
+    // Event listener — receives List from messenger client, converts to array for native
     @Override
     public void onPropBoolChanged(StructBoolWithArray newValue)
     {
@@ -397,6 +419,9 @@ public class StructArray2InterfaceJniClient extends AbstractStructArray2Interfac
         Log.i(TAG, "NOTIFICATION from messenger client Signal sigString "+ " " + paramString);
         nativeOnSigString(paramString);
     }
+
+
+    // Native declarations — array types for JNI compatibility
      private native void nativeOnPropBoolChanged(StructBoolWithArray propBool);
      private native void nativeOnPropIntChanged(StructIntWithArray propInt);
      private native void nativeOnPropFloatChanged(StructFloatWithArray propFloat);

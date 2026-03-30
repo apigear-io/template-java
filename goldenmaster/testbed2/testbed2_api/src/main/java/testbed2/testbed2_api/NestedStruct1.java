@@ -1,17 +1,19 @@
 package testbed2.testbed2_api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public  class NestedStruct1 {
 
     public NestedStruct1(Struct1 field1)
     {
       this.field1 = field1;
-    }  
+    }
 
-    public NestedStruct1() 
+    public NestedStruct1()
     {
         this.field1 = new Struct1();
     }

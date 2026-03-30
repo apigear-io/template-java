@@ -1,23 +1,20 @@
 package tbNames.tbNamesjniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import tbNames.tbNames_api.INamEs;
 import tbNames.tbNames_api.AbstractNamEs;
 import tbNames.tbNames_api.INamEsEventListener;
+import tbNames.tbNames_android_messenger.Conversions;
 import tbNames.tbNames_api.EnumWithUnderScores;
 import tbNames.tbNames_android_messenger.EnumWithUnderScoresParcelable;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 
 public class NamEsJniService extends AbstractNamEs {
@@ -96,7 +93,7 @@ public class NamEsJniService extends AbstractNamEs {
     @Override
     public void someFunction(boolean SOME_PARAM) {
         Log.i(TAG, "request method someFunction called, will call native");
-         nativeSomeFunction(SOME_PARAM);
+        nativeSomeFunction(SOME_PARAM);
     }
 
     @Override
@@ -115,7 +112,7 @@ public class NamEsJniService extends AbstractNamEs {
     @Override
     public void someFunction2(boolean Some_Param) {
         Log.i(TAG, "request method someFunction2 called, will call native");
-         nativeSomeFunction2(Some_Param);
+        nativeSomeFunction2(Some_Param);
     }
 
     @Override
@@ -129,7 +126,7 @@ public class NamEsJniService extends AbstractNamEs {
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -151,7 +148,7 @@ public class NamEsJniService extends AbstractNamEs {
         }
     }
 
-    // Called on Native Impl Service
+    // Native methods — use array types for JNI compatibility
     private native void nativeSetSwitch(boolean Switch);
     private native boolean nativeGetSwitch();
   
@@ -164,7 +161,6 @@ public class NamEsJniService extends AbstractNamEs {
     private native void nativeSetEnumProperty(EnumWithUnderScores enum_property);
     private native EnumWithUnderScores nativeGetEnumProperty();
   
-    // methods
     private native void nativeSomeFunction(boolean SOME_PARAM);
     private native void nativeSomeFunction2(boolean Some_Param);
 
@@ -173,7 +169,7 @@ public class NamEsJniService extends AbstractNamEs {
         isServiceReady = value;
     }
 
-    //In theory event listener interface
+    // Callbacks from native — receive arrays, convert to List and fire events
     public void onSwitchChanged(boolean newValue)
     {
          Log.i(TAG, "onSwitchChanged, will pass notification to all listeners");

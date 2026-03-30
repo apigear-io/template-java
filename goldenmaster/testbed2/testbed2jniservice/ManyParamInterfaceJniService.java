@@ -1,21 +1,18 @@
 package testbed2.testbed2jniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import testbed2.testbed2_api.IManyParamInterface;
 import testbed2.testbed2_api.AbstractManyParamInterface;
 import testbed2.testbed2_api.IManyParamInterfaceEventListener;
+import testbed2.testbed2_android_messenger.Conversions;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 
 public class ManyParamInterfaceJniService extends AbstractManyParamInterface {
@@ -165,7 +162,7 @@ public class ManyParamInterfaceJniService extends AbstractManyParamInterface {
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -187,7 +184,7 @@ public class ManyParamInterfaceJniService extends AbstractManyParamInterface {
         }
     }
 
-    // Called on Native Impl Service
+    // Native methods — use array types for JNI compatibility
     private native void nativeSetProp1(int prop1);
     private native int nativeGetProp1();
   
@@ -200,7 +197,6 @@ public class ManyParamInterfaceJniService extends AbstractManyParamInterface {
     private native void nativeSetProp4(int prop4);
     private native int nativeGetProp4();
   
-    // methods
     private native int nativeFunc1(int param1);
     private native int nativeFunc2(int param1, int param2);
     private native int nativeFunc3(int param1, int param2, int param3);
@@ -211,7 +207,7 @@ public class ManyParamInterfaceJniService extends AbstractManyParamInterface {
         isServiceReady = value;
     }
 
-    //In theory event listener interface
+    // Callbacks from native — receive arrays, convert to List and fire events
     public void onProp1Changed(int newValue)
     {
          Log.i(TAG, "onProp1Changed, will pass notification to all listeners");

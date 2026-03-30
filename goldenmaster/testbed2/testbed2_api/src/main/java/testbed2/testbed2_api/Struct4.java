@@ -1,8 +1,10 @@
 package testbed2.testbed2_api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public  class Struct4 {
 
@@ -12,9 +14,9 @@ public  class Struct4 {
       this.field2 = field2;
       this.field3 = field3;
       this.field4 = field4;
-    }  
+    }
 
-    public Struct4() 
+    public Struct4()
     {
     }
     @JsonProperty("field1")

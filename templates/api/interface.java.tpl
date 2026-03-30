@@ -8,23 +8,24 @@ import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
 import {{camel .Module.Name}}.{{camel .Module.Name}}_api.{{Camel .Name}};
 {{- end }}
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 
   public interface I{{Camel .Interface.Name }} {
     // properties
   {{- range .Interface.Properties }}
-    void set{{Camel .Name}}({{javaParam "" .}});
-    {{javaReturn "" . }} get{{Camel .Name}}();
-    void fire{{Camel .Name}}Changed({{javaType "" .}} newValue);
+    void set{{Camel .Name}}({{javaListParam "" .}});
+    {{javaListReturn "" . }} get{{Camel .Name}}();
+    void fire{{Camel .Name}}Changed({{javaListType "" .}} newValue);
   {{ end }}
     // methods
   {{- range .Interface.Operations }}
-    {{javaReturn "" .Return}} {{camel .Name}}({{javaParams "" .Params}});
-    {{javaAsyncReturn "" .Return}} {{camel .Name}}Async({{javaParams "" .Params}});
+    {{javaListReturn "" .Return}} {{camel .Name}}({{javaListParams "" .Params}});
+    {{javaListAsyncReturn "" .Return}} {{camel .Name}}Async({{javaListParams "" .Params}});
   {{- end }}
   {{- range .Interface.Signals }}
-    public void fire{{Camel .Name}}({{javaParams "" .Params}});
+    public void fire{{Camel .Name}}({{javaListParams "" .Params}});
   {{- end }}
     boolean _isReady();
     void _shutdown();

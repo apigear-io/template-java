@@ -1,25 +1,22 @@
 package testbed2.testbed2jniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import testbed2.testbed2_api.INestedStruct2Interface;
 import testbed2.testbed2_api.AbstractNestedStruct2Interface;
 import testbed2.testbed2_api.INestedStruct2InterfaceEventListener;
+import testbed2.testbed2_android_messenger.Conversions;
 import testbed2.testbed2_api.NestedStruct1;
 import testbed2.testbed2_android_messenger.NestedStruct1Parcelable;
 import testbed2.testbed2_api.NestedStruct2;
 import testbed2.testbed2_android_messenger.NestedStruct2Parcelable;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 
 public class NestedStruct2InterfaceJniService extends AbstractNestedStruct2Interface {
@@ -101,7 +98,7 @@ public class NestedStruct2InterfaceJniService extends AbstractNestedStruct2Inter
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -123,14 +120,13 @@ public class NestedStruct2InterfaceJniService extends AbstractNestedStruct2Inter
         }
     }
 
-    // Called on Native Impl Service
+    // Native methods — use array types for JNI compatibility
     private native void nativeSetProp1(NestedStruct1 prop1);
     private native NestedStruct1 nativeGetProp1();
   
     private native void nativeSetProp2(NestedStruct2 prop2);
     private native NestedStruct2 nativeGetProp2();
   
-    // methods
     private native NestedStruct1 nativeFunc1(NestedStruct1 param1);
     private native NestedStruct1 nativeFunc2(NestedStruct1 param1, NestedStruct2 param2);
 
@@ -139,7 +135,7 @@ public class NestedStruct2InterfaceJniService extends AbstractNestedStruct2Inter
         isServiceReady = value;
     }
 
-    //In theory event listener interface
+    // Callbacks from native — receive arrays, convert to List and fire events
     public void onProp1Changed(NestedStruct1 newValue)
     {
          Log.i(TAG, "onProp1Changed, will pass notification to all listeners");

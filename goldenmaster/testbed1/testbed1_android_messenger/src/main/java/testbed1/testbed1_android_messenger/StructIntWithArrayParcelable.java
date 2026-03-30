@@ -4,7 +4,9 @@ import testbed1.testbed1_api.StructIntWithArray;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
   public  class StructIntWithArrayParcelable implements Parcelable {
 
@@ -27,7 +29,7 @@ import java.util.Arrays;
         }
 
         this.data = new StructIntWithArray();
-        data.fieldInt = in.createIntArray();
+        data.fieldInt = Conversions.toList(in.createIntArray());
     }
 
     public static final Creator<StructIntWithArrayParcelable> CREATOR = new Creator<StructIntWithArrayParcelable>() {
@@ -49,7 +51,7 @@ import java.util.Arrays;
             return;
         }
 
-        dest.writeIntArray(data.fieldInt);
+        dest.writeIntArray(Conversions.toArray(data.fieldInt, new int[0]));
 
 
     }
@@ -61,7 +63,7 @@ import java.util.Arrays;
     }
 
     public static StructIntWithArray[] unwrapArray(StructIntWithArrayParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new StructIntWithArray[0];
         return Arrays.stream(parcelables)
            .map(StructIntWithArrayParcelable::getStructIntWithArray)
            .toArray(StructIntWithArray[]::new);

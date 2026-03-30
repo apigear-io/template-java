@@ -13,6 +13,8 @@ import testbed1.testbed1_api.StructStructWithArray;
 import testbed1.testbed1_api.StructEnumWithArray;
 import testbed1.testbed1_api.Enum0;
 
+import java.util.List;
+
   public interface IStructArray2InterfaceEventListener {
     void onPropBoolChanged(StructBoolWithArray newValue);
     void onPropIntChanged(StructIntWithArray newValue);

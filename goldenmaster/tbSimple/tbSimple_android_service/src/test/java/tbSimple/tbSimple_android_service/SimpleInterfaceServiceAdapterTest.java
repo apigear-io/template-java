@@ -90,8 +90,11 @@ import org.robolectric.annotation.Config;
 import org.robolectric.RuntimeEnvironment;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import tbSimple.tbSimple_android_messenger.Conversions;
 
 interface ISimpleInterfaceMessageGetter
 {

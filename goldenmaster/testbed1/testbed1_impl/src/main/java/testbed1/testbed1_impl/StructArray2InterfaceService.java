@@ -18,6 +18,8 @@ import testbed1.testbed1_api.StructString;
 import testbed1.testbed1_api.StructStringWithArray;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,7 +30,6 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
-import java.util.Arrays;
 
 
 public class StructArray2InterfaceService extends AbstractStructArray2Interface {
@@ -154,99 +155,99 @@ public class StructArray2InterfaceService extends AbstractStructArray2Interface 
     // methods
 
     @Override
-    public StructBool[] funcBool(StructBoolWithArray paramBool) {
+    public List<StructBool> funcBool(StructBoolWithArray paramBool) {
         Log.i(TAG, "request method funcBool called, returnig default");
-        return new StructBool[]{};
+        return new ArrayList<>();
     }
 
     @Override
-    public  CompletableFuture<StructBool[]> funcBoolAsync(StructBoolWithArray paramBool) {
+    public  CompletableFuture<List<StructBool>> funcBoolAsync(StructBoolWithArray paramBool) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcBool(paramBool); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<StructBool[]> f = new CompletableFuture<>();
+            CompletableFuture<List<StructBool>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public StructInt[] funcInt(StructIntWithArray paramInt) {
+    public List<StructInt> funcInt(StructIntWithArray paramInt) {
         Log.i(TAG, "request method funcInt called, returnig default");
-        return new StructInt[]{};
+        return new ArrayList<>();
     }
 
     @Override
-    public  CompletableFuture<StructInt[]> funcIntAsync(StructIntWithArray paramInt) {
+    public  CompletableFuture<List<StructInt>> funcIntAsync(StructIntWithArray paramInt) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcInt(paramInt); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<StructInt[]> f = new CompletableFuture<>();
+            CompletableFuture<List<StructInt>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public StructFloat[] funcFloat(StructFloatWithArray paramFloat) {
+    public List<StructFloat> funcFloat(StructFloatWithArray paramFloat) {
         Log.i(TAG, "request method funcFloat called, returnig default");
-        return new StructFloat[]{};
+        return new ArrayList<>();
     }
 
     @Override
-    public  CompletableFuture<StructFloat[]> funcFloatAsync(StructFloatWithArray paramFloat) {
+    public  CompletableFuture<List<StructFloat>> funcFloatAsync(StructFloatWithArray paramFloat) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcFloat(paramFloat); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<StructFloat[]> f = new CompletableFuture<>();
+            CompletableFuture<List<StructFloat>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public StructString[] funcString(StructStringWithArray paramString) {
+    public List<StructString> funcString(StructStringWithArray paramString) {
         Log.i(TAG, "request method funcString called, returnig default");
-        return new StructString[]{};
+        return new ArrayList<>();
     }
 
     @Override
-    public  CompletableFuture<StructString[]> funcStringAsync(StructStringWithArray paramString) {
+    public  CompletableFuture<List<StructString>> funcStringAsync(StructStringWithArray paramString) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcString(paramString); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<StructString[]> f = new CompletableFuture<>();
+            CompletableFuture<List<StructString>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public Enum0[] funcEnum(StructEnumWithArray paramEnum) {
+    public List<Enum0> funcEnum(StructEnumWithArray paramEnum) {
         Log.i(TAG, "request method funcEnum called, returnig default");
-        return new Enum0[]{};
+        return new ArrayList<>();
     }
 
     @Override
-    public  CompletableFuture<Enum0[]> funcEnumAsync(StructEnumWithArray paramEnum) {
+    public  CompletableFuture<List<Enum0>> funcEnumAsync(StructEnumWithArray paramEnum) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcEnum(paramEnum); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<Enum0[]> f = new CompletableFuture<>();
+            CompletableFuture<List<Enum0>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {

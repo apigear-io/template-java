@@ -1,23 +1,25 @@
 package {{camel .Module.Name}}.{{camel .Module.Name}}_api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public  class {{Camel .Struct.Name}} {
 
-    public {{Camel .Struct.Name}}({{javaParams "" .Struct.Fields}})
+    public {{Camel .Struct.Name}}({{javaListParams "" .Struct.Fields}})
     {
       {{- range .Struct.Fields }}
       this.{{camel .Name}} = {{camel .Name}};
       {{- end }}
-    }  
+    }
 
-    public {{Camel .Struct.Name}}() 
+    public {{Camel .Struct.Name}}()
     {
 {{- range .Struct.Fields }}
 {{- if .IsArray}}
-        this.{{camel .Name}} = new {{javaElementType "" . }}[0];
+        this.{{camel .Name}} = new ArrayList<>();
 {{- else  if not .IsPrimitive }}
 {{-  if (eq .KindType "enum") }}
         this.{{camel .Name}} = {{javaType "" . }}.values()[0];
@@ -30,7 +32,7 @@ public  class {{Camel .Struct.Name}} {
 
   {{- range .Struct.Fields }}
     @JsonProperty("{{snake .Name}}")
-    public {{javaType "" .}} {{camel .Name}};
+    public {{javaListType "" .}} {{camel .Name}};
   {{- end }}
 
     public {{Camel .Struct.Name}}({{Camel .Struct.Name}} other)
@@ -38,22 +40,11 @@ public  class {{Camel .Struct.Name}} {
 {{- range .Struct.Fields }}
 {{- if .IsArray}}
 {{- if or .IsPrimitive ((eq .KindType "enum"))}}
-        this.{{camel .Name}} = other.{{camel .Name}} != null
-            ? java.util.Arrays.copyOf(other.{{camel .Name}}, other.{{camel .Name}}.length)
-            : null;
+        this.{{camel .Name}} = new ArrayList<>(other.{{camel .Name}});
 {{- else }}
-        if (other.{{camel .Name}} != null)
-        {
-            this.{{camel .Name}} = new {{javaElementType "" . }}[other.{{camel .Name}}.length];
-            for (int i = 0; i < other.{{camel .Name}}.length; i++)
-            {
-                this.{{camel .Name}}[i] = new {{javaElementType "" . }}(other.{{camel .Name}}[i]);
-            }
-        }
-        else
-        {
-            this.{{camel .Name}} = null;
-        }
+        this.{{camel .Name}} = other.{{camel .Name}}.stream()
+            .map({{javaElementType "" . }}::new)
+            .collect(Collectors.toList());
 {{- end }}
 {{- else }}
 {{- if or .IsPrimitive ((eq .KindType "enum"))}}
@@ -75,10 +66,12 @@ public  class {{Camel .Struct.Name}} {
 
         return {{- if not (len (.Struct.Fields)) }} true{{else -}}
 {{- range $idx, $s :=.Struct.Fields }}
-{{- if .IsArray}}
-        {{ if $idx}}&&{{ end }} Arrays.equals(this.{{camel .Name}}, other.{{camel .Name}})
-{{- else if or .IsPrimitive ((eq .KindType "enum"))}}
+{{- if or .IsPrimitive ((eq .KindType "enum"))}}
+{{- if not .IsArray }}
         {{ if $idx}}&&{{ end }} this.{{camel .Name}} == other.{{camel .Name}}
+{{- else }}
+        {{ if $idx}}&&{{ end }} Objects.equals(this.{{camel .Name}}, other.{{camel .Name}})
+{{- end }}
 {{- else }}
         {{ if $idx}}&&{{ end }} Objects.equals(this.{{camel .Name}}, other.{{camel .Name}})
 {{- end }}
@@ -91,7 +84,7 @@ public  class {{Camel .Struct.Name}} {
         int result = 7;
 {{- range .Struct.Fields }}
 {{- if .IsArray}}
-        result = 31 * result + Arrays.hashCode({{camel .Name}});
+        result = 31 * result + {{camel .Name}}.hashCode();
 {{- else if or (eq .KindType "int") (eq .KindType "int32") }}
         result = 31 * result + Integer.hashCode({{camel .Name}});
 {{- else if (eq .KindType "string")}}

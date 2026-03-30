@@ -1,28 +1,28 @@
 package testbed1.testbed1_api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public  class StructBoolWithArray {
 
-    public StructBoolWithArray(boolean[] fieldBool)
+    public StructBoolWithArray(List<Boolean> fieldBool)
     {
       this.fieldBool = fieldBool;
-    }  
+    }
 
-    public StructBoolWithArray() 
+    public StructBoolWithArray()
     {
-        this.fieldBool = new boolean[0];
+        this.fieldBool = new ArrayList<>();
     }
     @JsonProperty("field_bool")
-    public boolean[] fieldBool;
+    public List<Boolean> fieldBool;
 
     public StructBoolWithArray(StructBoolWithArray other)
     {
-        this.fieldBool = other.fieldBool != null
-            ? java.util.Arrays.copyOf(other.fieldBool, other.fieldBool.length)
-            : null;
+        this.fieldBool = new ArrayList<>(other.fieldBool);
     }
 
     @Override
@@ -32,13 +32,13 @@ public  class StructBoolWithArray {
         StructBoolWithArray other = (StructBoolWithArray) o;
 
         return
-         Arrays.equals(this.fieldBool, other.fieldBool);
+         Objects.equals(this.fieldBool, other.fieldBool);
     }
 
     @Override
     public int hashCode() {
         int result = 7;
-        result = 31 * result + Arrays.hashCode(fieldBool);
+        result = 31 * result + fieldBool.hashCode();
         return result;
     }
 

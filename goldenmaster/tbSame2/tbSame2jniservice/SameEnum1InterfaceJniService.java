@@ -1,23 +1,20 @@
 package tbSame2.tbSame2jniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import tbSame2.tbSame2_api.ISameEnum1Interface;
 import tbSame2.tbSame2_api.AbstractSameEnum1Interface;
 import tbSame2.tbSame2_api.ISameEnum1InterfaceEventListener;
+import tbSame2.tbSame2_android_messenger.Conversions;
 import tbSame2.tbSame2_api.Enum1;
 import tbSame2.tbSame2_android_messenger.Enum1Parcelable;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 
 public class SameEnum1InterfaceJniService extends AbstractSameEnum1Interface {
@@ -65,7 +62,7 @@ public class SameEnum1InterfaceJniService extends AbstractSameEnum1Interface {
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -87,11 +84,10 @@ public class SameEnum1InterfaceJniService extends AbstractSameEnum1Interface {
         }
     }
 
-    // Called on Native Impl Service
+    // Native methods — use array types for JNI compatibility
     private native void nativeSetProp1(Enum1 prop1);
     private native Enum1 nativeGetProp1();
   
-    // methods
     private native Enum1 nativeFunc1(Enum1 param1);
 
     // Called by Native Impl Service
@@ -99,7 +95,7 @@ public class SameEnum1InterfaceJniService extends AbstractSameEnum1Interface {
         isServiceReady = value;
     }
 
-    //In theory event listener interface
+    // Callbacks from native — receive arrays, convert to List and fire events
     public void onProp1Changed(Enum1 newValue)
     {
          Log.i(TAG, "onProp1Changed, will pass notification to all listeners");

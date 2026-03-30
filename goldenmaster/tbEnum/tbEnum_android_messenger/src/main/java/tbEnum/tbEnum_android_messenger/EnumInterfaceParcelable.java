@@ -5,7 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import tbEnum.tbEnum_api.Enum0;
 import tbEnum.tbEnum_api.Enum1;
 import tbEnum.tbEnum_api.Enum2;
@@ -70,7 +72,7 @@ import tbEnum.tbEnum_api.Enum3;
     }
 
     public static IEnumInterface[] unwrapArray(EnumInterfaceParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new IEnumInterface[0];
         return Arrays.stream(parcelables)
            .map(EnumInterfaceParcelable::getEnumInterface)
            .toArray(IEnumInterface[]::new);

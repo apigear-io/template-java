@@ -29,7 +29,10 @@ import testbed1.testbed1_api.IStructInterface;
 import testbed1.testbed1_api.AbstractStructInterface;
 import testbed1.testbed1_api.RemoteOperationException;
 import testbed1.testbed1_android_messenger.StructInterfaceMessageType;
+import testbed1.testbed1_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 public class StructInterfaceServiceAdapter extends Service

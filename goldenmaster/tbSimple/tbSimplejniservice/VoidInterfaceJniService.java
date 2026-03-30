@@ -1,21 +1,18 @@
 package tbSimple.tbSimplejniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import tbSimple.tbSimple_api.IVoidInterface;
 import tbSimple.tbSimple_api.AbstractVoidInterface;
 import tbSimple.tbSimple_api.IVoidInterfaceEventListener;
+import tbSimple.tbSimple_android_messenger.Conversions;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 
 public class VoidInterfaceJniService extends AbstractVoidInterface {
@@ -34,7 +31,7 @@ public class VoidInterfaceJniService extends AbstractVoidInterface {
     @Override
     public void funcVoid() {
         Log.i(TAG, "request method funcVoid called, will call native");
-         nativeFuncVoid();
+        nativeFuncVoid();
     }
 
     @Override
@@ -48,7 +45,7 @@ public class VoidInterfaceJniService extends AbstractVoidInterface {
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -70,8 +67,7 @@ public class VoidInterfaceJniService extends AbstractVoidInterface {
         }
     }
 
-    // Called on Native Impl Service
-    // methods
+    // Native methods — use array types for JNI compatibility
     private native void nativeFuncVoid();
 
     // Called by Native Impl Service
@@ -79,7 +75,7 @@ public class VoidInterfaceJniService extends AbstractVoidInterface {
         isServiceReady = value;
     }
 
-    //In theory event listener interface
+    // Callbacks from native — receive arrays, convert to List and fire events
     public void onSigVoid()
     {
         Log.i(TAG, "onSigVoid, will pass notification to all listeners");

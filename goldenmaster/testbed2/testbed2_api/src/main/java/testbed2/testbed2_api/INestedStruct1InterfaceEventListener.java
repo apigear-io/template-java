@@ -10,6 +10,8 @@ import testbed2.testbed2_api.Enum1;
 import testbed2.testbed2_api.Enum2;
 import testbed2.testbed2_api.Enum3;
 
+import java.util.List;
+
   public interface INestedStruct1InterfaceEventListener {
     void onProp1Changed(NestedStruct1 newValue);
     void onSig1(NestedStruct1 param1);

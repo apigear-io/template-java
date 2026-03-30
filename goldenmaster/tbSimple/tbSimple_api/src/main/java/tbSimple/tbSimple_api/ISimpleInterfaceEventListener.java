@@ -1,5 +1,7 @@
 package tbSimple.tbSimple_api;
 
+import java.util.List;
+
   public interface ISimpleInterfaceEventListener {
     void onPropBoolChanged(boolean newValue);
     void onPropIntChanged(int newValue);

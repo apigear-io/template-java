@@ -5,9 +5,11 @@ import tbSimple.tbSimple_api.AbstractNoOperationsInterface;
 import tbSimple.tbSimple_api.INoOperationsInterfaceEventListener;
 
 import tbSimple.tbSimple_android_client.NoOperationsInterfaceClient;
+import tbSimple.tbSimple_android_messenger.Conversions;
 import android.content.Context;
 
 import android.os.Bundle;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import android.util.Log;
 
@@ -29,31 +31,37 @@ public class NoOperationsInterfaceJniClient extends AbstractNoOperationsInterfac
     {
         return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
+    // Interface method — List types
     @Override
     public void setPropBool(boolean propBool)
     {
-        Log.i(TAG, "got request from ue, setPropBool" + (propBool));
+        Log.i(TAG, "got request setPropBool" + (propBool));
         mMessengerClient.setPropBool(propBool);
     }
     @Override
     public boolean getPropBool()
     {
-        Log.i(TAG, "got request from ue, getPropBool");
+        Log.i(TAG, "got request getPropBool");
         return mMessengerClient.getPropBool();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setPropInt(int propInt)
     {
-        Log.i(TAG, "got request from ue, setPropInt" + (propInt));
+        Log.i(TAG, "got request setPropInt" + (propInt));
         mMessengerClient.setPropInt(propInt);
     }
     @Override
     public int getPropInt()
     {
-        Log.i(TAG, "got request from ue, getPropInt");
+        Log.i(TAG, "got request getPropInt");
         return mMessengerClient.getPropInt();
     }
+
+
     
 
     public boolean bind(Context ctx, String packageName, String connectionID){
@@ -92,7 +100,7 @@ public class NoOperationsInterfaceJniClient extends AbstractNoOperationsInterfac
         nativeIsReady(isReady);
     }
 
-    //Event listener
+    // Event listener — receives List from messenger client, converts to array for native
     @Override
     public void onPropBoolChanged(boolean newValue)
     {
@@ -117,6 +125,9 @@ public class NoOperationsInterfaceJniClient extends AbstractNoOperationsInterfac
         Log.i(TAG, "NOTIFICATION from messenger client Signal sigBool "+ " " + paramBool);
         nativeOnSigBool(paramBool);
     }
+
+
+    // Native declarations — array types for JNI compatibility
      private native void nativeOnPropBoolChanged(boolean propBool);
      private native void nativeOnPropIntChanged(int propInt);
     private native void nativeOnSigVoid();

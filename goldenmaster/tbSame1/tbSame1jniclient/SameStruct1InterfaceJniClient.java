@@ -6,11 +6,13 @@ import tbSame1.tbSame1_api.ISameStruct1InterfaceEventListener;
 import tbSame1.tbSame1_api.RemoteOperationException;
 
 import tbSame1.tbSame1_android_client.SameStruct1InterfaceClient;
+import tbSame1.tbSame1_android_messenger.Conversions;
 import tbSame1.tbSame1_api.Struct1;
 import tbSame1.tbSame1_android_messenger.Struct1Parcelable;
 import android.content.Context;
 
 import android.os.Bundle;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import android.util.Log;
 
@@ -32,28 +34,32 @@ public class SameStruct1InterfaceJniClient extends AbstractSameStruct1Interface 
     {
         return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
+    // Interface method — List types
     @Override
     public void setProp1(Struct1 prop1)
     {
-        Log.i(TAG, "got request from ue, setProp1" + (prop1));
+        Log.i(TAG, "got request setProp1" + (prop1));
         mMessengerClient.setProp1(prop1);
     }
     @Override
     public Struct1 getProp1()
     {
-        Log.i(TAG, "got request from ue, getProp1");
+        Log.i(TAG, "got request getProp1");
         return mMessengerClient.getProp1();
     }
+
+
     
-     @Override
-     public Struct1 func1(Struct1 param1)
-     {
+    // Interface method — List types
+    @Override
+    public Struct1 func1(Struct1 param1)
+    {
         Log.v(TAG, "Blocking callfunc1 - should not be used ");
         return mMessengerClient.func1(param1);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFunc1Result with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -120,7 +126,7 @@ public class SameStruct1InterfaceJniClient extends AbstractSameStruct1Interface 
         nativeIsReady(isReady);
     }
 
-    //Event listener
+    // Event listener — receives List from messenger client, converts to array for native
     @Override
     public void onProp1Changed(Struct1 newValue)
     {
@@ -133,6 +139,9 @@ public class SameStruct1InterfaceJniClient extends AbstractSameStruct1Interface 
         Log.i(TAG, "NOTIFICATION from messenger client Signal sig1 "+ " " + param1);
         nativeOnSig1(param1);
     }
+
+
+    // Native declarations — array types for JNI compatibility
      private native void nativeOnProp1Changed(Struct1 prop1);
     private native void nativeOnSig1(Struct1 param1);
     private native void nativeOnFunc1Result(Struct1 result, String callId);

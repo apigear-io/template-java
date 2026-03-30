@@ -1,6 +1,8 @@
 package tbNames.tbNames_api;
 import tbNames.tbNames_api.EnumWithUnderScores;
 
+import java.util.List;
+
   public interface INamEsEventListener {
     void onSwitchChanged(boolean newValue);
     void onSomePropertyChanged(int newValue);

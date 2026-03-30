@@ -8,6 +8,7 @@ import tbSame1.tbSame1_api.Enum1;
 import tbSame1.tbSame1_api.Enum2;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractSameEnum2Interface implements ISameEnum2Interface {
     private Collection<ISameEnum2InterfaceEventListener> listeners = ConcurrentHashMap.newKeySet();

@@ -6,11 +6,13 @@ import tbRefIfaces.tbRefIfaces_api.IParentIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.RemoteOperationException;
 
 import tbRefIfaces.tbRefIfaces_android_client.ParentIfClient;
+import tbRefIfaces.tbRefIfaces_android_messenger.Conversions;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_android_messenger.SimpleLocalIfParcelable;
 import android.content.Context;
 
 import android.os.Bundle;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import android.util.Log;
 
@@ -32,67 +34,92 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
     {
         return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
+    // Interface method — List types
     @Override
     public void setLocalIf(ISimpleLocalIf localIf)
     {
-        Log.i(TAG, "got request from ue, setLocalIf" + (localIf));
+        Log.i(TAG, "got request setLocalIf" + (localIf));
         mMessengerClient.setLocalIf(localIf);
     }
     @Override
     public ISimpleLocalIf getLocalIf()
     {
-        Log.i(TAG, "got request from ue, getLocalIf");
+        Log.i(TAG, "got request getLocalIf");
         return mMessengerClient.getLocalIf();
     }
+
+
     
+    // Interface method — List types
     @Override
-    public void setLocalIfList(ISimpleLocalIf[] localIfList)
+    public void setLocalIfList(List<ISimpleLocalIf> localIfList)
     {
-        Log.i(TAG, "got request from ue, setLocalIfList" + (localIfList));
+        Log.i(TAG, "got request setLocalIfList" + (localIfList));
         mMessengerClient.setLocalIfList(localIfList);
     }
-    @Override
-    public ISimpleLocalIf[] getLocalIfList()
+    // JNI entry point — array types for C++ compatibility
+    public void setLocalIfList(ISimpleLocalIf[] localIfList)
     {
-        Log.i(TAG, "got request from ue, getLocalIfList");
+        Log.i(TAG, "got JNI request setLocalIfList");
+        setLocalIfList(Conversions.toList(localIfList));
+    }
+    @Override
+    public List<ISimpleLocalIf> getLocalIfList()
+    {
+        Log.i(TAG, "got request getLocalIfList");
         return mMessengerClient.getLocalIfList();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setImportedIf(tbIfaceimport.tbIfaceimport_api.IEmptyIf importedIf)
     {
-        Log.i(TAG, "got request from ue, setImportedIf" + (importedIf));
+        Log.i(TAG, "got request setImportedIf" + (importedIf));
         mMessengerClient.setImportedIf(importedIf);
     }
     @Override
     public tbIfaceimport.tbIfaceimport_api.IEmptyIf getImportedIf()
     {
-        Log.i(TAG, "got request from ue, getImportedIf");
+        Log.i(TAG, "got request getImportedIf");
         return mMessengerClient.getImportedIf();
     }
+
+
     
+    // Interface method — List types
     @Override
-    public void setImportedIfList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfList)
+    public void setImportedIfList(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> importedIfList)
     {
-        Log.i(TAG, "got request from ue, setImportedIfList" + (importedIfList));
+        Log.i(TAG, "got request setImportedIfList" + (importedIfList));
         mMessengerClient.setImportedIfList(importedIfList);
     }
-    @Override
-    public tbIfaceimport.tbIfaceimport_api.IEmptyIf[] getImportedIfList()
+    // JNI entry point — array types for C++ compatibility
+    public void setImportedIfList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfList)
     {
-        Log.i(TAG, "got request from ue, getImportedIfList");
+        Log.i(TAG, "got JNI request setImportedIfList");
+        setImportedIfList(Conversions.toList(importedIfList));
+    }
+    @Override
+    public List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> getImportedIfList()
+    {
+        Log.i(TAG, "got request getImportedIfList");
         return mMessengerClient.getImportedIfList();
     }
+
+
     
-     @Override
-     public ISimpleLocalIf localIfMethod(ISimpleLocalIf param)
-     {
+    // Interface method — List types
+    @Override
+    public ISimpleLocalIf localIfMethod(ISimpleLocalIf param)
+    {
         Log.v(TAG, "Blocking calllocalIfMethod - should not be used ");
         return mMessengerClient.localIfMethod(param);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnLocalIfMethodResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -122,15 +149,16 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.localIfMethodAsync(param);
     }
-     @Override
-     public ISimpleLocalIf[] localIfMethodList(ISimpleLocalIf[] param)
-     {
+    // Interface method — List types
+    @Override
+    public List<ISimpleLocalIf> localIfMethodList(List<ISimpleLocalIf> param)
+    {
         Log.v(TAG, "Blocking calllocalIfMethodList - should not be used ");
         return mMessengerClient.localIfMethodList(param);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnLocalIfMethodListResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -140,7 +168,7 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
     */
     public void localIfMethodListAsync(String callId, ISimpleLocalIf[] param){
         Log.v(TAG, "non blocking call localIfMethodList ");
-        mMessengerClient.localIfMethodListAsync(param).whenComplete((result, throwable) -> {
+        mMessengerClient.localIfMethodListAsync(Conversions.toList(param)).whenComplete((result, throwable) -> {
             if (throwable != null) {
                 String errorMessage = throwable.getMessage() != null
                     ? throwable.getMessage() : throwable.getClass().getName();
@@ -149,26 +177,27 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
                 Log.w(TAG, "localIfMethodList async failed: " + errorMessage);
                 nativeAsyncOperationFailed(callId, errorMessage, errorCode);
             } else {
-                nativeOnLocalIfMethodListResult(result, callId);
+                nativeOnLocalIfMethodListResult(Conversions.toArray(result, new ISimpleLocalIf[0]), callId);
             }
         });
     }
 
     @Override
-    public CompletableFuture<ISimpleLocalIf[]> localIfMethodListAsync(ISimpleLocalIf[] param)
+    public CompletableFuture<List<ISimpleLocalIf>> localIfMethodListAsync(List<ISimpleLocalIf> param)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.localIfMethodListAsync(param);
     }
-     @Override
-     public tbIfaceimport.tbIfaceimport_api.IEmptyIf importedIfMethod(tbIfaceimport.tbIfaceimport_api.IEmptyIf param)
-     {
+    // Interface method — List types
+    @Override
+    public tbIfaceimport.tbIfaceimport_api.IEmptyIf importedIfMethod(tbIfaceimport.tbIfaceimport_api.IEmptyIf param)
+    {
         Log.v(TAG, "Blocking callimportedIfMethod - should not be used ");
         return mMessengerClient.importedIfMethod(param);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnImportedIfMethodResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -198,15 +227,16 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.importedIfMethodAsync(param);
     }
-     @Override
-     public tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfMethodList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param)
-     {
+    // Interface method — List types
+    @Override
+    public List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> importedIfMethodList(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> param)
+    {
         Log.v(TAG, "Blocking callimportedIfMethodList - should not be used ");
         return mMessengerClient.importedIfMethodList(param);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnImportedIfMethodListResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -216,7 +246,7 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
     */
     public void importedIfMethodListAsync(String callId, tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param){
         Log.v(TAG, "non blocking call importedIfMethodList ");
-        mMessengerClient.importedIfMethodListAsync(param).whenComplete((result, throwable) -> {
+        mMessengerClient.importedIfMethodListAsync(Conversions.toList(param)).whenComplete((result, throwable) -> {
             if (throwable != null) {
                 String errorMessage = throwable.getMessage() != null
                     ? throwable.getMessage() : throwable.getClass().getName();
@@ -225,13 +255,13 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
                 Log.w(TAG, "importedIfMethodList async failed: " + errorMessage);
                 nativeAsyncOperationFailed(callId, errorMessage, errorCode);
             } else {
-                nativeOnImportedIfMethodListResult(result, callId);
+                nativeOnImportedIfMethodListResult(Conversions.toArray(result, new tbIfaceimport.tbIfaceimport_api.IEmptyIf[0]), callId);
             }
         });
     }
 
     @Override
-    public CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf[]> importedIfMethodListAsync(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param)
+    public CompletableFuture<List<tbIfaceimport.tbIfaceimport_api.IEmptyIf>> importedIfMethodListAsync(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> param)
     {
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.importedIfMethodListAsync(param);
@@ -273,7 +303,7 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
         nativeIsReady(isReady);
     }
 
-    //Event listener
+    // Event listener — receives List from messenger client, converts to array for native
     @Override
     public void onLocalIfChanged(ISimpleLocalIf newValue)
     {
@@ -281,10 +311,10 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
         nativeOnLocalIfChanged(newValue);
     }
     @Override
-    public void onLocalIfListChanged(ISimpleLocalIf[] newValue)
+    public void onLocalIfListChanged(List<ISimpleLocalIf> newValue)
     {
         Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
-        nativeOnLocalIfListChanged(newValue);
+        nativeOnLocalIfListChanged(Conversions.toArray(newValue, new ISimpleLocalIf[0]));
     }
     @Override
     public void onImportedIfChanged(tbIfaceimport.tbIfaceimport_api.IEmptyIf newValue)
@@ -293,10 +323,10 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
         nativeOnImportedIfChanged(newValue);
     }
     @Override
-    public void onImportedIfListChanged(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] newValue)
+    public void onImportedIfListChanged(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> newValue)
     {
         Log.i(TAG, "NOTIFICATION from messenger client " + newValue);
-        nativeOnImportedIfListChanged(newValue);
+        nativeOnImportedIfListChanged(Conversions.toArray(newValue, new tbIfaceimport.tbIfaceimport_api.IEmptyIf[0]));
     }
     @Override
     public void onLocalIfSignal(ISimpleLocalIf param)
@@ -305,10 +335,10 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
         nativeOnLocalIfSignal(param);
     }
     @Override
-    public void onLocalIfSignalList(ISimpleLocalIf[] param)
+    public void onLocalIfSignalList(List<ISimpleLocalIf> param)
     {
         Log.i(TAG, "NOTIFICATION from messenger client Signal localIfSignalList "+ " " + param);
-        nativeOnLocalIfSignalList(param);
+        nativeOnLocalIfSignalList(Conversions.toArray(param, new ISimpleLocalIf[0]));
     }
     @Override
     public void onImportedIfSignal(tbIfaceimport.tbIfaceimport_api.IEmptyIf param)
@@ -317,11 +347,14 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
         nativeOnImportedIfSignal(param);
     }
     @Override
-    public void onImportedIfSignalList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param)
+    public void onImportedIfSignalList(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> param)
     {
         Log.i(TAG, "NOTIFICATION from messenger client Signal importedIfSignalList "+ " " + param);
-        nativeOnImportedIfSignalList(param);
+        nativeOnImportedIfSignalList(Conversions.toArray(param, new tbIfaceimport.tbIfaceimport_api.IEmptyIf[0]));
     }
+
+
+    // Native declarations — array types for JNI compatibility
      private native void nativeOnLocalIfChanged(ISimpleLocalIf localIf);
      private native void nativeOnLocalIfListChanged(ISimpleLocalIf[] localIfList);
      private native void nativeOnImportedIfChanged(tbIfaceimport.tbIfaceimport_api.IEmptyIf importedIf);

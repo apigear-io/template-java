@@ -5,7 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 {{- template "importApi" .}}
 
@@ -57,9 +59,9 @@ import java.util.Arrays;
     {{- range .Interface.Properties }}
 {{- if .IsArray}}
 {{- if .IsPrimitive }}
-        dest.write{{ ( Camel  (javaElementType "" .) ) }}Array(data.get{{Camel .Name}}());
+        dest.write{{ ( Camel  (javaElementType "" .) ) }}Array(Conversions.toArray(data.get{{Camel .Name}}(), new {{javaElementType "" .}}[0]));
 {{- else }}
-        dest.writeTypedArray({{template "getParcelable" .}}.wrapArray(data.get{{Camel .Name}}()), flags);
+        dest.writeTypedArray({{template "getParcelable" .}}.wrapArray(Conversions.toArray(data.get{{Camel .Name}}(), new {{javaElementType "" .}}[0])), flags);
 {{- end }}
 {{- else }}
 {{- if .IsPrimitive }}
@@ -81,7 +83,7 @@ import java.util.Arrays;
     }
 
     public static I{{Camel .Interface.Name}}[] unwrapArray({{Camel .Interface.Name}}Parcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new I{{Camel .Interface.Name}}[0];
         return Arrays.stream(parcelables)
            .map({{Camel .Interface.Name}}Parcelable::get{{Camel .Interface.Name}})
            .toArray(I{{Camel .Interface.Name}}[]::new);

@@ -4,6 +4,8 @@ import tbSame1.tbSame1_api.Struct2;
 import tbSame1.tbSame1_api.Enum1;
 import tbSame1.tbSame1_api.Enum2;
 
+import java.util.List;
+
   public interface ISameEnum2InterfaceEventListener {
     void onProp1Changed(Enum1 newValue);
     void onProp2Changed(Enum2 newValue);

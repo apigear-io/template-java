@@ -25,7 +25,10 @@ import tbRefIfaces.tbRefIfaces_api.IParentIf;
 import tbRefIfaces.tbRefIfaces_api.AbstractParentIf;
 import tbRefIfaces.tbRefIfaces_api.RemoteOperationException;
 import tbRefIfaces.tbRefIfaces_android_messenger.ParentIfMessageType;
+import tbRefIfaces.tbRefIfaces_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
@@ -33,7 +36,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
 
 public class ParentIfClient extends AbstractParentIf implements ServiceConnection
@@ -51,9 +53,9 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
     private final Map<Integer, Consumer<Bundle>> mpendingCalls = new ConcurrentHashMap<>();
     AtomicInteger callIdsGetter = new AtomicInteger(0);
     private ISimpleLocalIf m_localIf = null;
-    private ISimpleLocalIf[] m_localIfList = new ISimpleLocalIf[]{};
+    private List<ISimpleLocalIf> m_localIfList = new ArrayList<>();
     private tbIfaceimport.tbIfaceimport_api.IEmptyIf m_importedIf = null;
-    private tbIfaceimport.tbIfaceimport_api.IEmptyIf[] m_importedIfList = new tbIfaceimport.tbIfaceimport_api.IEmptyIf[]{};
+    private List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> m_importedIfList = new ArrayList<>();
 
 
 	public ParentIfClient(Context applicationContext, String connectionId)
@@ -204,13 +206,13 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 			        ISimpleLocalIf localIf = data.getParcelable("localIf", SimpleLocalIfParcelable.class).getSimpleLocalIf();
 				    onLocalIf(localIf);
                     
-                    ISimpleLocalIf[] localIfList =  SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("localIfList", SimpleLocalIfParcelable.class));
+                    List<ISimpleLocalIf> localIfList = Conversions.toList(SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("localIfList", SimpleLocalIfParcelable.class)));
 				    onLocalIfList(localIfList);
                     
 			        tbIfaceimport.tbIfaceimport_api.IEmptyIf importedIf = data.getParcelable("importedIf", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class).getEmptyIf();
 				    onImportedIf(importedIf);
                     
-                    tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfList =  tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class));
+                    List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> importedIfList = Conversions.toList(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class)));
 				    onImportedIfList(importedIfList);
 
                     break;
@@ -232,7 +234,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 				    data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
 
                     
-                    ISimpleLocalIf[] localIfList =  SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("localIfList", SimpleLocalIfParcelable.class));
+                    List<ISimpleLocalIf> localIfList = Conversions.toList(SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("localIfList", SimpleLocalIfParcelable.class)));
 
 				    onLocalIfList(localIfList);
 				    break;
@@ -254,12 +256,12 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 				    data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
 
                     
-                    tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfList =  tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class));
+                    List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> importedIfList = Conversions.toList(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class)));
 
 				    onImportedIfList(importedIfList);
 				    break;
 			    }
-			    // TODO params may be different structs from different modules, there should be a custom class loader 
+			    // TODO params may be different structs from different modules, there should be a custom class loader
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 			    case SIG_LocalIfSignal: {
@@ -278,7 +280,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
                     
         data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
                 
-                    ISimpleLocalIf[] param =  SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("param", SimpleLocalIfParcelable.class));
+                    List<ISimpleLocalIf> param = Conversions.toList(SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("param", SimpleLocalIfParcelable.class)));
 				    onLocalIfSignalList(param);
 				    break;
 			    }
@@ -298,7 +300,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
                     
         data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
                 
-                    tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param =  tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class));
+                    List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> param = Conversions.toList(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class)));
 				    onImportedIfSignalList(param);
 				    break;
 			    }
@@ -419,38 +421,38 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 
   
     @Override
-    public void setLocalIfList(ISimpleLocalIf[] localIfList)
+    public void setLocalIfList(List<ISimpleLocalIf> localIfList)
     {
         Log.i(TAG, "request setLocalIfList called "+ localIfList);
-        if (! Arrays.equals(m_localIfList, localIfList))
+        if (!m_localIfList.equals(localIfList))
         {
 			Message msg = new Message();
 			msg.what = ParentIfMessageType.PROP_LocalIfList.getValue();
 			Bundle data = new Bundle();
             
-		        data.putParcelableArray("localIfList", SimpleLocalIfParcelable.wrapArray(localIfList));
+		        data.putParcelableArray("localIfList", SimpleLocalIfParcelable.wrapArray(Conversions.toArray(localIfList, new ISimpleLocalIf[0])));
 			msg.setData(data);
 			mClientHandler.sendToService(msg);
         }
 
     }
 
-	public void onLocalIfList(ISimpleLocalIf[] localIfList)
+	public void onLocalIfList(List<ISimpleLocalIf> localIfList)
     {
         Log.i(TAG, "value received from service for LocalIfList ");
-        if (! Arrays.equals(m_localIfList, localIfList))
+        if (!m_localIfList.equals(localIfList))
         {
-            m_localIfList = localIfList;
+            m_localIfList = new ArrayList<>(localIfList);
             fireLocalIfListChanged(localIfList);
         }
 
     }
 
     @Override
-    public ISimpleLocalIf[] getLocalIfList()
+    public List<ISimpleLocalIf> getLocalIfList()
     {
         Log.i(TAG, "request getLocalIfList called, returning local");
-        return m_localIfList;
+        return new ArrayList<>(m_localIfList);
     }
 
   
@@ -491,44 +493,44 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 
   
     @Override
-    public void setImportedIfList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfList)
+    public void setImportedIfList(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> importedIfList)
     {
         Log.i(TAG, "request setImportedIfList called "+ importedIfList);
-        if (! Arrays.equals(m_importedIfList, importedIfList))
+        if (!m_importedIfList.equals(importedIfList))
         {
 			Message msg = new Message();
 			msg.what = ParentIfMessageType.PROP_ImportedIfList.getValue();
 			Bundle data = new Bundle();
             
-		        data.putParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(importedIfList));
+		        data.putParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(Conversions.toArray(importedIfList, new tbIfaceimport.tbIfaceimport_api.IEmptyIf[0])));
 			msg.setData(data);
 			mClientHandler.sendToService(msg);
         }
 
     }
 
-	public void onImportedIfList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfList)
+	public void onImportedIfList(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> importedIfList)
     {
         Log.i(TAG, "value received from service for ImportedIfList ");
-        if (! Arrays.equals(m_importedIfList, importedIfList))
+        if (!m_importedIfList.equals(importedIfList))
         {
-            m_importedIfList = importedIfList;
+            m_importedIfList = new ArrayList<>(importedIfList);
             fireImportedIfListChanged(importedIfList);
         }
 
     }
 
     @Override
-    public tbIfaceimport.tbIfaceimport_api.IEmptyIf[] getImportedIfList()
+    public List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> getImportedIfList()
     {
         Log.i(TAG, "request getImportedIfList called, returning local");
-        return m_importedIfList;
+        return new ArrayList<>(m_importedIfList);
     }
 
   
     // methods
 
-   
+
     @Override
     public ISimpleLocalIf localIfMethod(ISimpleLocalIf param) {
         CompletableFuture<ISimpleLocalIf> resFuture = localIfMethodAsync(param);
@@ -589,10 +591,10 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
         return future;
     }
 
-   
+
     @Override
-    public ISimpleLocalIf[] localIfMethodList(ISimpleLocalIf[] param) {
-        CompletableFuture<ISimpleLocalIf[]> resFuture = localIfMethodListAsync(param);
+    public List<ISimpleLocalIf> localIfMethodList(List<ISimpleLocalIf> param) {
+        CompletableFuture<List<ISimpleLocalIf>> resFuture = localIfMethodListAsync(param);
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
@@ -608,7 +610,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
     }
 
     @Override
-    public  CompletableFuture<ISimpleLocalIf[]> localIfMethodListAsync(ISimpleLocalIf[] param) {
+    public  CompletableFuture<List<ISimpleLocalIf>> localIfMethodListAsync(List<ISimpleLocalIf> param) {
 
     	Log.i(TAG, "Call on service localIfMethodList  "+ " " + param);
 		Message msg = new Message();
@@ -617,11 +619,11 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
         int msgId =  callIdsGetter.getAndIncrement();
         data.putInt("callId",msgId);
         
-		        data.putParcelableArray("param", SimpleLocalIfParcelable.wrapArray(param));
+		        data.putParcelableArray("param", SimpleLocalIfParcelable.wrapArray(Conversions.toArray(param, new ISimpleLocalIf[0])));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
 
-        CompletableFuture<ISimpleLocalIf[]>  future = new CompletableFuture<>();
+        CompletableFuture<List<ISimpleLocalIf>>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
@@ -638,7 +640,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
                 return;
             }
             
-            ISimpleLocalIf[] result =  SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])bundle.getParcelableArray("result", SimpleLocalIfParcelable.class));
+            List<ISimpleLocalIf> result = Conversions.toList(SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])bundle.getParcelableArray("result", SimpleLocalIfParcelable.class)));
             Log.v(TAG, "resolve localIfMethodList" + result);
             future.complete(result);
         };
@@ -650,7 +652,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
         return future;
     }
 
-   
+
     @Override
     public tbIfaceimport.tbIfaceimport_api.IEmptyIf importedIfMethod(tbIfaceimport.tbIfaceimport_api.IEmptyIf param) {
         CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf> resFuture = importedIfMethodAsync(param);
@@ -711,10 +713,10 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
         return future;
     }
 
-   
+
     @Override
-    public tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfMethodList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param) {
-        CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf[]> resFuture = importedIfMethodListAsync(param);
+    public List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> importedIfMethodList(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> param) {
+        CompletableFuture<List<tbIfaceimport.tbIfaceimport_api.IEmptyIf>> resFuture = importedIfMethodListAsync(param);
         try {
             return resFuture.get();
         } catch (ExecutionException e) {
@@ -730,7 +732,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
     }
 
     @Override
-    public  CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf[]> importedIfMethodListAsync(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param) {
+    public  CompletableFuture<List<tbIfaceimport.tbIfaceimport_api.IEmptyIf>> importedIfMethodListAsync(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> param) {
 
     	Log.i(TAG, "Call on service importedIfMethodList  "+ " " + param);
 		Message msg = new Message();
@@ -739,11 +741,11 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
         int msgId =  callIdsGetter.getAndIncrement();
         data.putInt("callId",msgId);
         
-		        data.putParcelableArray("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(param));
+		        data.putParcelableArray("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(Conversions.toArray(param, new tbIfaceimport.tbIfaceimport_api.IEmptyIf[0])));
 		msg.setData(data);
         msg.replyTo = mClientMessenger;
 
-        CompletableFuture<tbIfaceimport.tbIfaceimport_api.IEmptyIf[]>  future = new CompletableFuture<>();
+        CompletableFuture<List<tbIfaceimport.tbIfaceimport_api.IEmptyIf>>  future = new CompletableFuture<>();
         Consumer<Bundle> resolver = bundle -> {
             if (bundle == null)
             {
@@ -760,7 +762,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
                 return;
             }
             
-            tbIfaceimport.tbIfaceimport_api.IEmptyIf[] result =  tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])bundle.getParcelableArray("result", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class));
+            List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> result = Conversions.toList(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])bundle.getParcelableArray("result", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class)));
             Log.v(TAG, "resolve importedIfMethodList" + result);
             future.complete(result);
         };
@@ -770,7 +772,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
 		mClientHandler.sendToService(msg);
 
         return future;
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -783,7 +785,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
         Log.i(TAG, "onLocalIfSignal  received from service");
         fireLocalIfSignal(param);
     }
-    public void onLocalIfSignalList(ISimpleLocalIf[] param)
+    public void onLocalIfSignalList(List<ISimpleLocalIf> param)
     {
         Log.i(TAG, "onLocalIfSignalList  received from service");
         fireLocalIfSignalList(param);
@@ -793,7 +795,7 @@ public class ParentIfClient extends AbstractParentIf implements ServiceConnectio
         Log.i(TAG, "onImportedIfSignal  received from service");
         fireImportedIfSignal(param);
     }
-    public void onImportedIfSignalList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param)
+    public void onImportedIfSignalList(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> param)
     {
         Log.i(TAG, "onImportedIfSignalList  received from service");
         fireImportedIfSignalList(param);

@@ -1,8 +1,10 @@
 package customTypes.customTypes_api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public  class Vector3D {
 
@@ -11,9 +13,9 @@ public  class Vector3D {
       this.x = x;
       this.y = y;
       this.z = z;
-    }  
+    }
 
-    public Vector3D() 
+    public Vector3D()
     {
     }
     @JsonProperty("x")

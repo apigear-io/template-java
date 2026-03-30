@@ -1,20 +1,21 @@
 package testbed2.testbed2_api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Arrays;
 
 public class Testbed2TestHelper
 {
 
-    static public Struct1 makeTestStruct1() 
+    static public Struct1 makeTestStruct1()
     {
         Struct1 testStruct = new Struct1();
         testStruct.field1 = 1;
         return testStruct;
     }
 
-    static public Struct2 makeTestStruct2() 
+    static public Struct2 makeTestStruct2()
     {
         Struct2 testStruct = new Struct2();
         testStruct.field1 = 1;
@@ -22,7 +23,7 @@ public class Testbed2TestHelper
         return testStruct;
     }
 
-    static public Struct3 makeTestStruct3() 
+    static public Struct3 makeTestStruct3()
     {
         Struct3 testStruct = new Struct3();
         testStruct.field1 = 1;
@@ -31,7 +32,7 @@ public class Testbed2TestHelper
         return testStruct;
     }
 
-    static public Struct4 makeTestStruct4() 
+    static public Struct4 makeTestStruct4()
     {
         Struct4 testStruct = new Struct4();
         testStruct.field1 = 1;
@@ -41,14 +42,14 @@ public class Testbed2TestHelper
         return testStruct;
     }
 
-    static public NestedStruct1 makeTestNestedStruct1() 
+    static public NestedStruct1 makeTestNestedStruct1()
     {
         NestedStruct1 testStruct = new NestedStruct1();
         testStruct.field1 = Testbed2TestHelper.makeTestStruct1();
         return testStruct;
     }
 
-    static public NestedStruct2 makeTestNestedStruct2() 
+    static public NestedStruct2 makeTestNestedStruct2()
     {
         NestedStruct2 testStruct = new NestedStruct2();
         testStruct.field1 = Testbed2TestHelper.makeTestStruct1();
@@ -56,7 +57,7 @@ public class Testbed2TestHelper
         return testStruct;
     }
 
-    static public NestedStruct3 makeTestNestedStruct3() 
+    static public NestedStruct3 makeTestNestedStruct3()
     {
         NestedStruct3 testStruct = new NestedStruct3();
         testStruct.field1 = Testbed2TestHelper.makeTestStruct1();
@@ -65,7 +66,7 @@ public class Testbed2TestHelper
         return testStruct;
     }
 
-    static public IManyParamInterface makeTestManyParamInterface(IManyParamInterface testObjToFill) 
+    static public IManyParamInterface makeTestManyParamInterface(IManyParamInterface testObjToFill)
     {
         if (testObjToFill == null){return testObjToFill;}
         testObjToFill.setProp1(1);
@@ -75,7 +76,7 @@ public class Testbed2TestHelper
         return testObjToFill;
     }
 
-    static public INestedStruct1Interface makeTestNestedStruct1Interface(INestedStruct1Interface testObjToFill) 
+    static public INestedStruct1Interface makeTestNestedStruct1Interface(INestedStruct1Interface testObjToFill)
     {
         if (testObjToFill == null){return testObjToFill;}
         NestedStruct1 localprop1 = Testbed2TestHelper.makeTestNestedStruct1();
@@ -83,7 +84,7 @@ public class Testbed2TestHelper
         return testObjToFill;
     }
 
-    static public INestedStruct2Interface makeTestNestedStruct2Interface(INestedStruct2Interface testObjToFill) 
+    static public INestedStruct2Interface makeTestNestedStruct2Interface(INestedStruct2Interface testObjToFill)
     {
         if (testObjToFill == null){return testObjToFill;}
         NestedStruct1 localprop1 = Testbed2TestHelper.makeTestNestedStruct1();
@@ -93,7 +94,7 @@ public class Testbed2TestHelper
         return testObjToFill;
     }
 
-    static public INestedStruct3Interface makeTestNestedStruct3Interface(INestedStruct3Interface testObjToFill) 
+    static public INestedStruct3Interface makeTestNestedStruct3Interface(INestedStruct3Interface testObjToFill)
     {
         if (testObjToFill == null){return testObjToFill;}
         NestedStruct1 localprop1 = Testbed2TestHelper.makeTestNestedStruct1();

@@ -4,7 +4,9 @@ import testbed1.testbed1_api.StructStructWithArray;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import testbed1.testbed1_api.StructStringWithArray;
 
   public  class StructStructWithArrayParcelable implements Parcelable {
@@ -28,8 +30,7 @@ import testbed1.testbed1_api.StructStringWithArray;
         }
 
         this.data = new StructStructWithArray();
-        StructStringWithArrayParcelable[] l_parcelablefieldStruct = in.createTypedArray(StructStringWithArrayParcelable.CREATOR);
-        data.fieldStruct = StructStringWithArrayParcelable.unwrapArray(l_parcelablefieldStruct);
+        data.fieldStruct = Conversions.toList(StructStringWithArrayParcelable.unwrapArray(in.createTypedArray(StructStringWithArrayParcelable.CREATOR)));
     }
 
     public static final Creator<StructStructWithArrayParcelable> CREATOR = new Creator<StructStructWithArrayParcelable>() {
@@ -51,7 +52,7 @@ import testbed1.testbed1_api.StructStringWithArray;
             return;
         }
 
-        dest.writeTypedArray(StructStringWithArrayParcelable.wrapArray(data.fieldStruct), flags);
+        dest.writeTypedArray(StructStringWithArrayParcelable.wrapArray(Conversions.toArray(data.fieldStruct, new StructStringWithArray[0])), flags);
 
 
     }
@@ -63,7 +64,7 @@ import testbed1.testbed1_api.StructStringWithArray;
     }
 
     public static StructStructWithArray[] unwrapArray(StructStructWithArrayParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new StructStructWithArray[0];
         return Arrays.stream(parcelables)
            .map(StructStructWithArrayParcelable::getStructStructWithArray)
            .toArray(StructStructWithArray[]::new);

@@ -5,7 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
   public  class NoOperationsInterfaceParcelable implements Parcelable {
 
@@ -64,7 +66,7 @@ import java.util.Arrays;
     }
 
     public static INoOperationsInterface[] unwrapArray(NoOperationsInterfaceParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new INoOperationsInterface[0];
         return Arrays.stream(parcelables)
            .map(NoOperationsInterfaceParcelable::getNoOperationsInterface)
            .toArray(INoOperationsInterface[]::new);

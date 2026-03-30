@@ -10,6 +10,8 @@ import testbed2.testbed2_api.NestedStruct1;
 import testbed2.testbed2_api.NestedStruct2;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +22,6 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
-import java.util.Arrays;
 
 
 public class NestedStruct2InterfaceService extends AbstractNestedStruct2Interface {
@@ -115,7 +116,7 @@ public class NestedStruct2InterfaceService extends AbstractNestedStruct2Interfac
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {

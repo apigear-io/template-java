@@ -4,7 +4,9 @@ import customTypes.customTypes_api.Vector3D;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
   public  class Vector3DParcelable implements Parcelable {
 
@@ -65,7 +67,7 @@ import java.util.Arrays;
     }
 
     public static Vector3D[] unwrapArray(Vector3DParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new Vector3D[0];
         return Arrays.stream(parcelables)
            .map(Vector3DParcelable::getVector3D)
            .toArray(Vector3D[]::new);

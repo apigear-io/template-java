@@ -104,8 +104,11 @@ import org.robolectric.annotation.Config;
 import org.robolectric.RuntimeEnvironment;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import testbed1.testbed1_android_messenger.Conversions;
 
 interface IStructArrayInterfaceMessageGetter
 {
@@ -170,25 +173,20 @@ public class StructArrayInterfaceServiceAdapterTest
 
     void registerFakeActivityClient(Messenger messenger, String id)
     {
-        StructBool init_elementpropBool = new StructBool();
-        // todo fill if is struct
-        StructBool[] initpropBool = new StructBool[]{ init_elementpropBool } ;
+        List<StructBool> initpropBool = new ArrayList<>();
+        initpropBool.add(new StructBool());
         when(backendServiceMock.getPropBool()).thenReturn(initpropBool);
-        StructInt init_elementpropInt = new StructInt();
-        // todo fill if is struct
-        StructInt[] initpropInt = new StructInt[]{ init_elementpropInt } ;
+        List<StructInt> initpropInt = new ArrayList<>();
+        initpropInt.add(new StructInt());
         when(backendServiceMock.getPropInt()).thenReturn(initpropInt);
-        StructFloat init_elementpropFloat = new StructFloat();
-        // todo fill if is struct
-        StructFloat[] initpropFloat = new StructFloat[]{ init_elementpropFloat } ;
+        List<StructFloat> initpropFloat = new ArrayList<>();
+        initpropFloat.add(new StructFloat());
         when(backendServiceMock.getPropFloat()).thenReturn(initpropFloat);
-        StructString init_elementpropString = new StructString();
-        // todo fill if is struct
-        StructString[] initpropString = new StructString[]{ init_elementpropString } ;
+        List<StructString> initpropString = new ArrayList<>();
+        initpropString.add(new StructString());
         when(backendServiceMock.getPropString()).thenReturn(initpropString);
-        Enum0 init_elementpropEnum = Enum0.Value1;
-        // todo fill if is struct
-        Enum0[] initpropEnum = new Enum0[]{ init_elementpropEnum } ;
+        List<Enum0> initpropEnum = new ArrayList<>();
+        initpropEnum.add(Enum0.Value1);
         when(backendServiceMock.getPropEnum()).thenReturn(initpropEnum);
 
 
@@ -214,15 +212,15 @@ public class StructArrayInterfaceServiceAdapterTest
         assertEquals(StructArrayInterfaceMessageType.INIT.getValue(), response.what);
         Bundle data = response.getData();
         
-            StructBool[] receivedpropBool =  StructBoolParcelable.unwrapArray((StructBoolParcelable[])data.getParcelableArray("propBool", StructBoolParcelable.class));
+            List<StructBool> receivedpropBool = Conversions.toList(StructBoolParcelable.unwrapArray((StructBoolParcelable[])data.getParcelableArray("propBool", StructBoolParcelable.class)));
         
-            StructInt[] receivedpropInt =  StructIntParcelable.unwrapArray((StructIntParcelable[])data.getParcelableArray("propInt", StructIntParcelable.class));
+            List<StructInt> receivedpropInt = Conversions.toList(StructIntParcelable.unwrapArray((StructIntParcelable[])data.getParcelableArray("propInt", StructIntParcelable.class)));
         
-            StructFloat[] receivedpropFloat =  StructFloatParcelable.unwrapArray((StructFloatParcelable[])data.getParcelableArray("propFloat", StructFloatParcelable.class));
+            List<StructFloat> receivedpropFloat = Conversions.toList(StructFloatParcelable.unwrapArray((StructFloatParcelable[])data.getParcelableArray("propFloat", StructFloatParcelable.class)));
         
-            StructString[] receivedpropString =  StructStringParcelable.unwrapArray((StructStringParcelable[])data.getParcelableArray("propString", StructStringParcelable.class));
+            List<StructString> receivedpropString = Conversions.toList(StructStringParcelable.unwrapArray((StructStringParcelable[])data.getParcelableArray("propString", StructStringParcelable.class)));
         
-            Enum0[] receivedpropEnum =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("propEnum", Enum0Parcelable.class));
+            List<Enum0> receivedpropEnum = Conversions.toList(Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("propEnum", Enum0Parcelable.class)));
         
     // all structs, even from other modules, are known at compile time (see gradle files) and share the same PathClassLoader,
     // therefore, any class loader provide access to the same PathClassLoader.
@@ -274,22 +272,22 @@ public class StructArrayInterfaceServiceAdapterTest
         // Create and send message
         Message msg = Message.obtain(null, StructArrayInterfaceMessageType.PROP_PropBool.getValue());
         Bundle data = new Bundle();
-        StructBool[] testpropBool = new StructBool[1];
-        testpropBool[0] = Testbed1TestHelper.makeTestStructBool();
-		data.putParcelableArray("propBool", StructBoolParcelable.wrapArray(testpropBool));
+        List<StructBool> testpropBool = new java.util.ArrayList<>();
+        testpropBool.add(Testbed1TestHelper.makeTestStructBool());
+		data.putParcelableArray("propBool", StructBoolParcelable.wrapArray(Conversions.toArray(testpropBool, new StructBool[0])));
 
         msg.setData(data);
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        inOrderBackendService.verify(backendServiceMock,times(1)).setPropBool( any(StructBool[].class));
+        inOrderBackendService.verify(backendServiceMock,times(1)).setPropBool( any(List<StructBool>.class));
 	    
     }
 
     @Test
      public void whenNotifiedpropBool()
     {
-        StructBool[] testpropBool = new StructBool[1];
-        testpropBool[0] = Testbed1TestHelper.makeTestStructBool();
+        List<StructBool> testpropBool = new java.util.ArrayList<>();
+        testpropBool.add(Testbed1TestHelper.makeTestStructBool());
 
         testedAdapterAsEventListener.onPropBoolChanged(testpropBool);
         Robolectric.flushForegroundThreadScheduler();
@@ -301,7 +299,7 @@ public class StructArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
 
         
-            StructBool[] receivedpropBool =  StructBoolParcelable.unwrapArray((StructBoolParcelable[])data.getParcelableArray("propBool", StructBoolParcelable.class));
+            List<StructBool> receivedpropBool = Conversions.toList(StructBoolParcelable.unwrapArray((StructBoolParcelable[])data.getParcelableArray("propBool", StructBoolParcelable.class)));
 
         assertEquals(receivedpropBool, testpropBool);
     }
@@ -310,22 +308,22 @@ public class StructArrayInterfaceServiceAdapterTest
         // Create and send message
         Message msg = Message.obtain(null, StructArrayInterfaceMessageType.PROP_PropInt.getValue());
         Bundle data = new Bundle();
-        StructInt[] testpropInt = new StructInt[1];
-        testpropInt[0] = Testbed1TestHelper.makeTestStructInt();
-		data.putParcelableArray("propInt", StructIntParcelable.wrapArray(testpropInt));
+        List<StructInt> testpropInt = new java.util.ArrayList<>();
+        testpropInt.add(Testbed1TestHelper.makeTestStructInt());
+		data.putParcelableArray("propInt", StructIntParcelable.wrapArray(Conversions.toArray(testpropInt, new StructInt[0])));
 
         msg.setData(data);
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        inOrderBackendService.verify(backendServiceMock,times(1)).setPropInt( any(StructInt[].class));
+        inOrderBackendService.verify(backendServiceMock,times(1)).setPropInt( any(List<StructInt>.class));
 	    
     }
 
     @Test
      public void whenNotifiedpropInt()
     {
-        StructInt[] testpropInt = new StructInt[1];
-        testpropInt[0] = Testbed1TestHelper.makeTestStructInt();
+        List<StructInt> testpropInt = new java.util.ArrayList<>();
+        testpropInt.add(Testbed1TestHelper.makeTestStructInt());
 
         testedAdapterAsEventListener.onPropIntChanged(testpropInt);
         Robolectric.flushForegroundThreadScheduler();
@@ -337,7 +335,7 @@ public class StructArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
 
         
-            StructInt[] receivedpropInt =  StructIntParcelable.unwrapArray((StructIntParcelable[])data.getParcelableArray("propInt", StructIntParcelable.class));
+            List<StructInt> receivedpropInt = Conversions.toList(StructIntParcelable.unwrapArray((StructIntParcelable[])data.getParcelableArray("propInt", StructIntParcelable.class)));
 
         assertEquals(receivedpropInt, testpropInt);
     }
@@ -346,22 +344,22 @@ public class StructArrayInterfaceServiceAdapterTest
         // Create and send message
         Message msg = Message.obtain(null, StructArrayInterfaceMessageType.PROP_PropFloat.getValue());
         Bundle data = new Bundle();
-        StructFloat[] testpropFloat = new StructFloat[1];
-        testpropFloat[0] = Testbed1TestHelper.makeTestStructFloat();
-		data.putParcelableArray("propFloat", StructFloatParcelable.wrapArray(testpropFloat));
+        List<StructFloat> testpropFloat = new java.util.ArrayList<>();
+        testpropFloat.add(Testbed1TestHelper.makeTestStructFloat());
+		data.putParcelableArray("propFloat", StructFloatParcelable.wrapArray(Conversions.toArray(testpropFloat, new StructFloat[0])));
 
         msg.setData(data);
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        inOrderBackendService.verify(backendServiceMock,times(1)).setPropFloat( any(StructFloat[].class));
+        inOrderBackendService.verify(backendServiceMock,times(1)).setPropFloat( any(List<StructFloat>.class));
 	    
     }
 
     @Test
      public void whenNotifiedpropFloat()
     {
-        StructFloat[] testpropFloat = new StructFloat[1];
-        testpropFloat[0] = Testbed1TestHelper.makeTestStructFloat();
+        List<StructFloat> testpropFloat = new java.util.ArrayList<>();
+        testpropFloat.add(Testbed1TestHelper.makeTestStructFloat());
 
         testedAdapterAsEventListener.onPropFloatChanged(testpropFloat);
         Robolectric.flushForegroundThreadScheduler();
@@ -373,7 +371,7 @@ public class StructArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
 
         
-            StructFloat[] receivedpropFloat =  StructFloatParcelable.unwrapArray((StructFloatParcelable[])data.getParcelableArray("propFloat", StructFloatParcelable.class));
+            List<StructFloat> receivedpropFloat = Conversions.toList(StructFloatParcelable.unwrapArray((StructFloatParcelable[])data.getParcelableArray("propFloat", StructFloatParcelable.class)));
 
         assertEquals(receivedpropFloat, testpropFloat);
     }
@@ -382,22 +380,22 @@ public class StructArrayInterfaceServiceAdapterTest
         // Create and send message
         Message msg = Message.obtain(null, StructArrayInterfaceMessageType.PROP_PropString.getValue());
         Bundle data = new Bundle();
-        StructString[] testpropString = new StructString[1];
-        testpropString[0] = Testbed1TestHelper.makeTestStructString();
-		data.putParcelableArray("propString", StructStringParcelable.wrapArray(testpropString));
+        List<StructString> testpropString = new java.util.ArrayList<>();
+        testpropString.add(Testbed1TestHelper.makeTestStructString());
+		data.putParcelableArray("propString", StructStringParcelable.wrapArray(Conversions.toArray(testpropString, new StructString[0])));
 
         msg.setData(data);
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        inOrderBackendService.verify(backendServiceMock,times(1)).setPropString( any(StructString[].class));
+        inOrderBackendService.verify(backendServiceMock,times(1)).setPropString( any(List<StructString>.class));
 	    
     }
 
     @Test
      public void whenNotifiedpropString()
     {
-        StructString[] testpropString = new StructString[1];
-        testpropString[0] = Testbed1TestHelper.makeTestStructString();
+        List<StructString> testpropString = new java.util.ArrayList<>();
+        testpropString.add(Testbed1TestHelper.makeTestStructString());
 
         testedAdapterAsEventListener.onPropStringChanged(testpropString);
         Robolectric.flushForegroundThreadScheduler();
@@ -409,7 +407,7 @@ public class StructArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
 
         
-            StructString[] receivedpropString =  StructStringParcelable.unwrapArray((StructStringParcelable[])data.getParcelableArray("propString", StructStringParcelable.class));
+            List<StructString> receivedpropString = Conversions.toList(StructStringParcelable.unwrapArray((StructStringParcelable[])data.getParcelableArray("propString", StructStringParcelable.class)));
 
         assertEquals(receivedpropString, testpropString);
     }
@@ -418,9 +416,9 @@ public class StructArrayInterfaceServiceAdapterTest
         // Create and send message
         Message msg = Message.obtain(null, StructArrayInterfaceMessageType.PROP_PropEnum.getValue());
         Bundle data = new Bundle();
-        Enum0[] testpropEnum = new Enum0[1];
-        testpropEnum[0] = Enum0.Value1;
-		data.putParcelableArray("propEnum", Enum0Parcelable.wrapArray(testpropEnum));
+        List<Enum0> testpropEnum = new java.util.ArrayList<>();
+        testpropEnum.add(Enum0.Value1);
+		data.putParcelableArray("propEnum", Enum0Parcelable.wrapArray(Conversions.toArray(testpropEnum, new Enum0[0])));
 
         msg.setData(data);
         mServiceMessenger.send(msg);
@@ -432,8 +430,8 @@ public class StructArrayInterfaceServiceAdapterTest
     @Test
      public void whenNotifiedpropEnum()
     {
-        Enum0[] testpropEnum = new Enum0[1];
-        testpropEnum[0] = Enum0.Value1;
+        List<Enum0> testpropEnum = new java.util.ArrayList<>();
+        testpropEnum.add(Enum0.Value1);
 
         testedAdapterAsEventListener.onPropEnumChanged(testpropEnum);
         Robolectric.flushForegroundThreadScheduler();
@@ -445,15 +443,15 @@ public class StructArrayInterfaceServiceAdapterTest
         Bundle data = response.getData();
 
         
-            Enum0[] receivedpropEnum =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("propEnum", Enum0Parcelable.class));
+            List<Enum0> receivedpropEnum = Conversions.toList(Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("propEnum", Enum0Parcelable.class)));
 
         assertEquals(receivedpropEnum, testpropEnum);
     }
     @Test
     public void whenNotifiedsigBool()
     {
-        StructBool[] testparamBool = new StructBool[1];
-        testparamBool[0] = Testbed1TestHelper.makeTestStructBool();
+        List<StructBool> testparamBool = new java.util.ArrayList<>();
+        testparamBool.add(Testbed1TestHelper.makeTestStructBool());
 
         testedAdapterAsEventListener.onSigBool(testparamBool);
         Robolectric.flushForegroundThreadScheduler();
@@ -466,14 +464,14 @@ public class StructArrayInterfaceServiceAdapterTest
         
         data.setClassLoader(StructBoolParcelable.class.getClassLoader());
         
-            StructBool[] receivedparamBool =  StructBoolParcelable.unwrapArray((StructBoolParcelable[])data.getParcelableArray("paramBool", StructBoolParcelable.class));
+            List<StructBool> receivedparamBool = Conversions.toList(StructBoolParcelable.unwrapArray((StructBoolParcelable[])data.getParcelableArray("paramBool", StructBoolParcelable.class)));
         assertEquals(receivedparamBool, testparamBool);
 }
     @Test
     public void whenNotifiedsigInt()
     {
-        StructInt[] testparamInt = new StructInt[1];
-        testparamInt[0] = Testbed1TestHelper.makeTestStructInt();
+        List<StructInt> testparamInt = new java.util.ArrayList<>();
+        testparamInt.add(Testbed1TestHelper.makeTestStructInt());
 
         testedAdapterAsEventListener.onSigInt(testparamInt);
         Robolectric.flushForegroundThreadScheduler();
@@ -486,14 +484,14 @@ public class StructArrayInterfaceServiceAdapterTest
         
         data.setClassLoader(StructIntParcelable.class.getClassLoader());
         
-            StructInt[] receivedparamInt =  StructIntParcelable.unwrapArray((StructIntParcelable[])data.getParcelableArray("paramInt", StructIntParcelable.class));
+            List<StructInt> receivedparamInt = Conversions.toList(StructIntParcelable.unwrapArray((StructIntParcelable[])data.getParcelableArray("paramInt", StructIntParcelable.class)));
         assertEquals(receivedparamInt, testparamInt);
 }
     @Test
     public void whenNotifiedsigFloat()
     {
-        StructFloat[] testparamFloat = new StructFloat[1];
-        testparamFloat[0] = Testbed1TestHelper.makeTestStructFloat();
+        List<StructFloat> testparamFloat = new java.util.ArrayList<>();
+        testparamFloat.add(Testbed1TestHelper.makeTestStructFloat());
 
         testedAdapterAsEventListener.onSigFloat(testparamFloat);
         Robolectric.flushForegroundThreadScheduler();
@@ -506,14 +504,14 @@ public class StructArrayInterfaceServiceAdapterTest
         
         data.setClassLoader(StructFloatParcelable.class.getClassLoader());
         
-            StructFloat[] receivedparamFloat =  StructFloatParcelable.unwrapArray((StructFloatParcelable[])data.getParcelableArray("paramFloat", StructFloatParcelable.class));
+            List<StructFloat> receivedparamFloat = Conversions.toList(StructFloatParcelable.unwrapArray((StructFloatParcelable[])data.getParcelableArray("paramFloat", StructFloatParcelable.class)));
         assertEquals(receivedparamFloat, testparamFloat);
 }
     @Test
     public void whenNotifiedsigString()
     {
-        StructString[] testparamString = new StructString[1];
-        testparamString[0] = Testbed1TestHelper.makeTestStructString();
+        List<StructString> testparamString = new java.util.ArrayList<>();
+        testparamString.add(Testbed1TestHelper.makeTestStructString());
 
         testedAdapterAsEventListener.onSigString(testparamString);
         Robolectric.flushForegroundThreadScheduler();
@@ -526,14 +524,14 @@ public class StructArrayInterfaceServiceAdapterTest
         
         data.setClassLoader(StructStringParcelable.class.getClassLoader());
         
-            StructString[] receivedparamString =  StructStringParcelable.unwrapArray((StructStringParcelable[])data.getParcelableArray("paramString", StructStringParcelable.class));
+            List<StructString> receivedparamString = Conversions.toList(StructStringParcelable.unwrapArray((StructStringParcelable[])data.getParcelableArray("paramString", StructStringParcelable.class)));
         assertEquals(receivedparamString, testparamString);
 }
     @Test
     public void whenNotifiedsigEnum()
     {
-        Enum0[] testparamEnum = new Enum0[1];
-        testparamEnum[0] = Enum0.Value1;
+        List<Enum0> testparamEnum = new java.util.ArrayList<>();
+        testparamEnum.add(Enum0.Value1);
 
         testedAdapterAsEventListener.onSigEnum(testparamEnum);
         Robolectric.flushForegroundThreadScheduler();
@@ -546,7 +544,7 @@ public class StructArrayInterfaceServiceAdapterTest
         
         data.setClassLoader(Enum0Parcelable.class.getClassLoader());
         
-            Enum0[] receivedparamEnum =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("paramEnum", Enum0Parcelable.class));
+            List<Enum0> receivedparamEnum = Conversions.toList(Enum0Parcelable.unwrapArray((Enum0Parcelable[])data.getParcelableArray("paramEnum", Enum0Parcelable.class)));
         assertEquals(receivedparamEnum, testparamEnum);
 }
 
@@ -558,19 +556,19 @@ public class StructArrayInterfaceServiceAdapterTest
 
         int callId = 99;
         data.putInt("callId", callId);
-        StructBool[] testparamBool = new StructBool[1];
-        testparamBool[0] = Testbed1TestHelper.makeTestStructBool();
-		data.putParcelableArray("paramBool", StructBoolParcelable.wrapArray(testparamBool));
-        StructBool[] returnedValue = new StructBool[1];
-        returnedValue[0] = Testbed1TestHelper.makeTestStructBool();
+        List<StructBool> testparamBool = new java.util.ArrayList<>();
+        testparamBool.add(Testbed1TestHelper.makeTestStructBool());
+		data.putParcelableArray("paramBool", StructBoolParcelable.wrapArray(Conversions.toArray(testparamBool, new StructBool[0])));
+        List<StructBool> returnedValue = new ArrayList<>();
+        returnedValue.add(Testbed1TestHelper.makeTestStructBool());
 
 
-        when(backendServiceMock.funcBool( any(StructBool[].class))).thenReturn(returnedValue);
+        when(backendServiceMock.funcBool( any(List<StructBool>.class))).thenReturn(returnedValue);
 
         msg.setData(data);
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        inOrderBackendService.verify(backendServiceMock,times(1)).funcBool( any(StructBool[].class));
+        inOrderBackendService.verify(backendServiceMock,times(1)).funcBool( any(List<StructBool>.class));
 
         //Now verify it was sent back to caller
         Robolectric.flushForegroundThreadScheduler();
@@ -580,7 +578,7 @@ public class StructArrayInterfaceServiceAdapterTest
         assertEquals(StructArrayInterfaceMessageType.RPC_FuncBoolResp.getValue(), response.what);
         Bundle resp_data = response.getData();
         resp_data.setClassLoader(StructBoolParcelable.class.getClassLoader());
-        StructBool[] receivedByClient =  StructBoolParcelable.unwrapArray((StructBoolParcelable[])resp_data.getParcelableArray("result", StructBoolParcelable.class));
+        List<StructBool> receivedByClient = Conversions.toList(StructBoolParcelable.unwrapArray((StructBoolParcelable[])resp_data.getParcelableArray("result", StructBoolParcelable.class)));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));
@@ -594,19 +592,19 @@ public class StructArrayInterfaceServiceAdapterTest
 
         int callId = 99;
         data.putInt("callId", callId);
-        StructInt[] testparamInt = new StructInt[1];
-        testparamInt[0] = Testbed1TestHelper.makeTestStructInt();
-		data.putParcelableArray("paramInt", StructIntParcelable.wrapArray(testparamInt));
-        StructInt[] returnedValue = new StructInt[1];
-        returnedValue[0] = Testbed1TestHelper.makeTestStructInt();
+        List<StructInt> testparamInt = new java.util.ArrayList<>();
+        testparamInt.add(Testbed1TestHelper.makeTestStructInt());
+		data.putParcelableArray("paramInt", StructIntParcelable.wrapArray(Conversions.toArray(testparamInt, new StructInt[0])));
+        List<StructInt> returnedValue = new ArrayList<>();
+        returnedValue.add(Testbed1TestHelper.makeTestStructInt());
 
 
-        when(backendServiceMock.funcInt( any(StructInt[].class))).thenReturn(returnedValue);
+        when(backendServiceMock.funcInt( any(List<StructInt>.class))).thenReturn(returnedValue);
 
         msg.setData(data);
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        inOrderBackendService.verify(backendServiceMock,times(1)).funcInt( any(StructInt[].class));
+        inOrderBackendService.verify(backendServiceMock,times(1)).funcInt( any(List<StructInt>.class));
 
         //Now verify it was sent back to caller
         Robolectric.flushForegroundThreadScheduler();
@@ -616,7 +614,7 @@ public class StructArrayInterfaceServiceAdapterTest
         assertEquals(StructArrayInterfaceMessageType.RPC_FuncIntResp.getValue(), response.what);
         Bundle resp_data = response.getData();
         resp_data.setClassLoader(StructIntParcelable.class.getClassLoader());
-        StructInt[] receivedByClient =  StructIntParcelable.unwrapArray((StructIntParcelable[])resp_data.getParcelableArray("result", StructIntParcelable.class));
+        List<StructInt> receivedByClient = Conversions.toList(StructIntParcelable.unwrapArray((StructIntParcelable[])resp_data.getParcelableArray("result", StructIntParcelable.class)));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));
@@ -630,19 +628,19 @@ public class StructArrayInterfaceServiceAdapterTest
 
         int callId = 99;
         data.putInt("callId", callId);
-        StructFloat[] testparamFloat = new StructFloat[1];
-        testparamFloat[0] = Testbed1TestHelper.makeTestStructFloat();
-		data.putParcelableArray("paramFloat", StructFloatParcelable.wrapArray(testparamFloat));
-        StructFloat[] returnedValue = new StructFloat[1];
-        returnedValue[0] = Testbed1TestHelper.makeTestStructFloat();
+        List<StructFloat> testparamFloat = new java.util.ArrayList<>();
+        testparamFloat.add(Testbed1TestHelper.makeTestStructFloat());
+		data.putParcelableArray("paramFloat", StructFloatParcelable.wrapArray(Conversions.toArray(testparamFloat, new StructFloat[0])));
+        List<StructFloat> returnedValue = new ArrayList<>();
+        returnedValue.add(Testbed1TestHelper.makeTestStructFloat());
 
 
-        when(backendServiceMock.funcFloat( any(StructFloat[].class))).thenReturn(returnedValue);
+        when(backendServiceMock.funcFloat( any(List<StructFloat>.class))).thenReturn(returnedValue);
 
         msg.setData(data);
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        inOrderBackendService.verify(backendServiceMock,times(1)).funcFloat( any(StructFloat[].class));
+        inOrderBackendService.verify(backendServiceMock,times(1)).funcFloat( any(List<StructFloat>.class));
 
         //Now verify it was sent back to caller
         Robolectric.flushForegroundThreadScheduler();
@@ -652,7 +650,7 @@ public class StructArrayInterfaceServiceAdapterTest
         assertEquals(StructArrayInterfaceMessageType.RPC_FuncFloatResp.getValue(), response.what);
         Bundle resp_data = response.getData();
         resp_data.setClassLoader(StructFloatParcelable.class.getClassLoader());
-        StructFloat[] receivedByClient =  StructFloatParcelable.unwrapArray((StructFloatParcelable[])resp_data.getParcelableArray("result", StructFloatParcelable.class));
+        List<StructFloat> receivedByClient = Conversions.toList(StructFloatParcelable.unwrapArray((StructFloatParcelable[])resp_data.getParcelableArray("result", StructFloatParcelable.class)));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));
@@ -666,19 +664,19 @@ public class StructArrayInterfaceServiceAdapterTest
 
         int callId = 99;
         data.putInt("callId", callId);
-        StructString[] testparamString = new StructString[1];
-        testparamString[0] = Testbed1TestHelper.makeTestStructString();
-		data.putParcelableArray("paramString", StructStringParcelable.wrapArray(testparamString));
-        StructString[] returnedValue = new StructString[1];
-        returnedValue[0] = Testbed1TestHelper.makeTestStructString();
+        List<StructString> testparamString = new java.util.ArrayList<>();
+        testparamString.add(Testbed1TestHelper.makeTestStructString());
+		data.putParcelableArray("paramString", StructStringParcelable.wrapArray(Conversions.toArray(testparamString, new StructString[0])));
+        List<StructString> returnedValue = new ArrayList<>();
+        returnedValue.add(Testbed1TestHelper.makeTestStructString());
 
 
-        when(backendServiceMock.funcString( any(StructString[].class))).thenReturn(returnedValue);
+        when(backendServiceMock.funcString( any(List<StructString>.class))).thenReturn(returnedValue);
 
         msg.setData(data);
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
-        inOrderBackendService.verify(backendServiceMock,times(1)).funcString( any(StructString[].class));
+        inOrderBackendService.verify(backendServiceMock,times(1)).funcString( any(List<StructString>.class));
 
         //Now verify it was sent back to caller
         Robolectric.flushForegroundThreadScheduler();
@@ -688,7 +686,7 @@ public class StructArrayInterfaceServiceAdapterTest
         assertEquals(StructArrayInterfaceMessageType.RPC_FuncStringResp.getValue(), response.what);
         Bundle resp_data = response.getData();
         resp_data.setClassLoader(StructStringParcelable.class.getClassLoader());
-        StructString[] receivedByClient =  StructStringParcelable.unwrapArray((StructStringParcelable[])resp_data.getParcelableArray("result", StructStringParcelable.class));
+        List<StructString> receivedByClient = Conversions.toList(StructStringParcelable.unwrapArray((StructStringParcelable[])resp_data.getParcelableArray("result", StructStringParcelable.class)));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));
@@ -702,11 +700,11 @@ public class StructArrayInterfaceServiceAdapterTest
 
         int callId = 99;
         data.putInt("callId", callId);
-        Enum0[] testparamEnum = new Enum0[1];
-        testparamEnum[0] = Enum0.Value1;
-		data.putParcelableArray("paramEnum", Enum0Parcelable.wrapArray(testparamEnum));
-        Enum0[] returnedValue = new Enum0[1];
-        returnedValue[0] = Enum0.Value1;
+        List<Enum0> testparamEnum = new java.util.ArrayList<>();
+        testparamEnum.add(Enum0.Value1);
+		data.putParcelableArray("paramEnum", Enum0Parcelable.wrapArray(Conversions.toArray(testparamEnum, new Enum0[0])));
+        List<Enum0> returnedValue = new ArrayList<>();
+        returnedValue.add(Enum0.Value1);
 
 
         when(backendServiceMock.funcEnum(testparamEnum)).thenReturn(returnedValue);
@@ -724,7 +722,7 @@ public class StructArrayInterfaceServiceAdapterTest
         assertEquals(StructArrayInterfaceMessageType.RPC_FuncEnumResp.getValue(), response.what);
         Bundle resp_data = response.getData();
         resp_data.setClassLoader(Enum0Parcelable.class.getClassLoader());
-        Enum0[] receivedByClient =  Enum0Parcelable.unwrapArray((Enum0Parcelable[])resp_data.getParcelableArray("result", Enum0Parcelable.class));
+        List<Enum0> receivedByClient = Conversions.toList(Enum0Parcelable.unwrapArray((Enum0Parcelable[])resp_data.getParcelableArray("result", Enum0Parcelable.class)));
 
         assertEquals(receivedByClient, returnedValue);
         assertEquals(callId, resp_data.getInt("callId", -1));

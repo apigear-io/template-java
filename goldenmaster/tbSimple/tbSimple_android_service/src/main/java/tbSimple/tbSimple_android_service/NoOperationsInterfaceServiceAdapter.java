@@ -20,7 +20,10 @@ import tbSimple.tbSimple_android_service.INoOperationsInterfaceServiceProvider;
 import tbSimple.tbSimple_api.INoOperationsInterface;
 import tbSimple.tbSimple_api.AbstractNoOperationsInterface;
 import tbSimple.tbSimple_android_messenger.NoOperationsInterfaceMessageType;
+import tbSimple.tbSimple_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 public class NoOperationsInterfaceServiceAdapter extends Service

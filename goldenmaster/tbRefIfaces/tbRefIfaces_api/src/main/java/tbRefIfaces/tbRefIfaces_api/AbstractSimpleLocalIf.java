@@ -4,6 +4,7 @@ import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
   public abstract class AbstractSimpleLocalIf implements ISimpleLocalIf {
     private Collection<ISimpleLocalIfEventListener> listeners = ConcurrentHashMap.newKeySet();

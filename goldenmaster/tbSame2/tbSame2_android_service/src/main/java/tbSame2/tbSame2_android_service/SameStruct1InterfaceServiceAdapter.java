@@ -23,7 +23,10 @@ import tbSame2.tbSame2_api.ISameStruct1Interface;
 import tbSame2.tbSame2_api.AbstractSameStruct1Interface;
 import tbSame2.tbSame2_api.RemoteOperationException;
 import tbSame2.tbSame2_android_messenger.SameStruct1InterfaceMessageType;
+import tbSame2.tbSame2_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 public class SameStruct1InterfaceServiceAdapter extends Service

@@ -5,7 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import tbSame1.tbSame1_api.Enum1;
 
   public  class SameEnum1InterfaceParcelable implements Parcelable {
@@ -64,7 +66,7 @@ import tbSame1.tbSame1_api.Enum1;
     }
 
     public static ISameEnum1Interface[] unwrapArray(SameEnum1InterfaceParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new ISameEnum1Interface[0];
         return Arrays.stream(parcelables)
            .map(SameEnum1InterfaceParcelable::getSameEnum1Interface)
            .toArray(ISameEnum1Interface[]::new);

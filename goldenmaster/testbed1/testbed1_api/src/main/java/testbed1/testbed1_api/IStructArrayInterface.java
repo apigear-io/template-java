@@ -15,47 +15,48 @@ import testbed1.testbed1_api.StructStructWithArray;
 import testbed1.testbed1_api.StructEnumWithArray;
 import testbed1.testbed1_api.Enum0;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 
   public interface IStructArrayInterface {
     // properties
-    void setPropBool(StructBool[] propBool);
-    StructBool[] getPropBool();
-    void firePropBoolChanged(StructBool[] newValue);
+    void setPropBool(List<StructBool> propBool);
+    List<StructBool> getPropBool();
+    void firePropBoolChanged(List<StructBool> newValue);
   
-    void setPropInt(StructInt[] propInt);
-    StructInt[] getPropInt();
-    void firePropIntChanged(StructInt[] newValue);
+    void setPropInt(List<StructInt> propInt);
+    List<StructInt> getPropInt();
+    void firePropIntChanged(List<StructInt> newValue);
   
-    void setPropFloat(StructFloat[] propFloat);
-    StructFloat[] getPropFloat();
-    void firePropFloatChanged(StructFloat[] newValue);
+    void setPropFloat(List<StructFloat> propFloat);
+    List<StructFloat> getPropFloat();
+    void firePropFloatChanged(List<StructFloat> newValue);
   
-    void setPropString(StructString[] propString);
-    StructString[] getPropString();
-    void firePropStringChanged(StructString[] newValue);
+    void setPropString(List<StructString> propString);
+    List<StructString> getPropString();
+    void firePropStringChanged(List<StructString> newValue);
   
-    void setPropEnum(Enum0[] propEnum);
-    Enum0[] getPropEnum();
-    void firePropEnumChanged(Enum0[] newValue);
+    void setPropEnum(List<Enum0> propEnum);
+    List<Enum0> getPropEnum();
+    void firePropEnumChanged(List<Enum0> newValue);
   
     // methods
-    StructBool[] funcBool(StructBool[] paramBool);
-    CompletableFuture<StructBool[]> funcBoolAsync(StructBool[] paramBool);
-    StructInt[] funcInt(StructInt[] paramInt);
-    CompletableFuture<StructInt[]> funcIntAsync(StructInt[] paramInt);
-    StructFloat[] funcFloat(StructFloat[] paramFloat);
-    CompletableFuture<StructFloat[]> funcFloatAsync(StructFloat[] paramFloat);
-    StructString[] funcString(StructString[] paramString);
-    CompletableFuture<StructString[]> funcStringAsync(StructString[] paramString);
-    Enum0[] funcEnum(Enum0[] paramEnum);
-    CompletableFuture<Enum0[]> funcEnumAsync(Enum0[] paramEnum);
-    public void fireSigBool(StructBool[] paramBool);
-    public void fireSigInt(StructInt[] paramInt);
-    public void fireSigFloat(StructFloat[] paramFloat);
-    public void fireSigString(StructString[] paramString);
-    public void fireSigEnum(Enum0[] paramEnum);
+    List<StructBool> funcBool(List<StructBool> paramBool);
+    CompletableFuture<List<StructBool>> funcBoolAsync(List<StructBool> paramBool);
+    List<StructInt> funcInt(List<StructInt> paramInt);
+    CompletableFuture<List<StructInt>> funcIntAsync(List<StructInt> paramInt);
+    List<StructFloat> funcFloat(List<StructFloat> paramFloat);
+    CompletableFuture<List<StructFloat>> funcFloatAsync(List<StructFloat> paramFloat);
+    List<StructString> funcString(List<StructString> paramString);
+    CompletableFuture<List<StructString>> funcStringAsync(List<StructString> paramString);
+    List<Enum0> funcEnum(List<Enum0> paramEnum);
+    CompletableFuture<List<Enum0>> funcEnumAsync(List<Enum0> paramEnum);
+    public void fireSigBool(List<StructBool> paramBool);
+    public void fireSigInt(List<StructInt> paramInt);
+    public void fireSigFloat(List<StructFloat> paramFloat);
+    public void fireSigString(List<StructString> paramString);
+    public void fireSigEnum(List<Enum0> paramEnum);
     boolean _isReady();
     void _shutdown();
     // signal listeners

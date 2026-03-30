@@ -5,7 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
   public  class ManyParamInterfaceParcelable implements Parcelable {
 
@@ -66,7 +68,7 @@ import java.util.Arrays;
     }
 
     public static IManyParamInterface[] unwrapArray(ManyParamInterfaceParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new IManyParamInterface[0];
         return Arrays.stream(parcelables)
            .map(ManyParamInterfaceParcelable::getManyParamInterface)
            .toArray(IManyParamInterface[]::new);

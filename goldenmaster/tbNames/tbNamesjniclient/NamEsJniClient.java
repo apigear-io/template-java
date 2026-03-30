@@ -6,11 +6,13 @@ import tbNames.tbNames_api.INamEsEventListener;
 import tbNames.tbNames_api.RemoteOperationException;
 
 import tbNames.tbNames_android_client.NamEsClient;
+import tbNames.tbNames_android_messenger.Conversions;
 import tbNames.tbNames_api.EnumWithUnderScores;
 import tbNames.tbNames_android_messenger.EnumWithUnderScoresParcelable;
 import android.content.Context;
 
 import android.os.Bundle;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import android.util.Log;
 
@@ -32,67 +34,80 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
     {
         return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
+    // Interface method — List types
     @Override
     public void setSwitch(boolean Switch)
     {
-        Log.i(TAG, "got request from ue, setSwitch" + (Switch));
+        Log.i(TAG, "got request setSwitch" + (Switch));
         mMessengerClient.setSwitch(Switch);
     }
     @Override
     public boolean getSwitch()
     {
-        Log.i(TAG, "got request from ue, getSwitch");
+        Log.i(TAG, "got request getSwitch");
         return mMessengerClient.getSwitch();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setSomeProperty(int SOME_PROPERTY)
     {
-        Log.i(TAG, "got request from ue, setSomeProperty" + (SOME_PROPERTY));
+        Log.i(TAG, "got request setSomeProperty" + (SOME_PROPERTY));
         mMessengerClient.setSomeProperty(SOME_PROPERTY);
     }
     @Override
     public int getSomeProperty()
     {
-        Log.i(TAG, "got request from ue, getSomeProperty");
+        Log.i(TAG, "got request getSomeProperty");
         return mMessengerClient.getSomeProperty();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setSomePoperty2(int Some_Poperty2)
     {
-        Log.i(TAG, "got request from ue, setSomePoperty2" + (Some_Poperty2));
+        Log.i(TAG, "got request setSomePoperty2" + (Some_Poperty2));
         mMessengerClient.setSomePoperty2(Some_Poperty2);
     }
     @Override
     public int getSomePoperty2()
     {
-        Log.i(TAG, "got request from ue, getSomePoperty2");
+        Log.i(TAG, "got request getSomePoperty2");
         return mMessengerClient.getSomePoperty2();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setEnumProperty(EnumWithUnderScores enum_property)
     {
-        Log.i(TAG, "got request from ue, setEnumProperty" + (enum_property));
+        Log.i(TAG, "got request setEnumProperty" + (enum_property));
         mMessengerClient.setEnumProperty(enum_property);
     }
     @Override
     public EnumWithUnderScores getEnumProperty()
     {
-        Log.i(TAG, "got request from ue, getEnumProperty");
+        Log.i(TAG, "got request getEnumProperty");
         return mMessengerClient.getEnumProperty();
     }
+
+
     
-     @Override
-     public void someFunction(boolean SOME_PARAM)
-     {
+    // Interface method — List types
+    @Override
+    public void someFunction(boolean SOME_PARAM)
+    {
         Log.v(TAG, "Blocking callsomeFunction - should not be used ");
          mMessengerClient.someFunction(SOME_PARAM);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnSomeFunctionResult with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -122,15 +137,16 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.someFunctionAsync(SOME_PARAM);
     }
-     @Override
-     public void someFunction2(boolean Some_Param)
-     {
+    // Interface method — List types
+    @Override
+    public void someFunction2(boolean Some_Param)
+    {
         Log.v(TAG, "Blocking callsomeFunction2 - should not be used ");
          mMessengerClient.someFunction2(Some_Param);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnSomeFunction2Result with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -197,7 +213,7 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
         nativeIsReady(isReady);
     }
 
-    //Event listener
+    // Event listener — receives List from messenger client, converts to array for native
     @Override
     public void onSwitchChanged(boolean newValue)
     {
@@ -234,6 +250,9 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
         Log.i(TAG, "NOTIFICATION from messenger client Signal Some_Signal2 "+ " " + Some_Param);
         nativeOnSomeSignal2(Some_Param);
     }
+
+
+    // Native declarations — array types for JNI compatibility
      private native void nativeOnSwitchChanged(boolean Switch);
      private native void nativeOnSomePropertyChanged(int SOME_PROPERTY);
      private native void nativeOnSomePoperty2Changed(int Some_Poperty2);

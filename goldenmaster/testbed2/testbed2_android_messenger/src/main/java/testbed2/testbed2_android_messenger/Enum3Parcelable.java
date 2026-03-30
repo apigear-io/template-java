@@ -63,7 +63,7 @@ import java.util.Arrays;
     }
 
     public static Enum3[] unwrapArray(Enum3Parcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new Enum3[0];
         return Arrays.stream(parcelables)
            .map(Enum3Parcelable::getEnum3)
            .toArray(Enum3[]::new);

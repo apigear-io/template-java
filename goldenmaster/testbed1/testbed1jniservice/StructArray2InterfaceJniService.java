@@ -1,11 +1,11 @@
 package testbed1.testbed1jniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import testbed1.testbed1_api.IStructArray2Interface;
 import testbed1.testbed1_api.AbstractStructArray2Interface;
 import testbed1.testbed1_api.IStructArray2InterfaceEventListener;
+import testbed1.testbed1_android_messenger.Conversions;
 import testbed1.testbed1_api.Enum0;
 import testbed1.testbed1_android_messenger.Enum0Parcelable;
 import testbed1.testbed1_api.StructBool;
@@ -27,15 +27,12 @@ import testbed1.testbed1_android_messenger.StructStringParcelable;
 import testbed1.testbed1_api.StructStringWithArray;
 import testbed1.testbed1_android_messenger.StructStringWithArrayParcelable;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 
 public class StructArray2InterfaceJniService extends AbstractStructArray2Interface {
@@ -127,99 +124,99 @@ public class StructArray2InterfaceJniService extends AbstractStructArray2Interfa
     // methods
 
     @Override
-    public StructBool[] funcBool(StructBoolWithArray paramBool) {
+    public List<StructBool> funcBool(StructBoolWithArray paramBool) {
         Log.i(TAG, "request method funcBool called, will call native");
-        return nativeFuncBool(paramBool);
+        return Conversions.toList(nativeFuncBool(paramBool));
     }
 
     @Override
-    public  CompletableFuture<StructBool[]> funcBoolAsync(StructBoolWithArray paramBool) {
+    public  CompletableFuture<List<StructBool>> funcBoolAsync(StructBoolWithArray paramBool) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcBool(paramBool); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<StructBool[]> f = new CompletableFuture<>();
+            CompletableFuture<List<StructBool>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public StructInt[] funcInt(StructIntWithArray paramInt) {
+    public List<StructInt> funcInt(StructIntWithArray paramInt) {
         Log.i(TAG, "request method funcInt called, will call native");
-        return nativeFuncInt(paramInt);
+        return Conversions.toList(nativeFuncInt(paramInt));
     }
 
     @Override
-    public  CompletableFuture<StructInt[]> funcIntAsync(StructIntWithArray paramInt) {
+    public  CompletableFuture<List<StructInt>> funcIntAsync(StructIntWithArray paramInt) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcInt(paramInt); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<StructInt[]> f = new CompletableFuture<>();
+            CompletableFuture<List<StructInt>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public StructFloat[] funcFloat(StructFloatWithArray paramFloat) {
+    public List<StructFloat> funcFloat(StructFloatWithArray paramFloat) {
         Log.i(TAG, "request method funcFloat called, will call native");
-        return nativeFuncFloat(paramFloat);
+        return Conversions.toList(nativeFuncFloat(paramFloat));
     }
 
     @Override
-    public  CompletableFuture<StructFloat[]> funcFloatAsync(StructFloatWithArray paramFloat) {
+    public  CompletableFuture<List<StructFloat>> funcFloatAsync(StructFloatWithArray paramFloat) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcFloat(paramFloat); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<StructFloat[]> f = new CompletableFuture<>();
+            CompletableFuture<List<StructFloat>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public StructString[] funcString(StructStringWithArray paramString) {
+    public List<StructString> funcString(StructStringWithArray paramString) {
         Log.i(TAG, "request method funcString called, will call native");
-        return nativeFuncString(paramString);
+        return Conversions.toList(nativeFuncString(paramString));
     }
 
     @Override
-    public  CompletableFuture<StructString[]> funcStringAsync(StructStringWithArray paramString) {
+    public  CompletableFuture<List<StructString>> funcStringAsync(StructStringWithArray paramString) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcString(paramString); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<StructString[]> f = new CompletableFuture<>();
+            CompletableFuture<List<StructString>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
     }
 
     @Override
-    public Enum0[] funcEnum(StructEnumWithArray paramEnum) {
+    public List<Enum0> funcEnum(StructEnumWithArray paramEnum) {
         Log.i(TAG, "request method funcEnum called, will call native");
-        return nativeFuncEnum(paramEnum);
+        return Conversions.toList(nativeFuncEnum(paramEnum));
     }
 
     @Override
-    public  CompletableFuture<Enum0[]> funcEnumAsync(StructEnumWithArray paramEnum) {
+    public  CompletableFuture<List<Enum0>> funcEnumAsync(StructEnumWithArray paramEnum) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return funcEnum(paramEnum); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<Enum0[]> f = new CompletableFuture<>();
+            CompletableFuture<List<Enum0>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -241,7 +238,7 @@ public class StructArray2InterfaceJniService extends AbstractStructArray2Interfa
         }
     }
 
-    // Called on Native Impl Service
+    // Native methods — use array types for JNI compatibility
     private native void nativeSetPropBool(StructBoolWithArray propBool);
     private native StructBoolWithArray nativeGetPropBool();
   
@@ -257,7 +254,6 @@ public class StructArray2InterfaceJniService extends AbstractStructArray2Interfa
     private native void nativeSetPropEnum(StructEnumWithArray propEnum);
     private native StructEnumWithArray nativeGetPropEnum();
   
-    // methods
     private native StructBool[] nativeFuncBool(StructBoolWithArray paramBool);
     private native StructInt[] nativeFuncInt(StructIntWithArray paramInt);
     private native StructFloat[] nativeFuncFloat(StructFloatWithArray paramFloat);
@@ -269,7 +265,7 @@ public class StructArray2InterfaceJniService extends AbstractStructArray2Interfa
         isServiceReady = value;
     }
 
-    //In theory event listener interface
+    // Callbacks from native — receive arrays, convert to List and fire events
     public void onPropBoolChanged(StructBoolWithArray newValue)
     {
          Log.i(TAG, "onPropBoolChanged, will pass notification to all listeners");

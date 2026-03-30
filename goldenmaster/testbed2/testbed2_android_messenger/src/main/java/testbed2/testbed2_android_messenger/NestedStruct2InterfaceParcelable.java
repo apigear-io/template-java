@@ -5,7 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import testbed2.testbed2_api.NestedStruct1;
 import testbed2.testbed2_api.NestedStruct2;
 
@@ -66,7 +68,7 @@ import testbed2.testbed2_api.NestedStruct2;
     }
 
     public static INestedStruct2Interface[] unwrapArray(NestedStruct2InterfaceParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new INestedStruct2Interface[0];
         return Arrays.stream(parcelables)
            .map(NestedStruct2InterfaceParcelable::getNestedStruct2Interface)
            .toArray(INestedStruct2Interface[]::new);

@@ -4,7 +4,9 @@ import testbed1.testbed1_api.StructEnumWithArray;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import testbed1.testbed1_api.Enum0;
 
   public  class StructEnumWithArrayParcelable implements Parcelable {
@@ -28,8 +30,7 @@ import testbed1.testbed1_api.Enum0;
         }
 
         this.data = new StructEnumWithArray();
-        Enum0Parcelable[] l_parcelablefieldEnum = in.createTypedArray(Enum0Parcelable.CREATOR);
-        data.fieldEnum = Enum0Parcelable.unwrapArray(l_parcelablefieldEnum);
+        data.fieldEnum = Conversions.toList(Enum0Parcelable.unwrapArray(in.createTypedArray(Enum0Parcelable.CREATOR)));
     }
 
     public static final Creator<StructEnumWithArrayParcelable> CREATOR = new Creator<StructEnumWithArrayParcelable>() {
@@ -51,7 +52,7 @@ import testbed1.testbed1_api.Enum0;
             return;
         }
 
-        dest.writeTypedArray(Enum0Parcelable.wrapArray(data.fieldEnum), flags);
+        dest.writeTypedArray(Enum0Parcelable.wrapArray(Conversions.toArray(data.fieldEnum, new Enum0[0])), flags);
 
 
     }
@@ -63,7 +64,7 @@ import testbed1.testbed1_api.Enum0;
     }
 
     public static StructEnumWithArray[] unwrapArray(StructEnumWithArrayParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new StructEnumWithArray[0];
         return Arrays.stream(parcelables)
            .map(StructEnumWithArrayParcelable::getStructEnumWithArray)
            .toArray(StructEnumWithArray[]::new);

@@ -5,9 +5,11 @@ import tbIfaceimport.tbIfaceimport_api.AbstractEmptyIf;
 import tbIfaceimport.tbIfaceimport_api.IEmptyIfEventListener;
 
 import tbIfaceimport.tbIfaceimport_android_client.EmptyIfClient;
+import tbIfaceimport.tbIfaceimport_android_messenger.Conversions;
 import android.content.Context;
 
 import android.os.Bundle;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import android.util.Log;
 
@@ -66,6 +68,9 @@ public class EmptyIfJniClient extends AbstractEmptyIf implements IEmptyIfEventLi
         nativeIsReady(isReady);
     }
 
-    //Event listener
+    // Event listener — receives List from messenger client, converts to array for native
+
+
+    // Native declarations — array types for JNI compatibility
     private native void nativeIsReady(boolean isReady);
 }

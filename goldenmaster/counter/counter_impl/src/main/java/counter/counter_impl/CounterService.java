@@ -8,6 +8,8 @@ import counter.counter_api.AbstractCounter;
 import counter.counter_api.ICounterEventListener;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,7 +20,6 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
-import java.util.Arrays;
 
 
 public class CounterService extends AbstractCounter {
@@ -28,8 +29,8 @@ public class CounterService extends AbstractCounter {
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private customTypes.customTypes_api.Vector3D m_vector = new customTypes.customTypes_api.Vector3D();
     private org.apache.commons.math3.geometry.euclidean.threed.Vector3D m_extern_vector = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0);
-    private customTypes.customTypes_api.Vector3D[] m_vectorArray = new customTypes.customTypes_api.Vector3D[]{};
-    private org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] m_extern_vectorArray = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]{};
+    private List<customTypes.customTypes_api.Vector3D> m_vectorArray = new ArrayList<>();
+    private List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> m_extern_vectorArray = new ArrayList<>();
 
     public CounterService()
     {
@@ -78,42 +79,42 @@ public class CounterService extends AbstractCounter {
 
   
     @Override
-    public void setVectorArray(customTypes.customTypes_api.Vector3D[] vectorArray)
+    public void setVectorArray(List<customTypes.customTypes_api.Vector3D> vectorArray)
     {
         Log.i(TAG, "request setVectorArray called ");
-        if (! Arrays.equals(m_vectorArray, vectorArray))
+        if (!m_vectorArray.equals(vectorArray))
         {
-            m_vectorArray = vectorArray;
-            onVectorArrayChanged(m_vectorArray);
+            m_vectorArray = new ArrayList<>(vectorArray);
+            onVectorArrayChanged(new ArrayList<>(m_vectorArray));
         }
 
     }
 
     @Override
-    public customTypes.customTypes_api.Vector3D[] getVectorArray()
+    public List<customTypes.customTypes_api.Vector3D> getVectorArray()
     {
         Log.i(TAG, "request getVectorArray called,");
-        return m_vectorArray;
+        return new ArrayList<>(m_vectorArray);
     }
 
   
     @Override
-    public void setExternVectorArray(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] extern_vectorArray)
+    public void setExternVectorArray(List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> extern_vectorArray)
     {
         Log.i(TAG, "request setExternVectorArray called ");
-        if (! Arrays.equals(m_extern_vectorArray, extern_vectorArray))
+        if (!m_extern_vectorArray.equals(extern_vectorArray))
         {
-            m_extern_vectorArray = extern_vectorArray;
-            onExternVectorArrayChanged(m_extern_vectorArray);
+            m_extern_vectorArray = new ArrayList<>(extern_vectorArray);
+            onExternVectorArrayChanged(new ArrayList<>(m_extern_vectorArray));
         }
 
     }
 
     @Override
-    public org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] getExternVectorArray()
+    public List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> getExternVectorArray()
     {
         Log.i(TAG, "request getExternVectorArray called,");
-        return m_extern_vectorArray;
+        return new ArrayList<>(m_extern_vectorArray);
     }
 
   
@@ -139,19 +140,19 @@ public class CounterService extends AbstractCounter {
     }
 
     @Override
-    public org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] incrementArray(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec) {
+    public List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> incrementArray(List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> vec) {
         Log.i(TAG, "request method incrementArray called, returnig default");
-        return new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]{};
+        return new ArrayList<>();
     }
 
     @Override
-    public  CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]> incrementArrayAsync(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] vec) {
+    public  CompletableFuture<List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D>> incrementArrayAsync(List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> vec) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return incrementArray(vec); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<org.apache.commons.math3.geometry.euclidean.threed.Vector3D[]> f = new CompletableFuture<>();
+            CompletableFuture<List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
@@ -177,23 +178,23 @@ public class CounterService extends AbstractCounter {
     }
 
     @Override
-    public customTypes.customTypes_api.Vector3D[] decrementArray(customTypes.customTypes_api.Vector3D[] vec) {
+    public List<customTypes.customTypes_api.Vector3D> decrementArray(List<customTypes.customTypes_api.Vector3D> vec) {
         Log.i(TAG, "request method decrementArray called, returnig default");
-        return new customTypes.customTypes_api.Vector3D[]{};
+        return new ArrayList<>();
     }
 
     @Override
-    public  CompletableFuture<customTypes.customTypes_api.Vector3D[]> decrementArrayAsync(customTypes.customTypes_api.Vector3D[] vec) {
+    public  CompletableFuture<List<customTypes.customTypes_api.Vector3D>> decrementArrayAsync(List<customTypes.customTypes_api.Vector3D> vec) {
         try {
             return CompletableFuture.supplyAsync(
                     () -> {return decrementArray(vec); },
                     executor);
         } catch (RejectedExecutionException e) {
-            CompletableFuture<customTypes.customTypes_api.Vector3D[]> f = new CompletableFuture<>();
+            CompletableFuture<List<customTypes.customTypes_api.Vector3D>> f = new CompletableFuture<>();
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -226,17 +227,17 @@ public class CounterService extends AbstractCounter {
          Log.i(TAG, "onExternVectorChanged, will pass notification to all listeners");
          fireExternVectorChanged(newValue);
     }
-    private void onVectorArrayChanged(customTypes.customTypes_api.Vector3D[] newValue)
+    private void onVectorArrayChanged(List<customTypes.customTypes_api.Vector3D> newValue)
     {
          Log.i(TAG, "onVectorArrayChanged, will pass notification to all listeners");
          fireVectorArrayChanged(newValue);
     }
-    private void onExternVectorArrayChanged(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] newValue)
+    private void onExternVectorArrayChanged(List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> newValue)
     {
          Log.i(TAG, "onExternVectorArrayChanged, will pass notification to all listeners");
          fireExternVectorArrayChanged(newValue);
     }
-    public void onValueChanged(customTypes.customTypes_api.Vector3D vector, org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector, customTypes.customTypes_api.Vector3D[] vectorArray, org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] extern_vectorArray)
+    public void onValueChanged(customTypes.customTypes_api.Vector3D vector, org.apache.commons.math3.geometry.euclidean.threed.Vector3D extern_vector, List<customTypes.customTypes_api.Vector3D> vectorArray, List<org.apache.commons.math3.geometry.euclidean.threed.Vector3D> extern_vectorArray)
     {
         Log.i(TAG, "onValueChanged, will pass notification to all listeners");
         fireValueChanged(vector, extern_vector, vectorArray, extern_vectorArray);

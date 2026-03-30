@@ -23,7 +23,10 @@ import tbSame1.tbSame1_api.ISameEnum1Interface;
 import tbSame1.tbSame1_api.AbstractSameEnum1Interface;
 import tbSame1.tbSame1_api.RemoteOperationException;
 import tbSame1.tbSame1_android_messenger.SameEnum1InterfaceMessageType;
+import tbSame1.tbSame1_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 public class SameEnum1InterfaceServiceAdapter extends Service

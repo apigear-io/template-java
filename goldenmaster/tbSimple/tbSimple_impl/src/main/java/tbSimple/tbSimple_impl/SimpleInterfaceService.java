@@ -8,6 +8,8 @@ import tbSimple.tbSimple_api.AbstractSimpleInterface;
 import tbSimple.tbSimple_api.ISimpleInterfaceEventListener;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,7 +20,6 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
-import java.util.Arrays;
 
 
 public class SimpleInterfaceService extends AbstractSimpleInterface {
@@ -389,7 +390,7 @@ public class SimpleInterfaceService extends AbstractSimpleInterface {
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {

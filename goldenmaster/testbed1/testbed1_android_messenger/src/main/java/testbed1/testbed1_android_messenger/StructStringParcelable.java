@@ -4,7 +4,9 @@ import testbed1.testbed1_api.StructString;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
   public  class StructStringParcelable implements Parcelable {
 
@@ -61,7 +63,7 @@ import java.util.Arrays;
     }
 
     public static StructString[] unwrapArray(StructStringParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new StructString[0];
         return Arrays.stream(parcelables)
            .map(StructStringParcelable::getStructString)
            .toArray(StructString[]::new);

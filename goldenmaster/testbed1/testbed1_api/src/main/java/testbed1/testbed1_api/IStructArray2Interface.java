@@ -15,6 +15,7 @@ import testbed1.testbed1_api.StructStructWithArray;
 import testbed1.testbed1_api.StructEnumWithArray;
 import testbed1.testbed1_api.Enum0;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 
@@ -41,16 +42,16 @@ import java.util.concurrent.CompletableFuture;
     void firePropEnumChanged(StructEnumWithArray newValue);
   
     // methods
-    StructBool[] funcBool(StructBoolWithArray paramBool);
-    CompletableFuture<StructBool[]> funcBoolAsync(StructBoolWithArray paramBool);
-    StructInt[] funcInt(StructIntWithArray paramInt);
-    CompletableFuture<StructInt[]> funcIntAsync(StructIntWithArray paramInt);
-    StructFloat[] funcFloat(StructFloatWithArray paramFloat);
-    CompletableFuture<StructFloat[]> funcFloatAsync(StructFloatWithArray paramFloat);
-    StructString[] funcString(StructStringWithArray paramString);
-    CompletableFuture<StructString[]> funcStringAsync(StructStringWithArray paramString);
-    Enum0[] funcEnum(StructEnumWithArray paramEnum);
-    CompletableFuture<Enum0[]> funcEnumAsync(StructEnumWithArray paramEnum);
+    List<StructBool> funcBool(StructBoolWithArray paramBool);
+    CompletableFuture<List<StructBool>> funcBoolAsync(StructBoolWithArray paramBool);
+    List<StructInt> funcInt(StructIntWithArray paramInt);
+    CompletableFuture<List<StructInt>> funcIntAsync(StructIntWithArray paramInt);
+    List<StructFloat> funcFloat(StructFloatWithArray paramFloat);
+    CompletableFuture<List<StructFloat>> funcFloatAsync(StructFloatWithArray paramFloat);
+    List<StructString> funcString(StructStringWithArray paramString);
+    CompletableFuture<List<StructString>> funcStringAsync(StructStringWithArray paramString);
+    List<Enum0> funcEnum(StructEnumWithArray paramEnum);
+    CompletableFuture<List<Enum0>> funcEnumAsync(StructEnumWithArray paramEnum);
     public void fireSigBool(StructBoolWithArray paramBool);
     public void fireSigInt(StructIntWithArray paramInt);
     public void fireSigFloat(StructFloatWithArray paramFloat);

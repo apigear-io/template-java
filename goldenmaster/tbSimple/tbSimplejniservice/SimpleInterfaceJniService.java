@@ -1,21 +1,18 @@
 package tbSimple.tbSimplejniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import tbSimple.tbSimple_api.ISimpleInterface;
 import tbSimple.tbSimple_api.AbstractSimpleInterface;
 import tbSimple.tbSimple_api.ISimpleInterfaceEventListener;
+import tbSimple.tbSimple_android_messenger.Conversions;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 
 public class SimpleInterfaceJniService extends AbstractSimpleInterface {
@@ -154,7 +151,7 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
     @Override
     public void funcNoReturnValue(boolean paramBool) {
         Log.i(TAG, "request method funcNoReturnValue called, will call native");
-         nativeFuncNoReturnValue(paramBool);
+        nativeFuncNoReturnValue(paramBool);
     }
 
     @Override
@@ -339,7 +336,7 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -361,7 +358,7 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
         }
     }
 
-    // Called on Native Impl Service
+    // Native methods — use array types for JNI compatibility
     private native void nativeSetPropBool(boolean propBool);
     private native boolean nativeGetPropBool();
   
@@ -386,7 +383,6 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
     private native void nativeSetPropString(String propString);
     private native String nativeGetPropString();
   
-    // methods
     private native void nativeFuncNoReturnValue(boolean paramBool);
     private native boolean nativeFuncNoParams();
     private native boolean nativeFuncBool(boolean paramBool);
@@ -403,7 +399,7 @@ public class SimpleInterfaceJniService extends AbstractSimpleInterface {
         isServiceReady = value;
     }
 
-    //In theory event listener interface
+    // Callbacks from native — receive arrays, convert to List and fire events
     public void onPropBoolChanged(boolean newValue)
     {
          Log.i(TAG, "onPropBoolChanged, will pass notification to all listeners");

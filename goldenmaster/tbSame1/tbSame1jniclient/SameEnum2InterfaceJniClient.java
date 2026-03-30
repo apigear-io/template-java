@@ -6,6 +6,7 @@ import tbSame1.tbSame1_api.ISameEnum2InterfaceEventListener;
 import tbSame1.tbSame1_api.RemoteOperationException;
 
 import tbSame1.tbSame1_android_client.SameEnum2InterfaceClient;
+import tbSame1.tbSame1_android_messenger.Conversions;
 import tbSame1.tbSame1_api.Enum1;
 import tbSame1.tbSame1_android_messenger.Enum1Parcelable;
 import tbSame1.tbSame1_api.Enum2;
@@ -13,6 +14,7 @@ import tbSame1.tbSame1_android_messenger.Enum2Parcelable;
 import android.content.Context;
 
 import android.os.Bundle;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import android.util.Log;
 
@@ -34,41 +36,48 @@ public class SameEnum2InterfaceJniClient extends AbstractSameEnum2Interface impl
     {
         return mMessengerClient != null ? mMessengerClient._isReady() : false;
     }
+    // Interface method — List types
     @Override
     public void setProp1(Enum1 prop1)
     {
-        Log.i(TAG, "got request from ue, setProp1" + (prop1));
+        Log.i(TAG, "got request setProp1" + (prop1));
         mMessengerClient.setProp1(prop1);
     }
     @Override
     public Enum1 getProp1()
     {
-        Log.i(TAG, "got request from ue, getProp1");
+        Log.i(TAG, "got request getProp1");
         return mMessengerClient.getProp1();
     }
+
+
     
+    // Interface method — List types
     @Override
     public void setProp2(Enum2 prop2)
     {
-        Log.i(TAG, "got request from ue, setProp2" + (prop2));
+        Log.i(TAG, "got request setProp2" + (prop2));
         mMessengerClient.setProp2(prop2);
     }
     @Override
     public Enum2 getProp2()
     {
-        Log.i(TAG, "got request from ue, getProp2");
+        Log.i(TAG, "got request getProp2");
         return mMessengerClient.getProp2();
     }
+
+
     
-     @Override
-     public Enum1 func1(Enum1 param1)
-     {
+    // Interface method — List types
+    @Override
+    public Enum1 func1(Enum1 param1)
+    {
         Log.v(TAG, "Blocking callfunc1 - should not be used ");
         return mMessengerClient.func1(param1);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFunc1Result with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -98,15 +107,16 @@ public class SameEnum2InterfaceJniClient extends AbstractSameEnum2Interface impl
         Log.v(TAG, "NON Blocking call method ");
         return mMessengerClient.func1Async(param1);
     }
-     @Override
-     public Enum1 func2(Enum1 param1, Enum2 param2)
-     {
+    // Interface method — List types
+    @Override
+    public Enum1 func2(Enum1 param1, Enum2 param2)
+    {
         Log.v(TAG, "Blocking callfunc2 - should not be used ");
         return mMessengerClient.func2(param1, param2);
     }
 
     /**
-    * This is an async method to be called via JNI.
+    * JNI async entry point — uses array types for C++ compatibility.
     *
     * On success, calls nativeOnFunc2Result with the same callId.
     * On failure, calls nativeAsyncOperationFailed with the callId and error message.
@@ -173,7 +183,7 @@ public class SameEnum2InterfaceJniClient extends AbstractSameEnum2Interface impl
         nativeIsReady(isReady);
     }
 
-    //Event listener
+    // Event listener — receives List from messenger client, converts to array for native
     @Override
     public void onProp1Changed(Enum1 newValue)
     {
@@ -198,6 +208,9 @@ public class SameEnum2InterfaceJniClient extends AbstractSameEnum2Interface impl
         Log.i(TAG, "NOTIFICATION from messenger client Signal sig2 "+ " " + param1+ " " + param2);
         nativeOnSig2(param1, param2);
     }
+
+
+    // Native declarations — array types for JNI compatibility
      private native void nativeOnProp1Changed(Enum1 prop1);
      private native void nativeOnProp2Changed(Enum2 prop2);
     private native void nativeOnSig1(Enum1 param1);

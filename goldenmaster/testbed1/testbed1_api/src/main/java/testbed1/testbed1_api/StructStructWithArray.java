@@ -1,37 +1,30 @@
 package testbed1.testbed1_api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public  class StructStructWithArray {
 
-    public StructStructWithArray(StructStringWithArray[] fieldStruct)
+    public StructStructWithArray(List<StructStringWithArray> fieldStruct)
     {
       this.fieldStruct = fieldStruct;
-    }  
+    }
 
-    public StructStructWithArray() 
+    public StructStructWithArray()
     {
-        this.fieldStruct = new StructStringWithArray[0];
+        this.fieldStruct = new ArrayList<>();
     }
     @JsonProperty("field_struct")
-    public StructStringWithArray[] fieldStruct;
+    public List<StructStringWithArray> fieldStruct;
 
     public StructStructWithArray(StructStructWithArray other)
     {
-        if (other.fieldStruct != null)
-        {
-            this.fieldStruct = new StructStringWithArray[other.fieldStruct.length];
-            for (int i = 0; i < other.fieldStruct.length; i++)
-            {
-                this.fieldStruct[i] = new StructStringWithArray(other.fieldStruct[i]);
-            }
-        }
-        else
-        {
-            this.fieldStruct = null;
-        }
+        this.fieldStruct = other.fieldStruct.stream()
+            .map(StructStringWithArray::new)
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -41,13 +34,13 @@ public  class StructStructWithArray {
         StructStructWithArray other = (StructStructWithArray) o;
 
         return
-         Arrays.equals(this.fieldStruct, other.fieldStruct);
+         Objects.equals(this.fieldStruct, other.fieldStruct);
     }
 
     @Override
     public int hashCode() {
         int result = 7;
-        result = 31 * result + Arrays.hashCode(fieldStruct);
+        result = 31 * result + fieldStruct.hashCode();
         return result;
     }
 

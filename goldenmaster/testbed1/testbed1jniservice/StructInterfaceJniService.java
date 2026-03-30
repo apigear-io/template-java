@@ -1,11 +1,11 @@
 package testbed1.testbed1jniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import testbed1.testbed1_api.IStructInterface;
 import testbed1.testbed1_api.AbstractStructInterface;
 import testbed1.testbed1_api.IStructInterfaceEventListener;
+import testbed1.testbed1_android_messenger.Conversions;
 import testbed1.testbed1_api.StructBool;
 import testbed1.testbed1_android_messenger.StructBoolParcelable;
 import testbed1.testbed1_api.StructFloat;
@@ -15,15 +15,12 @@ import testbed1.testbed1_android_messenger.StructIntParcelable;
 import testbed1.testbed1_api.StructString;
 import testbed1.testbed1_android_messenger.StructStringParcelable;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 
 public class StructInterfaceJniService extends AbstractStructInterface {
@@ -173,7 +170,7 @@ public class StructInterfaceJniService extends AbstractStructInterface {
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -195,7 +192,7 @@ public class StructInterfaceJniService extends AbstractStructInterface {
         }
     }
 
-    // Called on Native Impl Service
+    // Native methods — use array types for JNI compatibility
     private native void nativeSetPropBool(StructBool propBool);
     private native StructBool nativeGetPropBool();
   
@@ -208,7 +205,6 @@ public class StructInterfaceJniService extends AbstractStructInterface {
     private native void nativeSetPropString(StructString propString);
     private native StructString nativeGetPropString();
   
-    // methods
     private native StructBool nativeFuncBool(StructBool paramBool);
     private native StructInt nativeFuncInt(StructInt paramInt);
     private native StructFloat nativeFuncFloat(StructFloat paramFloat);
@@ -219,7 +215,7 @@ public class StructInterfaceJniService extends AbstractStructInterface {
         isServiceReady = value;
     }
 
-    //In theory event listener interface
+    // Callbacks from native — receive arrays, convert to List and fire events
     public void onPropBoolChanged(StructBool newValue)
     {
          Log.i(TAG, "onPropBoolChanged, will pass notification to all listeners");

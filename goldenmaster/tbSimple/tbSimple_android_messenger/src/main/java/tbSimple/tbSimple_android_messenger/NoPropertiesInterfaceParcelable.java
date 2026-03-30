@@ -5,7 +5,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
   public  class NoPropertiesInterfaceParcelable implements Parcelable {
 
@@ -62,7 +64,7 @@ import java.util.Arrays;
     }
 
     public static INoPropertiesInterface[] unwrapArray(NoPropertiesInterfaceParcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new INoPropertiesInterface[0];
         return Arrays.stream(parcelables)
            .map(NoPropertiesInterfaceParcelable::getNoPropertiesInterface)
            .toArray(INoPropertiesInterface[]::new);

@@ -23,7 +23,10 @@ import tbRefIfaces.tbRefIfaces_api.IParentIf;
 import tbRefIfaces.tbRefIfaces_api.AbstractParentIf;
 import tbRefIfaces.tbRefIfaces_api.RemoteOperationException;
 import tbRefIfaces.tbRefIfaces_android_messenger.ParentIfMessageType;
+import tbRefIfaces.tbRefIfaces_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 public class ParentIfServiceAdapter extends Service
@@ -240,7 +243,7 @@ public class ParentIfServiceAdapter extends Service
 						Bundle data = msg.getData();
 						data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
 						
-                    ISimpleLocalIf[] localIfList =  SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("localIfList", SimpleLocalIfParcelable.class));
+                    List<ISimpleLocalIf> localIfList = Conversions.toList(SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("localIfList", SimpleLocalIfParcelable.class)));
 						backend.setLocalIfList(localIfList);
 						break;
 					}
@@ -258,7 +261,7 @@ public class ParentIfServiceAdapter extends Service
 						Bundle data = msg.getData();
 						data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
 						
-                    tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfList =  tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class));
+                    List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> importedIfList = Conversions.toList(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class)));
 						backend.setImportedIfList(importedIfList);
 						break;
 					}
@@ -329,7 +332,7 @@ public class ParentIfServiceAdapter extends Service
         data.setClassLoader(SimpleLocalIfParcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
-                    ISimpleLocalIf[] param =  SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("param", SimpleLocalIfParcelable.class));
+                    List<ISimpleLocalIf> param = Conversions.toList(SimpleLocalIfParcelable.unwrapArray((SimpleLocalIfParcelable[])data.getParcelableArray("param", SimpleLocalIfParcelable.class)));
 					Message respMsg = new Message();
 					respMsg.what = ParentIfMessageType.RPC_LocalIfMethodListResp.getValue();
 					Bundle resp_data = new Bundle();
@@ -340,9 +343,9 @@ public class ParentIfServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						ISimpleLocalIf[] result =  backend.localIfMethodList(param);
+						List<ISimpleLocalIf> result =  backend.localIfMethodList(param);
 						
-		        resp_data.putParcelableArray("result",SimpleLocalIfParcelable.wrapArray(result));
+		        resp_data.putParcelableArray("result",SimpleLocalIfParcelable.wrapArray(Conversions.toArray(result, new ISimpleLocalIf[0])));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "localIfMethodList failed: " + errorMessage);
@@ -443,7 +446,7 @@ public class ParentIfServiceAdapter extends Service
         data.setClassLoader(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class.getClassLoader());
 					int callId = data.getInt("callId");
 					
-                    tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param =  tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class));
+                    List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> param = Conversions.toList(tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.unwrapArray((tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable[])data.getParcelableArray("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.class)));
 					Message respMsg = new Message();
 					respMsg.what = ParentIfMessageType.RPC_ImportedIfMethodListResp.getValue();
 					Bundle resp_data = new Bundle();
@@ -454,9 +457,9 @@ public class ParentIfServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						tbIfaceimport.tbIfaceimport_api.IEmptyIf[] result =  backend.importedIfMethodList(param);
+						List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> result =  backend.importedIfMethodList(param);
 						
-		        resp_data.putParcelableArray("result",tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(result));
+		        resp_data.putParcelableArray("result",tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(Conversions.toArray(result, new tbIfaceimport.tbIfaceimport_api.IEmptyIf[0])));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "importedIfMethodList failed: " + errorMessage);
@@ -528,15 +531,15 @@ public class ParentIfServiceAdapter extends Service
 				ISimpleLocalIf localIf = backend.getLocalIf();
 				
 		        data.putParcelable("localIf", new SimpleLocalIfParcelable(localIf));
-				ISimpleLocalIf[] localIfList = backend.getLocalIfList();
+				List<ISimpleLocalIf> localIfList = backend.getLocalIfList();
 				
-		        data.putParcelableArray("localIfList", SimpleLocalIfParcelable.wrapArray(localIfList));
+		        data.putParcelableArray("localIfList", SimpleLocalIfParcelable.wrapArray(Conversions.toArray(localIfList, new ISimpleLocalIf[0])));
 				tbIfaceimport.tbIfaceimport_api.IEmptyIf importedIf = backend.getImportedIf();
 				
 		        data.putParcelable("importedIf", new tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable(importedIf));
-				tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfList = backend.getImportedIfList();
+				List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> importedIfList = backend.getImportedIfList();
 				
-		        data.putParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(importedIfList));
+		        data.putParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(Conversions.toArray(importedIfList, new tbIfaceimport.tbIfaceimport_api.IEmptyIf[0])));
 				msg.setData(data);
 				sendMessageToClients(msg);
 			}
@@ -554,14 +557,14 @@ public class ParentIfServiceAdapter extends Service
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onLocalIfListChanged(ISimpleLocalIf[] localIfList){
+		public void onLocalIfListChanged(List<ISimpleLocalIf> localIfList){
 			Log.i(TAG, "New value for LocalIfList from backend" + localIfList);
 
 			Message msg = new Message();
 			msg.what = ParentIfMessageType.SET_LocalIfList.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putParcelableArray("localIfList", SimpleLocalIfParcelable.wrapArray(localIfList));
+		        data.putParcelableArray("localIfList", SimpleLocalIfParcelable.wrapArray(Conversions.toArray(localIfList, new ISimpleLocalIf[0])));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
@@ -578,14 +581,14 @@ public class ParentIfServiceAdapter extends Service
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onImportedIfListChanged(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] importedIfList){
+		public void onImportedIfListChanged(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> importedIfList){
 			Log.i(TAG, "New value for ImportedIfList from backend" + importedIfList);
 
 			Message msg = new Message();
 			msg.what = ParentIfMessageType.SET_ImportedIfList.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(importedIfList));
+		        data.putParcelableArray("importedIfList", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(Conversions.toArray(importedIfList, new tbIfaceimport.tbIfaceimport_api.IEmptyIf[0])));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
@@ -601,13 +604,13 @@ public class ParentIfServiceAdapter extends Service
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onLocalIfSignalList(ISimpleLocalIf[] param){
+		public void onLocalIfSignalList(List<ISimpleLocalIf> param){
 			Log.i(TAG, "New singal for LocalIfSignalList = "+ " " + param);
 			Message msg = new Message();
 			msg.what = ParentIfMessageType.SIG_LocalIfSignalList.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putParcelableArray("param", SimpleLocalIfParcelable.wrapArray(param));
+		        data.putParcelableArray("param", SimpleLocalIfParcelable.wrapArray(Conversions.toArray(param, new ISimpleLocalIf[0])));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}
@@ -623,13 +626,13 @@ public class ParentIfServiceAdapter extends Service
 			sendMessageToClients(msg);
 		}
 		@Override
-		public void onImportedIfSignalList(tbIfaceimport.tbIfaceimport_api.IEmptyIf[] param){
+		public void onImportedIfSignalList(List<tbIfaceimport.tbIfaceimport_api.IEmptyIf> param){
 			Log.i(TAG, "New singal for ImportedIfSignalList = "+ " " + param);
 			Message msg = new Message();
 			msg.what = ParentIfMessageType.SIG_ImportedIfSignalList.getValue();
 			Bundle data = new Bundle();
 			
-		        data.putParcelableArray("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(param));
+		        data.putParcelableArray("param", tbIfaceimport.tbIfaceimport_android_messenger.EmptyIfParcelable.wrapArray(Conversions.toArray(param, new tbIfaceimport.tbIfaceimport_api.IEmptyIf[0])));
 			msg.setData(data);
 			sendMessageToClients(msg);
 		}

@@ -31,7 +31,10 @@ import tbEnum.tbEnum_api.IEnumInterface;
 import tbEnum.tbEnum_api.AbstractEnumInterface;
 import tbEnum.tbEnum_api.RemoteOperationException;
 import tbEnum.tbEnum_android_messenger.EnumInterfaceMessageType;
+import tbEnum.tbEnum_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.UUID;
@@ -39,7 +42,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.Arrays;
 
 
 public class EnumInterfaceClient extends AbstractEnumInterface implements ServiceConnection
@@ -265,7 +267,7 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 				    onProp3(prop3);
 				    break;
 			    }
-			    // TODO params may be different structs from different modules, there should be a custom class loader 
+			    // TODO params may be different structs from different modules, there should be a custom class loader
 			    // with a list of class loaders required for this message
 			    // IF there are at least 2 different structs from different modules - in theory if it is from same module setting loader for one should work for all structs from this module.
 			    case SIG_Sig0: {
@@ -534,7 +536,7 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
   
     // methods
 
-   
+
     @Override
     public Enum0 func0(Enum0 param0) {
         CompletableFuture<Enum0> resFuture = func0Async(param0);
@@ -595,7 +597,7 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
         return future;
     }
 
-   
+
     @Override
     public Enum1 func1(Enum1 param1) {
         CompletableFuture<Enum1> resFuture = func1Async(param1);
@@ -656,7 +658,7 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
         return future;
     }
 
-   
+
     @Override
     public Enum2 func2(Enum2 param2) {
         CompletableFuture<Enum2> resFuture = func2Async(param2);
@@ -717,7 +719,7 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
         return future;
     }
 
-   
+
     @Override
     public Enum3 func3(Enum3 param3) {
         CompletableFuture<Enum3> resFuture = func3Async(param3);
@@ -776,7 +778,7 @@ public class EnumInterfaceClient extends AbstractEnumInterface implements Servic
 		mClientHandler.sendToService(msg);
 
         return future;
-    }    
+    }
 
     @Override
     public boolean _isReady() {

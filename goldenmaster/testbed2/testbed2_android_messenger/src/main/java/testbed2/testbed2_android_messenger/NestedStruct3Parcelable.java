@@ -4,7 +4,9 @@ import testbed2.testbed2_api.NestedStruct3;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import testbed2.testbed2_api.Struct1;
 import testbed2.testbed2_api.Struct2;
 import testbed2.testbed2_api.Struct3;
@@ -71,7 +73,7 @@ import testbed2.testbed2_api.Struct3;
     }
 
     public static NestedStruct3[] unwrapArray(NestedStruct3Parcelable[] parcelables) {
-        if (parcelables == null) return null;
+        if (parcelables == null) return new NestedStruct3[0];
         return Arrays.stream(parcelables)
            .map(NestedStruct3Parcelable::getNestedStruct3)
            .toArray(NestedStruct3[]::new);

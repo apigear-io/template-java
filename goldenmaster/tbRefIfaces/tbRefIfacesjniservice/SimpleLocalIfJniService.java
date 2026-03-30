@@ -1,21 +1,18 @@
 package tbRefIfaces.tbRefIfacesjniservice;
 
-import android.os.Messenger;
 import android.util.Log;
 
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_api.AbstractSimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIfEventListener;
+import tbRefIfaces.tbRefIfaces_android_messenger.Conversions;
 
-import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
 
 
 public class SimpleLocalIfJniService extends AbstractSimpleLocalIf {
@@ -63,7 +60,7 @@ public class SimpleLocalIfJniService extends AbstractSimpleLocalIf {
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {
@@ -85,11 +82,10 @@ public class SimpleLocalIfJniService extends AbstractSimpleLocalIf {
         }
     }
 
-    // Called on Native Impl Service
+    // Native methods — use array types for JNI compatibility
     private native void nativeSetIntProperty(int intProperty);
     private native int nativeGetIntProperty();
   
-    // methods
     private native int nativeIntMethod(int param);
 
     // Called by Native Impl Service
@@ -97,7 +93,7 @@ public class SimpleLocalIfJniService extends AbstractSimpleLocalIf {
         isServiceReady = value;
     }
 
-    //In theory event listener interface
+    // Callbacks from native — receive arrays, convert to List and fire events
     public void onIntPropertyChanged(int newValue)
     {
          Log.i(TAG, "onIntPropertyChanged, will pass notification to all listeners");

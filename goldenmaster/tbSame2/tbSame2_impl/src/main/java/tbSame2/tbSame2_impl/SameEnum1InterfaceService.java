@@ -9,6 +9,8 @@ import tbSame2.tbSame2_api.ISameEnum1InterfaceEventListener;
 import tbSame2.tbSame2_api.Enum1;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -19,7 +21,6 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
-import java.util.Arrays;
 
 
 public class SameEnum1InterfaceService extends AbstractSameEnum1Interface {
@@ -72,7 +73,7 @@ public class SameEnum1InterfaceService extends AbstractSameEnum1Interface {
             f.completeExceptionally(e);
             return f;
         }
-    }    
+    }
 
     @Override
     public boolean _isReady() {

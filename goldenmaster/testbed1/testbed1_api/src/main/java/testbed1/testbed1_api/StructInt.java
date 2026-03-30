@@ -1,17 +1,19 @@
 package testbed1.testbed1_api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public  class StructInt {
 
     public StructInt(int fieldInt)
     {
       this.fieldInt = fieldInt;
-    }  
+    }
 
-    public StructInt() 
+    public StructInt()
     {
     }
     @JsonProperty("field_int")

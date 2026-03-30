@@ -41,7 +41,10 @@ import testbed1.testbed1_api.IStructArray2Interface;
 import testbed1.testbed1_api.AbstractStructArray2Interface;
 import testbed1.testbed1_api.RemoteOperationException;
 import testbed1.testbed1_android_messenger.StructArray2InterfaceMessageType;
+import testbed1.testbed1_android_messenger.Conversions;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 public class StructArray2InterfaceServiceAdapter extends Service
@@ -311,9 +314,9 @@ public class StructArray2InterfaceServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						StructBool[] result =  backend.funcBool(paramBool);
+						List<StructBool> result =  backend.funcBool(paramBool);
 						
-		        resp_data.putParcelableArray("result",StructBoolParcelable.wrapArray(result));
+		        resp_data.putParcelableArray("result",StructBoolParcelable.wrapArray(Conversions.toArray(result, new StructBool[0])));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "funcBool failed: " + errorMessage);
@@ -368,9 +371,9 @@ public class StructArray2InterfaceServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						StructInt[] result =  backend.funcInt(paramInt);
+						List<StructInt> result =  backend.funcInt(paramInt);
 						
-		        resp_data.putParcelableArray("result",StructIntParcelable.wrapArray(result));
+		        resp_data.putParcelableArray("result",StructIntParcelable.wrapArray(Conversions.toArray(result, new StructInt[0])));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "funcInt failed: " + errorMessage);
@@ -425,9 +428,9 @@ public class StructArray2InterfaceServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						StructFloat[] result =  backend.funcFloat(paramFloat);
+						List<StructFloat> result =  backend.funcFloat(paramFloat);
 						
-		        resp_data.putParcelableArray("result",StructFloatParcelable.wrapArray(result));
+		        resp_data.putParcelableArray("result",StructFloatParcelable.wrapArray(Conversions.toArray(result, new StructFloat[0])));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "funcFloat failed: " + errorMessage);
@@ -482,9 +485,9 @@ public class StructArray2InterfaceServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						StructString[] result =  backend.funcString(paramString);
+						List<StructString> result =  backend.funcString(paramString);
 						
-		        resp_data.putParcelableArray("result",StructStringParcelable.wrapArray(result));
+		        resp_data.putParcelableArray("result",StructStringParcelable.wrapArray(Conversions.toArray(result, new StructString[0])));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "funcString failed: " + errorMessage);
@@ -539,9 +542,9 @@ public class StructArray2InterfaceServiceAdapter extends Service
 							throw new RemoteOperationException("service not ready",
 								RemoteOperationException.ERROR_SERVICE_NOT_READY);
 						}
-						Enum0[] result =  backend.funcEnum(paramEnum);
+						List<Enum0> result =  backend.funcEnum(paramEnum);
 						
-		        resp_data.putParcelableArray("result",Enum0Parcelable.wrapArray(result));
+		        resp_data.putParcelableArray("result",Enum0Parcelable.wrapArray(Conversions.toArray(result, new Enum0[0])));
 					} catch (Exception e) {
 						String errorMessage = e.getMessage() != null ? e.getMessage() : e.getClass().getName();
 						Log.w(TAG, "funcEnum failed: " + errorMessage);

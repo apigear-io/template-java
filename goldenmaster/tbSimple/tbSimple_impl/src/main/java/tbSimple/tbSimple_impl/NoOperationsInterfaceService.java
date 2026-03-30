@@ -8,6 +8,8 @@ import tbSimple.tbSimple_api.AbstractNoOperationsInterface;
 import tbSimple.tbSimple_api.INoOperationsInterfaceEventListener;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,7 +20,6 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
-import java.util.Arrays;
 
 
 public class NoOperationsInterfaceService extends AbstractNoOperationsInterface {
@@ -73,7 +74,7 @@ public class NoOperationsInterfaceService extends AbstractNoOperationsInterface 
     }
 
   
-    // methods    
+    // methods
 
     @Override
     public boolean _isReady() {
