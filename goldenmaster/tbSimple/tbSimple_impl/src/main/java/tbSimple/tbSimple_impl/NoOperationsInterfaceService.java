@@ -24,7 +24,7 @@ import java.util.Arrays;
 public class NoOperationsInterfaceService extends AbstractNoOperationsInterface {
 
     private final static String TAG = "NoOperationsInterfaceService";
-    private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
+    private volatile boolean isServiceReady = true;//Use if you're waiting for some setup to be done
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private boolean m_propBool = false;
     private int m_propInt = 0;

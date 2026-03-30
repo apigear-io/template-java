@@ -26,7 +26,7 @@ import java.util.Arrays;
 public class SameStruct2InterfaceService extends AbstractSameStruct2Interface {
 
     private final static String TAG = "SameStruct2InterfaceService";
-    private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
+    private volatile boolean isServiceReady = true;//Use if you're waiting for some setup to be done
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private Struct2 m_prop1 = new Struct2();
     private Struct2 m_prop2 = new Struct2();

@@ -24,7 +24,7 @@ import java.util.Arrays;
 public class ManyParamInterfaceService extends AbstractManyParamInterface {
 
     private final static String TAG = "ManyParamInterfaceService";
-    private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
+    private volatile boolean isServiceReady = true;//Use if you're waiting for some setup to be done
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private int m_prop1 = 0;
     private int m_prop2 = 0;

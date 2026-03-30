@@ -28,7 +28,7 @@ import java.util.Arrays;
 public class StructInterfaceService extends AbstractStructInterface {
 
     private final static String TAG = "StructInterfaceService";
-    private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
+    private volatile boolean isServiceReady = true;//Use if you're waiting for some setup to be done
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private StructBool m_propBool = new StructBool();
     private StructInt m_propInt = new StructInt();

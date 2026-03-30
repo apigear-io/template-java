@@ -25,7 +25,7 @@ import java.util.Arrays;
 public class NamEsService extends AbstractNamEs {
 
     private final static String TAG = "NamEsService";
-    private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
+    private volatile boolean isServiceReady = true;//Use if you're waiting for some setup to be done
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private boolean m_Switch = false;
     private int m_SOME_PROPERTY = 0;

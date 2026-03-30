@@ -26,7 +26,7 @@ import java.util.Arrays;
 public class ParentIfService extends AbstractParentIf {
 
     private final static String TAG = "ParentIfService";
-    private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
+    private volatile boolean isServiceReady = true;//Use if you're waiting for some setup to be done
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private ISimpleLocalIf m_localIf = null;
     private ISimpleLocalIf[] m_localIfList = new ISimpleLocalIf[]{};

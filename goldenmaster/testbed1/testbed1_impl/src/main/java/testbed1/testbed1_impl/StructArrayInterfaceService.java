@@ -29,7 +29,7 @@ import java.util.Arrays;
 public class StructArrayInterfaceService extends AbstractStructArrayInterface {
 
     private final static String TAG = "StructArrayInterfaceService";
-    private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
+    private volatile boolean isServiceReady = true;//Use if you're waiting for some setup to be done
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private StructBool[] m_propBool = new StructBool[]{};
     private StructInt[] m_propInt = new StructInt[]{};

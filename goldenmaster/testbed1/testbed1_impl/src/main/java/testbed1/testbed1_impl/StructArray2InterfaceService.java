@@ -34,7 +34,7 @@ import java.util.Arrays;
 public class StructArray2InterfaceService extends AbstractStructArray2Interface {
 
     private final static String TAG = "StructArray2InterfaceService";
-    private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
+    private volatile boolean isServiceReady = true;//Use if you're waiting for some setup to be done
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private StructBoolWithArray m_propBool = new StructBoolWithArray();
     private StructIntWithArray m_propInt = new StructIntWithArray();

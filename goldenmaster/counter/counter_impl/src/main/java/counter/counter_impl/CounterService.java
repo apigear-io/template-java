@@ -24,7 +24,7 @@ import java.util.Arrays;
 public class CounterService extends AbstractCounter {
 
     private final static String TAG = "CounterService";
-    private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
+    private volatile boolean isServiceReady = true;//Use if you're waiting for some setup to be done
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private customTypes.customTypes_api.Vector3D m_vector = new customTypes.customTypes_api.Vector3D();
     private org.apache.commons.math3.geometry.euclidean.threed.Vector3D m_extern_vector = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(0.0, 0.0, 0.0);

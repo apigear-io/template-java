@@ -25,7 +25,7 @@ import java.util.Arrays;
 public class {{Camel .Interface.Name}}Service extends Abstract{{Camel .Interface.Name}} {
 
     private final static String TAG = "{{Camel .Interface.Name}}Service";
-    private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
+    private volatile boolean isServiceReady = true;//Use if you're waiting for some setup to be done
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     {{- range .Interface.Properties }}

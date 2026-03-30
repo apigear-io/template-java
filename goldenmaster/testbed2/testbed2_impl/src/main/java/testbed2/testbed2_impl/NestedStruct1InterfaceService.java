@@ -25,7 +25,7 @@ import java.util.Arrays;
 public class NestedStruct1InterfaceService extends AbstractNestedStruct1Interface {
 
     private final static String TAG = "NestedStruct1InterfaceService";
-    private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
+    private volatile boolean isServiceReady = true;//Use if you're waiting for some setup to be done
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private NestedStruct1 m_prop1 = new NestedStruct1();
 

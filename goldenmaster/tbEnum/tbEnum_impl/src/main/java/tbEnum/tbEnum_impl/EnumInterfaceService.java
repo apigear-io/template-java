@@ -28,7 +28,7 @@ import java.util.Arrays;
 public class EnumInterfaceService extends AbstractEnumInterface {
 
     private final static String TAG = "EnumInterfaceService";
-    private static boolean isServiceReady = true;//Use if you're waiting for some setup to be done
+    private volatile boolean isServiceReady = true;//Use if you're waiting for some setup to be done
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private Enum0 m_prop0 = Enum0.Value0;
     private Enum1 m_prop1 = Enum1.Value1;
