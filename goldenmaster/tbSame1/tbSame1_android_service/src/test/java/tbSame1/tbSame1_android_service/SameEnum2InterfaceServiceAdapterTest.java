@@ -355,6 +355,7 @@ public class SameEnum2InterfaceServiceAdapterTest
         when(backendServiceMock.func1(testparam1)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).func1(testparam1);
@@ -391,6 +392,7 @@ public class SameEnum2InterfaceServiceAdapterTest
         when(backendServiceMock.func2(testparam1, testparam2)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).func2(testparam1, testparam2);

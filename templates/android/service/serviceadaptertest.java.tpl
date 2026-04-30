@@ -362,6 +362,7 @@ public class {{Camel .Interface.Name }}ServiceAdapterTest
         {{- end}}
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).{{camel .Name}}({{- range $idx, $p :=.Params }}{{- if $idx}}, {{ end -}}

@@ -297,6 +297,7 @@ public class NestedStruct1InterfaceServiceAdapterTest
 		data.putParcelable("param1", new NestedStruct1Parcelable(testparam1));
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcNoReturnValue( any(NestedStruct1.class));
@@ -325,6 +326,7 @@ public class NestedStruct1InterfaceServiceAdapterTest
         when(backendServiceMock.funcNoParams()).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcNoParams();
@@ -359,6 +361,7 @@ public class NestedStruct1InterfaceServiceAdapterTest
         when(backendServiceMock.func1( any(NestedStruct1.class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).func1( any(NestedStruct1.class));

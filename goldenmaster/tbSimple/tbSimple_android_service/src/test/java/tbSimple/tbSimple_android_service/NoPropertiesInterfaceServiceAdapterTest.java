@@ -255,6 +255,7 @@ public class NoPropertiesInterfaceServiceAdapterTest
         data.putInt("callId", callId);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcVoid();
@@ -285,6 +286,7 @@ public class NoPropertiesInterfaceServiceAdapterTest
         when(backendServiceMock.funcBool(testparamBool)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcBool(testparamBool);
