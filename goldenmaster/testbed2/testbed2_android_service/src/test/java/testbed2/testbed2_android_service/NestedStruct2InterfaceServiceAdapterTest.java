@@ -369,6 +369,7 @@ public class NestedStruct2InterfaceServiceAdapterTest
         when(backendServiceMock.func1( any(NestedStruct1.class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).func1( any(NestedStruct1.class));
@@ -405,6 +406,7 @@ public class NestedStruct2InterfaceServiceAdapterTest
         when(backendServiceMock.func2( any(NestedStruct1.class),  any(NestedStruct2.class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).func2( any(NestedStruct1.class),  any(NestedStruct2.class));

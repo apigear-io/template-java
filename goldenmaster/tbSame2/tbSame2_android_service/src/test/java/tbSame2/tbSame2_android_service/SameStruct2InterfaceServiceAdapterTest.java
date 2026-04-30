@@ -357,6 +357,7 @@ public class SameStruct2InterfaceServiceAdapterTest
         when(backendServiceMock.func1( any(Struct1.class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).func1( any(Struct1.class));
@@ -393,6 +394,7 @@ public class SameStruct2InterfaceServiceAdapterTest
         when(backendServiceMock.func2( any(Struct1.class),  any(Struct2.class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).func2( any(Struct1.class),  any(Struct2.class));

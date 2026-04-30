@@ -272,6 +272,7 @@ public class SimpleLocalIfServiceAdapterTest
         when(backendServiceMock.intMethod(testparam)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).intMethod(testparam);

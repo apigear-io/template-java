@@ -419,6 +419,7 @@ public class CounterServiceAdapterTest
         when(backendServiceMock.increment( any(org.apache.commons.math3.geometry.euclidean.threed.Vector3D.class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).increment( any(org.apache.commons.math3.geometry.euclidean.threed.Vector3D.class));
@@ -455,6 +456,7 @@ public class CounterServiceAdapterTest
         when(backendServiceMock.incrementArray( any(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[].class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).incrementArray( any(org.apache.commons.math3.geometry.euclidean.threed.Vector3D[].class));
@@ -489,6 +491,7 @@ public class CounterServiceAdapterTest
         when(backendServiceMock.decrement( any(customTypes.customTypes_api.Vector3D.class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).decrement( any(customTypes.customTypes_api.Vector3D.class));
@@ -525,6 +528,7 @@ public class CounterServiceAdapterTest
         when(backendServiceMock.decrementArray( any(customTypes.customTypes_api.Vector3D[].class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).decrementArray( any(customTypes.customTypes_api.Vector3D[].class));

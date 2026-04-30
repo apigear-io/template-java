@@ -406,6 +406,7 @@ public class NamEsServiceAdapterTest
 		data.putBoolean("SOME_PARAM", testSOME_PARAM);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).someFunction(testSOME_PARAM);
@@ -432,6 +433,7 @@ public class NamEsServiceAdapterTest
 		data.putBoolean("Some_Param", testSome_Param);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).someFunction2(testSome_Param);

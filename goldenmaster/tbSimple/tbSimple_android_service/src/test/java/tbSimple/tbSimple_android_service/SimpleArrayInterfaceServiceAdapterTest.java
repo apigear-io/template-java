@@ -761,6 +761,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         when(backendServiceMock.funcBool(testparamBool)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcBool(testparamBool);
@@ -796,6 +797,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         when(backendServiceMock.funcInt(testparamInt)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcInt(testparamInt);
@@ -831,6 +833,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         when(backendServiceMock.funcInt32(testparamInt32)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcInt32(testparamInt32);
@@ -866,6 +869,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         when(backendServiceMock.funcInt64(testparamInt64)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcInt64(testparamInt64);
@@ -901,6 +905,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         when(backendServiceMock.funcFloat(testparamFloat)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcFloat(testparamFloat);
@@ -936,6 +941,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         when(backendServiceMock.funcFloat32(testparamFloat32)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcFloat32(testparamFloat32);
@@ -971,6 +977,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         when(backendServiceMock.funcFloat64(testparamFloat)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcFloat64(testparamFloat);
@@ -1006,6 +1013,7 @@ public class SimpleArrayInterfaceServiceAdapterTest
         when(backendServiceMock.funcString(testparamString)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcString(testparamString);

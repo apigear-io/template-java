@@ -496,6 +496,7 @@ public class ManyParamInterfaceServiceAdapterTest
         when(backendServiceMock.func1(testparam1)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).func1(testparam1);
@@ -531,6 +532,7 @@ public class ManyParamInterfaceServiceAdapterTest
         when(backendServiceMock.func2(testparam1, testparam2)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).func2(testparam1, testparam2);
@@ -568,6 +570,7 @@ public class ManyParamInterfaceServiceAdapterTest
         when(backendServiceMock.func3(testparam1, testparam2, testparam3)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).func3(testparam1, testparam2, testparam3);
@@ -607,6 +610,7 @@ public class ManyParamInterfaceServiceAdapterTest
         when(backendServiceMock.func4(testparam1, testparam2, testparam3, testparam4)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).func4(testparam1, testparam2, testparam3, testparam4);

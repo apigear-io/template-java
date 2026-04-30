@@ -458,6 +458,7 @@ public class EnumInterfaceServiceAdapterTest
         when(backendServiceMock.func0(testparam0)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).func0(testparam0);
@@ -492,6 +493,7 @@ public class EnumInterfaceServiceAdapterTest
         when(backendServiceMock.func1(testparam1)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).func1(testparam1);
@@ -526,6 +528,7 @@ public class EnumInterfaceServiceAdapterTest
         when(backendServiceMock.func2(testparam2)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).func2(testparam2);
@@ -560,6 +563,7 @@ public class EnumInterfaceServiceAdapterTest
         when(backendServiceMock.func3(testparam3)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).func3(testparam3);

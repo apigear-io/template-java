@@ -568,6 +568,7 @@ public class StructArrayInterfaceServiceAdapterTest
         when(backendServiceMock.funcBool( any(StructBool[].class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcBool( any(StructBool[].class));
@@ -604,6 +605,7 @@ public class StructArrayInterfaceServiceAdapterTest
         when(backendServiceMock.funcInt( any(StructInt[].class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcInt( any(StructInt[].class));
@@ -640,6 +642,7 @@ public class StructArrayInterfaceServiceAdapterTest
         when(backendServiceMock.funcFloat( any(StructFloat[].class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcFloat( any(StructFloat[].class));
@@ -676,6 +679,7 @@ public class StructArrayInterfaceServiceAdapterTest
         when(backendServiceMock.funcString( any(StructString[].class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcString( any(StructString[].class));
@@ -712,6 +716,7 @@ public class StructArrayInterfaceServiceAdapterTest
         when(backendServiceMock.funcEnum(testparamEnum)).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcEnum(testparamEnum);

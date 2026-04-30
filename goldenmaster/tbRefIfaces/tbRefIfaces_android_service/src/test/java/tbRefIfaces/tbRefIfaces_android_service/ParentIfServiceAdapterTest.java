@@ -465,6 +465,7 @@ public class ParentIfServiceAdapterTest
         when(backendServiceMock.localIfMethod( any(ISimpleLocalIf.class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).localIfMethod( any(ISimpleLocalIf.class));
@@ -501,6 +502,7 @@ public class ParentIfServiceAdapterTest
         when(backendServiceMock.localIfMethodList( any(ISimpleLocalIf[].class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).localIfMethodList( any(ISimpleLocalIf[].class));
@@ -535,6 +537,7 @@ public class ParentIfServiceAdapterTest
         when(backendServiceMock.importedIfMethod( any(tbIfaceimport.tbIfaceimport_api.IEmptyIf.class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).importedIfMethod( any(tbIfaceimport.tbIfaceimport_api.IEmptyIf.class));
@@ -571,6 +574,7 @@ public class ParentIfServiceAdapterTest
         when(backendServiceMock.importedIfMethodList( any(tbIfaceimport.tbIfaceimport_api.IEmptyIf[].class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).importedIfMethodList( any(tbIfaceimport.tbIfaceimport_api.IEmptyIf[].class));

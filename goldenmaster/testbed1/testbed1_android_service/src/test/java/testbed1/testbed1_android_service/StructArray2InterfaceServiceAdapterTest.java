@@ -528,6 +528,7 @@ public class StructArray2InterfaceServiceAdapterTest
         when(backendServiceMock.funcBool( any(StructBoolWithArray.class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcBool( any(StructBoolWithArray.class));
@@ -563,6 +564,7 @@ public class StructArray2InterfaceServiceAdapterTest
         when(backendServiceMock.funcInt( any(StructIntWithArray.class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcInt( any(StructIntWithArray.class));
@@ -598,6 +600,7 @@ public class StructArray2InterfaceServiceAdapterTest
         when(backendServiceMock.funcFloat( any(StructFloatWithArray.class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcFloat( any(StructFloatWithArray.class));
@@ -633,6 +636,7 @@ public class StructArray2InterfaceServiceAdapterTest
         when(backendServiceMock.funcString( any(StructStringWithArray.class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcString( any(StructStringWithArray.class));
@@ -668,6 +672,7 @@ public class StructArray2InterfaceServiceAdapterTest
         when(backendServiceMock.funcEnum( any(StructEnumWithArray.class))).thenReturn(returnedValue);
 
         msg.setData(data);
+        msg.replyTo = clientReplyMessenger;
         mServiceMessenger.send(msg);
         Robolectric.flushForegroundThreadScheduler();
         inOrderBackendService.verify(backendServiceMock,times(1)).funcEnum( any(StructEnumWithArray.class));
