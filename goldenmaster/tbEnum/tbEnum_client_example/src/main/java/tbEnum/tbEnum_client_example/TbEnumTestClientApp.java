@@ -266,8 +266,8 @@ public class TbEnumTestClientApp extends Activity implements IEnumInterfaceEvent
         Log.v(TAG, "My app: onDestroy, unbinding");
         if (mClient != null) {
             mClient.unbindFromService();
+            mClient.removeEventListener(this);
         }
-        mClient.removeEventListener(this);
         super.onDestroy();
     }
 

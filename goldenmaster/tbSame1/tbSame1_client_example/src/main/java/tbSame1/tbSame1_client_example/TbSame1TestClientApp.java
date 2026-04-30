@@ -64,7 +64,7 @@ public class TbSame1TestClientApp extends Activity implements ISameStruct1Interf
         bProp1.setBackgroundColor(Color.GREEN);
 
         bProp1.setOnClickListener(v -> {
-            Struct1 newProp1 = new Struct1(mClient.getProp1(););
+            Struct1 newProp1 = new Struct1(mClient.getProp1());
             //TODO increment
             Log.i(TAG, "SET prop1" + newProp1);
             mClient.setProp1(newProp1);
@@ -178,8 +178,8 @@ public class TbSame1TestClientApp extends Activity implements ISameStruct1Interf
         Log.v(TAG, "My app: onDestroy, unbinding");
         if (mClient != null) {
             mClient.unbindFromService();
+            mClient.removeEventListener(this);
         }
-        mClient.removeEventListener(this);
         super.onDestroy();
     }
 

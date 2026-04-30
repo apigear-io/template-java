@@ -164,8 +164,8 @@ public class TbSimpleTestClientApp extends Activity implements IVoidInterfaceEve
         Log.v(TAG, "My app: onDestroy, unbinding");
         if (mClient != null) {
             mClient.unbindFromService();
+            mClient.removeEventListener(this);
         }
-        mClient.removeEventListener(this);
         super.onDestroy();
     }
 

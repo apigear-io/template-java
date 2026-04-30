@@ -125,7 +125,7 @@ public class {{Camel .Module.Name}}TestClientApp extends Activity implements I{{
             {{javaReturn "" . }} new{{Camel .Name}} = {{ if or .IsPrimitive (eq .KindType "enum") -}}
             mClient.get{{Camel .Name}}();
             {{ else -}} 
-            new {{javaReturn "" . }}(mClient.get{{Camel .Name}}(););
+            new {{javaReturn "" . }}(mClient.get{{Camel .Name}}());
             {{- end }}
             //TODO increment
             Log.i(TAG, "SET {{.Name}}" + new{{Camel .Name}});
@@ -246,8 +246,8 @@ public class {{Camel .Module.Name}}TestClientApp extends Activity implements I{{
         Log.v(TAG, "My app: onDestroy, unbinding");
         if (mClient != null) {
             mClient.unbindFromService();
+            mClient.removeEventListener(this);
         }
-        mClient.removeEventListener(this);
         super.onDestroy();
     }
 

@@ -227,7 +227,9 @@ public class Testbed1TestServiceApp extends Activity implements IStructInterface
     }
 
     public void stopMyService() {
-        mBackend.removeEventListener(this);
+        if (mBackend != null) {
+            mBackend.removeEventListener(this);
+        }
         if (stub_service!= null)
         {
             this.stopService(stub_service);

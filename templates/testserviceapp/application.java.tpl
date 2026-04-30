@@ -222,7 +222,9 @@ public class {{Camel .Module.Name}}TestServiceApp extends Activity implements I{
     }
 
     public void stopMyService() {
-        mBackend.removeEventListener(this);
+        if (mBackend != null) {
+            mBackend.removeEventListener(this);
+        }
         if (stub_service!= null)
         {
             this.stopService(stub_service);

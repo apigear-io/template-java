@@ -1,4 +1,4 @@
-//TODO later// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 package testbed2.testbed2_android_client;
 
 import testbed2.testbed2_android_client.NestedStruct2InterfaceClient;

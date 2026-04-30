@@ -264,8 +264,8 @@ public class Testbed2TestClientApp extends Activity implements IManyParamInterfa
         Log.v(TAG, "My app: onDestroy, unbinding");
         if (mClient != null) {
             mClient.unbindFromService();
+            mClient.removeEventListener(this);
         }
-        mClient.removeEventListener(this);
         super.onDestroy();
     }
 

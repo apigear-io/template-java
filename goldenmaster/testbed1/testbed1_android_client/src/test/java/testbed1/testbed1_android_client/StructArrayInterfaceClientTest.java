@@ -1,4 +1,4 @@
-//TODO later// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 package testbed1.testbed1_android_client;
 
 import testbed1.testbed1_android_client.StructArrayInterfaceClient;

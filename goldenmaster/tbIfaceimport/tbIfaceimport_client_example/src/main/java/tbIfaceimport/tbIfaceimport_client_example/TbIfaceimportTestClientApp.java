@@ -150,8 +150,8 @@ public class TbIfaceimportTestClientApp extends Activity implements IEmptyIfEven
         Log.v(TAG, "My app: onDestroy, unbinding");
         if (mClient != null) {
             mClient.unbindFromService();
+            mClient.removeEventListener(this);
         }
-        mClient.removeEventListener(this);
         super.onDestroy();
     }
 
