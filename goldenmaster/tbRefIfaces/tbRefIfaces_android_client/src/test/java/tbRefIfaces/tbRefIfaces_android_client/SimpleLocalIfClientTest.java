@@ -1,4 +1,4 @@
-//TODO later// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 package tbRefIfaces.tbRefIfaces_android_client;
 
 import tbRefIfaces.tbRefIfaces_android_client.SimpleLocalIfClient;

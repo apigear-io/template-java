@@ -62,7 +62,7 @@ public class CounterTestClientApp extends Activity implements ICounterEventListe
         bVector.setBackgroundColor(Color.GREEN);
 
         bVector.setOnClickListener(v -> {
-            customTypes.customTypes_api.Vector3D newVector = new customTypes.customTypes_api.Vector3D(mClient.getVector(););
+            customTypes.customTypes_api.Vector3D newVector = new customTypes.customTypes_api.Vector3D(mClient.getVector());
             //TODO increment
             Log.i(TAG, "SET vector" + newVector);
             mClient.setVector(newVector);
@@ -73,7 +73,7 @@ public class CounterTestClientApp extends Activity implements ICounterEventListe
         bExternVector.setBackgroundColor(Color.GREEN);
 
         bExternVector.setOnClickListener(v -> {
-            org.apache.commons.math3.geometry.euclidean.threed.Vector3D newExternVector = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(mClient.getExternVector(););
+            org.apache.commons.math3.geometry.euclidean.threed.Vector3D newExternVector = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D(mClient.getExternVector());
             //TODO increment
             Log.i(TAG, "SET extern_vector" + newExternVector);
             mClient.setExternVector(newExternVector);
@@ -84,7 +84,7 @@ public class CounterTestClientApp extends Activity implements ICounterEventListe
         bVectorArray.setBackgroundColor(Color.GREEN);
 
         bVectorArray.setOnClickListener(v -> {
-            customTypes.customTypes_api.Vector3D[] newVectorArray = new customTypes.customTypes_api.Vector3D[](mClient.getVectorArray(););
+            customTypes.customTypes_api.Vector3D[] newVectorArray = new customTypes.customTypes_api.Vector3D[](mClient.getVectorArray());
             //TODO increment
             Log.i(TAG, "SET vectorArray" + newVectorArray);
             mClient.setVectorArray(newVectorArray);
@@ -95,7 +95,7 @@ public class CounterTestClientApp extends Activity implements ICounterEventListe
         bExternVectorArray.setBackgroundColor(Color.GREEN);
 
         bExternVectorArray.setOnClickListener(v -> {
-            org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] newExternVectorArray = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[](mClient.getExternVectorArray(););
+            org.apache.commons.math3.geometry.euclidean.threed.Vector3D[] newExternVectorArray = new org.apache.commons.math3.geometry.euclidean.threed.Vector3D[](mClient.getExternVectorArray());
             //TODO increment
             Log.i(TAG, "SET extern_vectorArray" + newExternVectorArray);
             mClient.setExternVectorArray(newExternVectorArray);
@@ -254,8 +254,8 @@ public class CounterTestClientApp extends Activity implements ICounterEventListe
         Log.v(TAG, "My app: onDestroy, unbinding");
         if (mClient != null) {
             mClient.unbindFromService();
+            mClient.removeEventListener(this);
         }
-        mClient.removeEventListener(this);
         super.onDestroy();
     }
 

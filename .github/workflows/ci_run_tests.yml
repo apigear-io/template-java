@@ -58,6 +58,14 @@ jobs:
         find goldenmaster -type d -name wrapper -exec rm -rf {} +
         echo "Removed any gradle/wrapper folders in submodules"
 
+    # Catch placeholder TODOs that leaked from templates into generated code
+    - name: Check for stray TODO markers in generated sources
+      run: |
+        if grep -rn "//TODO later" goldenmaster/ templates/; then
+          echo "Found stray '//TODO later' marker - clean up template before merging"
+          exit 1
+        fi
+
     # Build all modules
     - name: Build all modules
       working-directory: goldenmaster

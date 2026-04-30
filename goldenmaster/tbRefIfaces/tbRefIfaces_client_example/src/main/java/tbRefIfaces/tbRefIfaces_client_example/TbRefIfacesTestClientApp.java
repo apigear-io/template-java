@@ -177,8 +177,8 @@ public class TbRefIfacesTestClientApp extends Activity implements ISimpleLocalIf
         Log.v(TAG, "My app: onDestroy, unbinding");
         if (mClient != null) {
             mClient.unbindFromService();
+            mClient.removeEventListener(this);
         }
-        mClient.removeEventListener(this);
         super.onDestroy();
     }
 

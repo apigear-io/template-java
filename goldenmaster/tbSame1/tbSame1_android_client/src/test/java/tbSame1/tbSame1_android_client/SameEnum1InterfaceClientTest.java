@@ -1,4 +1,4 @@
-//TODO later// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 package tbSame1.tbSame1_android_client;
 
 import tbSame1.tbSame1_android_client.SameEnum1InterfaceClient;

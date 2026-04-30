@@ -1,4 +1,4 @@
-//TODO later// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 
 package counter.counter_android_client;
 

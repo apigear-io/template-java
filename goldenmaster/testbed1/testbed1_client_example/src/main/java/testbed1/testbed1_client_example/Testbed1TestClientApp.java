@@ -70,7 +70,7 @@ public class Testbed1TestClientApp extends Activity implements IStructInterfaceE
         bPropBool.setBackgroundColor(Color.GREEN);
 
         bPropBool.setOnClickListener(v -> {
-            StructBool newPropBool = new StructBool(mClient.getPropBool(););
+            StructBool newPropBool = new StructBool(mClient.getPropBool());
             //TODO increment
             Log.i(TAG, "SET propBool" + newPropBool);
             mClient.setPropBool(newPropBool);
@@ -81,7 +81,7 @@ public class Testbed1TestClientApp extends Activity implements IStructInterfaceE
         bPropInt.setBackgroundColor(Color.GREEN);
 
         bPropInt.setOnClickListener(v -> {
-            StructInt newPropInt = new StructInt(mClient.getPropInt(););
+            StructInt newPropInt = new StructInt(mClient.getPropInt());
             //TODO increment
             Log.i(TAG, "SET propInt" + newPropInt);
             mClient.setPropInt(newPropInt);
@@ -92,7 +92,7 @@ public class Testbed1TestClientApp extends Activity implements IStructInterfaceE
         bPropFloat.setBackgroundColor(Color.GREEN);
 
         bPropFloat.setOnClickListener(v -> {
-            StructFloat newPropFloat = new StructFloat(mClient.getPropFloat(););
+            StructFloat newPropFloat = new StructFloat(mClient.getPropFloat());
             //TODO increment
             Log.i(TAG, "SET propFloat" + newPropFloat);
             mClient.setPropFloat(newPropFloat);
@@ -103,7 +103,7 @@ public class Testbed1TestClientApp extends Activity implements IStructInterfaceE
         bPropString.setBackgroundColor(Color.GREEN);
 
         bPropString.setOnClickListener(v -> {
-            StructString newPropString = new StructString(mClient.getPropString(););
+            StructString newPropString = new StructString(mClient.getPropString());
             //TODO increment
             Log.i(TAG, "SET propString" + newPropString);
             mClient.setPropString(newPropString);
@@ -262,8 +262,8 @@ public class Testbed1TestClientApp extends Activity implements IStructInterfaceE
         Log.v(TAG, "My app: onDestroy, unbinding");
         if (mClient != null) {
             mClient.unbindFromService();
+            mClient.removeEventListener(this);
         }
-        mClient.removeEventListener(this);
         super.onDestroy();
     }
 

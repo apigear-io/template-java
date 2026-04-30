@@ -1,4 +1,4 @@
-//TODO later// Copyright Epic Games, Inc. All Rights Reserved.
+// Copyright Epic Games, Inc. All Rights Reserved.
 package tbSimple.tbSimple_android_client;
 
 import tbSimple.tbSimple_android_client.NoPropertiesInterfaceClient;
