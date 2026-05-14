@@ -6,6 +6,8 @@ import testbed1.testbed1_api.IStructInterfaceEventListener;
 import testbed1.testbed1_api.RemoteOperationException;
 
 import testbed1.testbed1_android_client.StructInterfaceClient;
+import apigear.android.lifecycle.BindingLifecycleRegistry;
+import apigear.android.lifecycle.IBindingLifecycleCoordinator;
 import testbed1.testbed1_api.StructBool;
 import testbed1.testbed1_android_messenger.StructBoolParcelable;
 import testbed1.testbed1_api.StructFloat;
@@ -32,6 +34,11 @@ public class StructInterfaceJniClient extends AbstractStructInterface implements
 
     private static String ModuleName = "testbed1.testbed1jniservice.StructInterfaceJniService";
     private String lastServicePackage ="";
+
+    // Stable Runnable reference so coordinator register/unregister see the same
+    // instance. Initialized once per JniClient; method-reference resolution at
+    // field-init time gives a single Runnable bound to this::unbind.
+    private final Runnable mCleanup = this::unbind;
 
     @Override
     public boolean _isReady()
@@ -245,11 +252,25 @@ public class StructInterfaceJniClient extends AbstractStructInterface implements
 
     public boolean bind(Context ctx, String packageName, String connectionID){
         Log.v(TAG, "natice client: bind " + packageName);
-        return initServiceConnection(ctx, packageName, connectionID);
+        boolean res = initServiceConnection(ctx, packageName, connectionID);
+        if (res)
+        {
+            IBindingLifecycleCoordinator coordinator = BindingLifecycleRegistry.get();
+            if (coordinator != null)
+            {
+                coordinator.registerCleanup(mCleanup);
+            }
+        }
+        return res;
     }
 
     public void unbind(){
         Log.v(TAG, "native client: unbind " + lastServicePackage);
+        IBindingLifecycleCoordinator coordinator = BindingLifecycleRegistry.get();
+        if (coordinator != null)
+        {
+            coordinator.unregisterCleanup(mCleanup);
+        }
         if (mMessengerClient != null)
         {
             mMessengerClient.unbindFromService();

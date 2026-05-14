@@ -6,6 +6,8 @@ import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.RemoteOperationException;
 
 import tbRefIfaces.tbRefIfaces_android_client.SimpleLocalIfClient;
+import apigear.android.lifecycle.BindingLifecycleRegistry;
+import apigear.android.lifecycle.IBindingLifecycleCoordinator;
 import android.content.Context;
 
 import android.os.Bundle;
@@ -24,6 +26,11 @@ public class SimpleLocalIfJniClient extends AbstractSimpleLocalIf implements ISi
 
     private static String ModuleName = "tbRefIfaces.tbRefIfacesjniservice.SimpleLocalIfJniService";
     private String lastServicePackage ="";
+
+    // Stable Runnable reference so coordinator register/unregister see the same
+    // instance. Initialized once per JniClient; method-reference resolution at
+    // field-init time gives a single Runnable bound to this::unbind.
+    private final Runnable mCleanup = this::unbind;
 
     @Override
     public boolean _isReady()
@@ -84,11 +91,25 @@ public class SimpleLocalIfJniClient extends AbstractSimpleLocalIf implements ISi
 
     public boolean bind(Context ctx, String packageName, String connectionID){
         Log.v(TAG, "natice client: bind " + packageName);
-        return initServiceConnection(ctx, packageName, connectionID);
+        boolean res = initServiceConnection(ctx, packageName, connectionID);
+        if (res)
+        {
+            IBindingLifecycleCoordinator coordinator = BindingLifecycleRegistry.get();
+            if (coordinator != null)
+            {
+                coordinator.registerCleanup(mCleanup);
+            }
+        }
+        return res;
     }
 
     public void unbind(){
         Log.v(TAG, "native client: unbind " + lastServicePackage);
+        IBindingLifecycleCoordinator coordinator = BindingLifecycleRegistry.get();
+        if (coordinator != null)
+        {
+            coordinator.unregisterCleanup(mCleanup);
+        }
         if (mMessengerClient != null)
         {
             mMessengerClient.unbindFromService();

@@ -6,6 +6,8 @@ import android.content.Intent;
 
 import tbSame2.tbSame2_api.ISameStruct2InterfaceEventListener;
 import tbSame2.tbSame2_api.ISameStruct2Interface;
+import apigear.android.lifecycle.BindingLifecycleRegistry;
+import apigear.android.lifecycle.IBindingLifecycleCoordinator;
 import tbSame2.tbSame2_android_service.SameStruct2InterfaceServiceAdapter;
 import tbSame2.tbSame2jniservice.SameStruct2InterfaceJniServiceProvider;
 import tbSame2.tbSame2_android_service.SameStruct2InterfaceBaseServiceLifecycleController;
@@ -45,13 +47,42 @@ public class SameStruct2InterfaceJniServiceStarter
         }
     };
 
+    // Stable Runnable reference for coordinator register/unregister. Static
+    // because the starter itself is a static facade over a single IMPL.
+    private static Runnable sCleanup;
+
     public static ISameStruct2Interface start(Context ctx)
     {
-        return IMPL.start(ctx);
+        ISameStruct2Interface result = IMPL.start(ctx);
+        if (result != null)
+        {
+            // Re-entrant start: drop any previous registration before replacing.
+            IBindingLifecycleCoordinator coordinator = BindingLifecycleRegistry.get();
+            if (sCleanup != null && coordinator != null)
+            {
+                coordinator.unregisterCleanup(sCleanup);
+            }
+            final Context capturedCtx = ctx;
+            sCleanup = () -> stop(capturedCtx);
+            if (coordinator != null)
+            {
+                coordinator.registerCleanup(sCleanup);
+            }
+        }
+        return result;
     }
 
     public static void stop(Context ctx)
     {
+        if (sCleanup != null)
+        {
+            IBindingLifecycleCoordinator coordinator = BindingLifecycleRegistry.get();
+            if (coordinator != null)
+            {
+                coordinator.unregisterCleanup(sCleanup);
+            }
+            sCleanup = null;
+        }
         IMPL.stop(ctx);
     }
 

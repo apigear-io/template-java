@@ -6,6 +6,8 @@ import tbEnum.tbEnum_api.IEnumInterfaceEventListener;
 import tbEnum.tbEnum_api.RemoteOperationException;
 
 import tbEnum.tbEnum_android_client.EnumInterfaceClient;
+import apigear.android.lifecycle.BindingLifecycleRegistry;
+import apigear.android.lifecycle.IBindingLifecycleCoordinator;
 import tbEnum.tbEnum_api.Enum0;
 import tbEnum.tbEnum_android_messenger.Enum0Parcelable;
 import tbEnum.tbEnum_api.Enum1;
@@ -32,6 +34,11 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
 
     private static String ModuleName = "tbEnum.tbEnumjniservice.EnumInterfaceJniService";
     private String lastServicePackage ="";
+
+    // Stable Runnable reference so coordinator register/unregister see the same
+    // instance. Initialized once per JniClient; method-reference resolution at
+    // field-init time gives a single Runnable bound to this::unbind.
+    private final Runnable mCleanup = this::unbind;
 
     @Override
     public boolean _isReady()
@@ -245,11 +252,25 @@ public class EnumInterfaceJniClient extends AbstractEnumInterface implements IEn
 
     public boolean bind(Context ctx, String packageName, String connectionID){
         Log.v(TAG, "natice client: bind " + packageName);
-        return initServiceConnection(ctx, packageName, connectionID);
+        boolean res = initServiceConnection(ctx, packageName, connectionID);
+        if (res)
+        {
+            IBindingLifecycleCoordinator coordinator = BindingLifecycleRegistry.get();
+            if (coordinator != null)
+            {
+                coordinator.registerCleanup(mCleanup);
+            }
+        }
+        return res;
     }
 
     public void unbind(){
         Log.v(TAG, "native client: unbind " + lastServicePackage);
+        IBindingLifecycleCoordinator coordinator = BindingLifecycleRegistry.get();
+        if (coordinator != null)
+        {
+            coordinator.unregisterCleanup(mCleanup);
+        }
         if (mMessengerClient != null)
         {
             mMessengerClient.unbindFromService();
