@@ -23,6 +23,10 @@ features:
             target: "{{camel .Module.Name}}_api/src/main/java/{{camel .Module.Name}}/{{camel .Module.Name}}_api/{{Camel .Module.Name}}TestHelper.java"
           - source: "api/remoteoperationexception.java.tpl"
             target: "{{camel .Module.Name}}_api/src/main/java/{{camel .Module.Name}}/{{camel .Module.Name}}_api/RemoteOperationException.java"
+          - source: "api/bindinglifecyclecoordinator.java.tpl"
+            target: "{{camel .Module.Name}}_api/src/main/java/apigear/android/lifecycle/IBindingLifecycleCoordinator.java"
+          - source: "api/bindinglifecycleregistry.java.tpl"
+            target: "{{camel .Module.Name}}_api/src/main/java/apigear/android/lifecycle/BindingLifecycleRegistry.java"
       - match: interface
         prefix: "{{camel .Module.Name}}/{{camel .Module.Name}}_api/src/main/java/{{camel .Module.Name}}/{{camel .Module.Name}}_api/"
         documents:
