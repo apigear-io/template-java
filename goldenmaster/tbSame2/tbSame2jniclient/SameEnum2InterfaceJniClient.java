@@ -6,6 +6,8 @@ import tbSame2.tbSame2_api.ISameEnum2InterfaceEventListener;
 import tbSame2.tbSame2_api.RemoteOperationException;
 
 import tbSame2.tbSame2_android_client.SameEnum2InterfaceClient;
+import apigear.android.lifecycle.BindingLifecycleRegistry;
+import apigear.android.lifecycle.IBindingLifecycleCoordinator;
 import tbSame2.tbSame2_api.Enum1;
 import tbSame2.tbSame2_android_messenger.Enum1Parcelable;
 import tbSame2.tbSame2_api.Enum2;
@@ -28,6 +30,11 @@ public class SameEnum2InterfaceJniClient extends AbstractSameEnum2Interface impl
 
     private static String ModuleName = "tbSame2.tbSame2jniservice.SameEnum2InterfaceJniService";
     private String lastServicePackage ="";
+
+    // Stable Runnable reference so coordinator register/unregister see the same
+    // instance. Initialized once per JniClient; method-reference resolution at
+    // field-init time gives a single Runnable bound to this::unbind.
+    private final Runnable mCleanup = this::unbind;
 
     @Override
     public boolean _isReady()
@@ -139,11 +146,25 @@ public class SameEnum2InterfaceJniClient extends AbstractSameEnum2Interface impl
 
     public boolean bind(Context ctx, String packageName, String connectionID){
         Log.v(TAG, "natice client: bind " + packageName);
-        return initServiceConnection(ctx, packageName, connectionID);
+        boolean res = initServiceConnection(ctx, packageName, connectionID);
+        if (res)
+        {
+            IBindingLifecycleCoordinator coordinator = BindingLifecycleRegistry.get();
+            if (coordinator != null)
+            {
+                coordinator.registerCleanup(mCleanup);
+            }
+        }
+        return res;
     }
 
     public void unbind(){
         Log.v(TAG, "native client: unbind " + lastServicePackage);
+        IBindingLifecycleCoordinator coordinator = BindingLifecycleRegistry.get();
+        if (coordinator != null)
+        {
+            coordinator.unregisterCleanup(mCleanup);
+        }
         if (mMessengerClient != null)
         {
             mMessengerClient.unbindFromService();

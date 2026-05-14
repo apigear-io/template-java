@@ -6,6 +6,8 @@ import tbRefIfaces.tbRefIfaces_api.IParentIfEventListener;
 import tbRefIfaces.tbRefIfaces_api.RemoteOperationException;
 
 import tbRefIfaces.tbRefIfaces_android_client.ParentIfClient;
+import apigear.android.lifecycle.BindingLifecycleRegistry;
+import apigear.android.lifecycle.IBindingLifecycleCoordinator;
 import tbRefIfaces.tbRefIfaces_api.ISimpleLocalIf;
 import tbRefIfaces.tbRefIfaces_android_messenger.SimpleLocalIfParcelable;
 import android.content.Context;
@@ -26,6 +28,11 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
 
     private static String ModuleName = "tbRefIfaces.tbRefIfacesjniservice.ParentIfJniService";
     private String lastServicePackage ="";
+
+    // Stable Runnable reference so coordinator register/unregister see the same
+    // instance. Initialized once per JniClient; method-reference resolution at
+    // field-init time gives a single Runnable bound to this::unbind.
+    private final Runnable mCleanup = this::unbind;
 
     @Override
     public boolean _isReady()
@@ -239,11 +246,25 @@ public class ParentIfJniClient extends AbstractParentIf implements IParentIfEven
 
     public boolean bind(Context ctx, String packageName, String connectionID){
         Log.v(TAG, "natice client: bind " + packageName);
-        return initServiceConnection(ctx, packageName, connectionID);
+        boolean res = initServiceConnection(ctx, packageName, connectionID);
+        if (res)
+        {
+            IBindingLifecycleCoordinator coordinator = BindingLifecycleRegistry.get();
+            if (coordinator != null)
+            {
+                coordinator.registerCleanup(mCleanup);
+            }
+        }
+        return res;
     }
 
     public void unbind(){
         Log.v(TAG, "native client: unbind " + lastServicePackage);
+        IBindingLifecycleCoordinator coordinator = BindingLifecycleRegistry.get();
+        if (coordinator != null)
+        {
+            coordinator.unregisterCleanup(mCleanup);
+        }
         if (mMessengerClient != null)
         {
             mMessengerClient.unbindFromService();

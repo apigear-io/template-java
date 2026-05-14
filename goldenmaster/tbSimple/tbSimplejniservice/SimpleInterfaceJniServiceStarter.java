@@ -6,6 +6,8 @@ import android.content.Intent;
 
 import tbSimple.tbSimple_api.ISimpleInterfaceEventListener;
 import tbSimple.tbSimple_api.ISimpleInterface;
+import apigear.android.lifecycle.BindingLifecycleRegistry;
+import apigear.android.lifecycle.IBindingLifecycleCoordinator;
 import tbSimple.tbSimple_android_service.SimpleInterfaceServiceAdapter;
 import tbSimple.tbSimplejniservice.SimpleInterfaceJniServiceProvider;
 import tbSimple.tbSimple_android_service.SimpleInterfaceBaseServiceLifecycleController;
@@ -45,13 +47,42 @@ public class SimpleInterfaceJniServiceStarter
         }
     };
 
+    // Stable Runnable reference for coordinator register/unregister. Static
+    // because the starter itself is a static facade over a single IMPL.
+    private static Runnable sCleanup;
+
     public static ISimpleInterface start(Context ctx)
     {
-        return IMPL.start(ctx);
+        ISimpleInterface result = IMPL.start(ctx);
+        if (result != null)
+        {
+            // Re-entrant start: drop any previous registration before replacing.
+            IBindingLifecycleCoordinator coordinator = BindingLifecycleRegistry.get();
+            if (sCleanup != null && coordinator != null)
+            {
+                coordinator.unregisterCleanup(sCleanup);
+            }
+            final Context capturedCtx = ctx;
+            sCleanup = () -> stop(capturedCtx);
+            if (coordinator != null)
+            {
+                coordinator.registerCleanup(sCleanup);
+            }
+        }
+        return result;
     }
 
     public static void stop(Context ctx)
     {
+        if (sCleanup != null)
+        {
+            IBindingLifecycleCoordinator coordinator = BindingLifecycleRegistry.get();
+            if (coordinator != null)
+            {
+                coordinator.unregisterCleanup(sCleanup);
+            }
+            sCleanup = null;
+        }
         IMPL.stop(ctx);
     }
 

@@ -6,6 +6,8 @@ import tbNames.tbNames_api.INamEsEventListener;
 import tbNames.tbNames_api.RemoteOperationException;
 
 import tbNames.tbNames_android_client.NamEsClient;
+import apigear.android.lifecycle.BindingLifecycleRegistry;
+import apigear.android.lifecycle.IBindingLifecycleCoordinator;
 import tbNames.tbNames_api.EnumWithUnderScores;
 import tbNames.tbNames_android_messenger.EnumWithUnderScoresParcelable;
 import android.content.Context;
@@ -26,6 +28,11 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
 
     private static String ModuleName = "tbNames.tbNamesjniservice.NamEsJniService";
     private String lastServicePackage ="";
+
+    // Stable Runnable reference so coordinator register/unregister see the same
+    // instance. Initialized once per JniClient; method-reference resolution at
+    // field-init time gives a single Runnable bound to this::unbind.
+    private final Runnable mCleanup = this::unbind;
 
     @Override
     public boolean _isReady()
@@ -163,11 +170,25 @@ public class NamEsJniClient extends AbstractNamEs implements INamEsEventListener
 
     public boolean bind(Context ctx, String packageName, String connectionID){
         Log.v(TAG, "natice client: bind " + packageName);
-        return initServiceConnection(ctx, packageName, connectionID);
+        boolean res = initServiceConnection(ctx, packageName, connectionID);
+        if (res)
+        {
+            IBindingLifecycleCoordinator coordinator = BindingLifecycleRegistry.get();
+            if (coordinator != null)
+            {
+                coordinator.registerCleanup(mCleanup);
+            }
+        }
+        return res;
     }
 
     public void unbind(){
         Log.v(TAG, "native client: unbind " + lastServicePackage);
+        IBindingLifecycleCoordinator coordinator = BindingLifecycleRegistry.get();
+        if (coordinator != null)
+        {
+            coordinator.unregisterCleanup(mCleanup);
+        }
         if (mMessengerClient != null)
         {
             mMessengerClient.unbindFromService();

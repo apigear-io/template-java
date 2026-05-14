@@ -6,6 +6,8 @@ import android.content.Intent;
 
 import testbed2.testbed2_api.INestedStruct1InterfaceEventListener;
 import testbed2.testbed2_api.INestedStruct1Interface;
+import apigear.android.lifecycle.BindingLifecycleRegistry;
+import apigear.android.lifecycle.IBindingLifecycleCoordinator;
 import testbed2.testbed2_android_service.NestedStruct1InterfaceServiceAdapter;
 import testbed2.testbed2jniservice.NestedStruct1InterfaceJniServiceProvider;
 import testbed2.testbed2_android_service.NestedStruct1InterfaceBaseServiceLifecycleController;
@@ -45,13 +47,42 @@ public class NestedStruct1InterfaceJniServiceStarter
         }
     };
 
+    // Stable Runnable reference for coordinator register/unregister. Static
+    // because the starter itself is a static facade over a single IMPL.
+    private static Runnable sCleanup;
+
     public static INestedStruct1Interface start(Context ctx)
     {
-        return IMPL.start(ctx);
+        INestedStruct1Interface result = IMPL.start(ctx);
+        if (result != null)
+        {
+            // Re-entrant start: drop any previous registration before replacing.
+            IBindingLifecycleCoordinator coordinator = BindingLifecycleRegistry.get();
+            if (sCleanup != null && coordinator != null)
+            {
+                coordinator.unregisterCleanup(sCleanup);
+            }
+            final Context capturedCtx = ctx;
+            sCleanup = () -> stop(capturedCtx);
+            if (coordinator != null)
+            {
+                coordinator.registerCleanup(sCleanup);
+            }
+        }
+        return result;
     }
 
     public static void stop(Context ctx)
     {
+        if (sCleanup != null)
+        {
+            IBindingLifecycleCoordinator coordinator = BindingLifecycleRegistry.get();
+            if (coordinator != null)
+            {
+                coordinator.unregisterCleanup(sCleanup);
+            }
+            sCleanup = null;
+        }
         IMPL.stop(ctx);
     }
 
