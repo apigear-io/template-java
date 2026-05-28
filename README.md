@@ -48,3 +48,7 @@ The template offers the following feature switches which can be enabled during c
 - external: support for external APIs
 - test: support for unit testing
 - olink: object link support (req. objectlink core java library) using websockets
+
+## License
+
+Licensed under the [MIT License](./LICENSE). See [LICENSE](./LICENSE) for details.
